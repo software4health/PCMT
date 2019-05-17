@@ -2,7 +2,7 @@
 
 (A user story should do _one_ thing for the user)
 
-As a \<persona\>, I want to \<some goal\> so that I may \<some reason\>.
+As a _persona_, I want to _some goal_ so that I may _some reason_.
 
 ### Background Documents
 
@@ -30,4 +30,4 @@ e.g.
 - [ ] Test Plan is updated
 - [ ] Documentation is updated
 
-/label ~user-story ~needs-ac
+/label ~type::user-story ~needs-ac
