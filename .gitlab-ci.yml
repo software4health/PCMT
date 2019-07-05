@@ -17,7 +17,7 @@ before_script:
 build:
   stage: build
   script:
-    - docker build -f pim/Dockerfile -t pcmt/pim --build-arg AKENEO_VER="v3.1.10" pim/
+    - docker build -f docker/pim/Dockerfile -t pcmt/pim --build-arg AKENEO_VER="v3.1.10" docker/pim/
 
 deploy:
   stage: deploy
