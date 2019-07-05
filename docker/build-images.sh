@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 AKENEO_VER="v3.1.10"
 
