@@ -16,6 +16,8 @@ before_script:
 
 build:
   stage: build
+  tags:
+    - docker
   script:
     ./docker/build-images.sh
 
