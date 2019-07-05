@@ -16,8 +16,7 @@ before_script:
 
 build:
   stage: build
-  script:
-    - ./build-images.sh
+  script: "./build-images.sh"
 
 deploy:
   stage: deploy
