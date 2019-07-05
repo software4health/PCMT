@@ -18,7 +18,8 @@ build:
   stage: build
   script:
     - cd docker
-    - ./build-images.sh
+    - pwd
+    - sh -c $(pwd)/build-images.sh
   #  - docker build -f docker/pim/Dockerfile -t pcmt/pim --build-arg AKENEO_VER="v3.1.10" docker/pim/
 
 deploy:
