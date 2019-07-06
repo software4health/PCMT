@@ -1,7 +1,8 @@
+ARG PCMT_REG=registry.gitlab.com/pcmt/pcmt
+FROM ${PCMT_REG}/pim AS pim
 FROM node:10-slim AS node
-ARG IMG_PREFIX=registry.gitlab.com/pcmt/pcmt
 USER node
-COPY --from=${IMG_PREFIX}/pim --chown=node:node /srv/pim /srv/pim
+COPY --from=pim --chown=node:node /srv/pim /srv/pim
 WORKDIR /srv/pim
 RUN yarn install && \
     yarn run less && \
