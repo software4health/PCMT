@@ -1,15 +1,14 @@
 version: '3'
-
 services:
   fpm:
-    image: 'pcmt/pim'
+    image: '${PCMT_REG}/pim'
     user: 'docker'
     working_dir: '/srv/pim'
     networks:
       - 'akeneo'
 
   httpd:
-    image: 'pcmt/httpd'
+    image: '{PCMT_REG}/httpd'
     depends_on:
       - 'fpm'
     ports:
