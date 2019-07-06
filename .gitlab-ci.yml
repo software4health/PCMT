@@ -16,7 +16,9 @@ before_script:
 
 build:
   stage: build
-  script: "./docker/build-images.sh"
+  script: 
+    - cd docker
+    - "./build-images.sh"
 
 deploy:
   stage: deploy
