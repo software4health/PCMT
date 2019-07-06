@@ -13,12 +13,15 @@ variables:
 
 before_script:
   - docker info
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
 build:
   stage: build
   script: 
     - cd docker
     - "./build-images.sh"
+    - docker push pcmt/pim:latest
+    - docker push pcmt/httpd:latest
 
 deploy:
   stage: deploy
