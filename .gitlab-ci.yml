@@ -19,9 +19,9 @@ build:
   stage: build
   script: 
     - cd docker
-    - "./build-images.sh"
-    - docker push pcmt/pim:latest
-    - docker push pcmt/httpd:latest
+    - "./build-images.sh ${CI_REGISTRY_IMAGE}"
+    - docker push $CI_REGISTRY_IMAGE/pim:latest
+    - docker push $CI_REGISTRY_IMAGE/httpd:latest
 
 deploy:
   stage: deploy
