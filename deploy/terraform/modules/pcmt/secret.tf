@@ -1,0 +1,4 @@
+resource "aws_key_pair" "ec2" {
+  key_name   = "pcmt-ec2"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC41j28oB9QjF5OzbVpVFikvmcrEkDjAGVmquZYItG+9/u4B1DG7xofLp3YAYwrmKnLNEMhCvsYssoNCS7FN7Gl5La64K+1KHVOr8pWxbAr292H6lL5RK3uPSJ8EQVS5cS8RVBf+IgtAq6h1lmPVq7dNYDgJZ4vhmVTm4BK8tLh84UXrmiGXDLdzHORgkA82alQOrUHTGns5kuXNDQnjoDfCbQMelBq21EFsyoNgWbMaji5rIbsdmOr3yeW2aoIerUjudjWsBYeRAxFm8z3ZoOkJywPRqN7z+7F+8icZk1aJ2sHF1YcYlULQgmFexXHRdzha2VSYig02922bgI/kKUZ jzamor@MoshiMint"
+}
