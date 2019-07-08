@@ -19,7 +19,7 @@ module "vpc" {
 resource "aws_security_group" "pcmt-web" {
   name        = "pcmt-web"
   description = "Allow http https ssh inbound, all outbound traffic"
-  vpc_id      = "${module.vpc.default_vpc_id}"
+  vpc_id      = "${module.vpc.vpc_id}"
 
   ingress {
     from_port   = 22
