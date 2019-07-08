@@ -19,7 +19,6 @@ module "pcmt" {
   tag-bill-to             = "${var.tag-bill-to}"
   root-volume-size        = "${var.root-volume-size}"
   instance-type           = "${var.instance-type}"
-  ami                     = "${var.ami}"
   hosted-zone-domain-name = "${var.hosted-zone-domain-name}"
   domain-name             = "${var.domain-name}"
 }

@@ -1,5 +1,5 @@
 resource "aws_instance" "app" {
-  ami                    = "${var.ami}"
+  ami                    = "${data.aws_ami.ubuntu-latest.id}"
   instance_type          = "${var.instance-type}"
   key_name               = "${aws_key_pair.ec2.id}"
   subnet_id              = "${module.vpc.public_subnets[0]}"
@@ -20,5 +20,20 @@ resource "aws_instance" "app" {
   volume_tags = {
     BillTo = "${var.tag-bill-to}"
     Type   = "${var.tag-type}"
+  }
+}
+
+data "aws_ami" "ubuntu-latest" {
+  most_recent = true
+  owners = ["099720109477"]
+
+  filter {
+    name = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-*"]
+  }
+
+  filter {
+    name = "architecture"
+    values = ["x86_64"]
   }
 }

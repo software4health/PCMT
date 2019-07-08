@@ -31,12 +31,6 @@ variable "instance-type" {
   default     = "t3a.small"
 }
 
-variable "ami" {
-  type        = string
-  description = "AWS AMI to use for compute"
-  default     = "ami-0c46f9f09e3a8c2b5"
-}
-
 variable "hosted-zone-domain-name" {
   type        = string
   description = "AWS Route53 Hosted Zone Domain Name"
