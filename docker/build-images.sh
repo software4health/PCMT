@@ -1,7 +1,7 @@
 #!/bin/sh
 
 AKENEO_VER="v3.1.10"
-PCMT_REG=$1
+PCMT_REG=${1:-"registry.gitlab.com/pcmt/pcmt"}
 
 docker build -f pim/Dockerfile \
     -t $PCMT_REG/pim \
