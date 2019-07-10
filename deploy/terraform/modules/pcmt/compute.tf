@@ -40,7 +40,6 @@ data "aws_ami" "ubuntu-latest" {
 }
 
 resource "null_resource" "deploy-docker" {
-  count = 0
   depends_on = ["aws_instance.app"]
 
   connection {
@@ -58,6 +57,6 @@ resource "null_resource" "deploy-docker" {
   }
 
   provisioner "local-exec" {
-    command = "docker run registry.gitlab.com/pcmt/pcmt/ansible ansible-playbook-wrapper -vvvv -i inventory docker.yml -e ansible_ssh_user=ubuntu --limit ${aws_instance.app.public_ip}"
+    command = "../script/pcmt-ansible.sh ${aws_instance.app.public_ip}"
   }
 }

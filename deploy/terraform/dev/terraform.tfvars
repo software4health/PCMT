@@ -4,4 +4,4 @@ tag-name    = "pcmt-dev"
 tag-type    = "test"
 tag-bill-to = "PCMT"
 
-domain-name = "pcmt.villagereach.org"
+domain-name = "dev.pcmt.villagereach.org"
