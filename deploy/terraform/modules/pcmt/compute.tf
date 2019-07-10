@@ -15,6 +15,7 @@ resource "aws_instance" "app" {
     Name   = "${var.tag-name}"
     BillTo = "${var.tag-bill-to}"
     Type   = "${var.tag-type}"
+    DeployGroup = "${var.app-deploy-group}"
   }
 
   volume_tags = {
@@ -35,5 +36,28 @@ data "aws_ami" "ubuntu-latest" {
   filter {
     name = "architecture"
     values = ["x86_64"]
+  }
+}
+
+resource "null_resource" "deploy-docker" {
+  count = 0
+  depends_on = ["aws_instance.app"]
+
+  connection {
+    user = "ubuntu"
+    host = "${aws_instance.app.public_ip}"
+  }
+
+  provisioner "remote-exec" {
+    inline = ["ls"]
+
+    connection {
+      type = "ssh"
+      user = "ubuntu"
+    }
+  }
+
+  provisioner "local-exec" {
+    command = "docker run registry.gitlab.com/pcmt/pcmt/ansible ansible-playbook-wrapper -vvvv -i inventory docker.yml -e ansible_ssh_user=ubuntu --limit ${aws_instance.app.public_ip}"
   }
 }

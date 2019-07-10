@@ -31,6 +31,12 @@ variable "instance-type" {
   default     = "t3a.small"
 }
 
+variable "app-deploy-group" {
+  type        = "string"
+  description = "Tags ec2 app instance for use by Ansible Playbooks."
+  default = "docker-hosts"
+}
+
 variable "hosted-zone-domain-name" {
   type        = string
   description = "AWS Route53 Hosted Zone Domain Name"
