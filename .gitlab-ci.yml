@@ -15,8 +15,13 @@ before_script:
   - docker info
   - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
 
-build:
+pim docker build:
   stage: build
+  only:
+    changes:
+      - docker/*
+  except:
+    - branches
   script: 
     - cd docker
     - "./build-images.sh pcmt"
