@@ -8,10 +8,13 @@
   get_url: 
     url:  https://gitlab.com/pcmt/pcmt/raw/master/docker-compose.yml
     dest: /app/
-- name: Pull PCMT images
+- name: Get PCMT .env file
+  get_url: 
+    url:  https://gitlab.com/pcmt/pcmt/raw/master/.env
+    dest: /app/
+- name: Pull and Start PCMT images
   docker_service:
     project_src: /app
     build: no
     pull: yes
     state: present
-#- name: Start PCMT images
