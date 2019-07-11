@@ -32,14 +32,14 @@ ansible docker build:
   stage: build
   only:
     changes:
-      - ansible/*
+      - deploy/ansible/*
   except:
     - branches
   script:
     - cd deploy/ansible
     - ./build.sh
     - docker push pcmt/ansible:latest
-    
+
 deploy:
   stage: deploy
   script:
