@@ -1,15 +1,14 @@
 version: '3'
-
 services:
   fpm:
-    image: 'pcmt/pim'
+    image: '${PCMT_REG}/pcmt'
     user: 'docker'
     working_dir: '/srv/pim'
     networks:
       - 'akeneo'
 
   httpd:
-    image: 'pcmt/httpd'
+    image: '{PCMT_REG}/httpd'
     depends_on:
       - 'fpm'
     ports:
@@ -24,6 +23,8 @@ services:
       MYSQL_USER: 'akeneo_pim'
       MYSQL_PASSWORD: 'akeneo_pim'
       MYSQL_DATABASE: 'akeneo_pim'
+    volumes:
+      - 'mysqldata:/var/lib/mysql'
     networks:
       - 'akeneo'
 
@@ -32,8 +33,16 @@ services:
     environment:
       ES_JAVA_OPTS: "${ES_JAVA_OPTS:--Xms512m -Xmx512m}"
       discovery.type: 'single-node'
+    volumes:
+      - 'esdata:/usr/share/elasticsearch/data'
     networks:
       - 'akeneo'
 
+volumes:
+  mysqldata:
+    driver: local
+  esdata:
+    driver: local
+    
 networks:
   akeneo:

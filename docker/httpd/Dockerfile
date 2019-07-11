@@ -1,6 +1,8 @@
+ARG PCMT_REG=pcmt
+FROM ${PCMT_REG}/pcmt AS pim
 FROM node:10-slim AS node
 USER node
-COPY --from=pcmt/pim --chown=node:node /srv/pim /srv/pim
+COPY --from=pim --chown=node:node /srv/pim /srv/pim
 WORKDIR /srv/pim
 RUN yarn install && \
     yarn run less && \

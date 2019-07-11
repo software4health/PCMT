@@ -13,10 +13,15 @@ variables:
 
 before_script:
   - docker info
+  - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
 
 build:
   stage: build
-  script: "./build-images.sh"
+  script: 
+    - cd docker
+    - "./build-images.sh pcmt"
+    - docker push pcmt/pcmt:latest
+    - docker push pcmt/httpd:latest
 
 deploy:
   stage: deploy
