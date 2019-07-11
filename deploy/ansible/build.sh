@@ -1,5 +1,5 @@
 #!/bin/sh
 
-PCMT_REG=${1:-"registry.gitlab.com/pcmt/pcmt"}
+PCMT_REG=${1:-"pcmt"}
 
 docker build -t $PCMT_REG/ansible:latest .

@@ -7,3 +7,6 @@
     - setup:
   roles:
     - role: geerlingguy.docker
+  tasks:
+    - include_tasks: tasks/pim.yml
+    

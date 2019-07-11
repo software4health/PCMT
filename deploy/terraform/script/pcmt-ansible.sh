@@ -26,7 +26,7 @@ TARGET_IP=$1
 docker run -e AWS_ACCESS_KEY_ID \
     -e AWS_SECRET_ACCESS_KEY \
     -v $SSH_PRIV_KEY_PATH:/root/.ssh/id_rsa:ro \
-    registry.gitlab.com/pcmt/pcmt/ansible ansible-playbook \
+    pcmt/ansible ansible-playbook \
         -vvvv \
         -i inventory playbook.yml \
         -e ansible_ssh_user=ubuntu \

@@ -1,7 +1,7 @@
 version: '3'
 services:
   fpm:
-    image: '${PCMT_REG}/pim'
+    image: '${PCMT_REG}/pcmt'
     user: 'docker'
     working_dir: '/srv/pim'
     networks:

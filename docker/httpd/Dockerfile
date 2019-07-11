@@ -1,5 +1,5 @@
-ARG PCMT_REG=registry.gitlab.com/pcmt/pcmt
-FROM ${PCMT_REG}/pim AS pim
+ARG PCMT_REG=pcmt
+FROM ${PCMT_REG}/pcmt AS pim
 FROM node:10-slim AS node
 USER node
 COPY --from=pim --chown=node:node /srv/pim /srv/pim
