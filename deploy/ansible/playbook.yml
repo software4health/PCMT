@@ -2,11 +2,20 @@
 - hosts: docker-hosts
   gather_facts: false
   become: yes
+  
+  vars:
+    pip_install_packages:
+      - name: docker
+      - name: docker-compose
+  
   pre_tasks:
     - include_tasks: tasks/python2-ubuntu.yml
     - setup:
+  
   roles:
+    - role: geerlingguy.pip
     - role: geerlingguy.docker
+  
   tasks:
     - include_tasks: tasks/pim.yml
     

@@ -1,0 +1,17 @@
+---
+- name: Create app directory
+  file:
+    path: /app
+    state: directory
+    mode: 0744 
+- name: Get PCMT docker-compose file
+  get_url: 
+    url:  https://gitlab.com/pcmt/pcmt/raw/master/docker-compose.yml
+    dest: /app/
+- name: Pull PCMT images
+  docker_service:
+    project_src: /app
+    build: no
+    pull: yes
+    state: present
+#- name: Start PCMT images
