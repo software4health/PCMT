@@ -23,6 +23,8 @@ services:
       MYSQL_USER: 'akeneo_pim'
       MYSQL_PASSWORD: 'akeneo_pim'
       MYSQL_DATABASE: 'akeneo_pim'
+    volumes:
+      - 'mysqldata:/var/lib/mysql'
     networks:
       - 'akeneo'
 
@@ -31,8 +33,16 @@ services:
     environment:
       ES_JAVA_OPTS: "${ES_JAVA_OPTS:--Xms512m -Xmx512m}"
       discovery.type: 'single-node'
+    volumes:
+      - 'esdata:/usr/share/elasticsearch/data'
     networks:
       - 'akeneo'
 
+volumes:
+  mysqldata:
+    driver: local
+  esdata:
+    driver: local
+    
 networks:
   akeneo:
