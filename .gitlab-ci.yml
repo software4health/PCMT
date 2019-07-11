@@ -28,6 +28,18 @@ pim docker build:
     - docker push pcmt/pcmt:latest
     - docker push pcmt/httpd:latest
 
+ansible docker build:
+  stage: build
+  only:
+    changes:
+      - ansible/*
+  except:
+    - branches
+  script:
+    - cd deploy/ansible
+    - ./build.sh
+    - docker push pcmt/ansible:latest
+    
 deploy:
   stage: deploy
   script:
