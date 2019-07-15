@@ -17,11 +17,6 @@ before_script:
 
 pim docker build:
   stage: build
-  only:
-    refs:
-      - master
-    changes:
-      - docker/**/*
   script: 
     - cd docker
     - "./build-images.sh pcmt"
@@ -30,8 +25,6 @@ pim docker build:
 
 ansible docker build:
   stage: build
-  except:
-    - branches
   script:
     - cd deploy/ansible
     - ./build.sh
