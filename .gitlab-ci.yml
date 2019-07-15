@@ -17,9 +17,6 @@ before_script:
 
 pim docker build:
   stage: build
-  only:
-    changes:
-      - docker/**/*
   except:
     - branches
   script: 
@@ -30,9 +27,6 @@ pim docker build:
 
 ansible docker build:
   stage: build
-  only:
-    changes:
-      - deploy/ansible/**/*
   except:
     - branches
   script:
