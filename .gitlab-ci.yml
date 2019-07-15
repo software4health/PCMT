@@ -18,10 +18,8 @@ before_script:
 pim docker build:
   stage: build
   only:
-    refs:
-      - triggers
     changes:
-      - docker/*
+      - docker/**/*
   except:
     - branches
   script: 
@@ -33,10 +31,8 @@ pim docker build:
 ansible docker build:
   stage: build
   only:
-    refs:
-      - triggers
     changes:
-      - deploy/ansible/*
+      - deploy/ansible/**/*
   except:
     - branches
   script:
