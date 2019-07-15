@@ -17,8 +17,11 @@ before_script:
 
 pim docker build:
   stage: build
-  except:
-    - branches
+  only:
+    refs:
+      - master
+    changes:
+      - docker/**/*
   script: 
     - cd docker
     - "./build-images.sh pcmt"
