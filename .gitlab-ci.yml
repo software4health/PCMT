@@ -10,8 +10,6 @@ services:
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
-  TF_ENV: dev
-  TF_CMD: plan
 
 before_script:
   - docker info
@@ -54,10 +52,13 @@ terraform docker build:
     - ./build.sh
     - docker push pcmt/terraform:latest
 
-deploy:
+deploy dev:
   stage: deploy
   only:
     - master@pcmt/pcmt
   when: manual
+  environment:
+    name: dev
+    url: http://dev.pcmt.villagereach.org
   script:
-    - ./deploy/terraform/run-docker.sh $TF_ENV $TF_CMD
+    - ./deploy/terraform/run-docker.sh dev apply -auto-approve
