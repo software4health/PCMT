@@ -10,6 +10,8 @@ services:
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
+  TF_ENV: dev
+  TF_CMD: plan
 
 before_script:
   - docker info
@@ -18,7 +20,10 @@ before_script:
 pim docker build:
   stage: build
   only:
-    - master@pcmt/pcmt
+    refs:
+      - master@pcmt/pcmt
+    changes:
+      - docker/**/*
   script: 
     - cd docker
     - "./build-images.sh pcmt"
@@ -28,7 +33,10 @@ pim docker build:
 ansible docker build:
   stage: build
   only:
-    - master@pcmt/pcmt
+    refs:
+      - master@pcmt/pcmt
+    changes:
+      - deploy/ansible/**/*
   script:
     - cd deploy/ansible
     - ./build.sh
@@ -37,7 +45,10 @@ ansible docker build:
 terraform docker build:
   stage: build
   only:
-    - master@pcmt/pcmt
+    refs:
+      - master@pcmt/pcmt
+    changes:
+      - deploy/terraform/**/*
   script:
     - cd deploy/terraform
     - ./build.sh
@@ -45,5 +56,8 @@ terraform docker build:
 
 deploy:
   stage: deploy
+  only:
+    - master@pcmt/pcmt
+  when: manual
   script:
-    - echo "...deploy to env here..."
+    - ./deploy/terraform/run-docker.sh $TF_ENV $TF_CMD
