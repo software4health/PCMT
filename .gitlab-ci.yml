@@ -17,6 +17,8 @@ before_script:
 
 pim docker build:
   stage: build
+  only:
+    - master@pcmt/pcmt
   script: 
     - cd docker
     - "./build-images.sh pcmt"
@@ -25,10 +27,21 @@ pim docker build:
 
 ansible docker build:
   stage: build
+  only:
+    - master@pcmt/pcmt
   script:
     - cd deploy/ansible
     - ./build.sh
     - docker push pcmt/ansible:latest
+
+terraform docker build:
+  stage: build
+  only:
+    - master@pcmt/pcmt
+  script:
+    cd deploy/terraform
+    ./build.sh
+    docker push pcmt/terraform:latest
 
 deploy:
   stage: deploy
