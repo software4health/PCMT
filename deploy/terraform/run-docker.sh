@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 docker run --rm \
     -e AWS_ACCESS_KEY_ID \
