@@ -39,9 +39,9 @@ terraform docker build:
   only:
     - master@pcmt/pcmt
   script:
-    cd deploy/terraform
-    ./build.sh
-    docker push pcmt/terraform:latest
+    - cd deploy/terraform
+    - ./build.sh
+    - docker push pcmt/terraform:latest
 
 deploy:
   stage: deploy
