@@ -37,12 +37,6 @@ variable "app-deploy-group" {
   default     = "docker-hosts"
 }
 
-variable "ec2-key-pair" {
-  type        = "string"
-  description = "Name of EC2 key-pair for instance"
-  default     = "pcmt-ec2"
-}
-
 variable "hosted-zone-domain-name" {
   type        = string
   description = "AWS Route53 Hosted Zone Domain Name"
@@ -52,19 +46,4 @@ variable "hosted-zone-domain-name" {
 variable "domain-name" {
   type        = string
   description = "AWS Route53 Domain Name"
-}
-
-variable "subnet-id" {
-  type        = string
-  description = "ID of subnet to launch EC2 into"
-}
-
-variable "route53-zone-id" {
-  type        = string
-  description = "ID of zone to insert record into"
-}
-
-variable "security-group-id" {
-  type        = string
-  description = "ID of security group to use for instance"
 }
