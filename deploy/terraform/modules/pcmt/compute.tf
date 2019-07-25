@@ -1,9 +1,9 @@
 resource "aws_instance" "app" {
   ami                    = "${data.aws_ami.ubuntu-latest.id}"
   instance_type          = "${var.instance-type}"
-  key_name               = "${aws_key_pair.ec2.id}"
-  subnet_id              = "${module.vpc.public_subnets[0]}"
-  vpc_security_group_ids = ["${aws_security_group.pcmt-web.id}"]
+  key_name               = "${var.ec2-key-pair}"
+  subnet_id              = "${var.subnet-id}"
+  vpc_security_group_ids = ["${var.security-group-id}"]
 
   root_block_device {
     volume_type           = "gp2"
@@ -12,9 +12,9 @@ resource "aws_instance" "app" {
   }
 
   tags = {
-    Name   = "${var.tag-name}"
-    BillTo = "${var.tag-bill-to}"
-    Type   = "${var.tag-type}"
+    Name        = "${var.tag-name}"
+    BillTo      = "${var.tag-bill-to}"
+    Type        = "${var.tag-type}"
     DeployGroup = "${var.app-deploy-group}"
   }
 
@@ -26,15 +26,15 @@ resource "aws_instance" "app" {
 
 data "aws_ami" "ubuntu-latest" {
   most_recent = true
-  owners = ["099720109477"]
+  owners      = ["099720109477"]
 
   filter {
-    name = "name"
+    name   = "name"
     values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-*"]
   }
 
   filter {
-    name = "architecture"
+    name   = "architecture"
     values = ["x86_64"]
   }
 }
