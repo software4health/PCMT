@@ -41,6 +41,9 @@ data "aws_ami" "ubuntu-latest" {
 
 resource "null_resource" "deploy-docker" {
   depends_on = ["aws_instance.app"]
+  triggers = {
+    build_number = "${timestamp()}"
+  }
 
   connection {
     user = "ubuntu"
