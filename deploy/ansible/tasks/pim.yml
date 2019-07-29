@@ -17,6 +17,10 @@
     url:  https://gitlab.com/pcmt/pcmt/raw/master/settings.env
     dest: /app/
 - name: Pull and Start PCMT images
+  vars:
+    pcmt_profile: "{{ lookup('env', 'PCMT_PROFILE') }}"
+  environment:
+    PCMT_PROFILE: "{{ pcmt_profile }}"
   docker_service:
     project_src: /app
     build: no

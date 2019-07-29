@@ -10,6 +10,10 @@ if [ -z "$AWS_ACCESS_KEY_ID" ]; then
     exit 1
 fi
 
+if [ -z "$PCMT_PROFILE" ]; then
+    echo "Warning: PCMT Profile not set"
+fi
+
 SSH_KEY="/tmp/.ssh/id_rsa"
 if [ ! -r "$SSH_KEY" -o ! -f "$SSH_KEY" ]; then
     echo "SSH Key $SSH_KEY not accessible"

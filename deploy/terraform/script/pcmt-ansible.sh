@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Usage:  inteded to be used from Terraform's local provisioner.
+
 if [ -z "$1" ]; then
     echo IP Argument Missing
     exit 1
@@ -20,6 +22,7 @@ TARGET_IP=$1
 docker run --rm \
     -e AWS_ACCESS_KEY_ID \
     -e AWS_SECRET_ACCESS_KEY \
+    -e PCMT_PROFILE \
     -v pcmt-ssh-key:/tmp/.ssh \
     pcmt/ansible ansible-playbook \
         -v \
