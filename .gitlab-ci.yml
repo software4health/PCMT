@@ -63,13 +63,13 @@ deploy dev:
   script:
     - ./deploy/terraform/run-docker.sh dev apply -auto-approve
 
-  deploy cd-test:
-    stage: deploy
-    only:
-      - master@pcmt/pcmt
-    when: manual
-    environment:
-      name: cd-test
-      url: http://cd-test.pcmt.villagereach.org
-    script:
-      - ./deploy/terraform/run-docker.sh cd-test apply -auto-approve
+deploy cd-test:
+  stage: deploy
+  only:
+    - master@pcmt/pcmt
+  when: manual
+  environment:
+    name: cd-test
+    url: http://cd-test.pcmt.villagereach.org
+  script:
+    - ./deploy/terraform/run-docker.sh cd-test apply -auto-approve
