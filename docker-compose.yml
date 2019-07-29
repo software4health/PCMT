@@ -3,6 +3,8 @@ services:
   fpm:
     image: '${PCMT_REG}/pcmt'
     env_file: settings.env
+    environment:
+      - PCMT_PROFILE
     user: 'docker'
     working_dir: '/srv/pim'
     networks:
