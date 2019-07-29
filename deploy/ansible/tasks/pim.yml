@@ -12,9 +12,14 @@
   get_url: 
     url:  https://gitlab.com/pcmt/pcmt/raw/master/.env
     dest: /app/
+- name: Get PCMT settings.env file
+  get_url: 
+    url:  https://gitlab.com/pcmt/pcmt/raw/master/settings.env
+    dest: /app/
 - name: Pull and Start PCMT images
   docker_service:
     project_src: /app
     build: no
     pull: yes
+    restarted: yes
     state: present
