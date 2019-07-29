@@ -15,19 +15,14 @@ if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
     exit 1
 fi
 
-SSH_PRIV_KEY_PATH="${HOME}/.ssh/pcmt_id_rsa"
-if [ ! -r "$SSH_PRIV_KEY_PATH" -a ! -f "$SSH_PRIV_KEY_PATH" ]; then
-    echo "SSH Key $SSH_PRIV_KEY_PATH not accessible"
-    exit 1
-fi
-
 TARGET_IP=$1
 
-docker run -e AWS_ACCESS_KEY_ID \
+docker run --rm \
+    -e AWS_ACCESS_KEY_ID \
     -e AWS_SECRET_ACCESS_KEY \
-    -v $SSH_PRIV_KEY_PATH:/root/.ssh/id_rsa:ro \
+    -v pcmt-ssh-key:/tmp/.ssh \
     pcmt/ansible ansible-playbook \
-        -vvvv \
+        -v \
         -i inventory playbook.yml \
         -e ansible_ssh_user=ubuntu \
         --limit $TARGET_IP
