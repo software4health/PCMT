@@ -1,30 +1,54 @@
-# Terraform
+# Infrastructure as Code
 
-### Destroy instance: 
+This stack includes:
+- Terraform for provisioning cloud resources (compute, network, etc)
+- Ansible for configuration management (installing docker, PCMT, etc)
+- Docker for using Terraform and Ansible (recommended).
 
+## Requirements
+
+- Docker (19.09+)
+- Docker-Compose (1.23.2+)
+- Terraform (optional, recommended use is through Docker)
+- Ansible (optional, recommended use is through Docker)
+
+## Settings
+
+The following environment variables are available:
+
+- `AWS_ACCESS_KEY_ID`: The AWS key for Terraform to use.
+- `AWS_SECRET_ACCESS_KEY`: The AWS key for Terraform to use.
+- `SSH_PRIV_KEY_PATH`: path to the SSH key that Ansible will need to configure
+  the instance.
+- `PCMR_PROFILE`: Profile as documented in PCMT's `settings.env`.
+
+
+## Quick Start
+
+The recommended useage is through running docker containers which hold PCMT's
+Terraform and Ansible configurations.  A helper script `run-docker.sh` is
+included to streamline this interaction.
+
+The command's format is: `./run-docker.sh <env-name> <terraform command>`
+
+__Example__: show the plan for the `cd-test` environment:
+```bash
+export AWS_ACCESS_KEY_ID=<insert>
+export AWS_SECRET_ACCESS_KEY=<insert>
+export SSH_PRIV_KEY_PATH=$HOME/.ssh/id_rsa
+export PCMT_PROFILE=production
+
+./run-docker.sh cd-test plan
 ```
-cd <env>
-terraform destroy -target module.pcmt.aws_instance.app
+
+__Example__: create/update the `cd-test` env, and clear the database:
+
+```bash
+PCMT_PROFILE=dev ./run-docker.sh cd-test apply -auto-approve
 ```
 
-### Taint, so that app is re-deployed (destructive):
+__Example__: destroy the `cd-test` environment
 
+```bash
+SSH_PRIV_KEY_PATH=$HOME/.ssh/id_rsa ./run-docker.sh cd-test destroy -auto-approve
 ```
-cd <env>
-terraform taint module.pcmt.null_resource.deploy-docker
-terraform apply
-```
-Note:  if the module can't be found durring `terraform taint` then run
-`terraform state list` and copy the one that ends in `docker-deploy`, using
-it in the `terraform taint` command.
-
-
-## Not used
-
-- Not using `aws_key_pair` as using this resource in TF results in the key-pair
-  either forcing the key-pair to be recreated if not manually imported, and
-  will also break between different environments where taking one down will
-  try to remove the key pair.  Not using until this [bug][aws_key_pair_bug] is 
-  resolved.
-
-[aws_key_pair_bug]: https://github.com/terraform-providers/terraform-provider-aws/issues/1092
