@@ -73,7 +73,7 @@ dev (KEEP DB):
   variables:
     PCMT_PROFILE: production
 
-.deploy cd-test: &deploy_cd-test
+.cd-test: &cd-test_job
   stage: deploy
   only:
     - master@pcmt/pcmt
@@ -81,15 +81,28 @@ dev (KEEP DB):
   environment:
     name: cd-test
     url: http://cd-test.pcmt.villagereach.org
-  script:
+    on_stop: cd-test-destroy
+
+.cd-test_script-deploy:
+  script: &cd-test_script-deploy
     - ./deploy/terraform/run-docker.sh cd-test apply -auto-approve
+    
+.cd-test_script-destroy:
+  script: &cd-test_script-destroy
+    - ./deploy/terraform/run-docker.sh cd-test destroy -auto-approve
 
 cd-test (WIPE DB):
-  <<: *deploy_cd-test
+  <<: *cd-test_job
   variables:
     PCMT_PROFILE: dev
+  script: *cd-test_script-deploy
 
 cd-test (KEEP DB):
-  <<: *deploy_cd-test
+  <<: *cd-test_job
   variables:
     PCMT_PROFILE: production
+  script: *cd-test_script-deploy
+
+cd-test-destroy:
+  <<: *cd-test_job
+  script: *cd-test_script-destroy
