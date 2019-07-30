@@ -106,3 +106,6 @@ cd-test (KEEP DB):
 cd-test-destroy:
   <<: *cd-test_job
   script: *cd-test_script-destroy
+  environment:
+    name: cd-test
+    action: stop
