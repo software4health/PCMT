@@ -63,7 +63,7 @@ deploy dev:
   script:
     - ./deploy/terraform/run-docker.sh dev apply -auto-approve
 
-deploy cd-test:
+.deploy cd-test: &deploy_cd-test
   stage: deploy
   only:
     - master@pcmt/pcmt
@@ -73,3 +73,13 @@ deploy cd-test:
     url: http://cd-test.pcmt.villagereach.org
   script:
     - ./deploy/terraform/run-docker.sh cd-test apply -auto-approve
+
+deploy cd-test (WIPE DB):
+  <<: *deploy_cd-test
+  variables:
+    PCMT_PROFILE: dev
+
+deploy cd-test (KEEP DB):
+  <<: *deploy_cd-test
+  variables:
+    PCMT_PROFILE: production
