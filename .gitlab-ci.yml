@@ -52,7 +52,7 @@ terraform docker build:
     - ./build.sh
     - docker push pcmt/terraform:latest
 
-deploy dev:
+.deploy dev: &deploy_dev
   stage: deploy
   only:
     - master@pcmt/pcmt
@@ -62,6 +62,16 @@ deploy dev:
     url: http://dev.pcmt.villagereach.org
   script:
     - ./deploy/terraform/run-docker.sh dev apply -auto-approve
+
+deploy dev (WIPE DB):
+  <<: *deploy_dev
+  variables:
+    PCMT_PROFILE: dev
+
+deploy dev (KEEP DB):
+  <<: *deploy_dev
+  variables:
+    PCMT_PROFILE: production
 
 .deploy cd-test: &deploy_cd-test
   stage: deploy
