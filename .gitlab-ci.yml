@@ -63,12 +63,12 @@ terraform docker build:
   script:
     - ./deploy/terraform/run-docker.sh dev apply -auto-approve
 
-deploy dev (WIPE DB):
+dev (WIPE DB):
   <<: *deploy_dev
   variables:
     PCMT_PROFILE: dev
 
-deploy dev (KEEP DB):
+dev (KEEP DB):
   <<: *deploy_dev
   variables:
     PCMT_PROFILE: production
@@ -84,12 +84,12 @@ deploy dev (KEEP DB):
   script:
     - ./deploy/terraform/run-docker.sh cd-test apply -auto-approve
 
-deploy cd-test (WIPE DB):
+cd-test (WIPE DB):
   <<: *deploy_cd-test
   variables:
     PCMT_PROFILE: dev
 
-deploy cd-test (KEEP DB):
+cd-test (KEEP DB):
   <<: *deploy_cd-test
   variables:
     PCMT_PROFILE: production
