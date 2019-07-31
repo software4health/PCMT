@@ -11,3 +11,4 @@ Catalog Management Tool (PCMT).
 1. [Containerization with Docker and Docker Compose](adr-002.md)
 1. [Cloud Provisioning through Terraform](adr-003.md)
 1. [Compute Provisioning through Ansible](adr-004.md)
+1. [Build PCMT from the Akeneo PIM Community Edition](adr-005.md)
