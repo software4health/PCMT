@@ -12,3 +12,4 @@ Catalog Management Tool (PCMT).
 1. [Cloud Provisioning through Terraform](adr-003.md)
 1. [Compute Provisioning through Ansible](adr-004.md)
 1. [Build PCMT from the Akeneo PIM Community Edition](adr-005.md)
+1. [Open Source License and IP](adr-006.md)
