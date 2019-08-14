@@ -15,6 +15,7 @@ licensed under the [NP-OSL v3][np-osl] and the [CC BY-SA 4.0][cc-by-sa].
 
 - [PCMT License & Copyright][pcmt-license]
 - [Architecture Decision](./doc/arch/adr-006.md)
+- [License How-to](./doc/license-howto.md)
 - TODO: Contribution guide
 
 PCMT includes a derivative work of Akeneo PIM Community Edition which is
