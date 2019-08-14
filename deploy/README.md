@@ -52,3 +52,6 @@ __Example__: destroy the `cd-test` environment
 ```bash
 SSH_PRIV_KEY_PATH=$HOME/.ssh/id_rsa ./run-docker.sh cd-test destroy -auto-approve
 ```
+
+---
+Copyright (c) 2019, VillageReach.  Licensed CC BY-SA 4.0:  https://creativecommons.org/licenses/by-sa/4.0/

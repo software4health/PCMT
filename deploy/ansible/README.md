@@ -39,3 +39,6 @@ built, and pull it with `docker pull pcmt/ansible`.
 
 1. Install a specific version, or specific branch.
 1. Use a specific configuration, perhaps a local one for testing.
+
+---
+Copyright (c) 2019, VillageReach.  Licensed CC BY-SA 4.0:  https://creativecommons.org/licenses/by-sa/4.0/

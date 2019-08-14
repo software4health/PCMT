@@ -1,3 +1,9 @@
+######################################################################
+# Copyright (c) 2019, VillageReach
+# Licensed under the Non-Profit Open Software License version 3.0.
+# SPDX-License-Identifier: NPOSL-3.0
+######################################################################
+
 ARG PCMT_REG=pcmt
 FROM ${PCMT_REG}/pcmt AS pim
 FROM node:10-slim AS node

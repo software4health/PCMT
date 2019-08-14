@@ -56,3 +56,6 @@ it in the `terraform taint` command.
   resolved.
 
 [aws_key_pair_bug]: https://github.com/terraform-providers/terraform-provider-aws/issues/1092
+
+---
+Copyright (c) 2019, VillageReach.  Licensed CC BY-SA 4.0:  https://creativecommons.org/licenses/by-sa/4.0/

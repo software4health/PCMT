@@ -1,3 +1,9 @@
+######################################################################
+# Copyright (c) 2019, VillageReach
+# Licensed under the Non-Profit Open Software License version 3.0.
+# SPDX-License-Identifier: NPOSL-3.0
+######################################################################
+
 FROM akeneo/fpm:php-7.2
 LABEL maintainer="josh.zamor@villagereach.org"
 ARG AKENEO_URL=https://github.com/akeneo/pim-community-standard/archive/

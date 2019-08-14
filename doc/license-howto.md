@@ -52,3 +52,6 @@ Copyright (c) 2019, VillageReach.  Licensed CC BY-SA 4.0:  https://creativecommo
 The full URL of the license should always be visible.
 
 [spdx-using]: https://spdx.org/using-spdx-license-identifier
+
+---
+Copyright (c) 2019, VillageReach.  Licensed CC BY-SA 4.0:  https://creativecommons.org/licenses/by-sa/4.0/

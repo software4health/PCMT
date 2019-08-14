@@ -1,3 +1,9 @@
+######################################################################
+# Copyright (c) 2019, VillageReach
+# Licensed under the Non-Profit Open Software License version 3.0.
+# SPDX-License-Identifier: NPOSL-3.0
+######################################################################
+
 resource "aws_route53_record" "main" {
   zone_id = "${var.route53-zone-id}"
   name    = "${var.domain-name}"

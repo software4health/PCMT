@@ -29,3 +29,6 @@ copyrighted and licensed from Akeneo SAS:
 [pcmt-license]: ./COPYRIGHT.md
 [akeneo-license]: https://github.com/akeneo/pim-community-standard/blob/master/LICENCE.txt
 [akeneo-source]: https://github.com/akeneo/pim-community-standard
+
+---
+Copyright (c) 2019, VillageReach.  Licensed CC BY-SA 4.0:  https://creativecommons.org/licenses/by-sa/4.0/

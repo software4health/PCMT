@@ -1,3 +1,9 @@
+######################################################################
+# Copyright (c) 2019, VillageReach
+# Licensed under the Non-Profit Open Software License version 3.0.
+# SPDX-License-Identifier: NPOSL-3.0
+######################################################################
+
 output "vpc-subnet-id" {
   value       = module.vpc.public_subnets[0]
   description = "Id of the first subnet of the VPC"
