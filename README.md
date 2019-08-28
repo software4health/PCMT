@@ -30,5 +30,36 @@ copyrighted and licensed from Akeneo SAS:
 [akeneo-license]: https://github.com/akeneo/pim-community-standard/blob/master/LICENCE.txt
 [akeneo-source]: https://github.com/akeneo/pim-community-standard
 
+## Quick Start
+
+1. Clone Repository
+1. `PCMT_PROFILE=dev docker-compose up -d`
+1. Browse to `localhost`
+1. Login with `admin` / `admin`.
+
+To stop & cleanup:  `docker-compose down -v`.
+
+## Development
+
+1. Clone Repository
+1. `./dev.sh`
+1. Wait for environment to start, it'll look like:
+      ```
+      fpm_1            | Fixtures fixtures_product_csv has been successfully executed.
+      fpm_1            |
+      fpm_1            | Delete jobs for fixtures.
+      fpm_1            | Versioning is already up to date.
+      fpm_1            | Consumer name: "e1f04492-5ced-4b95-948c-fd245cf3fd97"
+      ```
+
+1. In another shell: `docker-compose run --rm node yarn webpack`
+1. Browse to `localhost`
+1. Login with `admin` / `admin`.
+
+Notes:
+- As local files in `pim/` are updated, the containers will reflect it.
+- `./ddev.sh exec fpm bash` will start a shell with access to Akeneo tools such 
+    as `bin/console`.
+
 ---
 Copyright (c) 2019, VillageReach.  Licensed CC BY-SA 4.0:  https://creativecommons.org/licenses/by-sa/4.0/

@@ -1,0 +1,124 @@
+################################################################################
+# Copyright (c) 2013, Akeneo SAS
+# Copyright (c) 2019, VillageReach
+# Licensed under the Open Software License version 3.0 AND Non-Profit Open 
+# Software License version 3.0.
+# SPDX-License-Identifier: NPOSL-3.0 AND OSL-3.0
+################################################################################
+
+imports:
+    - { resource: '../../vendor/akeneo/pim-community-dev/src/Akeneo/Platform/config/pim.yml' }
+    - { resource: pim_parameters.yml }
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+
+framework:
+    translator:      { fallback: en_US }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: "%kernel.debug%"
+    form:            true
+    csrf_protection: true
+    validation:
+        enable_annotations: true
+        enabled: true
+    templating:      { engines: ['twig', 'php'] } #assets_version: SomeVersionScheme
+    default_locale:  "%locale%"
+    session:
+        name:                 BAPID
+        handler_id:           session.handler.pdo
+        gc_maxlifetime:       3600
+    fragments:
+        enabled:              true
+        path:                 /_fragment # used for controller action in template
+    serializer:
+        enabled:              true
+    http_method_override: true
+    assets:
+        packages:
+            frontend:
+                version_strategy: pim_enrich.version_strategy
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    globals:
+        uservoice_key: "%uservoice_key%"
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport:                "%mailer_transport%"
+    host:                     "%mailer_host%"
+    port:                     "%mailer_port%"
+    encryption:               "%mailer_encryption%"
+    username:                 "%mailer_user%"
+    password:                 "%mailer_password%"
+    spool:                    { type: memory }
+
+akeneo_pim_structure:
+    reference_data:
+        AdditionalTradeItemClassificationCodeListCode:
+            class: Pcmt\Bundle\Entity\AdditionalTradeItemClassificationCodeListCode
+            type: simple
+        AdditionalTradeItemIdentificationTypeCode:
+            class: Pcmt\Bundle\Entity\AdditionalTradeItemIdentificationTypeCode
+            type: simple
+        ColourCodeListCode:
+            class: Pcmt\Bundle\Entity\ColourCodeListCode
+            type: simple
+        CountryCode:
+            class: Pcmt\Bundle\Entity\CountryCode
+            type: simple
+        DataCarrierTypeCode:
+            class: Pcmt\Bundle\Entity\DataCarrierTypeCode
+            type: simple
+        RouteAdministration:
+            class: Pcmt\Bundle\Entity\RouteAdministration
+            type: simple
+        GDSNMeasurementUnitCode:
+            class: Pcmt\Bundle\Entity\GDSNMeasurementUnitCode
+            type: simple
+        Gs1TradeItemIdentificationKeyCode:
+            class: Pcmt\Bundle\Entity\Gs1TradeItemIdentificationKeyCode
+            type: simple
+        ImportClassificationTypeCode:
+            class: Pcmt\Bundle\Entity\ImportClassificationTypeCode
+            type: simple
+        LanguageCode:
+            class: Pcmt\Bundle\Entity\LanguageCode
+            type: simple
+        NonfoodIngredientOfConcernCode:
+            class: Pcmt\Bundle\Entity\NonfoodIngredientOfConcernCode
+            type: simple
+        PackageTypeCode:
+            class: Pcmt\Bundle\Entity\PackageTypeCode
+            type: simple
+        PlatformTypeCode:
+            class: Pcmt\Bundle\Entity\PlatformTypeCode
+            type: simple
+        ReferencedFileTypeCode:
+            class: Pcmt\Bundle\Entity\ReferencedFileTypeCode
+            type: simple
+        RegulationTypeCode:
+            class: Pcmt\Bundle\Entity\RegulationTypeCode
+            type: simple
+        ShippingContainerTypeCode:
+            class: Pcmt\Bundle\Entity\ShippingContainerTypeCode
+            type: simple
+        SizeCodeListCode:
+            class: Pcmt\Bundle\Entity\SizeCodeListCode
+            type: simple
+        TemperatureQualifierCode:
+            class: Pcmt\Bundle\Entity\TemperatureQualifierCode
+            type: simple
+        TradeItemUnitDescriptorCode:
+            class: Pcmt\Bundle\Entity\TradeItemUnitDescriptorCode
+            type: simple
+
+parameters:
+    pim_ce_dev_src_folder_location: '%kernel.project_dir%/vendor/akeneo/pim-community-dev'
+
+
+

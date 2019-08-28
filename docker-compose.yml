@@ -1,3 +1,9 @@
+######################################################################
+# Copyright (c) 2019, VillageReach
+# Licensed under the Non-Profit Open Software License version 3.0.
+# SPDX-License-Identifier: NPOSL-3.0
+######################################################################
+
 version: '3'
 services:
   fpm:
@@ -12,8 +18,6 @@ services:
 
   httpd:
     image: '${PCMT_REG}/httpd'
-    depends_on:
-      - 'fpm'
     ports:
       - '${DOCKER_PORT_HTTP:-80}:80'
     networks:

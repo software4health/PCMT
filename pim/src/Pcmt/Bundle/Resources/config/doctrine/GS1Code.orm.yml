@@ -1,0 +1,44 @@
+Pcmt\Bundle\Entity\GS1Code:
+    type: entity
+    inheritanceType: SINGLE_TABLE
+    discriminatorColumn:
+        name: type
+        type: string
+    table: pcmt_reference_data_gs1_codes
+    changeTrackingPolicy: DEFERRED_EXPLICIT
+    repositoryClass: Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        sortOrder:
+            type: integer
+        listName:
+            type: string
+            nullable: false
+        code:
+            type: string
+            unique: true
+            nullable: false
+        name:
+            type: string
+            nullable: false
+        definition:
+            type: string
+            nullable: true
+        changeDate:
+            type: datetime
+            nullable: true
+        version:
+            type:integer
+            nullable: true
+        status:
+            type: integer
+            default: 1
+            nullable: false
+    uniqueConstraints:
+        search_idx:
+            columns: [ name, listName, code ]
+    lifecycleCallbacks: { }

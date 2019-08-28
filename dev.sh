@@ -1,15 +1,15 @@
-#!/bin/sh
+#!/bin/bash
 ######################################################################
 # Copyright (c) 2019, VillageReach
 # Licensed under the Non-Profit Open Software License version 3.0.
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
-AKENEO_VER="v3.1.10"
-PCMT_REG=${1:-"pcmt"}
+function cleanup() {
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
+}
+trap cleanup EXIT
 
-docker build -f pim/Dockerfile \
-    -t $PCMT_REG/pcmt \
-    --build-arg AKENEO_VER=${AKENEO_VER} \
-    pim/
-docker build -f httpd/Dockerfile -t $PCMT_REG/httpd httpd/
+PCMT_PROFILE=dev docker-compose -f docker-compose.yml \
+    -f docker-compose.dev.yml \
+    up

@@ -1,0 +1,5 @@
+config:
+    paths:
+        pcmt_csv_exporter_module: pcmtenrich/js/product/form/export-csv
+        pcmt_csv_exporter_template: pcmtenrich/templates/product/export-csv.html
+        pcmt/product-edit-form/packages: pcmtenrich/js/product/form/packages
