@@ -1,0 +1,3 @@
+Pcmt\Bundle\Entity\SizeCodeListCode:
+    type: entity
+    repositoryClass: Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository

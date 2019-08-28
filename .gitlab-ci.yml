@@ -29,8 +29,8 @@ pim docker build:
     changes:
       - docker/**/*
   script: 
-    - cd docker
-    - "./build-images.sh pcmt"
+    - cd pim
+    - "./build-images.sh"
     - docker push pcmt/pcmt:latest
     - docker push pcmt/httpd:latest
 
@@ -58,6 +58,8 @@ terraform docker build:
     - ./build.sh
     - docker push pcmt/terraform:latest
 
+############### Dev Environment ###############
+
 .deploy dev: &deploy_dev
   stage: deploy
   only:
@@ -78,6 +80,8 @@ dev (KEEP DB):
   <<: *deploy_dev
   variables:
     PCMT_PROFILE: production
+
+############### CD-TEST Environment ###############
 
 .cd-test: &cd-test_job
   stage: deploy
@@ -114,4 +118,45 @@ cd-test-destroy:
   script: *cd-test_script-destroy
   environment:
     name: cd-test
+    action: stop
+
+############### Staging Environment ###############
+
+.staging: &staging_job
+  stage: deploy
+  only:
+    refs:
+      - master@pcmt/pcmt
+    changes:
+      - pim/**/*
+  environment:
+    name: staging
+    url: http://staging.pcmt.villagereach.org
+    on_stop: staging-destroy
+
+.staging_script-deploy:
+  script: &staging_script-deploy
+    - ./deploy/terraform/run-docker.sh staging apply -auto-approve
+    
+.staging_script-destroy:
+  script: &staging_script-destroy
+    - ./deploy/terraform/run-docker.sh staging destroy -auto-approve
+
+staging (WIPE DB):
+  <<: *staging_job
+  variables:
+    PCMT_PROFILE: dev
+  script: *staging_script-deploy
+
+staging (KEEP DB):
+  <<: *staging_job
+  variables:
+    PCMT_PROFILE: production
+  script: *staging_script-deploy
+
+staging-destroy:
+  <<: *staging_job
+  script: *staging_script-destroy
+  environment:
+    name: staging 
     action: stop

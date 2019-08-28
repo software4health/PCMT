@@ -17,11 +17,15 @@ if [ ! -z "$PCMT_PROFILE" ]; then
 fi
 echo "Running PCMT with profile: $profile"
 
+source cpFromTmp.sh
+
 ./wait.sh mysql 3306
 ./wait.sh elasticsearch 9200
 
 shopt -s nocasematch
-if [[ "production" != $profile ]]; then
+phpArgs="-F"
+if [ "production" != $profile ]; then
+    #phpArgs=""
     bin/console --env=prod pim:install --force --symlink --clean
 else 
     bin/console --env=prod pim:installer:prepare-required-directories
@@ -31,4 +35,4 @@ fi
 
 bin/console --env=prod akeneo:batch:job-queue-consumer-daemon &
 
-sudo php-fpm7.2 -F
+sudo php-fpm7.2 $phpArgs

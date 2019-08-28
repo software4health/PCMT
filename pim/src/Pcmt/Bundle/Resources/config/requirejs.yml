@@ -1,0 +1,4 @@
+config:
+    paths:
+        locale_logger: pcmt/js/locale_logger  #module name: web/bundles/pcmt/js/locale_logger, this module will be moved there during assets:install
+        logger_test_view: pcmt/js/logger_test_view

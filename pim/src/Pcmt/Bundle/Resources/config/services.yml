@@ -1,0 +1,26 @@
+services:
+
+  Pcmt\Bundle\Command\PcmtHelperCommand:
+    autowire: true
+    tags:
+      - { name: 'console.command', command: 'pcmt:command' }
+
+  Pcmt\Bundle\Command\PcmtGenerateRefDataCommand:
+    autowire: true
+    tags:
+      - { name: 'console.command', command: 'pcmt:generate-ref-data' }
+
+  Pcmt\Bundle\Command\PcmtCreateAttributeForRefDataCommand:
+    autowire: true
+    tags:
+      - { name: 'console.command', command: 'pcmt:generate-ref-data-attr' }
+
+  Pcmt\Bundle\Command\PcmtCreateAllAttributes:
+    autowire: true
+    tags:
+      - { name: 'console.command', command: 'pcmt:generate-ref-data-attr-all' }
+
+  Pcmt\Bundle\Command\PcmtAssignAttributesToFamily:
+    autowire: true
+    tags:
+      - { name: 'console.command', command: 'pcmt:assign-attr-to-family-all' }

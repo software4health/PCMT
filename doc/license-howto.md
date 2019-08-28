@@ -17,8 +17,20 @@ Licensed under the Non-Profit Open Software License version 3.0.
 SPDX-License-Identifier: NPOSL-3.0
 ```
 
+For files from Akeneo CE PIM modified for use in PCMT (in PCMT), we should
+mark a dual copyright and license:
+
+```
+Copyright (c) 2013, Akeneo SAS
+Copyright (c) 2019, VillageReach
+Licensed under the Open Software License version 3.0 AND Non-Profit Open 
+Software License version 3.0.
+SPDX-License-Identifier: NPOSL-3.0 AND OSL-3.0
+```
+
 ### Markdown, YAML, Terraform, Shell etc
 
+PCMT:
 ```
 ######################################################################
 # Copyright (c) 2019, VillageReach
@@ -27,14 +39,37 @@ SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 ```
 
+PCMT and Akeneo:
+```
+################################################################################
+# Copyright (c) 2013, Akeneo SAS
+# Copyright (c) 2019, VillageReach
+# Licensed under the Open Software License version 3.0 AND Non-Profit Open 
+# Software License version 3.0.
+# SPDX-License-Identifier: NPOSL-3.0 AND OSL-3.0
+################################################################################
+```
+
 ### PHP
 
+PCMT:
 ```
 /**********************************************************************
  * Copyright (c) 2019, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
 **********************************************************************/
+```
+
+PCMT and Akeneo:
+```
+/*******************************************************************************
+ * Copyright (c) 2013, Akeneo SAS
+ * Copyright (c) 2019, VillageReach
+ * Licensed under the Open Software License version 3.0 AND Non-Profit Open 
+ * Software License version 3.0.
+ * SPDX-License-Identifier: NPOSL-3.0 AND OSL-3.0
+*******************************************************************************/
 ```
 
 ## Documentation
