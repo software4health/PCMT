@@ -29,7 +29,7 @@ pim docker build:
     refs:
       - master@pcmt/pcmt
     changes:
-      - docker/**/*
+      - pim/**/*
   script: 
     - cd pim
     - "./build-images.sh"
