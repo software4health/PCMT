@@ -129,43 +129,43 @@ cd-test-destroy:
     name: cd-test
     action: stop
 
-############### Staging Environment ###############
+############### Test Environment ###############
 
-.staging: &staging_job
+.test: &test_job
   stage: deploy
   only:
     refs:
       - master@pcmt/pcmt
     changes:
       - pim/**/*
-  environment:
-    name: staging
-    url: http://staging.pcmt.villagereach.org
-    on_stop: staging-destroy
-
-.staging_script-deploy:
-  script: &staging_script-deploy
-    - ./deploy/terraform/run-docker.sh staging apply -auto-approve
-    
-.staging_script-destroy:
-  script: &staging_script-destroy
-    - ./deploy/terraform/run-docker.sh staging destroy -auto-approve
-
-staging (WIPE DB):
-  <<: *staging_job
   variables:
     PCMT_PROFILE: dev
-  script: *staging_script-deploy
-
-staging (KEEP DB):
-  <<: *staging_job
-  variables:
-    PCMT_PROFILE: production
-  script: *staging_script-deploy
-
-staging-destroy:
-  <<: *staging_job
-  script: *staging_script-destroy
   environment:
-    name: staging 
+    name: test
+    url: http://test.pcmt.villagereach.org
+    on_stop: test-destroy
+
+.test_script-deploy:
+  script: &test_script-deploy
+    - ./deploy/terraform/run-docker.sh test apply -auto-approve
+    
+.test_script-destroy:
+  script: &test_script-destroy
+    - ./deploy/terraform/run-docker.sh test destroy -auto-approve
+
+test (on git push):
+  <<: *test_job
+  script: *test_script-deploy
+
+test (manual):
+  <<: *test_job
+  script: *test_script-deploy
+  when: manual
+
+test-destroy:
+  <<: *test_job
+  script: *test_script-destroy
+  when: manual
+  environment:
+    name: test 
     action: stop
