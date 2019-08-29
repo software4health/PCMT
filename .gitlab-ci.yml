@@ -23,18 +23,25 @@ before_script:
   - docker info
   - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
 
-pim docker build:
+.pim_docker_build:
   stage: build
-  only:
-    refs:
-      - master@pcmt/pcmt
-    changes:
-      - pim/**/*
   script: 
     - cd pim
     - "./build-images.sh"
     - docker push pcmt/pcmt:latest
     - docker push pcmt/httpd:latest
+
+pim docker build (on git push):
+  extends: .pim_docker_build
+  only:
+    refs:
+      - master@pcmt/pcmt
+    changes:
+      - pim/**/*
+
+pim docker build (manual retry):
+  extends: .pim_docker_build
+  when: manual
 
 ansible docker build:
   stage: build
