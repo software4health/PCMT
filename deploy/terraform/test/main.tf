@@ -7,7 +7,7 @@
 terraform {
   backend "s3" {
     bucket = "pcmt-terraform-states"
-    key    = "pcmt-staging.tf"
+    key    = "pcmt-test.tf"
     region = "eu-west-1"
   }
 }
@@ -25,7 +25,7 @@ data "terraform_remote_state" "pcmt-network-dev" {
   }
 }
 
-module "staging" {
+module "test" {
   source = "../modules/pcmt"
 
   aws-region              = "${var.aws-region}"
