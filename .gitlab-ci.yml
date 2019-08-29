@@ -133,11 +133,6 @@ cd-test-destroy:
 
 .test: &test_job
   stage: deploy
-  only:
-    refs:
-      - master@pcmt/pcmt
-    changes:
-      - pim/**/*
   variables:
     PCMT_PROFILE: dev
   environment:
@@ -155,6 +150,11 @@ cd-test-destroy:
 
 test (on git push):
   <<: *test_job
+  only:
+    refs:
+      - master@pcmt/pcmt
+    changes:
+      - pim/**/*
   script: *test_script-deploy
 
 test (manual):
