@@ -36,7 +36,7 @@ ADD --chown=docker:docker docker/pim/parameters.yml /srv/pim/app/config/
 
 USER docker
 WORKDIR /srv/pim    
-RUN php -d memory_limit=3G /usr/local/bin/composer update && \
+RUN php -d memory_limit=3G /usr/local/bin/composer install && \
     rm -rf var/cache/*
 CMD /srv/pim/start.sh
 
