@@ -8,11 +8,11 @@ version: "3.0"
 services: 
   fpm:
     volumes:
-      - "pim:/srv/pim"
-      - "./pim/src:/srv/pim/src:ro"
-      - "./pim/app:/tmp/pcmt/app:ro"
-      - "./pim/composer.json:/srv/pim/composer.json:ro"
-      - "./pim/composer.lock:/srv/pim/composer.lock:rw"
+      - 'pim:/srv/pim'
+      - './pim/src:/srv/pim/src:ro'
+      - './pim/app:/tmp/pcmt/app:ro'
+      - './pim/composer.json:/srv/pim/composer.json:ro'
+      - './pim/composer.lock:/srv/pim/composer.lock:rw'
     entrypoint: ["/srv/pim/start.sh"]
     depends_on:
       - mysql
@@ -25,13 +25,14 @@ services:
     user: 'node'
     volumes:
       - 'pim:/srv/pim'
+      - './pim/src:/srv/pim/src:ro'
     working_dir: '/srv/pim'
     networks:
      - akeneo
 
   httpd:
     volumes:
-      - "pim:/srv/pim"
+      - 'pim:/srv/pim'
 
 volumes:
   pim:
