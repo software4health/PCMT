@@ -23,9 +23,7 @@ source cpFromTmp.sh
 ./wait.sh elasticsearch 9200
 
 shopt -s nocasematch
-phpArgs="-F"
 if [ "production" != $profile ]; then
-    #phpArgs=""
     bin/console --env=prod pim:install --force --symlink --clean
 else 
     bin/console --env=prod pim:installer:prepare-required-directories
@@ -35,4 +33,4 @@ fi
 
 bin/console --env=prod akeneo:batch:job-queue-consumer-daemon &
 
-sudo php-fpm7.2 $phpArgs
+sudo php-fpm7.2 -F
