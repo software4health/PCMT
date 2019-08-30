@@ -8,7 +8,7 @@
 if [ -d "/tmp/pcmt" ]; then
     echo Found /tmp/pcmt, copying into pim...
     cp -rfv /tmp/pcmt/* /srv/pim/
-    composer update
+    composer install
 else
     echo /tmp/pcmt not found, ignoring.
 fi
