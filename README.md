@@ -52,7 +52,7 @@ To stop & cleanup:  `docker-compose down -v`.
       fpm_1            | Consumer name: "e1f04492-5ced-4b95-948c-fd245cf3fd97"
       ```
 
-1. In another shell: `docker-compose run --rm node yarn webpack`
+1. In another shell: `./ddev.sh run --rm node yarn webpack`
 1. Browse to `localhost`
 1. Login with `admin` / `admin`.
 
