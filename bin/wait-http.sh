@@ -5,11 +5,11 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
-function cleanup() {
-    docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
-}
-trap cleanup EXIT
+URL=$1
 
-PCMT_PROFILE=dev docker-compose -f docker-compose.yml \
-    -f docker-compose.dev.yml \
-    up
+echo "Waiting for $URL..."
+until $(curl --output /dev/null --silent --head --fail "$URL"); do
+    printf '.'
+    sleep 5
+done
+echo "... $URL is up"

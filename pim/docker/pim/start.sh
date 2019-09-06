@@ -28,7 +28,7 @@ if [ "production" != $profile ]; then
 else 
     bin/console --env=prod pim:installer:prepare-required-directories
     bin/console --env=prod pim:installer:check-requirements
-    bin/console --env=prod pim:installer:assets --symlink --clean
+    bin/console --env=prod pim:installer:assets --symlink
 fi
 
 bin/console --env=prod akeneo:batch:job-queue-consumer-daemon &
