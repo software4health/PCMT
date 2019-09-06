@@ -21,11 +21,16 @@ dev-stop:
 
 .PHONY: dev-clean
 dev-clean:
+	rm -rf pim/vendor
 	./ddev.sh down -v
 
 .PHONY: dev-assets
 dev-assets:
 	bin/install-assets.sh
+
+.PHONY: dev-cp-vendor
+dev-cp-vendor:
+	docker cp -L pcmt_fpm_1:/srv/pim/vendor ./pim/vendor
 
 .PHONY: dev-fpm
 dev-fpm:
