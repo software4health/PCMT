@@ -55,6 +55,9 @@ To stop & cleanup:  `docker-compose down -v`.
 Notes:
 - As local files in `pim/` are updated, the containers will reflect it.
 - Run `make dev-assets` to regenerate web assets (e.g. less, js, etc).
+- To see the vendor dependencies, run `make dev-cp-vendor` after `make dev-up`,
+    which will copy these files from the container to `pim/vendor`.  These files
+    are simply copied, not synchronized so don't edit them directly.
 - `make dev-fpm` will start a shell with access to Akeneo tools such 
     as `bin/console`.
 
