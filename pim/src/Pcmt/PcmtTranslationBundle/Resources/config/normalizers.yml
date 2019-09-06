@@ -1,0 +1,2 @@
+parameters:
+  pim_catalog.normalizer.standard.translation.class: Pcmt\PcmtTranslationBundle\Normalizer\Standard\TranslationNormalizer

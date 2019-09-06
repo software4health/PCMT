@@ -120,5 +120,17 @@ akeneo_pim_structure:
 parameters:
     pim_ce_dev_src_folder_location: '%kernel.project_dir%/vendor/akeneo/pim-community-dev'
 
+doctrine:
+    orm:
+        auto_generate_proxy_classes:  true # <- change to true
+        proxy_dir:            '%kernel.cache_dir%/doctrine/orm/Proxies'
+        proxy_namespace:      Proxies
 
-
+akeneo_storage_utils:
+    mapping_overrides:
+        -
+            original: Akeneo\Pim\Structure\Component\Model\Attribute
+            override: Pcmt\PcmtAttributeBundle\Entity\Attribute
+        -
+            original: Akeneo\Pim\Structure\Component\Model\AttributeTranslation
+            override: Pcmt\PcmtTranslationBundle\Entity\AttributeTranslation

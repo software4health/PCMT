@@ -41,7 +41,7 @@ abstract class GS1Code extends AbstractCustomEntity
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -65,7 +65,7 @@ abstract class GS1Code extends AbstractCustomEntity
     /**
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -73,7 +73,7 @@ abstract class GS1Code extends AbstractCustomEntity
     /**
      * @param string $codeName
      */
-    public function setName(string $codeName): void
+    public function setName(?string $codeName): void
     {
         $this->name = $codeName;
     }

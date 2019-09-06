@@ -11,7 +11,7 @@ use Symfony\Component\Security\Acl\Exception\Exception;
 use Pcmt\Bundle\Helper\GsCodesHelper;
 
 
-class PcmtAssignAttributesToFamily extends ContainerAwareCommand
+class PcmtAssignAttributesToFamilyCommand extends ContainerAwareCommand
 {
   /**
    * run inside terminal in fpm docker: bin/console $defaultName
