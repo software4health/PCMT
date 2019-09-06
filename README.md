@@ -46,8 +46,7 @@ To stop & cleanup:  `docker-compose down -v`.
 1. `make dev-up` to run containers. 
 1. Wait for environment to start, it'll look like:
       ```
-      Waiting for http://localhost...
-      ...... http://localhost is up
+      SUCCESS: PCMT Dev now available at http://localhost
       ```
 
 1. Browse to `localhost`
