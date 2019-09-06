@@ -22,7 +22,7 @@ variable "tag-bill-to" {
 variable "root-volume-size" {
   type        = number
   description = "Size in GB of root volume"
-  default     = "10"
+  default     = "20"
 }
 
 variable "instance-type" {
