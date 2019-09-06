@@ -27,13 +27,17 @@
     "require": {
         "php": ">=7.2.0",
         "akeneo-labs/custom-entity-bundle": "3.0.*",
-        "akeneo/pim-community-dev": "3.2.x-dev@dev"
+        "akeneo/pim-community-dev": "3.2.x-dev@dev",
+        "php-http/guzzle6-adapter": "^2.0",
+        "sabre/xml": "^2.1"
     },
     "require-dev": {
         "doctrine/migrations": "1.5.0",
         "doctrine/doctrine-migrations-bundle": "1.2.1",
         "symfony/profiler-pack": "^1.0",
-        "symfony/maker-bundle": "^1.12"
+        "symfony/maker-bundle": "^1.12",
+        "symfony/phpunit-bridge": "^4.3",
+        "phpunit/phpunit": "^8"
     },
     "scripts": {
         "symfony-scripts": [

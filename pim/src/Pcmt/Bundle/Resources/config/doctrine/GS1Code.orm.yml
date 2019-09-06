@@ -18,15 +18,17 @@ Pcmt\Bundle\Entity\GS1Code:
         listName:
             type: string
             nullable: false
+            unique: false
         code:
             type: string
-            unique: true
+            unique: false
             nullable: false
         name:
             type: string
-            nullable: false
+            nullable: true
         definition:
-            type: string
+            type: text
+            length: 65535
             nullable: true
         changeDate:
             type: datetime
@@ -39,6 +41,8 @@ Pcmt\Bundle\Entity\GS1Code:
             default: 1
             nullable: false
     uniqueConstraints:
-        search_idx:
-            columns: [ name, listName, code ]
+        listname_code_idx:
+            columns:
+                - listName
+                - code
     lifecycleCallbacks: { }

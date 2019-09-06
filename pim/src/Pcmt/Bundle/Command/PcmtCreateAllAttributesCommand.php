@@ -5,13 +5,14 @@ namespace Pcmt\Bundle\Command;
 
 use Pcmt\Bundle\Helper\GsCodesHelper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Acl\Exception\Exception;
 
 
-class PcmtCreateAllAttributes extends ContainerAwareCommand
+class PcmtCreateAllAttributesCommand extends ContainerAwareCommand
 {
   /**
    * run inside terminal in fpm docker: bin/console $defaultName
@@ -30,6 +31,9 @@ class PcmtCreateAllAttributes extends ContainerAwareCommand
       'All Reference Data Attribute Creator',
       '============',
     ]);
+    $bar = new ProgressBar($output, count($codeList));
+    $bar->setFormat("very_verbose");
+    $bar->start();
     foreach ($codeList as $code) {
       // create as Attribute
       try {
@@ -43,8 +47,9 @@ class PcmtCreateAllAttributes extends ContainerAwareCommand
       } catch (Exception $e) {
         $output->writeln($e);
       }
+      $bar->advance();
     }
-    $output->writeln('done');
+    $bar->finish();
   }
 
 }

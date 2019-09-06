@@ -1,0 +1,3 @@
+config:
+    paths:
+        dnd/product-edit-form/attributes/description: pcmtproduct/js/product/form/attributes/description

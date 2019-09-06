@@ -1,0 +1,13 @@
+config:
+    config:
+        pim/controller-registry:
+            defaultController:
+                module: pim/controller/template
+            controllers:
+                pim_enrich_attribute_create:
+                    module: dnd/controller/attribute/create
+    paths:
+        dnd/attribute-edit-form/descriptions/translation: pcmtattribute/js/attribute/form/descriptions/translation
+        dnd/template/form/properties/translation: pcmtattribute/templates/form/properties/translation.html
+        dnd/controller/attribute/create: pcmtattribute/js/controller/attribute/create
+

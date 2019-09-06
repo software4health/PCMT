@@ -15,12 +15,12 @@ services:
     tags:
       - { name: 'console.command', command: 'pcmt:generate-ref-data-attr' }
 
-  Pcmt\Bundle\Command\PcmtCreateAllAttributes:
+  Pcmt\Bundle\Command\PcmtCreateAllAttributesCommand:
     autowire: true
     tags:
       - { name: 'console.command', command: 'pcmt:generate-ref-data-attr-all' }
 
-  Pcmt\Bundle\Command\PcmtAssignAttributesToFamily:
+  Pcmt\Bundle\Command\PcmtAssignAttributesToFamilyCommand:
     autowire: true
     tags:
       - { name: 'console.command', command: 'pcmt:assign-attr-to-family-all' }

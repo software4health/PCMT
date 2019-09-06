@@ -1,0 +1,17 @@
+services:
+
+  pcmt_connector.job.job_parameters.constraint_collection_provider.reference_data_download_xmls:
+    class: Pcmt\Bundle\PcmtConnectorBundle\JobParameters\ConstraintCollectionProvider\XmlReferenceDataDownload
+    arguments:
+      -
+        - 'reference_data_download_xmls'
+    tags:
+      - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
+
+  pcmt_connector.job.job_parameters.constraint_collection_provider.reference_data_import_xmls:
+    class: Pcmt\Bundle\PcmtConnectorBundle\JobParameters\ConstraintCollectionProvider\XmlReferenceDataImport
+    arguments:
+      -
+        - 'reference_data_import_xml'
+    tags:
+      - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
