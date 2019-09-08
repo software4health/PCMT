@@ -29,6 +29,10 @@ services:
     networks:
      - akeneo
 
+  mysql:
+    ports:
+      - '3306:3306'
+
   httpd:
     volumes:
       - 'pim:/srv/pim'
