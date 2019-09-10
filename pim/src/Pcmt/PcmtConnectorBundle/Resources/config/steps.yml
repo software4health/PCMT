@@ -1,0 +1,18 @@
+services:
+
+  pcmt_xml_connector.step.xml_reference_data_download:
+    class: Pcmt\PcmtConnectorBundle\Step\ImportRefDataFiles
+    arguments:
+      - 'import_xml_data_files'
+      - '@event_dispatcher'
+      - '@akeneo_batch.job_repository'
+
+  pcmt_xml_connector.step.xml_reference_data_import:     #one instance of a job will be responsible to parse one file, shell/python script will be instantiating jobs for several files
+    class: Akeneo\Tool\Component\Batch\Step\ItemStep          # and passing serialized filename as a parameter for each job
+    arguments:
+      - 'process'
+      - '@event_dispatcher'
+      - '@akeneo_batch.job_repository'
+      - '@pcmt_connector.reader.xml.reference_data_gs1'
+      - '@pcmt_connector.processor.reference_data'
+      - '@pcmt_connector.write.reference_data'
