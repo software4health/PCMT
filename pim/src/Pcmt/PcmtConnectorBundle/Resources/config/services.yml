@@ -4,7 +4,7 @@ imports:
 
 services:
 
-  Pcmt\Bundle\PcmtConnectorBundle\Command\InitializeReferenceDataImport:
+  Pcmt\PcmtConnectorBundle\Command\InitializeReferenceDataImport:
     autowire: true
     tags:
       - { name: 'console.command', command: 'pcmt:reference_data:create' }

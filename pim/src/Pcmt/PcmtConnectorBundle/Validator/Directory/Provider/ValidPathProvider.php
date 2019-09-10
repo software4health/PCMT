@@ -8,7 +8,7 @@ class ValidPathProvider
     public function getConfig()
     {
         return [
-            'reference_data_files_path' => 'src/Pcmt/Bundle/PcmtConnectorBundle/Resources/config/reference_data'
+            'reference_data_files_path' => 'src/Pcmt/PcmtConnectorBundle/Resources/config/reference_data'
         ];
     }
 }

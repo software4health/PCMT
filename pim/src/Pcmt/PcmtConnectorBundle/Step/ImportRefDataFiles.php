@@ -38,7 +38,7 @@ class ImportRefDataFiles extends AbstractStep
         $directoryValidator->validate('reference_data_files_path', $this->directory);
 
         if(!is_dir($this->directory)){
-            mkdir($this->directory, 0755);
+            mkdir($this->directory, 0775);
         }
 
         foreach ($urls as $url){

@@ -23,7 +23,7 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
 
     public function __construct()
     {
-        $this->dir = 'src/Pcmt/Bundle/PcmtConnectorBundle/Resources/config/';
+        $this->dir = 'src/Pcmt/PcmtConnectorBundle/Resources/config/';
         $directory = new \RecursiveDirectoryIterator($this->dir);
         $iterator = new \RecursiveIteratorIterator($directory);
         $this->fileIterator = new \RegexIterator($iterator, '/^.+\.xml$/i', \RecursiveRegexIterator::ALL_MATCHES);

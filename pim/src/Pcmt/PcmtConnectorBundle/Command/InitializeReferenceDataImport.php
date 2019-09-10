@@ -4,12 +4,11 @@ declare(strict_types=1);
 namespace Pcmt\PcmtConnectorBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Pcmt\Bundle\PcmtConnectorBundle\Exception\InvalidJobConfigurationException;
+use Pcmt\PcmtConnectorBundle\Exception\InvalidJobConfigurationException;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-
 
 class InitializeReferenceDataImport extends ContainerAwareCommand
 {
@@ -51,7 +50,7 @@ class InitializeReferenceDataImport extends ContainerAwareCommand
         $this->executeJobs($output);
     }
 
-    protected function executeJobs(OutputInterface $output) // put the jobs into one queue and execute them consecutively
+    protected function executeJobs(OutputInterface $output): void // put the jobs into one queue and execute them consecutively
     {
         foreach (self::CONSECUTIVE_JOBS as $order => $job){
 
@@ -102,7 +101,7 @@ class InitializeReferenceDataImport extends ContainerAwareCommand
         }
     }
 
-    protected function createJobInstanceFromParameters(array $parameters, OutputInterface $output)
+    protected function createJobInstanceFromParameters(array $parameters, OutputInterface $output): bool
     {
         $command = $this->getApplication()->find('akeneo:batch:create-job');
 
