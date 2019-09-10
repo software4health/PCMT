@@ -1,10 +1,5 @@
 services:
 
-  Pcmt\Bundle\PcmtConnectorBundle\Command\Handler\ConsecutivePcmtJobExecutionHandler:
-    autowire: true
-    tags:
-      - { name: 'console.command', command: 'pcmt:handler:batch_import' }
-
   Pcmt\Bundle\PcmtConnectorBundle\Command\Handler\PcmtReferenceDataDownloadHandler:
     autowire: true
     tags:

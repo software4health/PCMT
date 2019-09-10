@@ -1,9 +1,0 @@
-extensions:
-    #pcmt-product-edit-export-to-csv:
-      #module:  pcmt_csv_exporter_module
-      #parent : pim-product-edit-form
-      #targetZone: buttons
-    pcmt-product-edit-tab-packages:
-        module: pcmt/product-edit-form/packages
-        parent: pim-product-edit-form-column-tabs
-        targetZone: container
