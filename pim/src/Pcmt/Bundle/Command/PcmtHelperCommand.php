@@ -50,41 +50,8 @@ class PcmtHelperCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /**
-         * first check for download job instance, and if not there, create it
-         */
-       $trialCount = 4; //set max trial to create command
-        try{
-            $this->checkIfJobsExist($output, $trialCount);
-        } catch (InvalidJobConfigurationException $exception){
-            $output->writeln($exception->getMessage());
-            die;
-        }
-        /**
-         * then fire up commands consecutively
-         */
-        $this>$this->executeJobs($input, $output);
+
     }
-
-    protected function executeJobs(InputInterface $input, OutputInterface $output) // put the jobs into one queue and execute them consecutively
-    {
-        $executionHandler = new ConsecutivePcmtJobExecutionHandler();
-        $executionHandler->executeJobs($output);
-
-
-        /*foreach (self::CONSECUTIVE_JOBS as $order => $job){
-            $handler =  $this->getApplication()->find($job['handler']);
-            $output->writeln(sprintf('Executing step:  %s', $job['job_execution_handler']));
-
-            $arguments = [
-                'code' => ($job['code']) ?? null,
-                'dirPath' => ($job['dirPath']) ?? null
-            ];
-
-        }
-        $executionHandler->executeJobs($input, $output);*/
-    }
-
 
     private function checkIfJobsExist(OutputInterface $output, int $trialCount)
     {

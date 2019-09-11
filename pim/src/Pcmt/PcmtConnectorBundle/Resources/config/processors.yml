@@ -1,0 +1,11 @@
+services:
+
+  pcmt_connector.processor.reference_data:
+    class: Pcmt\PcmtConnectorBundle\Processor\PcmtReferenceDataProcessor
+    arguments:
+      - '@pim_custom_entity.configuration.registry'
+      - '@doctrine.orm.entity_manager'
+      - '@pim_custom_entity.updater.custom_entity'
+      - '@validator'
+      - '@akeneo_storage_utils.doctrine.object_detacher'
+      - '@pcmt_connector.factory.reference_data'

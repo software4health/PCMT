@@ -1,0 +1,10 @@
+imports:
+  - { resource: steps.yml }
+  - { resource: jobs.yml }
+
+services:
+
+  Pcmt\PcmtConnectorBundle\Command\InitializeReferenceDataImport:
+    autowire: true
+    tags:
+      - { name: 'console.command', command: 'pcmt:reference_data:create' }

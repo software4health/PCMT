@@ -1,0 +1,4 @@
+services:
+  pcmt_connector.reader.xml.reference_data_gs1:
+    class: Pcmt\PcmtConnectorBundle\Reader\File\GS1ReferenceDataXmlReader
+    autowire: true
