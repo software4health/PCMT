@@ -38,8 +38,9 @@ class ReadConfigHelperCommand extends ContainerAwareCommand
                     continue;
                 }
 
-                dump(strtoupper($values['value']['{}name'] . ":"));
-                dump("   symbol: " . $values['value']['{}value']);
+                dump(strtoupper($values['value']['{}name'] . ": ") . $values['value']['{}name']);
+                //dump(strtoupper($values['value']['{}name'] . ":"));
+               // dump("   symbol: " . $values['value']['{}value']);
             }
         } catch (\Exception $exception){
             dump($exception);

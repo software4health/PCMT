@@ -26,4 +26,9 @@ class PcmtConnectorExtension extends Extension
        $loader->load('processors.yml');
        $loader->load('utils.yml');
     }
+
+    public function getAlias()
+    {
+        return 'pcmt_job_connector';
+    }
 }

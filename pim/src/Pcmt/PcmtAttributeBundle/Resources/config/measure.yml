@@ -1,5 +1,5 @@
 measures_config:
-    GS1_Unit_Of_Measure:
+    GDSN_Unit_Of_Measure:
         standard:
         units:
             KILOGRAM FORCE:
