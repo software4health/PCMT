@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Pcmt\PcmtAttributeBundle\DependencyInjection;
 
@@ -8,14 +9,19 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 
-class PcmtAttributeExtension extends Extension {
+class PcmtAttributeExtension extends Extension
+{
+      public function load(array $configs, ContainerBuilder $container)
+      {
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('array_converters.yml');
+        $loader->load('entities.yml');
+        $loader->load('normalizers.yml');
+        $loader->load('updaters.yml');
+      }
 
-  public function load(array $configs, ContainerBuilder $container)
-  {
-    $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-    $loader->load('array_converters.yml');
-    $loader->load('entities.yml');
-    $loader->load('normalizers.yml');
-    $loader->load('updaters.yml');
-  }
+      public function getAlias()
+      {
+          return 'pcmt_attribute';
+      }
 }

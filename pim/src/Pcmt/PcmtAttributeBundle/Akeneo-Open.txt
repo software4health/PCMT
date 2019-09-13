@@ -1,0 +1,14 @@
+In order to make the bundle reuasble I tested out several configuration and packaging options.
+These are initial experiments with extendable and package that can be configured on the fly.
+
+As Symfony Recommends, I created a config file inside the bundle itself.
+All the options configurable by the end user are inside Extension class.
+As it doesn't matter where the config is placed as long as it's placed under bundle root configuration key (pcmt_attribute in this case)
+I will place all attribute config under pcmt_attributes.yml
+
+As a result, all congfiguration will be available in $configs array in PcmtConnectorBundle class
+
+1/ We will provide configuration class called 'DataDownloadPathProvider' which will return set of valid directories/or directory that the user
+may want to save their data to.
+This class will have default value but can be totally overriden by library user.
+
