@@ -22,6 +22,8 @@ variables:
 before_script:
   - docker info
   - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
+  - apk add bash
+  - bash --version
 
 .pim_docker_build:
   stage: build
