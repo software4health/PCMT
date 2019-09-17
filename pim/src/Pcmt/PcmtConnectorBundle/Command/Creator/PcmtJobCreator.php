@@ -36,6 +36,7 @@ class PcmtJobCreator extends ContainerAwareCommand
                 throw new UnknownJobException('Job  ' . $jobInstanceParameters['code'] . ' undefinded.');
             }
 
+            $output->writeln('Job  ' . $jobInstanceParameters['code'] . ' found. Starting job execution.');
             return true;
 
         } catch (UnknownJobException $exception){
