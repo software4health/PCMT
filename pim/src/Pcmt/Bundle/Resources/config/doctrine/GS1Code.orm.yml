@@ -6,7 +6,7 @@ Pcmt\Bundle\Entity\GS1Code:
         type: string
     table: pcmt_reference_data_gs1_codes
     changeTrackingPolicy: DEFERRED_EXPLICIT
-    repositoryClass: Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository
+    repositoryClass: Pcmt\Bundle\Entity\Repository\GS1CodesRepository
     id:
         id:
             type: integer
