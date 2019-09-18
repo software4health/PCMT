@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\Command\Handler;
 
+use Pcmt\PcmtConnectorBundle\Registry\PcmtConnectorJobParametersRegistry;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -41,6 +42,7 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try{
+            $this->createJobIfNotExists($output);
             $this->fileIterator->rewind();
             while($this->fileIterator->current()){
 
@@ -72,5 +74,15 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
             $output->writeln($exception);
             die;
         }
+    }
+
+    private function createJobIfNotExists(OutputInterface $output): void
+    {
+        $jobCreatror = $this->getApplication()->find('pcmt:job-creator');
+        $arguments = [
+            'jobName' => PcmtConnectorJobParametersRegistry::JOB_REFERENCE_DATA_IMPORT_NAME
+        ];
+        $input = new ArrayInput($arguments);
+        $jobCreatror->run($input, $output);
     }
 }

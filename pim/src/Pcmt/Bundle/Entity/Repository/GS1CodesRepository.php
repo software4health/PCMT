@@ -3,8 +3,39 @@ declare(strict_types=1);
 
 namespace Pcmt\Bundle\Entity\Repository;
 
+use Doctrine\ORM\QueryBuilder;
+use PHPUnit\Util\Json;
 use Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class GS1CodesRepository extends CustomEntityRepository
 {
+    /**
+     * @param QueryBuilder $qb
+     * @param array $options
+     * Override method
+     */
+    protected function selectFields(QueryBuilder $qb, array $options)
+    {
+        $labelProperty = $this->getReferenceDataLabelProperty();
+        $identifierField = isset($options['type']) && 'code' === $options['type'] ? 'code' : 'id';
+
+        $qb
+            ->select(
+                sprintf('%s.%s AS id', $this->getAlias(), $identifierField)
+            )
+            ->addSelect(
+                sprintf(
+                    'CASE WHEN %s.%s IS NULL OR %s.%s = \'\' THEN CONCAT(\'[\', %s.code, \']\') ELSE CONCAT(%s.name, \' (\', %s.%s,  \') \') END AS text',
+                    $this->getAlias(),
+                    $labelProperty,
+                    $this->getAlias(),
+                    $labelProperty,
+                    $this->getAlias(),
+                    $this->getAlias(),
+                    $this->getAlias(),
+                    $labelProperty
+                )
+            );
+    }
 }

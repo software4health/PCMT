@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\Command\Handler;
 
+use Pcmt\PcmtConnectorBundle\Registry\PcmtConnectorJobParametersRegistry;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -25,6 +26,7 @@ class PcmtReferenceDataDownloadHandler extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try{
+            $this->createJobIfNotExists($output);
             $command = $this->getApplication()->find('akeneo:batch:job');
             $arguments = [
                 'code' => ($input->getArgument('code')) ?? self::DEFAULT_JOB_CODE,
@@ -43,4 +45,13 @@ class PcmtReferenceDataDownloadHandler extends ContainerAwareCommand
         }
     }
 
+    private function createJobIfNotExists(OutputInterface $output): void
+    {
+        $jobCreatror = $this->getApplication()->find('pcmt:job-creator');
+        $arguments = [
+            'jobName' => PcmtConnectorJobParametersRegistry::JOB_REFERENCE_DATA_DOWNLOAD_NAME
+        ];
+        $input = new ArrayInput($arguments);
+        $jobCreatror->run($input, $output);
+    }
 }
