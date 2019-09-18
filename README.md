@@ -61,5 +61,30 @@ Notes:
 - `make dev-fpm` will start a shell with access to Akeneo tools such 
     as `bin/console`.
 
+### Commands
+
+PCMT adds a number of commands that a developer may use.  Unless otherwise 
+noted these commands are meant to be run in the `pcmt` container / `fpm` 
+service.
+
+Example:
+
+```shell
+make dev-fpm
+bin/console <command>
+```
+
+#### Reference Data
+
+`bin/console pcmt:handler:download_reference_data` - Downloads the latest  
+reference data from the Internet and stores them alongside the source code.
+Run this to update these codes and commit to source control.
+
+`bin/console pcmt:handler:import_reference_data` - Imports the reference data
+downloaded in the previous command into the database, potentially overwriting  
+any referencedata already there.  Use this in development or testing contexts  
+so that the reference data is available in the UI, but beware of running this  
+in production.
+
 ---
 Copyright (c) 2019, VillageReach.  Licensed CC BY-SA 4.0:  https://creativecommons.org/licenses/by-sa/4.0/

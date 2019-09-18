@@ -1,0 +1,6 @@
+services:
+
+  Pcmt\PcmtAttributeBundle\Command\ReadConfigHelperCommand:
+    autowire: true
+    tags:
+      - { name: 'console.command', command: 'pcmt:measures' }

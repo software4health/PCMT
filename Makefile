@@ -32,6 +32,10 @@ dev-assets:
 dev-cp-vendor:
 	docker cp -L pcmt_fpm_1:/srv/pim/vendor ./pim/vendor
 
+.PHONY: dev-cp-web
+dev-cp-web:
+    docker cp -L pcmt_fpm_1:/srv/pim/web .pim/
+
 .PHONY: dev-fpm
 dev-fpm:
 	./ddev.sh exec fpm bash
