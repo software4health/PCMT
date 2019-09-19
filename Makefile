@@ -9,7 +9,7 @@ all: build
 
 .PHONY: build
 build:
-	cd pim/ && ./build-images.sh
+	./pim/build-images.sh
 
 .PHONY: dev-up
 dev-up:
