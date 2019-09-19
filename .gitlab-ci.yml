@@ -28,10 +28,7 @@ before_script:
 .pim_docker_build:
   stage: build
   script: 
-    - cd pim
-    - "./build-images.sh"
-    - docker push pcmt/pcmt:latest
-    - docker push pcmt/httpd:latest
+    - bin/ci-build.sh
 
 pim docker build (on git push):
   extends: .pim_docker_build
