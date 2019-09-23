@@ -22,14 +22,13 @@ variables:
 before_script:
   - docker info
   - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
+  - apk add bash make
+  - bash --version
 
 .pim_docker_build:
   stage: build
   script: 
-    - cd pim
-    - "./build-images.sh"
-    - docker push pcmt/pcmt:latest
-    - docker push pcmt/httpd:latest
+    - bin/ci-build.sh
 
 pim docker build (on git push):
   extends: .pim_docker_build

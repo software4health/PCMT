@@ -8,6 +8,7 @@ use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Batch\Step\AbstractStep;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use Pcmt\PcmtConnectorBundle\Util\Adapter\DirectoryCreator;
 use Pcmt\PcmtConnectorBundle\Validator\Directory\DirectoryPathValidator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -37,9 +38,8 @@ class ImportRefDataFiles extends AbstractStep
         $directoryValidator = new DirectoryPathValidator();
         $directoryValidator->validate('reference_data_files_path', $this->directory);
 
-        if(!is_dir($this->directory)){
-            mkdir($this->directory, 0775);
-        }
+        $this->createDirectories($this->directory);
+        DirectoryCreator::createDirectory($this->directory);
 
         foreach ($urls as $url){
             try{
@@ -63,5 +63,20 @@ class ImportRefDataFiles extends AbstractStep
         $filename = $matches[1] . '.xml';
 
         return $this->directory . $filename;
+    }
+
+    private function createDirectories(string $path)
+    {
+        $path_split = explode('/', $path); //array
+        $buildPath = '';
+        foreach($path_split as $pathElem){
+            if($pathElem === "") { continue; }
+            $buildPath .= $pathElem . '/';
+            if(is_dir($buildPath)){
+                continue;
+            }
+            mkdir($buildPath, 0777);
+        }
+        return true;
     }
 }

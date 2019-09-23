@@ -7,12 +7,12 @@
 version: '3.4'
 services:
   pim:
-    image: pcmt/pcmt
+    image: pcmt/pcmt:${PCMT_VER:-latest}
     build:
       context: .
       target: pim
   httpd:
-    image: pcmt/httpd
+    image: pcmt/httpd:${PCMT_VER:-latest}
     build:
       context: .
       target: httpd
