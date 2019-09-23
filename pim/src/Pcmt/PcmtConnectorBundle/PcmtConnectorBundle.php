@@ -13,6 +13,7 @@ class PcmtConnectorBundle extends Bundle
         if(null === $this->extension){
             $this->extension = new PcmtConnectorExtension();
         }
+
         return $this->extension;
     }
 }
