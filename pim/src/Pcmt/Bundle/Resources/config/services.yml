@@ -1,26 +1,13 @@
 services:
 
-  Pcmt\Bundle\Command\PcmtHelperCommand:
-    autowire: true
-    tags:
-      - { name: 'console.command', command: 'pcmt:command' }
-
-  Pcmt\Bundle\Command\PcmtGenerateRefDataCommand:
-    autowire: true
-    tags:
-      - { name: 'console.command', command: 'pcmt:generate-ref-data' }
-
+  #util command for the one below (PcmtCreateAllAttributesCommand)
   Pcmt\Bundle\Command\PcmtCreateAttributeForRefDataCommand:
     autowire: true
     tags:
       - { name: 'console.command', command: 'pcmt:generate-ref-data-attr' }
 
+  #util command - generate default reference data simple select attributes
   Pcmt\Bundle\Command\PcmtCreateAllAttributesCommand:
     autowire: true
     tags:
       - { name: 'console.command', command: 'pcmt:generate-ref-data-attr-all' }
-
-  Pcmt\Bundle\Command\PcmtAssignAttributesToFamilyCommand:
-    autowire: true
-    tags:
-      - { name: 'console.command', command: 'pcmt:assign-attr-to-family-all' }
