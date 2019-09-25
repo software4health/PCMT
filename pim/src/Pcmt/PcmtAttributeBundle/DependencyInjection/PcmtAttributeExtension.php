@@ -18,6 +18,9 @@ class PcmtAttributeExtension extends Extension
         $loader->load('entities.yml');
         $loader->load('normalizers.yml');
         $loader->load('updaters.yml');
+        $loader->load('attribute_types.yml');
+        $loader->load('providers.yml');
+        $loader->load('routing.yml');
       }
 
       public function getAlias()
