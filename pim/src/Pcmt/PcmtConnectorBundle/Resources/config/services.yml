@@ -4,6 +4,11 @@ imports:
 
 services:
 
+  Pcmt\PcmtConnectorBundle\Command\Creator\PcmtJobCreator:
+    autowire: true
+    tags:
+      - { name: 'console.command', command: 'pcmt:job-creator' }
+
   Pcmt\PcmtConnectorBundle\Command\InitializeReferenceDataImport:
     autowire: true
     tags:

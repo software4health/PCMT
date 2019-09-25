@@ -1,3 +1,13 @@
+pim_enrich.entity.attribute:
+  property:
+    concat_attribute_member_select:
+      label: Attribute
+      choose: choose attribute
+    concat_attribute_separator_select:
+      label: Separator
+      choose: choose separator
+    type:
+      pcmt_catalog_concatenated: Concatenated Attributes
 pim_measure:
   families:
     GDSN_Unit_Of_Measure: GDSN_Unit_Of_Measure

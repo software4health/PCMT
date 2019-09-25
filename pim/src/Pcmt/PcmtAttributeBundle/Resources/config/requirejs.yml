@@ -6,8 +6,30 @@ config:
             controllers:
                 pim_enrich_attribute_create:
                     module: dnd/controller/attribute/create
+
+        pim/fetcher-registry:
+            fetchers:
+                default: pim/base-fetcher
+                concat-attribute:
+                    module: pim/attribute-fetcher
+                    options:
+                        identifier_type: pim_catalog_identifier
+                        urls:
+                            list: pim_enrich_attribute_rest_index
+                            get: pim_enrich_attribute_rest_get
+
+        pim/form/common/attributes/create-button:
+            attribute_icons:
+                pcmt_catalog_concatenated: file
+
+        pim/attribute-edit-form/type-specific-form-registry:  #configuration for concatenated attribute type create/edit form
+            formNames:
+                pcmt_catalog_concatenated:
+                    create: pcmt-attribute-form-concatenated
+                    edit: pcmt-attribute-form-concatenated
     paths:
         dnd/attribute-edit-form/descriptions/translation: pcmtattribute/js/attribute/form/descriptions/translation
         dnd/template/form/properties/translation: pcmtattribute/templates/form/properties/translation.html
         dnd/controller/attribute/create: pcmtattribute/js/controller/attribute/create
-
+        #concat attribute select dropdown
+        pcmt/attribute-edit-form-properties/concat-attribute-select: pcmtattribute/js/attribute/form/properties/concat-attribute-select-attribute

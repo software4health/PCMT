@@ -1,0 +1,5 @@
+services:
+    pim_enrich.provider.field.concatenated:
+        class: 'Pcmt\PcmtAttributeBundle\Provider\Field\ConcatenatedAttributeFieldProvider'
+        tags:
+            - { name: pim_enrich.provider.field, priority: 100 }

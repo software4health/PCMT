@@ -1,0 +1,3 @@
+config:
+  paths:
+    pcmt_connector_button: pcmtconnector/js/common/button
