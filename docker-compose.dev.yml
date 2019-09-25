@@ -19,7 +19,11 @@ services:
     # volume will be initialized.
     depends_on: 
       - httpd
-  
+
+  elasticsearch:
+    ports:
+      - '9200:9200'
+
   node:
     image: 'node:10-slim'
     user: 'node'

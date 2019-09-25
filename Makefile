@@ -34,7 +34,7 @@ dev-cp-vendor:
 
 .PHONY: dev-cp-web
 dev-cp-web:
-    docker cp -L pcmt_fpm_1:/srv/pim/web .pim/
+    docker cp -L pcmt_fpm_1:/srv/pim/web pim/
 
 .PHONY: dev-fpm
 dev-fpm:
