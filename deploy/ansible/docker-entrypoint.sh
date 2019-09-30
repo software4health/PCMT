@@ -15,8 +15,17 @@ if [ -z "$AWS_ACCESS_KEY_ID" ]; then
     exit 1
 fi
 
+if [ -z "$PCMT_ASSET_URL" ]; then
+    echo PCMT ASSET URL missing
+    exit 1
+fi
+
 if [ -z "$PCMT_PROFILE" ]; then
     echo "Warning: PCMT Profile not set"
+fi
+
+if [ -z "$PCMT_VER" ]; then
+    echo "Warning: PCMT Version not set"
 fi
 
 SSH_KEY="/tmp/.ssh/id_rsa"
