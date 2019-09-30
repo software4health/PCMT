@@ -20,6 +20,8 @@ docker run --rm \
     -e AWS_ACCESS_KEY_ID \
     -e AWS_SECRET_ACCESS_KEY \
     -e PCMT_PROFILE \
+    -e PCMT_VER \
+    -e PCMT_ASSET_URL \
     -v pcmt-ssh-key:/tmp/.ssh \
     -v "/var/run/docker.sock:/var/run/docker.sock" \
     pcmt/terraform "${@}"

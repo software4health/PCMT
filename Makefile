@@ -40,3 +40,11 @@ dev-cp-web:
 dev-fpm:
 	./ddev.sh exec fpm bash
 
+.PHONY: terraform
+terraform:
+	cd deploy/terraform && ./build.sh
+
+.PHONY: ansible
+ansible:
+	cd deploy/ansible && ./build.sh
+
