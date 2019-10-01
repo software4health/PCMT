@@ -15,8 +15,14 @@ echo "$0 Pushing tagged as $PCMT_VER"
 docker push pcmt/pcmt:$PCMT_VER
 docker push pcmt/httpd:$PCMT_VER
 
+# determine git branch name
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ ! -z "$CI_COMMIT_REF_NAME" ]; then # if running in gitlab, use theirs
+    GIT_BRANCH=$CI_COMMIT_REF_NAME
+fi
 echo "$0 ...Branch detected: $GIT_BRANCH"
+
+# tag semver if we're on master branch
 if [ "master" = "$GIT_BRANCH" ]; then
     PCMT_SEMVER=$($DIR/pcmt-semver.sh)
     echo "$0 ... Co-tagging as $PCMT_SEMVER"
