@@ -27,6 +27,12 @@ before_script:
 
 ############### PIM ###############
 
+.pim_only_changes:
+  only:
+    changes:
+      - pim/**/*
+      - '.env'
+
 .pim_docker_build:
   stage: build
   script: 
@@ -34,10 +40,9 @@ before_script:
     - bin/ci-push.sh
 
 pim docker build (on git push):
-  extends: .pim_docker_build
-  only:
-    changes:
-      - pim/**/*
+  extends: 
+    - .pim_docker_build
+    - .pim_only_changes
 
 pim docker build (manual retry):
   extends: .pim_docker_build
@@ -152,11 +157,11 @@ cd-test-destroy:
 
 test (on git push):
   <<: *test_job
+  extends:
+    - .pim_only_changes
   only:
     refs:
       - master@pcmt/pcmt
-    changes:
-      - pim/**/*
   script: *test_script-deploy
 
 test (manual):
