@@ -138,7 +138,7 @@ cd-test-destroy:
 
 ############### Test Environment ###############
 
-.test: &test_job
+.test:
   stage: deploy
   variables:
     PCMT_PROFILE: dev
@@ -148,30 +148,32 @@ cd-test-destroy:
     on_stop: test-destroy
 
 .test_script-deploy:
-  script: &test_script-deploy
+  script:
     - ./bin/ci-deploy.sh test
     
 .test_script-destroy:
-  script: &test_script-destroy
+  script:
     - ./deploy/terraform/run-docker.sh test destroy -auto-approve
 
 test (on git push):
-  <<: *test_job
   extends:
+    - .test
+    - .test_script-deploy
     - .pim_only_changes
   only:
     refs:
       - master@pcmt/pcmt
-  script: *test_script-deploy
 
 test (manual):
-  <<: *test_job
-  script: *test_script-deploy
+  extends:
+    - .test
+    - .test_script-deploy
   when: manual
 
 test-destroy:
-  <<: *test_job
-  script: *test_script-destroy
+  extends:
+    - .test
+    - .test_script-destroy
   when: manual
   environment:
     name: test 
