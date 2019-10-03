@@ -141,42 +141,42 @@ env-showcase-destroy:
 
 ############### Test Environment ###############
 
-.test:
+.env-test:
   stage: deploy
   variables:
     PCMT_PROFILE: dev
   environment:
     name: test
     url: http://test.pcmt.villagereach.org
-    on_stop: test-destroy
+    on_stop: env-test-destroy
 
-.test_script-deploy:
+.env-test_script-deploy:
   script:
     - ./bin/ci-deploy.sh test
     
-.test_script-destroy:
+.env-test_script-destroy:
   script:
     - ./deploy/terraform/run-docker.sh test destroy -auto-approve
 
-test (on git push):
+env-test:
   extends:
-    - .test
-    - .test_script-deploy
+    - .env-test
+    - .env-test_script-deploy
     - .pim_only_changes
   only:
     refs:
       - master@pcmt/pcmt
 
-test (manual):
+env-test (manual):
   extends:
-    - .test
-    - .test_script-deploy
+    - .env-test
+    - .env-test_script-deploy
   when: manual
 
-test-destroy:
+env-test-destroy:
   extends:
-    - .test
-    - .test_script-destroy
+    - .env-test
+    - .env-test_script-destroy
   when: manual
   environment:
     name: test 
