@@ -97,43 +97,46 @@ dev (KEEP DB):
   variables:
     PCMT_PROFILE: production
 
-############### CD-TEST Environment ###############
+############### Showcase Environment ###############
 
-.cd-test: &cd-test_job
+.env-showcase:
   stage: deploy
   only:
     - master@pcmt/pcmt
   when: manual
   environment:
-    name: cd-test
-    url: http://cd-test.pcmt.villagereach.org
-    on_stop: cd-test-destroy
+    name: showcase
+    url: http://showcase.pcmt.villagereach.org
+    on_stop: env-showcase-destroy
 
-.cd-test_script-deploy:
-  script: &cd-test_script-deploy
-    - ./bin/ci-deploy.sh cd-test
+.env-showcase_script-deploy:
+  script:
+    - ./bin/ci-deploy.sh showcase
     
-.cd-test_script-destroy:
-  script: &cd-test_script-destroy
-    - ./deploy/terraform/run-docker.sh cd-test destroy -auto-approve
+.env-showcase_script-destroy:
+  script: 
+    - ./deploy/terraform/run-docker.sh showcase destroy -auto-approve
 
-cd-test (WIPE DB):
-  <<: *cd-test_job
+env-showcase (WIPE DB):
+  extends:
+    - .env-showcase
+    - .env-showcase_script-deploy
   variables:
     PCMT_PROFILE: dev
-  script: *cd-test_script-deploy
 
-cd-test (KEEP DB):
-  <<: *cd-test_job
+env-showcase (KEEP DB):
+  extends:
+    - .env-showcase
+    - .env-showcase_script-deploy
   variables:
     PCMT_PROFILE: production
-  script: *cd-test_script-deploy
 
-cd-test-destroy:
-  <<: *cd-test_job
-  script: *cd-test_script-destroy
+env-showcase-destroy:
+  extends:
+    - .env-showcase
+    - .env-showcase_script-destroy
   environment:
-    name: cd-test
+    name: showcase
     action: stop
 
 ############### Test Environment ###############
