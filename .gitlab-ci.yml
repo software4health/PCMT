@@ -142,6 +142,8 @@ env-showcase-destroy:
 ############### Test Environment ###############
 
 .env-test:
+  extends:
+    - .pim_only_changes
   stage: deploy
   variables:
     PCMT_PROFILE: dev
@@ -162,7 +164,6 @@ env-test:
   extends:
     - .env-test
     - .env-test_script-deploy
-    - .pim_only_changes
   only:
     refs:
       - master@pcmt/pcmt
