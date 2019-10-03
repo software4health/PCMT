@@ -76,7 +76,9 @@ terraform docker build:
 
 ############### Dev Environment ###############
 
-.deploy dev: &deploy_dev
+.env-dev: 
+  extends:
+    - .pim_only_changes
   stage: deploy
   only:
     - master@pcmt/pcmt
@@ -87,13 +89,15 @@ terraform docker build:
   script:
     - ./bin/ci-deploy.sh dev
 
-dev (WIPE DB):
-  <<: *deploy_dev
+.env-dev (WIPE DB):
+  extends:
+    - .env-dev
   variables:
     PCMT_PROFILE: dev
 
-dev (KEEP DB):
-  <<: *deploy_dev
+.env-dev (KEEP DB):
+  extends:
+    - .env-dev
   variables:
     PCMT_PROFILE: production
 
