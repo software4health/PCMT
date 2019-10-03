@@ -53,18 +53,3 @@ variable "domain-name" {
   type        = string
   description = "AWS Route53 Domain Name"
 }
-
-variable "subnet-id" {
-  type        = string
-  description = "ID of subnet to launch EC2 into"
-}
-
-variable "route53-zone-id" {
-  type        = string
-  description = "ID of zone to insert record into"
-}
-
-variable "security-group-id" {
-  type        = string
-  description = "ID of security group to use for instance"
-}
