@@ -32,6 +32,7 @@ before_script:
     changes:
       - pim/**/*
       - '.env'
+      - 'docker-compose.yml'
 
 .pim_docker_build:
   stage: build
@@ -104,6 +105,8 @@ terraform docker build:
 ############### Showcase Environment ###############
 
 .env-showcase:
+  extends:
+    - .pim_only_changes
   stage: deploy
   only:
     - master@pcmt/pcmt
