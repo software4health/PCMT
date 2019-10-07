@@ -1,0 +1,6 @@
+# Job labels
+batch_jobs:
+    pcmt_xlsx_product_import:
+        validation.label: Validation
+        label: Pcmt Product import in XLSX
+        import.label: Pcmt Product import

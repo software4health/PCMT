@@ -1,0 +1,9 @@
+services:
+
+  pcmt_enrichment.provider.form.job_instance:
+    class: 'Akeneo\Platform\Bundle\ImportExportBundle\Provider\Form\JobInstanceFormProvider'
+    arguments:
+      -
+          pcmt_xlsx_product_import: pim-job-instance-xlsx-product-import
+    tags:
+      - { name: pim_enrich.provider.form, priority: 100 }
