@@ -1,0 +1,17 @@
+#parameters:
+#  pim_job_product_batch_size: 10
+#  pim_catalog.saver.product.class: 'Pcmt\PcmtCustomDatasetBundle\Step\Saver\ProductSaver'
+#  pim_catalog.updater.product.class: 'Akeneo\Pim\Enrichment\Component\Product\Updater\ProductUpdater'
+
+services:
+
+  pcmt_connector.step.pcmt_xlsx_product.import:
+    class: '%pim_connector.step.item_step.class%'
+    arguments:
+      - 'import'
+      - '@event_dispatcher'
+      - '@akeneo_batch.job_repository'
+      - '@pim_connector.reader.file.xlsx_product'
+      - '@pcmt_connector.processor.denormalization.product'
+      - '@pim_connector.writer.database.product'
+      - '%pim_job_product_batch_size%'

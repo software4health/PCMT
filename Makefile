@@ -40,6 +40,25 @@ dev-cp-web:
 dev-fpm:
 	./ddev.sh exec fpm bash
 
+.PHONY: dev-db-restart
+dev-db-restart:
+	./ddev.sh exec fpm rm -rf var/cache
+	./ddev.sh exec fpm bin/console --env=prod pim:install --force --symlink --clean
+
+.PHONY: dev-db-restart-with-assets
+dev-db-restart-with-assets:
+	./ddev.sh exec fpm rm -rf var/cache
+	./ddev.sh exec fpm bin/console --env=prod pim:install --force --symlink --clean
+	bin/install-assets.sh
+
+.PHONY: dev-cp-app
+dev-cp-app:
+	./ddev.sh exec fpm cp -avr /tmp/pcmt/app/. /srv/pim/app/
+
+.PHONY: dev-cp-tmp
+dev-cp-tmp:
+	docker cp -L pcmt_fpm_1:/tmp ./pim/tmp
+
 .PHONY: terraform
 terraform:
 	cd deploy/terraform && ./build.sh

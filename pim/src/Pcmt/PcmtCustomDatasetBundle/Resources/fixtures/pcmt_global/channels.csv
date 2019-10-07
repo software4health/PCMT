@@ -1,0 +1,4 @@
+code;label-en_US;label-de_DE;label-fr_FR;locales;currencies;tree
+mobile;DHIS2;;;en_US;USD;master
+print;GS1 GDSN;;;en_US;USD;GS1_GDSN
+ecommerce;PRODUCT CATALOG;;;en_US;USD;master
