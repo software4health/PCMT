@@ -21,6 +21,10 @@ The following environment variables are available:
 - `SSH_PRIV_KEY_PATH`: path to the SSH key that Ansible will need to configure
   the instance.
 - `PCMR_PROFILE`: Profile as documented in PCMT's `settings.env`.
+- `PCMT_VER`: The version of PCMT to deploy, this version will need to be
+  tagged in Docker Hub.
+- `PCMT_ASSET_URL`: The full, public, URL where a commit's SHA may be appended
+  to retrieve the deployment descriptors for the specified version.
 
 
 ## Quick Start
@@ -44,6 +48,8 @@ export PCMT_PROFILE=production
 __Example__: create/update the `cd-test` env, and clear the database:
 
 ```bash
+export PCMT_VER=0.1.0-snapshot
+export PCMT_ASSET_URL=https://gitlab.com/pcmt/pcmt/raw/<commit-sha>"
 PCMT_PROFILE=dev ./run-docker.sh cd-test apply -auto-approve
 ```
 

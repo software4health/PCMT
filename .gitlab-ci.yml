@@ -22,25 +22,34 @@ variables:
 before_script:
   - docker info
   - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
-  - apk add bash make
+  - apk add bash make git
   - bash --version
+
+############### PIM ###############
+
+.pim_only_changes:
+  only:
+    changes:
+      - pim/**/*
+      - '.env'
+      - 'docker-compose.yml'
 
 .pim_docker_build:
   stage: build
   script: 
     - bin/ci-build.sh
+    - bin/ci-push.sh
 
 pim docker build (on git push):
-  extends: .pim_docker_build
-  only:
-    refs:
-      - master@pcmt/pcmt
-    changes:
-      - pim/**/*
+  extends: 
+    - .pim_docker_build
+    - .pim_only_changes
 
 pim docker build (manual retry):
   extends: .pim_docker_build
   when: manual
+
+############### IoC ###############
 
 ansible docker build:
   stage: build
@@ -68,7 +77,9 @@ terraform docker build:
 
 ############### Dev Environment ###############
 
-.deploy dev: &deploy_dev
+.env-dev: 
+  extends:
+    - .pim_only_changes
   stage: deploy
   only:
     - master@pcmt/pcmt
@@ -77,93 +88,103 @@ terraform docker build:
     name: dev
     url: http://dev.pcmt.villagereach.org
   script:
-    - ./deploy/terraform/run-docker.sh dev apply -auto-approve
+    - ./bin/ci-deploy.sh dev
 
-dev (WIPE DB):
-  <<: *deploy_dev
+.env-dev (WIPE DB):
+  extends:
+    - .env-dev
   variables:
     PCMT_PROFILE: dev
 
-dev (KEEP DB):
-  <<: *deploy_dev
+.env-dev (KEEP DB):
+  extends:
+    - .env-dev
   variables:
     PCMT_PROFILE: production
 
-############### CD-TEST Environment ###############
+############### Showcase Environment ###############
 
-.cd-test: &cd-test_job
+.env-showcase:
+  extends:
+    - .pim_only_changes
   stage: deploy
   only:
     - master@pcmt/pcmt
   when: manual
   environment:
-    name: cd-test
-    url: http://cd-test.pcmt.villagereach.org
-    on_stop: cd-test-destroy
+    name: showcase
+    url: http://showcase.pcmt.villagereach.org
+    on_stop: env-showcase-destroy
 
-.cd-test_script-deploy:
-  script: &cd-test_script-deploy
-    - ./deploy/terraform/run-docker.sh cd-test apply -auto-approve
+.env-showcase_script-deploy:
+  script:
+    - ./bin/ci-deploy.sh showcase
     
-.cd-test_script-destroy:
-  script: &cd-test_script-destroy
-    - ./deploy/terraform/run-docker.sh cd-test destroy -auto-approve
+.env-showcase_script-destroy:
+  script: 
+    - ./deploy/terraform/run-docker.sh showcase destroy -auto-approve
 
-cd-test (WIPE DB):
-  <<: *cd-test_job
+env-showcase (WIPE DB):
+  extends:
+    - .env-showcase
+    - .env-showcase_script-deploy
   variables:
     PCMT_PROFILE: dev
-  script: *cd-test_script-deploy
 
-cd-test (KEEP DB):
-  <<: *cd-test_job
+env-showcase (KEEP DB):
+  extends:
+    - .env-showcase
+    - .env-showcase_script-deploy
   variables:
     PCMT_PROFILE: production
-  script: *cd-test_script-deploy
 
-cd-test-destroy:
-  <<: *cd-test_job
-  script: *cd-test_script-destroy
+env-showcase-destroy:
+  extends:
+    - .env-showcase
+    - .env-showcase_script-destroy
   environment:
-    name: cd-test
+    name: showcase
     action: stop
 
 ############### Test Environment ###############
 
-.test: &test_job
+.env-test:
+  extends:
+    - .pim_only_changes
   stage: deploy
   variables:
     PCMT_PROFILE: dev
   environment:
     name: test
     url: http://test.pcmt.villagereach.org
-    on_stop: test-destroy
+    on_stop: env-test-destroy
 
-.test_script-deploy:
-  script: &test_script-deploy
-    - ./deploy/terraform/run-docker.sh test apply -auto-approve
+.env-test_script-deploy:
+  script:
+    - ./bin/ci-deploy.sh test
     
-.test_script-destroy:
-  script: &test_script-destroy
+.env-test_script-destroy:
+  script:
     - ./deploy/terraform/run-docker.sh test destroy -auto-approve
 
-test (on git push):
-  <<: *test_job
+env-test:
+  extends:
+    - .env-test
+    - .env-test_script-deploy
   only:
     refs:
       - master@pcmt/pcmt
-    changes:
-      - pim/**/*
-  script: *test_script-deploy
 
-test (manual):
-  <<: *test_job
-  script: *test_script-deploy
+env-test (manual):
+  extends:
+    - .env-test
+    - .env-test_script-deploy
   when: manual
 
-test-destroy:
-  <<: *test_job
-  script: *test_script-destroy
+env-test-destroy:
+  extends:
+    - .env-test
+    - .env-test_script-destroy
   when: manual
   environment:
     name: test 

@@ -29,7 +29,8 @@
         "akeneo-labs/custom-entity-bundle": "3.0.*",
         "akeneo/pim-community-dev": "3.2.x-dev@dev",
         "php-http/guzzle6-adapter": "^2.0",
-        "sabre/xml": "^2.1"
+        "sabre/xml": "^2.1",
+        "phpoffice/phpspreadsheet": "1.9.0"
     },
     "require-dev": {
         "doctrine/migrations": "1.5.0",

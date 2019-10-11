@@ -1,0 +1,20 @@
+services:
+
+  pcmt_connector.job.job_parameters.default_values_provider.pcmt_xlsx_product_import:
+    class: 'Akeneo\Pim\Enrichment\Component\Product\Connector\Job\JobParameters\DefaultValueProvider\ProductCsvImport'
+    arguments:
+      - '@akeneo_pim_enrichment.job.job_parameters.default_values_provider.simple_xlsx_import'
+      -
+        - 'pcmt_xlsx_product_import'
+    tags:
+      - { name: akeneo_batch.job.job_parameters.default_values_provider }
+
+  pcmt_connector.job.job_parameters.constraint_collection_provider.pcmt_xlsx_product_import:
+    class: 'Akeneo\Pim\Enrichment\Component\Product\Connector\Job\JobParameters\ConstraintCollectionProvider\ProductCsvImport'
+    arguments:
+      - '@akeneo_pim_enrichment.job.job_parameters.constraint_collection_provider.simple_xlsx_import'
+      -
+        - 'pcmt_xlsx_product_import'
+    tags:
+      - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
+

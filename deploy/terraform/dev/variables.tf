@@ -22,7 +22,7 @@ variable "tag-bill-to" {
 variable "root-volume-size" {
   type        = number
   description = "Size in GB of root volume"
-  default     = "10"
+  default     = "20"
 }
 
 variable "instance-type" {
@@ -35,6 +35,12 @@ variable "app-deploy-group" {
   type        = "string"
   description = "Tags ec2 app instance for use by Ansible Playbooks."
   default     = "docker-hosts"
+}
+
+variable "ec2-key-pair" {
+  type        = "string"
+  description = "Name of EC2 key-pair for instance"
+  default     = "pcmt-ec2"
 }
 
 variable "hosted-zone-domain-name" {

@@ -6,13 +6,17 @@
 ######################################################################
 
 AKENEO_VER="v3.2.5"
-ENV_PATH="$DIR/../.env"
 
 # Path of this script
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# Load .env file, in format for env
-DOT_ENV=$(grep -v '^#' $ENV_PATH | xargs) 
+# path of .env file
+ENV_PATH="$DIR/../.env"
 
-env $DOT_ENV docker-compose -f "$DIR/docker-compose.yml" build \
+# Load .env file and PCMT_VER, in format for env
+DOT_ENV=$(grep -viE '^(PCMT_VER|#)' $ENV_PATH | xargs) 
+PCMT_VER=$("$DIR/../bin/pcmt-ver-sha.sh")
+BUILD_ENV="$DOT_ENV PCMT_VER=$PCMT_VER"
+
+env $BUILD_ENV docker-compose -f "$DIR/docker-compose.yml" build \
     --build-arg AKENEO_VER=${AKENEO_VER}

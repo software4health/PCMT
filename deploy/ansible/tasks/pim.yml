@@ -6,21 +6,23 @@
     mode: 0744 
 - name: Get PCMT docker-compose file
   get_url: 
-    url:  https://gitlab.com/pcmt/pcmt/raw/master/docker-compose.yml
+    url:  "{{ pcmt_asset_url }}/docker-compose.yml"
     dest: /app/
 - name: Get PCMT .env file
   get_url: 
-    url:  https://gitlab.com/pcmt/pcmt/raw/master/.env
+    url:  "{{ pcmt_asset_url }}/.env"
     dest: /app/
 - name: Get PCMT settings.env file
   get_url: 
-    url:  https://gitlab.com/pcmt/pcmt/raw/master/settings.env
+    url:  "{{ pcmt_asset_url }}/settings.env"
     dest: /app/
 - name: Pull and Start PCMT images
   vars:
     pcmt_profile: "{{ lookup('env', 'PCMT_PROFILE') }}"
+    pcmt_ver: "{{ lookup('env', 'PCMT_VER') }}"
   environment:
     PCMT_PROFILE: "{{ pcmt_profile }}"
+    PCMT_VER: "{{ pcmt_ver }}"
   docker_service:
     project_src: /app
     build: no

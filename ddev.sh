@@ -5,4 +5,8 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml ${@}
+PCMT_VER=$(bin/pcmt-ver-sha.sh)
+
+PCMT_VER=$PCMT_VER docker-compose -f docker-compose.yml \
+    -f docker-compose.dev.yml \
+    ${@}
