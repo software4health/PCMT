@@ -6,4 +6,21 @@ services:
             - '@pim_catalog.repository.locale'
             - '@pim_catalog.registry.attribute_type'
             - '@pim_structure.updater.translatable'
+            - '@pcmt_create_attribute_manager'
             - ['auto_option_sorting', 'is_read_only']
+            -
+    pcmt_catalog.updater.product_value_concatenated:
+        class: 'Pcmt\PcmtAttributeBundle\Updater\ConcatenatedAttributeProductValuesUpdater'
+        arguments:
+           - '@pim_catalog.updater.property_setter'
+
+
+    ## field setters
+
+    pcmt_catalog.updater.setter.concatenated_value:
+        class: '%pim_catalog.updater.setter.value.class%'
+        parent: pim_catalog.updater.setter.abstract
+        arguments:
+             - ['pcmt_catalog_concatenated']
+        tags:
+            - { name: 'pim_catalog.updater.setter' }

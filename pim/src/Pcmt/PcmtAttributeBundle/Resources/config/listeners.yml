@@ -1,0 +1,11 @@
+services:
+
+    Pcmt\PcmtAttributeBundle\EventSubscriber\UpdateProductValueIfHasConcatenatedAttribute:
+        arguments:
+          - '@pim_catalog.repository.product'
+          - '@pcmt_catalog.repository.pcmt_family_concatenated_attribute'
+          - '@pim_catalog.repository.attribute'
+          - '@pcmt_catalog.updater.product_value_concatenated'
+          - '@pim_catalog.saver.product'
+        tags:
+          - { name: kernel.event_subscriber, event: product.fetched }
