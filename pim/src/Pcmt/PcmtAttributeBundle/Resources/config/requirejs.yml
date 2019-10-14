@@ -1,5 +1,8 @@
 config:
     config:
+        pcmt/template/form/poperties/concat-attribute:
+            fieldName: concatenated
+
         pim/controller-registry:
             defaultController:
                 module: pim/controller/template
@@ -19,7 +22,7 @@ config:
                             get: pim_enrich_attribute_rest_get
 
         pim/form/common/attributes/create-button:
-            attribute_icons:
+             attribute_icons:
                 pcmt_catalog_concatenated: file
 
         pim/attribute-edit-form/type-specific-form-registry:  #configuration for concatenated attribute type create/edit form
@@ -28,8 +31,16 @@ config:
                     create: pcmt-attribute-form-concatenated
                     edit: pcmt-attribute-form-concatenated
     paths:
+
         dnd/attribute-edit-form/descriptions/translation: pcmtattribute/js/attribute/form/descriptions/translation
         dnd/template/form/properties/translation: pcmtattribute/templates/form/properties/translation.html
         dnd/controller/attribute/create: pcmtattribute/js/controller/attribute/create
-        #concat attribute select dropdown
+
+        pim/attribute-form-properties/concat-attribute-create: pcmtattribute/js/attribute/form/properties/concat-attribute
+        pim/template/form/properties/concat-attribute: pcmtattribute/templates/form/properties/concat-attribute.html
+
+        #concat attribute select dropdown - module
         pcmt/attribute-edit-form-properties/concat-attribute-select: pcmtattribute/js/attribute/form/properties/concat-attribute-select-attribute
+
+        #concat attribute display value field
+        pcmt/concatenated: pcmtattribute/js/attribute/field/concat-attribute-text-field

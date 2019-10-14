@@ -1,0 +1,16 @@
+parameters:
+
+  pcmt_concatenated_attribute.value.concatenated_value.class: Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Component\Value\ConcatenatedAttributeValue
+
+services:
+
+  pim_catalog.factory.value.concatenated:
+    class: Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Component\Factory\ConcatenatedValueFactory
+    public: false
+    arguments:
+      - '@pim_catalog.repository.attribute'
+      - '@pim_catalog.factory.value'
+      - '%pcmt_concatenated_attribute.value.concatenated_value.class%'
+      - 'pcmt_catalog_concatenated'
+    tags:
+      - { name: pim_catalog.factory.value }

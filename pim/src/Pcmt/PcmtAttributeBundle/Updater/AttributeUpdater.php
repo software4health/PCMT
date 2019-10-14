@@ -2,13 +2,18 @@
 
 namespace Pcmt\PcmtAttributeBundle\Updater;
 
+use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
+use Akeneo\Pim\Structure\Component\AttributeTypeRegistry;
+use Akeneo\Pim\Structure\Component\Repository\AttributeGroupRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use Akeneo\Tool\Component\StorageUtils\Exception\UnknownPropertyException;
 use Doctrine\Common\Util\ClassUtils;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Pim\Structure\Component\Updater\AttributeUpdater as BaseAttributeUpdater;
+use Pcmt\PcmtAttributeBundle\Entity\ConcatenatedAttribute;
 use Pcmt\PcmtTranslationBundle\Updater\TranslatableUpdater;
+use Pcmt\PcmtAttributeBundle\Extension\PcmtAttributeManager;
 
 /**
  * @override: Handle localizable attribute description when updating an attribute
@@ -26,7 +31,24 @@ class AttributeUpdater extends BaseAttributeUpdater
   /** @var TranslatableUpdater */
   protected $translatableUpdater;
 
-  /**
+  /** @var PcmtAttributeManager $pcmtAttributesManager */
+  protected $pcmtAttributesManager;
+
+  public function __construct
+  (
+      AttributeGroupRepositoryInterface $attrGroupRepo,
+      LocaleRepositoryInterface $localeRepository,
+      AttributeTypeRegistry $registry,
+      \Akeneo\Tool\Component\Localization\TranslatableUpdater $translatableUpdater,
+      PcmtAttributeManager $pcmtAttributesManager,
+      array $properties
+  )
+  {
+      $this->pcmtAttributesManager = $pcmtAttributesManager;
+      parent::__construct($attrGroupRepo, $localeRepository, $registry, $translatableUpdater, $properties);
+  }
+
+    /**
    * {@inheritdoc}
    */
   public function update($attribute, array $data, array $options = [])
@@ -56,9 +78,8 @@ class AttributeUpdater extends BaseAttributeUpdater
    */
   protected function validateDataType($field, $data)
   {
-    // Add @DND
-    if (in_array($field, ['labels', 'available_locales', 'allowed_extensions', 'descriptions'])) { // add descriptions to validation
-      // / Add @DND
+    if (in_array($field, ['labels', 'available_locales', 'allowed_extensions', 'descriptions', 'concatenated'])) {
+
       if (!is_array($data)) {
         throw InvalidPropertyTypeException::arrayExpected($field, static::class, $data);
       }
@@ -101,6 +122,7 @@ class AttributeUpdater extends BaseAttributeUpdater
         'scopable',
         'required',
         'auto_option_sorting',
+        'concatenated'
       ]
     )) {
       if (null !== $data && !is_scalar($data)) {
@@ -151,6 +173,9 @@ class AttributeUpdater extends BaseAttributeUpdater
         break;
       case 'auto_option_sorting':
         $attribute->setProperty('auto_option_sorting', $data);
+        break;
+        case 'concatenated':
+        $this->pcmtAttributesManager::decorateAttributeInstance(ConcatenatedAttribute::class, $attribute, $field, $data);
         break;
       default:
         $this->setValue($attribute, $field, $data);
