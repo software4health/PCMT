@@ -23,9 +23,13 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
   /**
    * run inside terminal in fpm docker: bin/console $defaultName
    */
+  /** @var string */
   protected static $defaultName = 'pcmt:custom-dataset:create';
 
+  /** @var string */
   protected $filesFolderPath;
+
+  /** @var string */
   protected $tmpAttributeGroupsFile = '/tmp/tmp_2_attribute_groups.xlsx';
 
   protected function execute(InputInterface $input, OutputInterface $output): void
@@ -120,6 +124,7 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
       ["code" => "pcmt_xlsx_product_import", "fileName" => "8_products.xlsx"],
       ["code" => "pcmt_xlsx_product_import", "fileName" => "8_products_gs1.xlsx"],
       ["code" => "import_map_suppliers", "fileName" => "9_masterdata_entries.xlsx"],
+      ["code" => "pcmt_xlsx_datagrid_view_import", "fileName" => "11_datagrid_view.xlsx"],
     ];
   }
 }

@@ -21,8 +21,11 @@ class PcmtCreateCustomDatasetCsvCommand extends ContainerAwareCommand
   /**
    * run inside terminal in fpm docker: bin/console $defaultName
    */
+
+  /** @var string */
   protected static $defaultName = 'pcmt:custom-dataset:csv:create';
 
+  /** @var string */
   protected $filesFolderPath;
 
   protected function execute(InputInterface $input, OutputInterface $output): void

@@ -23,6 +23,7 @@ define([
                     this.render();
                 }
             },
+
             template: _.template(selectTemplate),
             attributes: [],
 
@@ -36,7 +37,9 @@ define([
                         }.bind(this))
                 );
             },
-
+            setFieldName: function(fieldname){
+                this.fieldName = fieldname;
+            },
             renderInput: function (templateContext) {
                 if (!_.has(this.getFormData(), this.fieldName) && _.has(this.config, 'defaultValue')) {
                     this.updateModel(this.config.defaultValue);

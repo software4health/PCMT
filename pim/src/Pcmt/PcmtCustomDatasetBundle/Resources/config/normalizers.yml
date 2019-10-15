@@ -1,0 +1,5 @@
+services:
+  pcmt_connector.normalizer.datagrid_view:
+    class: 'Pcmt\PcmtCustomDatasetBundle\Processor\Normalizer\PcmtDatagridViewNormalizer'
+    tags:
+      - { name: pcmt.normalizer }

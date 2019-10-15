@@ -248,6 +248,16 @@ jobs:
             realTimeVersioning: true
             decimalSeparator: .
             dateFormat: yyyy-MM-dd
+    #11
+    pcmt_xlsx_datagrid_view_import:
+        connector: PCMT XLSX Connector
+        alias:     pcmt_xlsx_datagrid_view_import
+        label:     XLSX 11_datagrid_view import
+        type:      import
+        configuration:
+            filePath:      /tmp/datagrid_view.xlsx
+            uploadAllowed: true
+
 #xlsx_exports
     #1
     xlsx_category_export:
@@ -427,3 +437,14 @@ jobs:
                     scope: ecommerce
                     locales:
                         - en_US
+
+  #11
+    pcmt_xlsx_datagrid_view_export:
+        connector: PCMT XLSX Connector
+        alias:     pcmt_xlsx_datagrid_view_export
+        label:     XLSX 11_datagrid_view export
+        type:      export
+        configuration:
+            withHeader: true
+            linesPerFile: 10000
+            filePath:   /tmp/11_datagrid_view.xlsx

@@ -5,7 +5,7 @@ pim_enrich.entity.attribute:
       choose: choose attribute
     concat_attribute_separator_select:
       label: Separator
-      choose: choose separator
+      choose: write separator
     type:
       pcmt_catalog_concatenated: Concatenated Attributes
 pim_measure:

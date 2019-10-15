@@ -31,7 +31,6 @@ define([
              */
             initialize: function (config) {
                 this.config = config.config;
-
                 BaseForm.prototype.initialize.apply(this, arguments);
             },
 

@@ -5,13 +5,12 @@ namespace Pcmt\PcmtAttributeBundle\Provider\Field;
 
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Field\FieldProviderInterface;
-use Akeneo\Platform\Bundle\UIBundle\Provider\Field\RuntimeException;
 use Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
 
 class ConcatenatedAttributeFieldProvider implements FieldProviderInterface
 {
     protected $fields = [
-        PcmtAtributeTypes::CONCATENATED_FIELDS => 'pcmt_concatenated_attribute_field'
+        PcmtAtributeTypes::CONCATENATED_FIELDS => 'pcmt_concatenated_attribute_text_field'
     ];
 
     public function getField($attribute)
