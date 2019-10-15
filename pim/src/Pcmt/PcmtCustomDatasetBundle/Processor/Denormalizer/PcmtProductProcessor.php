@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Pcmt\PcmtCustomDatasetBundle\Processor\Denormalizer;
 
@@ -84,7 +85,7 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
   /**
    * {@inheritdoc}
    */
-  public function process($item)
+  public function process($item): ProductInterface
   {
     $itemHasStatus = isset($item['enabled']);
     if (!isset($item['enabled'])) {
@@ -174,7 +175,7 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
    *
    * @return array
    */
-  protected function filterIdenticalData(ProductInterface $product, array $filteredItem)
+  protected function filterIdenticalData(ProductInterface $product, array $filteredItem): array
   {
     return $this->productFilter->filter($product, $filteredItem);
   }
@@ -184,7 +185,7 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
    *
    * @return string|null
    */
-  protected function getIdentifier(array $item)
+  protected function getIdentifier(array $item): ?string
   {
     return isset($item['identifier']) ? $item['identifier'] : null;
   }
@@ -221,7 +222,7 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
    *
    * @return array
    */
-  protected function filterItemData(array $item)
+  protected function filterItemData(array $item): array
   {
     foreach ($this->repository->getIdentifierProperties() as $identifierProperty) {
       unset($item['values'][$identifierProperty]);
@@ -238,7 +239,7 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
    *
    * @throws PropertyException
    */
-  protected function updateProduct(ProductInterface $product, array $filteredItem)
+  protected function updateProduct(ProductInterface $product, array $filteredItem): void
   {
     $this->updater->update($product, $filteredItem);
   }
@@ -250,7 +251,7 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
    *
    * @return ConstraintViolationListInterface
    */
-  protected function validateProduct(ProductInterface $product)
+  protected function validateProduct(ProductInterface $product): ConstraintViolationListInterface
   {
     return $this->validator->validate($product);
   }
@@ -261,7 +262,7 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
    *
    * @param ProductInterface $product
    */
-  protected function detachProduct(ProductInterface $product)
+  protected function detachProduct(ProductInterface $product): void
   {
     $this->detacher->detach($product);
   }
