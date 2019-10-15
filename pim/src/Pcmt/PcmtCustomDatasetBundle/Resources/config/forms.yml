@@ -5,5 +5,7 @@ services:
     arguments:
       -
           pcmt_xlsx_product_import: pim-job-instance-xlsx-product-import
+          pcmt_xlsx_datagrid_view_export: pim-job-instance-xlsx-base-export
+          pcmt_xlsx_datagrid_view_import: pim-job-instance-xlsx-base-import
     tags:
       - { name: pim_enrich.provider.form, priority: 100 }

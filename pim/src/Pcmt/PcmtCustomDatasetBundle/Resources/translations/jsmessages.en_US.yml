@@ -4,3 +4,13 @@ batch_jobs:
         validation.label: Validation
         label: Pcmt Product import in XLSX
         import.label: Pcmt Product import
+
+    pcmt_xlsx_datagrid_view_export:
+        validation.label: Validation
+        label: Pcmt Datagrid View export in XLSX
+        import.label: Pcmt Datagrid View export
+
+    pcmt_xlsx_datagrid_view_import:
+        validation.label: Validation
+        label: Pcmt Datagrid View import in XLSX
+        import.label: Pcmt Datagrid View import
