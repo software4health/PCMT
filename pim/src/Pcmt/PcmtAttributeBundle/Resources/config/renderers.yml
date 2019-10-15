@@ -8,7 +8,6 @@ services:
       - '@liip_imagine.cache.manager'
       - '@liip_imagine.filter.manager'
       - '@pim_catalog.repository.cached_attribute'
-     # - 'AkeneoPimEnrichmentBundle:Product:renderPdf.html.twig'
       - 'PcmtAttributeBundle:Product:renderPdf.html.twig'
       - '%upload_dir%'
       - '%pim_pdf_generator_font%'
