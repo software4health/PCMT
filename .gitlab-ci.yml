@@ -189,3 +189,47 @@ env-test-destroy:
   environment:
     name: test 
     action: stop
+
+############### Beta Environment ###############
+
+.env-beta:
+  extends:
+    - .pim_only_changes
+  stage: deploy
+  only:
+    - master@pcmt/pcmt
+  when: manual
+  environment:
+    name: beta
+    url: http://beta.pcmt.villagereach.org
+    on_stop: env-beta-destroy
+
+.env-beta_script-deploy:
+  script:
+    - ./bin/ci-deploy.sh beta
+    
+.env-beta_script-destroy:
+  script: 
+    - ./deploy/terraform/run-docker.sh beta destroy -auto-approve
+
+env-beta (WIPE DB):
+  extends:
+    - .env-beta
+    - .env-beta_script-deploy
+  variables:
+    PCMT_PROFILE: dev
+
+env-beta (KEEP DB):
+  extends:
+    - .env-beta
+    - .env-beta_script-deploy
+  variables:
+    PCMT_PROFILE: production
+
+env-beta-destroy:
+  extends:
+    - .env-beta
+    - .env-beta_script-destroy
+  environment:
+    name: beta
+    action: stop
