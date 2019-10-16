@@ -25,6 +25,7 @@ class PcmtAttributeExtension extends Extension
         $loader->load('factories.yml');
         $loader->load('listeners.yml');
         $loader->load('comparators.yml');
+        $loader->load('renderers.yml');
       }
 
       public function getAlias()

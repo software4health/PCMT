@@ -39,16 +39,17 @@ class PcmtHelperCommand extends ContainerAwareCommand
         //fetch concatenated attributes
         $concatenatedRepository = $this->getContainer()->get('pcmt_catalog.repository.pcmt_family_concatenated_attribute');
         $concatenatedAttributes = $concatenatedRepository->getConcatenatedAttributes($family);
-        //dump($concatenatedAttributes);
+
         $productValues = $product->getRawValues();
         $values = []; //input structure to values updater;
 
         foreach ($concatenatedAttributes as $counter => $concatenatedAttribute){
             $attributeName = $concatenatedAttribute['code'];
-            $memberAttributes = $attrRepo->findBy(['id' =>
+            $memberAttributes = $attrRepo->findBy(['code' =>
                 explode(',', $concatenatedAttribute['properties']['attributes'])
             ]);//fetch member attributes from concatenated attributes:
             $separator =  $concatenatedAttribute['properties']['separators']; //separator
+
 
             $concatenatedValue = [];
             foreach ($memberAttributes as $memberAttribute){
@@ -65,11 +66,12 @@ class PcmtHelperCommand extends ContainerAwareCommand
             $values[$attributeName]['data']['locale'] = null;
             $values[$attributeName]['data']['scope'] = null;
 
+            dump($values);
 
             //update the product value:
-            $productValuesUpdater->update($product, $values);
+            //$productValuesUpdater->update($product, $values);
 
-            $productSaver->save($product);
+           // $productSaver->save($product);
         }
     }
 

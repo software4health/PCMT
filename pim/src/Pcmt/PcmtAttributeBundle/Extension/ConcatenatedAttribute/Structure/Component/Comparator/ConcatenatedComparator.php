@@ -20,7 +20,7 @@ class ConcatenatedComparator implements ComparatorInterface
         return in_array($data, $this->types);
     }
 
-    public function compare($data, $originals): ?string
+    public function compare($data, $originals): ?array
     {
         $default = ['locale' => null, 'scope' => null, 'data' => null];
         $originals = array_merge($default, $originals);
