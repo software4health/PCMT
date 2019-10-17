@@ -15,7 +15,12 @@ if [ -z "$ENV_NAME" ]; then
     exit 1
 fi
 
-export PCMT_VER=$($DIR/pcmt-ver-sha.sh)
+if [ -z "$PCMT_VER" ]; then
+    echo "PCMT_VER not set, so setting to full version..."
+    export PCMT_VER=$($DIR/pcmt-ver-sha.sh)
+fi
+echo "Deploying $PCMT_VER"
+    
 COMMIT_SHA=$(git rev-parse HEAD)
 export PCMT_ASSET_URL="https://gitlab.com/pcmt/pcmt/raw/$COMMIT_SHA"
 
