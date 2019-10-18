@@ -14,7 +14,7 @@ services:
       - './pim/web:/tmp/pcmt/web:ro'
       - './pim/composer.json:/srv/pim/composer.json'
       - './pim/composer.lock:/srv/pim/composer.lock'
-    # we use depends_up so that the pim volume is initialized by one container 
+    # we use depends_on so that the pim volume is initialized by one container 
     # with a complete /srv/pim.  Otherwise there isn't a gurantee how this
     # volume will be initialized.
     depends_on: 
