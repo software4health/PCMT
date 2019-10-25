@@ -1,0 +1,9 @@
+services:
+
+    #### Drafts Fetcher for dashboard w/ user context ####
+    pcmt_catalog.draft.fetcher:
+        class: Pcmt\PcmtProductBundle\Widget\DraftsFetcher
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@security.token_storage'
+            - '@oro_security.security_facade'

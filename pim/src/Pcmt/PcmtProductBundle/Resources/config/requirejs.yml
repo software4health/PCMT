@@ -1,3 +1,9 @@
 config:
     paths:
         dnd/product-edit-form/attributes/description: pcmtproduct/js/product/form/attributes/description
+
+        ### Dashboard widget
+        pcmt/product/widget/draft-products-widget: pcmtproduct/js/draft/draft-products-widget
+        ### templates ###
+        pcmt/product/template/widget/draft-products-widget: pcmtproduct/templates/draft/draft-products-widget.html
+        pcmt/product/template/widget/view-all-btn: pcmtproduct/templates/draft/view-all-btn.html

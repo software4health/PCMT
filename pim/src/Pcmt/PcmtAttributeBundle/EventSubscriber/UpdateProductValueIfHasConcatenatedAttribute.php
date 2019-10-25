@@ -100,5 +100,4 @@ final class UpdateProductValueIfHasConcatenatedAttribute implements EventSubscri
             $this->productSaver->save($product);
         }
     }
-
 }

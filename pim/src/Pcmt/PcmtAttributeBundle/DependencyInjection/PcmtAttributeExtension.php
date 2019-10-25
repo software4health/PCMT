@@ -21,7 +21,6 @@ class PcmtAttributeExtension extends Extension
         $loader->load('updaters.yml');
         $loader->load('attribute_types.yml');
         $loader->load('providers.yml');
-        $loader->load('controllers.yml');
         $loader->load('factories.yml');
         $loader->load('listeners.yml');
         $loader->load('comparators.yml');

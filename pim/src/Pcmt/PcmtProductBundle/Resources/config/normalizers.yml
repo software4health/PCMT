@@ -1,0 +1,15 @@
+services:
+
+    pcmt_catalog.draft_new.property_normalizer:
+        class: Pcmt\PcmtProductBundle\Normalizer\NewDraftPropertyNormalizer
+        autowire: true
+
+    pcmt_catalog.draft_pending.property_normalizer:
+        class: Pcmt\PcmtProductBundle\Normalizer\PendingDraftPropertyNormalizer
+
+    pcmt_catalog.draft.normalizer:
+        class: Pcmt\PcmtProductBundle\Normalizer\DraftNormalizer
+        arguments:
+          - ['@pcmt_catalog.draft_new.property_normalizer', '@pcmt_catalog.draft_pending.property_normalizer']
+        tags:
+          - { name: pim_internal_api_serializer.normalizer, priority: 110 }

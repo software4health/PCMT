@@ -1,0 +1,7 @@
+services:
+
+    pcmt_catalog.draft.manager:
+        class: Pcmt\PcmtProductBundle\Manager\DraftManager
+
+    pcmt_catalog.draft.updater.new:
+        class:
