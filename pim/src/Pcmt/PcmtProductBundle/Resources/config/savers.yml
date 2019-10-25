@@ -1,0 +1,7 @@
+services:
+
+    pcmt_product.save.productDraft:
+        class: Pcmt\PcmtProductBundle\Saver\ProductDraftSaver
+        arguments:
+          - '@doctrine.orm.entity_manager'
+          - '@event_dispatcher'

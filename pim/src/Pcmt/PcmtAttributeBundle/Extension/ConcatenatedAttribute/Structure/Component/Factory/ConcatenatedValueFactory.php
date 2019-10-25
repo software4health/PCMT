@@ -33,7 +33,7 @@ class ConcatenatedValueFactory extends AbstractValueFactory
         $this->valueFactory = $valueFactory;
     }
 
-    protected function prepareData(AttributeInterface $attribute, $data, bool $ignoreUnknownData): string
+    protected function prepareData(AttributeInterface $attribute, $data, bool $ignoreUnknownData): ?string
     {
         /**
          * here now data is in format of array wth single value :
