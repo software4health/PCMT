@@ -4,4 +4,5 @@ pcmt_product:
             product: Product
             date: Date
             author: Author
-            action:
+            action: Actions
+            empty: No drafts

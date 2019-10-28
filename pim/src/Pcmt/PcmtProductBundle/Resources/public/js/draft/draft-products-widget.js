@@ -17,9 +17,9 @@ define(
 
             _processResponse: function(data) {
                 if(!_.isEmpty(data)){
-                    console.log('some data passed!');
-                    console.log(this.template);
+                    console.log(data)
                 }
+                return data;
             }
         });
     }
