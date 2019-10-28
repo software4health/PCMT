@@ -10,7 +10,6 @@
             <%- __('pcmt_product.widget.drafts_overview.date') %>
         </th>
         <th class="AknGrid-headerCell">
-            Author
             <%- __('pcmt_product.widget.drafts_overview.author') %>
         </th>
         <th class="AknGrid-headerCell">
@@ -21,9 +20,17 @@
 
     <tbody>
         <% _.each(data, function (draft) { %>
-            <% console.log(draft); %>
+            <% console.log(draft.id); %>
             <tr class="AknGrid-bodyRow">
-                <td class="AknGrid-bodyCell">TEST!!!!</td>
+                <td class="AknGrid-bodyCell"><%- draft.label %></td>
+                <td class="AknGrid-bodyCell"><%- draft.createdAt.date %></td>
+                <td class="AknGrid-bodyCell"><%- draft.author %></td>
+                <td class="AknGrid-bodyCell">
+                    <span class="AknButton AknButton--small AknButton review-draft"
+                          data-id="<%-draft.id%>"
+                    >Review
+                    </span>
+                </td>
             </tr>
         <% }); %>
     </tbody>
