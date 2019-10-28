@@ -7,6 +7,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Carbon\Carbon;
 
 
 abstract class ProductAbstractDraft implements
