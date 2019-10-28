@@ -52,6 +52,10 @@ class DraftsFetcher
 
             $fetcherFormatted[]['id'] = $draft->getId();
             $fetcherFormatted[]['label'] = $productLabel;
+            $fetcherFormatted[]['createdAt'] = $draft->getCreatedAt();
+            $fetcherFormatted[]['author'] =  $user->getFirstName() . ' ' . $user->getLastName();
         }
+
+        return $fetcherFormatted;
     }
 }

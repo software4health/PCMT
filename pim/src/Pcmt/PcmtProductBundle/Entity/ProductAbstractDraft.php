@@ -84,6 +84,11 @@ abstract class ProductAbstractDraft implements
         return $this->draftHistoryEntries;
     }
 
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->created;
+    }
+
     public function getAuthor(): UserInterface
     {
         return $this->author;

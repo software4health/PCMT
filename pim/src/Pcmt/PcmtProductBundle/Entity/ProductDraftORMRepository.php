@@ -14,7 +14,7 @@ class ProductDraftORMRepository extends EntityRepository implements DraftReposit
         throw new NotImplementedException('method not implemented');
     }
 
-    public function getUserDrafts(UserInterface $user)
+    public function getUserDrafts(UserInterface $user): array
     {
         $qb = $this->createQueryBuilder('d');
         $qb->where(

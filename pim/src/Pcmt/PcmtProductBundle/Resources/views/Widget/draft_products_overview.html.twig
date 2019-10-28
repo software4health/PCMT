@@ -11,11 +11,12 @@
             function ($, widgetContainer, DraftsWidget) {
                 'use strict';
                 $(function () {
-                    var options = {el: '#draft-products-overview-widget', alias: 'draft_products_overview'};
-                    var widget = widgetContainer.getWidget(options, DraftsWidget);
+                    let options = {el: '#draft-products-overview-widget', alias: 'draft_products_overview'};
+                    let widget = widgetContainer.getWidget(options, DraftsWidget);
                     widget.render().delayedLoad();
                 });
             }
         );
     </script>
 {% endset %}
+

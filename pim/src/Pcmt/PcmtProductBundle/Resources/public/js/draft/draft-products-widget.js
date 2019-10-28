@@ -16,7 +16,10 @@ define(
             template: _.template(template),
 
             _processResponse: function(data) {
-                console.log(data)
+                if(!_.isEmpty(data)){
+                    console.log('some data passed!');
+                    console.log(this.template);
+                }
             }
         });
     }

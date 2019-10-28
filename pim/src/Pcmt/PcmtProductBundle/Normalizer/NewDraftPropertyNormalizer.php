@@ -5,10 +5,6 @@ namespace Pcmt\PcmtProductBundle\Normalizer;
 
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
 use Symfony\Component\Intl\Exception\MethodNotImplementedException;
-use Symfony\Component\Serializer\Exception\CircularReferenceException;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\Exception\InvalidArgumentException;
-use Symfony\Component\Serializer\Exception\LogicException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class NewDraftPropertyNormalizer implements NormalizerInterface
