@@ -89,6 +89,11 @@ abstract class ProductAbstractDraft implements
         return $this->created;
     }
 
+    public function getCreatedAtFormatted(): string
+    {
+        return Carbon::parse($this->created)->isoFormat('LLLL');
+    }
+
     public function getAuthor(): UserInterface
     {
         return $this->author;
