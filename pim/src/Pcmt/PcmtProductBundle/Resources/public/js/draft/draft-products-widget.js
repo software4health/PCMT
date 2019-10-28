@@ -16,7 +16,10 @@ define(
             template: _.template(template),
 
             _processResponse: function(data) {
-                console.log(data)
+                if(_.isEmpty(data)){
+                    return [];
+                }
+                return data;
             }
         });
     }

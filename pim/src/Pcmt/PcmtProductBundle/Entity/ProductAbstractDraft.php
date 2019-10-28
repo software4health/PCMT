@@ -7,6 +7,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Carbon\Carbon;
 
 
 abstract class ProductAbstractDraft implements
@@ -82,6 +83,16 @@ abstract class ProductAbstractDraft implements
     public function getDraftHistoryEntries(): Collection
     {
         return $this->draftHistoryEntries;
+    }
+
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->created;
+    }
+
+    public function getCreatedAtFormatted(): string
+    {
+        return Carbon::parse($this->created)->isoFormat('LLLL');
     }
 
     public function getAuthor(): UserInterface

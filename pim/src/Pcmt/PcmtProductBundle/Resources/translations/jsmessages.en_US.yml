@@ -1,0 +1,8 @@
+pcmt_product:
+    widget:
+        drafts_overview:
+            product: Product
+            date: Date
+            author: Author
+            action: Actions
+            empty: No drafts

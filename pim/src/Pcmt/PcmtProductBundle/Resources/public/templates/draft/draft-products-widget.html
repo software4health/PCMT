@@ -1,32 +1,43 @@
-<% if(!_.isEmpty(data)) { %>
-<thead>
-<tr>
-    <th class="AknGrid-headerCell">
-        <%- __('pim_import_export.widget.draft_overview.product') %>
-    </th>
-    <th class="AknGrid-headerCell">
-        <%- __('pim_common.type') %>
-    </th>
-    <th class="AknGrid-headerCell">
-        <%- __('pim_import_export.widget.last_operations.date') %>
-    </th>
-    <th class="AknGrid-headerCell">
-        <%- __('pim_common.status') %>
-    </th>
-    <th class="AknGrid-headerCell">
-        <%- __('pim_import_export.widget.last_operations.author') %>
-    </th>
-    <th class="AknGrid-headerCell">
-        <!-- below are the action inputs -->
-    </th>
-    <th class="AknGrid-headerCell"></th>
-</tr>
-</thead>
+<% if (!_.isEmpty(data)) { %>
 
-<tbody>
-<!-- draft serialized data -->
-<tr class="AknGrid-bodyRow">
-    <td class="AknGrid-bodyCell">TEST!!!!</td>
-</tr>
-</tbody>
+    <thead>
+    <tr>
+        <th class="AknGrid-headerCell">
+            <%- __('pcmt_product.widget.drafts_overview.product') %>
+        </th>
+        <th class="AknGrid-headerCell">
+            <%- __('pcmt_product.widget.drafts_overview.date') %>
+        </th>
+        <th class="AknGrid-headerCell">
+            <%- __('pcmt_product.widget.drafts_overview.author') %>
+        </th>
+        <th class="AknGrid-headerCell">
+            <%- __('pcmt_product.widget.drafts_overview.action') %>
+        </th>
+    </tr>
+    </thead>
+
+    <tbody>
+        <% _.each(data, function (draft) { %>
+            <tr class="AknGrid-bodyRow">
+                <td class="AknGrid-bodyCell"><%- draft.label %></td>
+                <td class="AknGrid-bodyCell"><%- draft.createdAt %></td>
+                <td class="AknGrid-bodyCell"><%- draft.author %></td>
+                <td class="AknGrid-bodyCell">
+                    <span class="AknButton AknButton--small AknButton review-draft"
+                          data-id="<%-draft.id%>"
+                    >Review
+                    </span>
+                </td>
+            </tr>
+        <% }); %>
+    </tbody>
+<% } else {%>
+    <tr>
+        <td class="AknGrid-bodyCell AknGrid-bodyCell--full">
+            <div class="AknMessageBox AknMessageBox--centered">
+                <%- __('pcmt_product.widget.drafts_overview.empty') %>
+            </div>
+        </td>
+    </tr>
 <% } %>

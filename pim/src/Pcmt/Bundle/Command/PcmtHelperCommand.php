@@ -5,21 +5,9 @@ namespace Pcmt\Bundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft;
-use Pcmt\PcmtProductBundle\Entity\ProductDraftHistory;
-use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
-use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
-use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-
 
 class PcmtHelperCommand extends ContainerAwareCommand
 {
@@ -48,7 +36,14 @@ class PcmtHelperCommand extends ContainerAwareCommand
         $user = $userRepository->find('1');
 
         $drafts = $draftRepository->getUserDrafts($user);
-        dump($drafts);
+        $return = [];
+
+        foreach ($drafts as $draft){
+            $return[$draft->getId()]['product'] = $draft->getProductData()['identifier'];
+            $return[$draft->getId()]['createdAt'] = $draft->getCreatedAt();
+            $return[$draft->getId()]['author'] = $user->getFirstName() . ' ' . $user->getLastName();
+        }
+        dump($return);
         die;
 
     }
