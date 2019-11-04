@@ -2,10 +2,16 @@ services:
 
     Pcmt\PcmtAttributeBundle\EventSubscriber\UpdateProductValueIfHasConcatenatedAttribute:
         arguments:
+          - '@doctrine.orm.entity_manager'
           - '@pim_catalog.repository.product'
+          - '@pim_catalog.repository.product_model'
+          - '@pcmt_catalog.repository.family_variant'
           - '@pcmt_catalog.repository.pcmt_family_concatenated_attribute'
+          - '@pim_catalog.repository.family'
           - '@pim_catalog.repository.attribute'
           - '@pcmt_catalog.updater.product_value_concatenated'
+          - '@pim_catalog.updater.entity_with_values'
           - '@pim_catalog.saver.product'
+          - '@pim_catalog.saver.product_model'
         tags:
-          - { name: kernel.event_subscriber, event: product.fetched }
+          - { name: kernel.event_subscriber }

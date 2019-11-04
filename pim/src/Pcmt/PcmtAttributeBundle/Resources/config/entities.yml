@@ -3,6 +3,7 @@ parameters:
     pim_catalog.repository.concatenated_attribute.class: Pcmt\PcmtAttributeBundle\Entity\PcmtFamilyRepository
 
 services:
+
     pcmt_catalog.repository.pcmt_family_concatenated_attribute:
         class: '%pim_catalog.repository.concatenated_attribute.class%'
         factory: 'doctrine.orm.entity_manager:getRepository'
