@@ -1,0 +1,5 @@
+pcmt_permission_drafts_list:
+  type: action
+  label: pcmt.permission.drafts.label.list
+  group_name: pcmt.permission.drafts
+#  group_name: pim_api.acl_group.association_type
