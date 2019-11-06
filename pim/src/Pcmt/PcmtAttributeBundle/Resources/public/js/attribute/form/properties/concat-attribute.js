@@ -23,7 +23,10 @@ define([
         },
         template: _.template(formTemplate),
         attributes: [],
-        members: ['attribute1', 'separator1', 'attribute2'],
+        members : {
+            attributes : ['attribute1', 'attribute2'],
+            separators: ['separator1']
+        },
 
         initialize: function (config) {
             this.config = config.config;
@@ -49,13 +52,13 @@ define([
             }
 
             /** stringMember is the key, whether 'separators' or 'attributes' **/
-            console.log(this.getFieldValue(event.target));
             data.concatenated[event.target.name] = this.getFieldValue(event.target);
 
             this.setData(data);
         },
+
         render: function(templateContext) {
-            console.log(this.formatChoices(this.attributes));
+
             this.$el.html(this.template({
                 value: "",
                 model: this.getFormData(),
@@ -72,7 +75,6 @@ define([
 
             this.delegateEvents();
             this.renderExtensions();
-
             this.postRender();
         },
 

@@ -9,6 +9,9 @@ use Akeneo\Pim\Structure\Component\Normalizer\Standard\AttributeNormalizer as Ba
 
 class AttributeNormalizer extends BaseAttributeNormalizer
 {
+  /** @var NormalizerInterface $concatenatedAttributesNormalizer */
+  private $concatenatedAttributesNormalizer;
+
   /** @var NormalizerInterface */
   private $translationNormalizer;
 
@@ -18,12 +21,15 @@ class AttributeNormalizer extends BaseAttributeNormalizer
   /** @var array */
   private $properties;
 
-  /**
-   * @param NormalizerInterface $translationNormalizer
-   * @param NormalizerInterface $dateTimeNormalizer
-   * @param array               $properties
-   */
+    /**
+     * AttributeNormalizer constructor.
+     * @param NormalizerInterface $concatenatedNormalizer
+     * @param NormalizerInterface $translationNormalizer
+     * @param NormalizerInterface $dateTimeNormalizer
+     * @param array $properties
+     */
   public function __construct(
+    NormalizerInterface $concatenatedNormalizer,
     NormalizerInterface $translationNormalizer,
     NormalizerInterface $dateTimeNormalizer,
     array $properties
@@ -32,6 +38,7 @@ class AttributeNormalizer extends BaseAttributeNormalizer
       $translationNormalizer,
       $dateTimeNormalizer,
       $properties);
+    $this->concatenatedAttributesNormalizer = $concatenatedNormalizer;
     $this->translationNormalizer = $translationNormalizer;
     $this->dateTimeNormalizer = $dateTimeNormalizer;
     $this->properties = $properties;
@@ -84,9 +91,8 @@ class AttributeNormalizer extends BaseAttributeNormalizer
       'localizable'            => (bool) $attribute->isLocalizable(),
       'scopable'               => (bool) $attribute->isScopable(),
       'labels'                 => $this->translationNormalizer->normalize($attribute, $format, $context),
-      // Add @Pcmt
-      'descriptions'           => $this->translationNormalizer->normalizeDescription($attribute, $context), // normalize localizable attribute description
-      // / Add @Pcmt
+      'descriptions'           => $this->translationNormalizer->normalizeDescription($attribute, $context),
+      'concatenated'           => $this->concatenatedAttributesNormalizer->normalize($attribute) //not dependent on context
     ];
 
     return $normalizedAttribute + $normalizedProperties;
