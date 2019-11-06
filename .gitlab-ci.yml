@@ -233,3 +233,47 @@ env-beta-destroy:
   environment:
     name: beta
     action: stop
+
+############### Rwanda Beta Environment ###############
+
+.env-rwanda-beta:
+  extends:
+    - .pim_only_changes
+  stage: deploy
+  only:
+    - master@pcmt/pcmt
+  when: manual
+  environment:
+    name: rwanda-beta
+    url: http://rwanda-beta.pcmt.villagereach.org
+    on_stop: env-rwanda-beta-destroy
+
+.env-rwanda-beta_script-deploy:
+  script:
+    - ./bin/ci-deploy.sh rwanda-beta
+    
+.env-rwanda-beta_script-destroy:
+  script: 
+    - ./deploy/terraform/run-docker.sh rwanda-beta destroy -auto-approve
+
+env-rwanda-beta (WIPE DB):
+  extends:
+    - .env-rwanda-beta
+    - .env-rwanda-beta_script-deploy
+  variables:
+    PCMT_PROFILE: dev
+
+env-rwanda-beta (KEEP DB):
+  extends:
+    - .env-rwanda-beta
+    - .env-rwanda-beta_script-deploy
+  variables:
+    PCMT_PROFILE: production
+
+env-rwanda-beta-destroy:
+  extends:
+    - .env-rwanda-beta
+    - .env-rwanda-beta_script-destroy
+  environment:
+    name: rwanda-beta
+    action: stop
