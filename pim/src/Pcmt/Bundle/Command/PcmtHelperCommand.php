@@ -37,6 +37,11 @@ class PcmtHelperCommand extends ContainerAwareCommand
         $modelRepo = $this->getContainer()->get('pim_catalog.repository.product_model');
         $pcmtFamilyRepo = $this->getContainer()->get('pcmt_catalog.repository.family_variant');
         $pcmtFamilyRepo = $this->getEntityManager()->getRepository(FamilyVariant::class);
+
+        $converter = $this->getContainer()->get('pim_connector.array_converter.flat_to_standard.concatenated_attribute');
+        dump($converter);
+        die;
+
         dump(get_class($pcmtFamilyRepo));
         die;
         $model = $modelRepo->find(1);

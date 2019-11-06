@@ -33,3 +33,11 @@ services:
           - 'negative_allowed'
           - 'auto_option_sorting'
           - 'is_read_only'
+
+    pim_connector.array_converter.flat_to_standard.concatenated_attribute:
+        class: 'Pcmt\PcmtAttributeBundle\Extension\Connector\ArrayConverter\StandardToFlat\Product\ConcatenatedAttributesConverter'
+        arguments:
+          - '@pim_connector.array_converter.flat_to_standard.product.attribute_columns_resolver'
+          - ['pcmt_catalog_concatenated']
+        tags:
+            - { name: 'pim_connector.array_converter.standard_to_flat.product.value_converter' }
