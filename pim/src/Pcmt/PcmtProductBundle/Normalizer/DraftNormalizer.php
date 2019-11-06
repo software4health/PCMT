@@ -7,52 +7,27 @@ use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class DraftNormalizer implements NormalizerInterface
 {
-    /** @var NormalizerInterface $draftPropertyNormalizer */
-    protected $draftPropertyNormalizers;
-    /** @var string[] */
-    protected $supportedFormat = ['internal_api'];
+    /**
+     * @var ObjectNormalizer
+     */
+    private $objectNormalizer;
 
-    public function __construct(array $draftPropertyNormalizers)
+    public function __construct(ObjectNormalizer $objectNormalizer)
     {
-        $this->draftPropertyNormalizers = $draftPropertyNormalizers;
+        $this->objectNormalizer = $objectNormalizer;
     }
 
     public function normalize($draft, $format = null, array $context = []): array
     {
-        $draftHistory = $draft->getDraftHistoryEntries();
-        $normalizedDraftHistory = [];
-
-        foreach ($draftHistory as $entry){
-            $normalizedDraftHistory[] = [
-                'changeset' => $entry->getChangeSet(),
-                'date' => $entry->getCreatedAt()
-            ];
-        }
-        $normalizedDraft = [
-            'id' => $draft->getId(),
-            'author' => $draft->getAuthor()->getUserName(),
-            'product' => (null != $draft->getProduct()) ? $draft->getProduct()->getName() : $draft->getProductData(),
-            'type' => $draft->getType(),
-            'history' => $normalizedDraftHistory
-        ];
-
-        return $normalizedDraft;
+        $data = $this->objectNormalizer->normalize($draft, $format, $context);
+        return $data;
     }
 
-    public function supportsNormalization($data, $format = null): bool
+    public function supportsNormalization($data, $format = null, array $context = [])
     {
-        return $data instanceof ProductDraftInterface && in_array($format, $this->supportedFormat);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setSerializer(SerializerInterface $serializer)
-    {
-        $this->serializer = $serializer;
+        return $data instanceof ProductDraftInterface;
     }
 }
