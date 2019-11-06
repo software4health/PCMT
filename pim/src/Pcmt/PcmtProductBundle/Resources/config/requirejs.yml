@@ -4,6 +4,18 @@ config:
 
         ### Dashboard widget
         pcmt/product/widget/draft-products-widget: pcmtproduct/js/draft/draft-products-widget
+
         ### templates ###
         pcmt/product/template/widget/draft-products-widget: pcmtproduct/templates/draft/draft-products-widget.html
         pcmt/product/template/widget/view-all-btn: pcmtproduct/templates/draft/view-all-btn.html
+
+        pcmt/product/template/draft-list: pcmtproduct/templates/draft/draft-list.html
+
+        ### controllers ###
+        pcmt/product/drafts/index: pcmtproduct/js/controller/drafts_index
+
+    config:
+        pim/controller-registry:
+            controllers:
+                pcmt_product_drafts_index:
+                    module: pcmt/product/drafts/index

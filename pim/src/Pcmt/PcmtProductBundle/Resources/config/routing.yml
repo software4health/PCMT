@@ -1,0 +1,6 @@
+pcmt_product_drafts_index:
+  path: /drafts/
+pcmt_product_drafts_api:
+  path: /rest/drafts/
+  defaults: { _controller: pcmt_product.controller.rest.drafts:getList }
+  methods: [GET]
