@@ -7,9 +7,9 @@ services:
     pcmt_catalog.draft_pending.property_normalizer:
         class: Pcmt\PcmtProductBundle\Normalizer\PendingDraftPropertyNormalizer
 
-    pcmt_catalog.draft.normalizer:
+    pcmt_product.draft.normalizer:
         class: Pcmt\PcmtProductBundle\Normalizer\DraftNormalizer
         arguments:
-          - ['@pcmt_catalog.draft_new.property_normalizer', '@pcmt_catalog.draft_pending.property_normalizer']
+          - '@serializer.normalizer.object'
         tags:
-          - { name: pim_internal_api_serializer.normalizer, priority: 110 }
+          - { name: serializer.normalizer, priority: 110 }

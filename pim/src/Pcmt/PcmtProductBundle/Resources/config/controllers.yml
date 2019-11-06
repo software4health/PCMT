@@ -1,5 +1,9 @@
 services:
-
+  pcmt_product.controller.rest.drafts:
+    class: Pcmt\PcmtProductBundle\Controller\PcmtProductDraftController
+    arguments:
+      - '@doctrine.orm.entity_manager'
+      - '@security.token_storage'
   ### overrides product controller
   pim_enrich.controller.rest.product:
     class: Pcmt\PcmtProductBundle\Controller\PcmtProductController

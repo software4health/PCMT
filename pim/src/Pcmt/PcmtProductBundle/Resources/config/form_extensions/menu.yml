@@ -1,0 +1,8 @@
+extensions:
+  pcmt-product-drafts-list-sub-element:     # The unique key of your extension
+    module: pim/menu/item                          # The module provided by akeneo for sub elements
+    parent: pim-menu-activity-navigation-block     # The parent is the tab we just created
+    position: 120                                  # [optional] The position in the tree where you want to add the item
+    config:
+      title: pcmt_product.drafts_list.title
+      to: pcmt_product_drafts_index

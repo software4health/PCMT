@@ -6,3 +6,33 @@ pcmt_product:
             author: Author
             action: Actions
             empty: No drafts
+    drafts_list:
+        title: Drafts list
+
+pcmt_product.entity.draft:
+    label: draft
+    uppercase_label: Draft
+    plural_label: Drafts
+    flash:
+        update:
+            success: Draft successfully updated.
+            fail: An error occurred during draft update.
+        create:
+            success: Draft successfully created
+        delete:
+            success: Draft successfully removed
+            fail: Cannot delete this draft
+    property:
+        attribute_as_label: Attribute used as label
+        attribute_as_image: Attribute used as the main picture
+        empty_attribute_as_image: Not selected
+    page_title:
+        index: "]-Inf, 1]{{ count }} draft|]1, Inf[{{ count }} drafts"
+    module:
+        create:
+            button: Create draft
+        delete:
+            confirm: Are you sure you want to delete this draft?
+
+pim_title:
+    pcmt_product_drafts_index: 'Drafts page'
