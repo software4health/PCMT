@@ -1,5 +1,5 @@
 services:
-  pcmt.controller.product_draft:
-    class: Pcmt\PcmtProductBundle\Controller\PcmtProductDraftController
-    calls:
-      - [ setSecurityFacade, ['@oro_security.security_facade'] ]
+    pcmt.controller.product_draft:
+        class: Pcmt\PcmtProductBundle\Controller\PcmtProductDraftController
+        calls:
+            - [ setSecurityFacade, ['@oro_security.security_facade'] ]
