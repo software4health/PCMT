@@ -18,6 +18,7 @@ class PcmtProductExtension extends Extension
         $loader->load('controllers.yml');
         $loader->load('fetchers.yml');
         $loader->load('widget.yml');
+        $loader->load('services.yml');
     }
 
     public function getAlias(): string

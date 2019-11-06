@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Controller;
 
+
+use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Doctrine\ORM\EntityManagerInterface;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
 use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
@@ -35,7 +37,10 @@ class PcmtProductDraftController
         $this->tokenStorage = $tokenStorage;
     }
 
-    /** approve existig draft */
+    /**
+     * approve existig draft
+     * @AclAncestor("pcmt_permission_drafts_approve")
+     */
     public function approveAction(Request $request): JsonResponse
     {
         throw new NotImplementedException('method not impemented');
