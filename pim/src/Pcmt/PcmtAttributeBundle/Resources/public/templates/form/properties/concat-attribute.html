@@ -1,9 +1,7 @@
-<% _.each(members, function (member) { %>
 
-    <% if(member.indexOf("separator") === -1) { %>
-
+        <% _.each(members.attributes, function (member) { %>
         <!-- attribute select -->
-            <div class="AknFieldContainer">
+           <div class="AknFieldContainer">
 
                     <select
                             id="pcmt_enrich_form_<%- member %>" class="select2 member-attribute"
@@ -11,53 +9,58 @@
                             <% if (multiple) { %>multiple<% } %>\
                             <% if (readOnly) { %>readonly disabled<% } %>
                     >
-                <% let attributeValue = null; if(typeof model.concatenated === 'object' && model.concatenated[member] !== null) { attributeValue = model.concatenated[member]; } %>
-                <option value=""<% if (!value) { %> selected<% } %>></option>
+                        <option value=""<% if (!value) { %> selected<% } %>></option>
                         <% if (Object.keys(choices).length > 0 && Object.values(choices)[0] instanceof Object) { %>
                         <% _.each(choices, function (optGroupOptions, optGroupLabel) { %>
 
-                        <optgroup label="<%- optGroupLabel %>">
-                            <% _.each(optGroupOptions, function (choiceLabel, choiceValue) { %>
-                            <!-- compare each choiceValue with attributeValue and if they match, mark as selected -->
-                                <option value="<%- choiceLabel %>" <% if (!multiple && choiceLabel === value) { %> selected<% } %>
-                                <%- choiceLabel %>
-                                </option>
-                            <% }); %>
-                        </optgroup>
+                            <optgroup label="<%- optGroupLabel %>">
+                                <% _.each(optGroupOptions, function (choiceLabel, choiceValue) { %>
+                                    <option value="<%- choiceLabel %>" <% if (!multiple && choiceLabel === value) { %> selected<% } %>
+                                    <%- choiceLabel %>
+                                    </option>
+                                <% }); %>
+                            </optgroup>
 
                         <% }); %>
+
                         <% } else { %>
                         <% _.each(choices, function (choiceLabel, choiceValue) { %>
 
-                        <option value="<%- choiceLabel %>"
-                        <% if ((!multiple && choiceValue === value) || (multiple && _.contains(value, choiceValue))) { %> selected<% } %>
-                        >
-                        <%- choiceLabel %>
-
-                        </option>
+                        <% let attributeValue = null; if(typeof model.concatenated === 'object') { attributeValue = model.concatenated[member]; } %>
+                            <option value="<%- choiceLabel %>"
+                                <% if (attributeValue != null && attributeValue == choiceLabel) { %> selected<% } %>
+                                >
+                                <%- choiceLabel %>
+                            </option>
 
                     <% }); %>
                     <% } %>
 
                     </select>
-
             </div>
-    <% } else {  %>
 
-                <!-- separator input -->
+            <!-- separators -->
+
+                <% let selectIndex = member.substr(-1);
+                    _.each(members.separators, function (separator){
+                        if(separator.substr(-1) == selectIndex){ %>
+
             <div class="AknFieldContainer">
+
                 <div class="AknFieldContainer-inputContainer field-input">
                     <input
-                      id="<%- member %>"
-                      name="<%- member %>"
-                      class="AknTextField separator-field"
-                      type="text"
-                      placeholder="<%- labels.defaultChooseSeparator %>"
-                      <% let separatorValue = ""; if(typeof model.concatenated === 'object' && model.concatenated[member] !== null) { separatorValue = model.concatenated[member]; } %>
-                      value="<%- separatorValue %>"  <%- isReadOnly ? 'readonly disabled' : '' %>
+                            id="<%- separator %>"
+                            name="<%- separator %>"
+                            class="AknTextField separator-field"
+                            type="text"
+                            placeholder="<%- labels.defaultChooseSeparator %>"
+                    <% let separatorValue = ""; if(typeof model.concatenated === 'object' && model.concatenated[separator] !== null) { separatorValue = model.concatenated[separator]; } %>
+                    value="<%- separatorValue %>"  <%- isReadOnly ? 'readonly disabled' : '' %>
                     />
                 </div>
-            </div>
-    <% } %>
 
-<% }) %>
+            </div>
+
+                    <% }}); %>
+
+        <% }); %>
