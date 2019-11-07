@@ -13,7 +13,7 @@ use Carbon\Carbon;
 abstract class ProductAbstractDraft implements ProductDraftInterface
 {
     /** @var int $id */
-    protected $id;
+    protected $id = 0;
 
     /** @var \DateTime $created */
     protected $created;
@@ -52,10 +52,10 @@ abstract class ProductAbstractDraft implements ProductDraftInterface
 
     protected function __construct
     (
-       UserInterface $author,
-       \DateTime $created,
-       int $version,
-       int $status
+        UserInterface $author,
+        \DateTime $created,
+        int $version,
+        int $status
     )
     {
         $this->author = $author;
@@ -65,14 +65,14 @@ abstract class ProductAbstractDraft implements ProductDraftInterface
         $this->draftHistoryEntries = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
     public function addDraftHistory(DraftHistoryInterface $draftHistory): void
     {
-        if($this->draftHistoryEntries->contains($draftHistory)){
+        if ($this->draftHistoryEntries->contains($draftHistory)) {
             return;
         }
         $this->draftHistoryEntries->add($draftHistory);

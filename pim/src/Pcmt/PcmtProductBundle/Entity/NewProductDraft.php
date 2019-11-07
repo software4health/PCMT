@@ -29,6 +29,6 @@ class NewProductDraft extends ProductAbstractDraft
 
     public function getType(): string
     {
-       return self::TYPE;
+        return self::TYPE;
     }
 }
