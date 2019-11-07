@@ -16,4 +16,9 @@ interface ProductDraftInterface
 
     public const TYPE_NEW = 'new product draft';
     public const TYPE_PENDING = 'existing product draft';
+
+    public function getId() : int ;
+    public function getProductData() : ?array;
+    public function getProduct(): ?ProductInterface;
+
 }

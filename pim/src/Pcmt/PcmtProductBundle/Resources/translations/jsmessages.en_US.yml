@@ -1,13 +1,21 @@
 pcmt_product:
+    drafts_list:
+        title: Drafts
+        product: Product
+        date: Date
+        changes: Changes
+        author: Author
+        action: Actions
+        empty: No drafts
+        loading: Loading...
     widget:
         drafts_overview:
             product: Product
             date: Date
+            changes: Changes
             author: Author
             action: Actions
             empty: No drafts
-    drafts_list:
-        title: Drafts list
 
 pcmt_product.entity.draft:
     label: draft

@@ -10,8 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Carbon\Carbon;
 
 
-abstract class ProductAbstractDraft implements
-    ProductDraftInterface
+abstract class ProductAbstractDraft implements ProductDraftInterface
 {
     /** @var int $id */
     protected $id;
@@ -66,7 +65,7 @@ abstract class ProductAbstractDraft implements
         $this->draftHistoryEntries = new ArrayCollection();
     }
 
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
@@ -107,7 +106,7 @@ abstract class ProductAbstractDraft implements
 
     public function getProductData(): ?array
     {
-        return [];
+        return $this->productData;
     }
 
     public function approve(): self

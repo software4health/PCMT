@@ -3,27 +3,98 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Normalizer;
 
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Pcmt\PcmtProductBundle\Entity\AttributeChange;
+use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
+use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
+use Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class DraftNormalizer implements NormalizerInterface
 {
     /**
-     * @var ObjectNormalizer
+     * @param ProductDraftInterface $draft
+     * @param null $format
+     * @param array $context
+     * @return array
      */
-    private $objectNormalizer;
-
-    public function __construct(ObjectNormalizer $objectNormalizer)
-    {
-        $this->objectNormalizer = $objectNormalizer;
-    }
-
     public function normalize($draft, $format = null, array $context = []): array
     {
-        $data = $this->objectNormalizer->normalize($draft, $format, $context);
+        $data = [];
+        $data['id'] = $draft->getId();
+        $productLabel = 'no label';
+        /** @var ProductAbstractDraft $draft */
+        switch (get_class($draft)) {
+            case NewProductDraft::class:
+                $productLabel = $draft->getProductData()['identifier'] ?? 'no label';
+                break;
+            case PendingProductDraft::class:
+                $product = $draft->getProduct();
+                $productLabel = $product ? $product->getIdentifier() : 'no product id';
+                break;
+        }
+        $data['label'] = $productLabel;
+        $createdAt = $draft->getCreatedAt();
+        $createdAt->format('Y-m-d H:i');
+        $data['createdAt'] = $draft->getCreatedAtFormatted();
+        $author = $draft->getAuthor();
+        $data['author'] = $author ?
+            $author->getFirstName() . ' ' . $author->getLastName() : 'no author';
+        $data['changes'] = $this->getChanges($draft);
+
         return $data;
+    }
+
+    private function getChanges(ProductDraftInterface $draft)
+    {
+        $changes = [];
+
+        $draftData = $draft->getProductData();
+
+        $product = $draft->getProduct();
+        foreach ($draftData as $attribute => $value) {
+            if ($attribute == "values") {
+                foreach ($value as $vAttribute => $valueOfValues) {
+                    $v = $valueOfValues[0]["data"] ?? null;
+                    $changes[] = $this->createChange($vAttribute, $v, $product);
+                }
+            } else {
+                $changes[] = $this->createChange($attribute, $value, $product);
+            }
+        }
+
+        $normalizers = [new AttributeChangeNormalizer()];
+        $serializer = new Serializer($normalizers);
+        return $serializer->normalize($changes);
+    }
+
+    private function createChange($attribute, $value, $product)
+    {
+        return new AttributeChange(
+            $attribute,
+            (string)($product ? $this->getPreviousValue($product, $attribute) : null),
+            (string)$value
+        );
+    }
+
+    private function getPreviousValue(ProductInterface $product, $attribute)
+    {
+        switch ($attribute) {
+            case 'family':
+                return $product->getFamily()->getCode();
+            case 'identifier':
+                return $product->getIdentifier();
+            default:
+                // this may need refactoring in future when creating draft from existing product will be implemented
+                $data = $product->getRawValues();
+                if (!empty($data["attribute"])) {
+                    return $data["attribute"];
+                }
+                return null;
+        }
     }
 
     public function supportsNormalization($data, $format = null, array $context = [])

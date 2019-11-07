@@ -10,6 +10,7 @@ services:
     pcmt_product.draft.normalizer:
         class: Pcmt\PcmtProductBundle\Normalizer\DraftNormalizer
         arguments:
-          - '@serializer.normalizer.object'
+            - '@serializer.normalizer.object'
         tags:
-          - { name: serializer.normalizer, priority: 110 }
+            - { name: pim_internal_api_serializer.normalizer, priority: 110 }
+
