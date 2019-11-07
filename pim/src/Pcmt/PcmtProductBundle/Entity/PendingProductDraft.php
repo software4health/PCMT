@@ -12,6 +12,7 @@ class PendingProductDraft extends ProductAbstractDraft
 
     public function __construct(
         ProductInterface $product,
+        array $productData,
         UserInterface $author,
         \DateTime $created,
         int $version,
@@ -19,6 +20,7 @@ class PendingProductDraft extends ProductAbstractDraft
     )
     {
         $this->product = $product;
+        $this->productData = $productData;
         parent::__construct($author, $created, $version, $status);
     }
 

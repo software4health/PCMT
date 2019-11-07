@@ -43,6 +43,9 @@ class PcmtProductDraftController
         throw new NotImplementedException('method not impemented');
     }
 
+    /**
+     * @AclAncestor("pcmt_permission_drafts_list")
+     */
     public function getList(Request $request) : JsonResponse
     {
         $user = $this->tokenStorage->getToken()->getUser();

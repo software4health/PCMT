@@ -4,11 +4,11 @@ config:
 
         ### Dashboard widget
         pcmt/product/widget/draft-products-widget: pcmtproduct/js/draft/draft-products-widget
+        pcmt/product/draft/list : pcmtproduct/js/draft/draft_list
 
         ### templates ###
         pcmt/product/template/widget/draft-products-widget: pcmtproduct/templates/draft/draft-products-widget.html
         pcmt/product/template/widget/view-all-btn: pcmtproduct/templates/draft/view-all-btn.html
-
         pcmt/product/template/draft-list: pcmtproduct/templates/draft/draft-list.html
 
         ### controllers ###

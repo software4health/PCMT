@@ -1,28 +1,28 @@
 extensions:
-  pcmt-product-drafts-index:
-    module: pim/common/simple-view
-    config:
-      template: pim/template/common/default-template
+    pcmt-product-drafts-index:
+        module: pim/common/simple-view
+        config:
+            template: pim/template/common/default-template
 
-  pcmt-product-drafts-index-user-navigation:
-    module: pim/menu/user-navigation
-    parent: pcmt-product-drafts-index
-    targetZone: user-menu
-    config:
-      userAccount: pim_menu.user.user_account
-      logout: pim_menu.user.logout
+    pcmt-product-drafts-index-user-navigation:
+        module: pim/menu/user-navigation
+        parent: pcmt-product-drafts-index
+        targetZone: user-menu
+        config:
+            userAccount: pim_menu.user.user_account
+            logout: pim_menu.user.logout
 
-  pcmt-product-drafts-index-content:
-    module: pim/common/simple-view
-    parent: pcmt-product-drafts-index
-    targetZone: content
-    config:
-      template: pcmt/product/template/draft-list
+    pcmt-product-drafts-index-content:
+        module: pcmt/product/draft/list
+        parent: pcmt-product-drafts-index
+        targetZone: content
+        config:
+            template: pcmt/product/template/draft-list
 
-  pcmt-product-drafts-index-breadcrumbs:
-    module: pim/common/breadcrumbs
-    parent: pcmt-product-drafts-index
-    targetZone: breadcrumbs
-    config:
-      tab: pim-menu-activity
-      item: pcmt-product-drafts-list-sub-element
+    pcmt-product-drafts-index-breadcrumbs:
+        module: pim/common/breadcrumbs
+        parent: pcmt-product-drafts-index
+        targetZone: breadcrumbs
+        config:
+            tab: pim-menu-activity
+            item: pcmt-product-drafts-list-sub-element

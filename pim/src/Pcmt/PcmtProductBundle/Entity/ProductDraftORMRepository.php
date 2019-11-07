@@ -15,7 +15,7 @@ class ProductDraftORMRepository extends EntityRepository implements DraftReposit
         throw new NotImplementedException('method not implemented');
     }
 
-    public function createDatagridQueryBuilder() : QueryBuilder
+    public function createDatagridQueryBuilder(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('d');
         $qb->select('d.id')
