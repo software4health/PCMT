@@ -47,7 +47,7 @@ class DraftsFetcher
                     $productLabel = $draft->getProductData()['identifier'] ?? '-no product-';
                     break;
                 case PendingProductDraft::class:
-                    $productLabel = $draft->getProduct()->getCode();
+                    $productLabel = $draft->getProduct()->getIdentifier();
                     break;
             }
 

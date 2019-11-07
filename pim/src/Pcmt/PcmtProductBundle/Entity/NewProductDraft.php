@@ -31,9 +31,4 @@ class NewProductDraft extends ProductAbstractDraft
     {
        return self::TYPE;
     }
-
-    public function getProductData(): ?array
-    {
-        return $this->productData;
-    }
 }

@@ -1,10 +1,10 @@
 <div class="AknDefault-mainContent">
 
-<h1>Draft list</h1>
+<h1><%- __('pcmt_product.drafts_list.title') %></h1>
 
 <% if (loading) { %>
 
-    Loading...
+    <%- __('pcmt_product.drafts_list.loading') %>
 
 <% } else {%>
 
@@ -14,16 +14,19 @@
 <thead>
 <tr>
     <th class="AknGrid-headerCell">
-        <%- __('pcmt_product.widget.drafts_overview.product') %>
+        <%- __('pcmt_product.drafts_list.product') %>
     </th>
     <th class="AknGrid-headerCell">
-        <%- __('pcmt_product.widget.drafts_overview.date') %>
+        <%- __('pcmt_product.drafts_list.author') %>
     </th>
     <th class="AknGrid-headerCell">
-        <%- __('pcmt_product.widget.drafts_overview.author') %>
+        <%- __('pcmt_product.drafts_list.changes') %>
     </th>
     <th class="AknGrid-headerCell">
-        <%- __('pcmt_product.widget.drafts_overview.action') %>
+        <%- __('pcmt_product.drafts_list.date') %>
+    </th>
+    <th class="AknGrid-headerCell">
+        <%- __('pcmt_product.drafts_list.action') %>
     </th>
 </tr>
 </thead>
@@ -32,8 +35,18 @@
 <% _.each(data, function (draft) { %>
 <tr class="AknGrid-bodyRow">
     <td class="AknGrid-bodyCell"><%- draft.label %></td>
-    <td class="AknGrid-bodyCell"><%- draft.createdAt %></td>
     <td class="AknGrid-bodyCell"><%- draft.author %></td>
+    <td class="AknGrid-bodyCell">
+        <% _.each(draft.changes, function (change) { %>
+            <div style="margin-bottom:10px;">
+                <b><%- change.attribute %></b><br>
+                Previous: <%- change.previousValue %><br>
+                New: <%- change.newValue %>
+            </div>
+        <% }); %>
+        </ul>
+    </td>
+    <td class="AknGrid-bodyCell"><%- draft.createdAt %></td>
     <td class="AknGrid-bodyCell">
         <span class="AknButton AknButton--small AknButton review-draft"
               data-id="<%-draft.id%>"
@@ -47,7 +60,7 @@
 <tr>
     <td class="AknGrid-bodyCell AknGrid-bodyCell--full">
         <div class="AknMessageBox AknMessageBox--centered">
-            <%- __('pcmt_product.widget.drafts_overview.empty') %>
+            <%- __('pcmt_product.drafts_list.empty') %>
         </div>
     </td>
 </tr>
