@@ -29,6 +29,3 @@
     pull: yes
     restarted: yes
     state: present
-- name: Remove dangling images
-  docker_prune:
-    images: yes
