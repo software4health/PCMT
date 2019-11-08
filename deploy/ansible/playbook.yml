@@ -12,6 +12,7 @@
     pip_install_packages:
       - name: docker
       - name: docker-compose
+      - name: docker-prune
     pcmt_asset_url: "{{ lookup('env', 'PCMT_ASSET_URL') }}"
   
   pre_tasks:
