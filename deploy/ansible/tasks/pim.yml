@@ -29,3 +29,5 @@
     pull: yes
     restarted: yes
     state: present
+- name: Prune docker system
+  shell: docker system prune -af
