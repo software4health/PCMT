@@ -24,15 +24,25 @@ class ConcatenatedAttributesConverterTest extends TestCase
         $this->columnsResolverMock = $this->createMock(AttributeColumnsResolver::class);
     }
 
-    public function testShouldReturnValidConvertedArray()
+    /** @dataProvider provideDataToConvert */
+    public function testShouldReturnValidConvertedArray(array $input, array $converted)
     {
         $attribute = new Attribute();
-        $data = [];
         $attribute->setType(PcmtAtributeTypes::CONCATENATED_FIELDS);
         $attribute->setCode('concatenated_test');
         $concatenatedAttributesConverter = $this->getConcatenatedAttributesConverterInstance();
 
-        $this->assertTrue(array_key_exists('concatenated_test', $concatenatedAttributesConverter->convert($attribute->getCode(),$data)));
+        $this->assertEquals($converted, $concatenatedAttributesConverter->convert($attribute->getCode(),$input));
+    }
+
+    public function provideDataToConvert(): array
+    {
+        return [
+          [
+              ['attribute1' => '100 EUR', 'separator' => ':', 'attribute2' => '0.250KG'],
+              ['concatenated_test' => '100 EUR:0.250KG']
+          ]
+        ];
     }
 
     private function getConcatenatedAttributesConverterInstance(): ConcatenatedAttributesConverter
