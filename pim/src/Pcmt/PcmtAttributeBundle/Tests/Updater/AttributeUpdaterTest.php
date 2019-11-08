@@ -9,6 +9,7 @@ use Akeneo\Pim\Structure\Component\Repository\AttributeGroupRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use Akeneo\Tool\Component\StorageUtils\Exception\UnknownPropertyException;
+use Pcmt\PcmtAttributeBundle\Extension\PcmtAttributeManager;
 use Pcmt\PcmtAttributeBundle\Updater\AttributeUpdater;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject as Mock;
@@ -36,6 +37,9 @@ class AttributeUpdaterTest extends TestCase {
   /** @var Attribute|Mock */
   protected $attribute;
 
+  /** @var PcmtAttributeManager|Mock */
+  protected $attributeManager;
+
 
   public function setUp(): void
   {
@@ -44,6 +48,7 @@ class AttributeUpdaterTest extends TestCase {
     $this->registryMock = $this->createMock(AttributeTypeRegistry::class);
     $this->translatableUpdaterMock = $this->createMock(TranslatableUpdater::class);
     $this->attribute = $this->createMock(Attribute::class);
+    $this->attributeManager = $this->createMock(PcmtAttributeManager::class);
     $this->propertiesMock = [];
     parent::setUp();
   }
@@ -54,6 +59,7 @@ class AttributeUpdaterTest extends TestCase {
       $this->localeRepositoryMock,
       $this->registryMock,
       $this->translatableUpdaterMock,
+      $this->attributeManager,
       $this->propertiesMock
     );
   }
@@ -72,6 +78,7 @@ class AttributeUpdaterTest extends TestCase {
         $this->localeRepositoryMock,
         $this->registryMock,
         $this->translatableUpdaterMock,
+        $this->attributeManager,
         $this->propertiesMock))
       ->getMock();
     $attributeUpdater->expects($this->atLeastOnce())->method('validateDataType');
