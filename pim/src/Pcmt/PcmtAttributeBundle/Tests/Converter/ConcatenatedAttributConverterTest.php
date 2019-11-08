@@ -25,13 +25,14 @@ class ConcatenatedAttributesConverterTest extends TestCase
     }
 
     /** @dataProvider provideDataToConvert */
-    public function testShouldReturnValidConvertedArray(array $input, array $converted)
+    public function testShouldReturnValidConvertedArray(array $input, array $converted): void
     {
         $attribute = new Attribute();
         $attribute->setType(PcmtAtributeTypes::CONCATENATED_FIELDS);
         $attribute->setCode('concatenated_test');
         $concatenatedAttributesConverter = $this->getConcatenatedAttributesConverterInstance();
 
+        $this->assertTrue($concatenatedAttributesConverter->supportsAttribute($attribute));
         $this->assertEquals($converted, $concatenatedAttributesConverter->convert($attribute->getCode(),$input));
     }
 
