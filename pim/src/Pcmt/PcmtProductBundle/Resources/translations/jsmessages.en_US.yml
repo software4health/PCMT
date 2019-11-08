@@ -8,6 +8,10 @@ pcmt_product:
         action: Actions
         empty: No drafts
         loading: Loading...
+        previous_value: Previous
+        new_value: New
+        collapse: Collapse
+        show_more: Show more
     widget:
         drafts_overview:
             product: Product
