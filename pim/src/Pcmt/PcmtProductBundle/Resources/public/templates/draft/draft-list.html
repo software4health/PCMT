@@ -2,67 +2,102 @@
 
 <% if (loading) { %>
 
-    <%- __('pcmt_product.drafts_list.loading') %>
+<div class="AknLoadingMask">
+    <div class="AknLoadingMask-wrapper">
+    </div>
+    <div id="loading-frame" class="AknLoadingMask-frame loading-frame">
+        <div class="AknLoadingMask-box">
+            <div class="AknLoadingMask-content"></div>
+        </div>
+    </div>
+</div>
 
 <% } else {%>
 
 <table class="AknGrid AknGrid--unclickable">
-<% if (!_.isEmpty(data)) { %>
+    <% if (!_.isEmpty(data)) { %>
 
-<thead>
-<tr>
-    <th class="AknGrid-headerCell">
-        <%- __('pcmt_product.drafts_list.product') %>
-    </th>
-    <th class="AknGrid-headerCell">
-        <%- __('pcmt_product.drafts_list.author') %>
-    </th>
-    <th class="AknGrid-headerCell">
-        <%- __('pcmt_product.drafts_list.changes') %>
-    </th>
-    <th class="AknGrid-headerCell">
-        <%- __('pcmt_product.drafts_list.date') %>
-    </th>
-    <th class="AknGrid-headerCell">
-        <%- __('pcmt_product.drafts_list.action') %>
-    </th>
-</tr>
-</thead>
+    <thead>
+    <tr>
+        <th class="AknGrid-headerCell">
+            <%- __('pcmt_product.drafts_list.product') %>
+        </th>
+        <th class="AknGrid-headerCell">
+            <%- __('pcmt_product.drafts_list.author') %>
+        </th>
+        <th class="AknGrid-headerCell">
+            <%- __('pcmt_product.drafts_list.changes') %>
+        </th>
+        <th class="AknGrid-headerCell">
+            <%- __('pcmt_product.drafts_list.date') %>
+        </th>
+        <th class="AknGrid-headerCell">
+            <%- __('pcmt_product.drafts_list.action') %>
+        </th>
+    </tr>
+    </thead>
 
-<tbody>
-<% _.each(data, function (draft) { %>
-<tr class="AknGrid-bodyRow">
-    <td class="AknGrid-bodyCell"><%- draft.label %></td>
-    <td class="AknGrid-bodyCell"><%- draft.author %></td>
-    <td class="AknGrid-bodyCell">
-        <% _.each(draft.changes, function (change) { %>
-            <div style="margin-bottom:10px;">
-                <b><%- change.attribute %></b><br>
-                Previous: <%- change.previousValue %><br>
-                New: <%- change.newValue %>
+    <tbody>
+    <% _.each(data, function (draft) { %>
+    <tr class="AknGrid-bodyRow">
+        <td class="AknGrid-bodyCell"><%- draft.label %></td>
+        <td class="AknGrid-bodyCell"><%- draft.author %></td>
+        <td class="AknGrid-bodyCell">
+            <div id="draft-changes-shortcut-<%- draft.id %>"
+                 class="draft-changes-shortcut"
+                 data-draft-id="<%- draft.id %>"
+                 style="cursor:pointer">
+
+                <div class="AknButtonList AknButtonList--right" style="float:right;">
+                    <button class="AknActionButton">
+                        <%- __('pcmt_product.drafts_list.show_more') %>
+                        <span class="AknActionButton-caret AknCaret"></span>
+                    </button>
+                </div>
+
+                <% firstChange = _.first(draft.changes) %>
+                <div style="margin-bottom:10px;">
+                    <b><%- firstChange.attribute %></b><br>
+                    <%- __('pcmt_product.drafts_list.previous_value') %>: <%- firstChange.previousValue %><br>
+                    <%- __('pcmt_product.drafts_list.new_value') %>: <%- firstChange.newValue %>
+                </div>
             </div>
-        <% }); %>
-        </ul>
-    </td>
-    <td class="AknGrid-bodyCell"><%- draft.createdAt %></td>
-    <td class="AknGrid-bodyCell">
-        <span class="AknButton AknButton--small AknButton review-draft"
-              data-id="<%-draft.id%>"
-        >Review
-        </span>
-    </td>
-</tr>
-<% }); %>
-</tbody>
-<% } else {%>
-<tr>
-    <td class="AknGrid-bodyCell AknGrid-bodyCell--full">
-        <div class="AknMessageBox AknMessageBox--centered">
-            <%- __('pcmt_product.drafts_list.empty') %>
-        </div>
-    </td>
-</tr>
-<% } %>
+            <div id="draft-changes-full-<%- draft.id %>"
+                 class="draft-changes-full"
+                 data-draft-id="<%- draft.id %>"
+                 style="cursor:pointer; display:none">
+
+                <div class="AknButtonList AknButtonList--right"  style="float:right;">
+                    <button class="AknActionButton" data-toggle="dropdown">
+                        <%- __('pcmt_product.drafts_list.collapse') %>
+                        <span class="AknActionButton-caret AknCaret"></span>
+                    </button>
+                </div>
+
+                <% _.each(draft.changes, function (change) { %>
+                <div style="margin-bottom:10px;">
+                    <b><%- change.attribute %></b><br>
+                    <%- __('pcmt_product.drafts_list.previous_value') %>: <%- change.previousValue %><br>
+                    <%- __('pcmt_product.drafts_list.new_value') %>: <%- change.newValue %>
+                </div>
+                <% }); %>
+
+            </div>
+        </td>
+        <td class="AknGrid-bodyCell"><%- draft.createdAt %></td>
+        <td class="AknGrid-bodyCell"></td>
+    </tr>
+    <% }); %>
+    </tbody>
+    <% } else {%>
+    <tr>
+        <td class="AknGrid-bodyCell AknGrid-bodyCell--full">
+            <div class="AknMessageBox AknMessageBox--centered">
+                <%- __('pcmt_product.drafts_list.empty') %>
+            </div>
+        </td>
+    </tr>
+    <% } %>
 
 </table>
 
