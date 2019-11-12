@@ -1,6 +1,6 @@
 services:
     pcmt_connector.job.job_parameters.default_values_provider.pcmt_xlsx_product_export:
-        class: 'Akeneo\Pim\Enrichment\Component\Product\Connector\Job\JobParameters\DefaultValueProvider\ProductXlsxExport'
+        class: 'Pcmt\PcmtProductBundle\Connector\Job\JobParameters\DefaultValueProvider\PcmtProductE2openExport'
         arguments:
             - '@akeneo_pim_enrichment.job.job_parameters.default_values_provider.simple_xlsx_export'
             - '@pim_catalog.repository.channel'

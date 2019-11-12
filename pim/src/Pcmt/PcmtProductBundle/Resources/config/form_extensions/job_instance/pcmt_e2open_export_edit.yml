@@ -251,23 +251,8 @@ extensions:
                     field: family
                     view: akeneo-product-family-filter
                 -
-                    field: enabled
-                    view: akeneo-product-enabled-filter
-                -
-                    field: completeness
-                    view: akeneo-product-completeness-filter
-                -
                     field: updated
                     view: akeneo-product-updated-filter
-                -
-                    field: categories
-                    view: akeneo-product-category-filter
-
-    pim-job-instance-pcmt-e2open-export-edit-content-default-attribute-filters:
-        module: pim/job/product/edit/content/data/default-attribute-filters
-        parent: pim-job-instance-pcmt-e2open-export-edit-content-data
-        config:
-            types: [pim_catalog_identifier]
 
     pim-job-instance-pcmt-e2open-export-edit-content-data-help:
         module: pim/job/common/edit/content/data/help
