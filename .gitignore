@@ -2,4 +2,4 @@
 pim/vendor
 web/
 Pcmt/PcmtConnectorBundle/Resources/config/reference_data/
-Pcmt/Bundle/Command/
+pim/src/Pcmt/Bundle/Command/PcmtHelperCommand
