@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace Pcmt\Bundle\Command;
 
-use Akeneo\Pim\Structure\Component\Model\FamilyVariant;
 use Doctrine\ORM\EntityManagerInterface;
-use Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
