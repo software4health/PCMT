@@ -8,12 +8,24 @@ use Akeneo\Pim\Enrichment\Component\Product\Connector\ArrayConverter\StandardToF
 
 class ConcatenatedAttributesConverter extends AbstractValueConverter implements ValueConverterInterface
 {
+    protected const VALID_TYPES = [
+        'attribute1' => ['string', 'array'],
+        'separator' => ['string'],
+        'attribute2' => ['string', 'array']
+    ];
+
     public function convert($attributeCode, $data): array
     {
         $convertedItem = [];
         $testoutputstring = '';
 
-        foreach ($data as $value){
+        if(!is_array($data)){
+            throw new \InvalidArgumentException('Serialized data should be array.');
+        }
+        foreach ($data as $attributeName => $value){
+            if(!array_key_exists($attributeName, self::VALID_TYPES) || !in_array(gettype($value), self::VALID_TYPES[$attributeName])){
+                throw new \InvalidArgumentException('Invalid type passed.');
+            }
             if(is_array($value)){
                 foreach ($value as $key => $item){
                     $testoutputstring .= $item;
