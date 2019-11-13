@@ -15,6 +15,17 @@ define(
             events: {
                 "click .draft-changes-shortcut": "changesExpand",
                 "click .draft-changes-full": "changesCollapse",
+                "click .draft-status-choice": "statusChoiceChanged",
+            },
+            configure: function () {
+                this.loadParams();
+                const model = this.getFormData();
+                model.chosenStatus = {};
+                model.drafts = [];
+                model.params = {};
+                model.loading = true;
+                this.setData(model);
+                this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_update', this.render);
             },
             changesExpand: function (ev) {
                 let id = ev.currentTarget.dataset.draftId;
@@ -30,32 +41,67 @@ define(
                 let divShortcutId = '#draft-changes-shortcut-' + id;
                 $(divShortcutId).show();
             },
-            data: [],
-            loading: true,
+            statusChoiceChanged: function (ev) {
+                this.changeStatusChoice(ev.currentTarget.dataset.value);
+            },
+            changeStatusChoice: function (newChosenStatusId) {
+                newChosenStatusId = parseInt(newChosenStatusId);
+                const model = this.getFormData();
+                if (newChosenStatusId === model.chosenStatus.id) {
+                    return;
+                }
+                let status = _.find(model.params.statuses, function(s){
+                    return s.id === newChosenStatusId;
+                });
+                if (!status) {
+                    return;
+                }
+                model.chosenStatus = status;
+                this.setData(model);
+                this.loadDrafts();
+            },
             template: _.template(template),
             loadDrafts: function () {
-                $.get(Routing.generate('pcmt_product_drafts_api'))
+                const model = this.getFormData();
+                model.loading = true;
+                this.setData(model);
+                $.get(Routing.generate('pcmt_product_drafts_api', {status: model.chosenStatus.id}))
                     .done(_.bind(function (resp) {
-                        this.loading = false;
-                        this.data = resp;
-                        this.renderInside();
+                        const model = this.getFormData();
+                        model.drafts = resp;
+                        model.loading = false;
+                        this.setData(model);
                     }, this))
                     .fail(function () {
-                        this.loading = false;
+                        const model = this.getFormData();
+                        model.loading = false;
+                        this.setData(model);
                         console.log('failed');
                     });
             },
-            render: function () {
-                this.loadDrafts();
-                this.renderInside();
+            loadParams: function () {
+                $.get(Routing.generate('pcmt_product_drafts_params'))
+                    .done(_.bind(function (resp) {
+                        const model = this.getFormData();
+                        model.params = resp;
+                        this.setData(model);
+                        this.changeStatusChoice(1);
+                    }, this))
+                    .fail(function () {
+                        console.log('Loading params failed');
+                    });
             },
-            renderInside: function () {
+            render: function () {
+                const model = this.getFormData();
                 this.$el.html(this.template({
-                    data: this.data,
                     _: _,
                     __: __,
-                    loading: this.loading
+                    data: model.drafts,
+                    params: model.params,
+                    loading: model.loading,
+                    chosenStatus: model.chosenStatus
                 }));
+                $("#draft_status_choice_" + model.chosenStatus.id).addClass("AknDropdown-menuLink--active active");
             }
         });
     }

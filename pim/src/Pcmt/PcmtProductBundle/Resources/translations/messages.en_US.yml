@@ -1,13 +1,9 @@
 pim_dashboard:
-    title: Dashboard
-    version: Version
     widget:
-        completeness:
-            title: Completeness Over Channels and Locales
-        last_operations:
-            title: Last operations
-            status: Status
-            type: Type
         drafts_overview:
             title: Draft products overview
-
+pcmt_product:
+    draft:
+        status_new: New
+        status_approved: Approved
+        status_rejected: Rejected
