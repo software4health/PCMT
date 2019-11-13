@@ -117,6 +117,11 @@ abstract class ProductAbstractDraft implements ProductDraftInterface
         return $this;
     }
 
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+
     abstract public function getType(): string;
 
     abstract public function nextVersion(): void;

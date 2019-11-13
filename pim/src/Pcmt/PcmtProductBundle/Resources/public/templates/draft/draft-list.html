@@ -32,6 +32,9 @@
             <%- __('pcmt_product.drafts_list.date') %>
         </th>
         <th class="AknGrid-headerCell">
+            <%- __('pcmt_product.drafts_list.status') %>
+        </th>
+        <th class="AknGrid-headerCell">
             <%- __('pcmt_product.drafts_list.action') %>
         </th>
     </tr>
@@ -85,6 +88,11 @@
             </div>
         </td>
         <td class="AknGrid-bodyCell"><%- draft.createdAt %></td>
+        <td class="AknGrid-bodyCell">
+            <div class="AknBadge <%- draft.status.class %>">
+                <%- __(draft.status.name) %>
+            </div>
+        </td>
         <td class="AknGrid-bodyCell"></td>
     </tr>
     <% }); %>

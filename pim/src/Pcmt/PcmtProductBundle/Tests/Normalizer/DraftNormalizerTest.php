@@ -9,8 +9,11 @@ use Akeneo\Pim\Structure\Component\AttributeTypeRegistry;
 use Akeneo\UserManagement\Component\Model\User;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
 use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
+use Pcmt\PcmtProductBundle\Normalizer\AttributeChangeNormalizer;
 use Pcmt\PcmtProductBundle\Normalizer\DraftNormalizer;
+use Pcmt\PcmtProductBundle\Normalizer\DraftStatusNormalizer;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 /**
  * To run, type:
@@ -20,8 +23,17 @@ use PHPUnit\Framework\TestCase;
  */
 class DraftNormalizerTest extends TestCase
 {
+    /**
+     * @var DraftNormalizer
+     */
+    private $draftNormalizer;
+
     public function setUp(): void
     {
+        $attributeChangeNormalizer = new AttributeChangeNormalizer();
+        $logger = $this->createMock(LoggerInterface::class);
+        $draftStatusNormalizer = new DraftStatusNormalizer($logger);
+        $this->draftNormalizer = new DraftNormalizer($draftStatusNormalizer, $attributeChangeNormalizer);
         parent::setUp();
     }
 
@@ -38,8 +50,7 @@ class DraftNormalizerTest extends TestCase
         $created = new \DateTime();
         $draft = new NewProductDraft($productData, $author, $created, 0, 0);
 
-        $normalizer = new DraftNormalizer();
-        $array = $normalizer->normalize($draft);
+        $array = $this->draftNormalizer->normalize($draft);
 
         $this->assertNotEmpty($array["changes"]);
         $this->assertEquals(count($productData), count($array["changes"]));
@@ -63,8 +74,7 @@ class DraftNormalizerTest extends TestCase
 
         $draft = new PendingProductDraft($product, $productData, $author, $created, 0, 0);
 
-        $normalizer = new DraftNormalizer();
-        $array = $normalizer->normalize($draft);
+        $array = $this->draftNormalizer->normalize($draft);
 
         $this->assertNotEmpty($array["changes"]);
         $this->assertEquals(count($productData), count($array["changes"]));
