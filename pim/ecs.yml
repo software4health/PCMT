@@ -9,41 +9,28 @@ imports:
     - { resource: 'vendor/symplify/easy-coding-standard/config/set/symfony-risky.yaml' }
 
 services:
-    # most of these services are taken from symplify.yaml
-    # see https://github.com/Symplify/Symplify/blob/master/packages/CodingStandard/config/symplify.yaml
-
-    # PHP 5.5
     Symplify\CodingStandard\Fixer\Php\ClassStringToClassConstantFixer: ~
 
-    # Control Structures
     Symplify\CodingStandard\Fixer\Property\ArrayPropertyDefaultValueFixer: ~
     Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFixer: ~
     Symplify\CodingStandard\Fixer\ControlStructure\RequireFollowedByAbsolutePathFixer: ~
 
-    # Spaces
     Symplify\CodingStandard\Fixer\Strict\BlankLineAfterStrictTypesFixer: ~
 
-    # Comments
     Symplify\CodingStandard\Fixer\Commenting\RemoveSuperfluousDocBlockWhitespaceFixer: ~
 
-    # Naming
     PhpCsFixer\Fixer\PhpUnit\PhpUnitMethodCasingFixer: ~
 
-    # Debug
     Symplify\CodingStandard\Sniffs\Debug\DebugFunctionCallSniff: ~
     Symplify\CodingStandard\Sniffs\Debug\CommentedOutCodeSniff: ~
 
-    # final classes
     PhpCsFixer\Fixer\ClassNotation\FinalInternalClassFixer: ~
 
-    # multibyte
     PhpCsFixer\Fixer\Alias\MbStrFunctionsFixer: ~
 
-    # psr
     PhpCsFixer\Fixer\Basic\Psr0Fixer: ~
     PhpCsFixer\Fixer\Basic\Psr4Fixer: ~
 
-    # psr-1
     PHP_CodeSniffer\Standards\PSR1\Sniffs\Classes\ClassDeclarationSniff: ~
     PHP_CodeSniffer\Standards\PSR1\Sniffs\Files\SideEffectsSniff: ~
     PHP_CodeSniffer\Standards\PSR1\Sniffs\Methods\CamelCapsMethodNameSniff: ~
@@ -80,16 +67,13 @@ services:
     PhpCsFixer\Fixer\ArrayNotation\NoWhitespaceBeforeCommaInArrayFixer: ~
     PhpCsFixer\Fixer\ArrayNotation\WhitespaceAfterCommaInArrayFixer: ~
 
-    # merge issets
     PhpCsFixer\Fixer\LanguageConstruct\CombineConsecutiveIssetsFixer: ~
     PhpCsFixer\Fixer\LanguageConstruct\CombineConsecutiveUnsetsFixer: ~
 
-    # remove useless phpdoc
     PhpCsFixer\Fixer\FunctionNotation\PhpdocToReturnTypeFixer: ~
     PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer: ~
     PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer: ~
 
-    # arguable checkers, feel free to remove them
     Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff: ~
     PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer:
         order:
@@ -102,11 +86,9 @@ services:
         statements:
             - 'return'
 
-    # cognitive complexity - adjust level to your needs, starting from 100
     Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff:
         maxCognitiveComplexity: 30
 
-    # this one is RISKY, but if you are sure your phpdoc is right then go on
     SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff: ~
 
 parameters:
