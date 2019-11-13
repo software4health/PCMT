@@ -16,6 +16,24 @@ use Symfony\Component\Serializer\Serializer;
 class DraftNormalizer implements NormalizerInterface
 {
     /**
+     * @var DraftStatusNormalizer
+     */
+    private $statusNormalizer;
+    /**
+     * @var AttributeChangeNormalizer
+     */
+    private $attributeChangeNormalizer;
+
+    public function __construct(
+        DraftStatusNormalizer $statusNormalizer,
+        AttributeChangeNormalizer $attributeChangeNormalizer
+    )
+    {
+        $this->statusNormalizer = $statusNormalizer;
+        $this->attributeChangeNormalizer = $attributeChangeNormalizer;
+    }
+
+    /**
      * @param ProductDraftInterface $draft
      * @param null $format
      * @param array $context
@@ -44,11 +62,12 @@ class DraftNormalizer implements NormalizerInterface
         $data['author'] = $author ?
             $author->getFirstName() . ' ' . $author->getLastName() : 'no author';
         $data['changes'] = $this->getChanges($draft);
+        $data['status'] = $this->statusNormalizer->normalize($draft);
 
         return $data;
     }
 
-    private function getChanges(ProductDraftInterface $draft)
+    private function getChanges(ProductDraftInterface $draft): array
     {
         $changes = [];
 
@@ -66,12 +85,11 @@ class DraftNormalizer implements NormalizerInterface
             }
         }
 
-        $normalizers = [new AttributeChangeNormalizer()];
-        $serializer = new Serializer($normalizers);
+        $serializer = new Serializer([$this->attributeChangeNormalizer]);
         return $serializer->normalize($changes);
     }
 
-    private function createChange($attribute, $value, $product)
+    private function createChange($attribute, $value, $product): AttributeChange
     {
         return new AttributeChange(
             $attribute,
@@ -97,7 +115,7 @@ class DraftNormalizer implements NormalizerInterface
         }
     }
 
-    public function supportsNormalization($data, $format = null, array $context = [])
+    public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         return $data instanceof ProductDraftInterface;
     }

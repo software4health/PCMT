@@ -1,10 +1,15 @@
 pcmt_product:
+    draft:
+        status_new: New
+        status_approved: Approved
+        status_rejected: Rejected
     drafts_list:
         title: Drafts
         product: Product
         date: Date
         changes: Changes
         author: Author
+        status: Status
         action: Actions
         empty: No drafts
         loading: Loading...

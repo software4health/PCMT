@@ -25,13 +25,20 @@ class PcmtProductDraftController
      * @var TokenStorageInterface
      */
     private $tokenStorage;
+    /**
+     * @var DraftNormalizer
+     */
+    private $draftNormalizer;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage)
+        TokenStorageInterface $tokenStorage,
+        DraftNormalizer $draftNormalizer
+    )
     {
         $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;
+        $this->draftNormalizer = $draftNormalizer;
     }
 
     /**
@@ -46,16 +53,12 @@ class PcmtProductDraftController
     /**
      * @AclAncestor("pcmt_permission_drafts_list")
      */
-    public function getList(Request $request) : JsonResponse
+    public function getList(Request $request): JsonResponse
     {
-        $user = $this->tokenStorage->getToken()->getUser();
         $draftRepository = $this->entityManager->getRepository(ProductAbstractDraft::class);
-        $drafts =  $draftRepository->findAll();
+        $drafts = $draftRepository->findAll();
 
-        $normalizer = new DraftNormalizer();
-        $normalizers = [$normalizer];
-
-        $serializer = new Serializer($normalizers);
+        $serializer = new Serializer([$this->draftNormalizer]);
         $data = $serializer->normalize($drafts);
         return new JsonResponse($data);
     }
