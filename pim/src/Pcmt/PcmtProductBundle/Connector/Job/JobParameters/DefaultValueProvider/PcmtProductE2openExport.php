@@ -15,20 +15,7 @@ class PcmtProductE2openExport extends ProductXlsxExport implements DefaultValues
     public function getDefaultValues(): array
     {
         $parameters = parent::getDefaultValues();
-        $channels = $this->channelRepository->getFullChannels();
-        $defaultChannelCode = (0 !== count($channels)) ? $channels[0]->getCode() : null;
-
-        $localesCodes = $this->localeRepository->getActivatedLocaleCodes();
-        $defaultLocaleCodes = (0 !== count($localesCodes)) ? [$localesCodes[0]] : [];
-
-        $parameters['filters'] = [
-            'data'      => [
-            ],
-            'structure' => [
-                'scope'   => $defaultChannelCode,
-                'locales' => $defaultLocaleCodes,
-            ],
-        ];
+        $parameters['filters']['data'] = [];
         return $parameters;
     }
 }
