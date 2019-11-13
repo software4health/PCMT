@@ -3,7 +3,7 @@
         <!-- attribute select -->
            <div class="AknFieldContainer">
 
-                    <select
+                    <select required
                             id="pcmt_enrich_form_<%- member %>" class="select2 member-attribute"
                             name="<%- member %>" data-placeholder="<%- labels.defaultChooseAttribute %>"
                             <% if (multiple) { %>multiple<% } %>\
@@ -48,7 +48,7 @@
             <div class="AknFieldContainer">
 
                 <div class="AknFieldContainer-inputContainer field-input">
-                    <input
+                    <input required
                             id="<%- separator %>"
                             name="<%- separator %>"
                             class="AknTextField separator-field"
