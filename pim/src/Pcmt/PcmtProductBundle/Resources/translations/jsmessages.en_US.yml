@@ -53,3 +53,10 @@ pcmt_product.entity.draft:
 
 pim_title:
     pcmt_product_drafts_index: 'Drafts page'
+
+# Job labels
+batch_jobs:
+    pcmt_e2open_export:
+        validation.label: Validation
+        label: Pcmt e2open export
+        export.label: Pcmt e2open export

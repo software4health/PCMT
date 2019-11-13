@@ -1,0 +1,11 @@
+services:
+    pcmt_connector.job.pcmt_e2open_export:
+        class: '%pim_connector.job.simple_job.class%'
+        arguments:
+            - 'pcmt_e2open_export'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            -
+                - '@pcmt_connector.step.pcmt_xlsx_datagrid.export'
+        tags:
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.export_type%' }
