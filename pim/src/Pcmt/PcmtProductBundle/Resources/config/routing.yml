@@ -4,3 +4,7 @@ pcmt_product_drafts_api:
     path: /rest/drafts/
     defaults: { _controller: pcmt_product.controller.rest.drafts:getList }
     methods: [GET]
+pcmt_product_drafts_params:
+    path: /rest/drafts/params/
+    defaults: { _controller: pcmt_product.controller.rest.drafts:getListParams }
+    methods: [GET]

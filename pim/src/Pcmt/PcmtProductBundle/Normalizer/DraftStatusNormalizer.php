@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Normalizer;
 
+use Pcmt\PcmtProductBundle\Service\DraftStatusService;
 use Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 use Psr\Log\LoggerInterface;
@@ -15,10 +16,15 @@ class DraftStatusNormalizer implements NormalizerInterface
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var DraftStatusService
+     */
+    private $draftStatusService;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, DraftStatusService $draftStatusService)
     {
         $this->logger = $logger;
+        $this->draftStatusService = $draftStatusService;
     }
 
     /**
@@ -31,7 +37,7 @@ class DraftStatusNormalizer implements NormalizerInterface
     {
         $statusId = $productDraft->getStatus();
         try {
-            $name = $this->getName($statusId);
+            $name = $this->draftStatusService->getNameTranslated($statusId);
         } catch (\Exception $e) {
             $name = 'Unknown';
             $this->logger->error($e->getMessage());
@@ -42,20 +48,6 @@ class DraftStatusNormalizer implements NormalizerInterface
             'name' => $name,
             'class' => $this->getCssClass($statusId),
         ];
-    }
-
-    private function getName(int $draftStatusId): string
-    {
-        switch ($draftStatusId) {
-            case ProductDraftInterface::STATUS_NEW :
-                return 'pcmt_product.draft.status_new';
-            case ProductDraftInterface::STATUS_APPROVED :
-                return 'pcmt_product.draft.status_approved';
-            case ProductDraftInterface::STATUS_REJECTED :
-                return 'pcmt_product.draft.status_rejected';
-            default:
-                throw new \Exception("No status name for: " . $draftStatusId);
-        }
     }
 
     private function getCssClass(int $draftStatusId): string
