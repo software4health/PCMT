@@ -4,14 +4,16 @@ declare(strict_types=1);
 namespace Pcmt\PcmtProductBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
-use Pcmt\PcmtProductBundle\Service\DraftStatusService;
+use Pcmt\PcmtProductBundle\Service\DraftStatusListService;
+use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
 use Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft;
 use Pcmt\PcmtProductBundle\Normalizer\DraftNormalizer;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Intl\Exception\NotImplementedException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -32,21 +34,27 @@ class PcmtProductDraftController
      */
     private $draftNormalizer;
     /**
-     * @var DraftStatusService
+     * @var DraftStatusTranslatorService
      */
-    private $draftStatusService;
+    private $draftStatusTranslatorService;
+    /**
+     * @var DraftStatusListService
+     */
+    private $draftStatusListService;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         TokenStorageInterface $tokenStorage,
         DraftNormalizer $draftNormalizer,
-        DraftStatusService $draftStatusService
+        DraftStatusTranslatorService $draftStatusTranslatorService,
+        DraftStatusListService $draftStatusListService
     )
     {
         $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;
         $this->draftNormalizer = $draftNormalizer;
-        $this->draftStatusService = $draftStatusService;
+        $this->draftStatusTranslatorService = $draftStatusTranslatorService;
+        $this->draftStatusListService = $draftStatusListService;
     }
 
     /**
@@ -64,7 +72,7 @@ class PcmtProductDraftController
     public function getList(Request $request): JsonResponse
     {
         $criteria = [
-            "status" => $request->query->get('status') ?? ProductDraftInterface::STATUS_NEW
+            "status" => $request->query->get('status') ?? ProductAbstractDraft::STATUS_NEW
         ];
         $draftRepository = $this->entityManager->getRepository(ProductAbstractDraft::class);
 
@@ -81,11 +89,11 @@ class PcmtProductDraftController
     public function getListParams(): JsonResponse
     {
         $statuses = [];
-        $ids = $this->draftStatusService->getAll();
+        $ids = $this->draftStatusListService->getAll();
         foreach ($ids as $id) {
             $statuses[] = [
                 'id' => $id,
-                'name' => $this->draftStatusService->getNameTranslated($id)
+                'name' => $this->draftStatusTranslatorService->getNameTranslated($id)
             ];
         }
         $data = [
@@ -93,5 +101,24 @@ class PcmtProductDraftController
         ];
 
         return new JsonResponse($data);
+    }
+
+    /**
+     * @AclAncestor("pcmt_permission_drafts_reject")
+     */
+    public function rejectDraft(Request $request, ProductAbstractDraft $draft): JsonResponse
+    {
+        if (!$draft) {
+            throw new NotFoundHttpException('The draft does not exist');
+        }
+        if ($draft->getStatus() !== ProductAbstractDraft::STATUS_NEW) {
+            throw new BadRequestHttpException("You can only reject draft of status 'new'");
+        }
+
+        $draft->setStatus(ProductAbstractDraft::STATUS_REJECTED);
+        $this->entityManager->persist($draft);
+        $this->entityManager->flush();
+
+        return new JsonResponse([]);
     }
 }

@@ -12,6 +12,10 @@ use Carbon\Carbon;
 
 abstract class ProductAbstractDraft implements ProductDraftInterface
 {
+    public const STATUS_NEW = 1;
+    public const STATUS_REJECTED = 4;
+    public const STATUS_APPROVED = 2;
+
     /** @var int $id */
     protected $id = 0;
 
@@ -50,8 +54,7 @@ abstract class ProductAbstractDraft implements ProductDraftInterface
     /** @var ProductInterface|null $product */
     protected $product;
 
-    protected function __construct
-    (
+    protected function __construct(
         UserInterface $author,
         \DateTime $created,
         int $version,
@@ -109,17 +112,14 @@ abstract class ProductAbstractDraft implements ProductDraftInterface
         return $this->productData;
     }
 
-    public function approve(): self
-    {
-        $this->status = self::STATUS_APPROVED;
-        $this->approved = new \DateTime();
-
-        return $this;
-    }
-
     public function getStatus(): int
     {
         return $this->status;
+    }
+
+    public function setStatus(int $statusId): void
+    {
+        $this->status = $statusId;
     }
 
     abstract public function getType(): string;

@@ -8,6 +8,9 @@ namespace Pcmt\PcmtProductBundle\Entity;
  */
 class AttributeChange
 {
+    /**
+     * @var string
+     */
     private $attributeName;
     private $previousValue;
     private $newValue;

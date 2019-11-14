@@ -8,3 +8,9 @@ pcmt_product_drafts_params:
     path: /rest/drafts/params/
     defaults: { _controller: pcmt_product.controller.rest.drafts:getListParams }
     methods: [GET]
+pcmt_product_drafts_delete:
+    path: /rest/draft/{id}/
+    defaults: { _controller: pcmt_product.controller.rest.drafts:rejectDraft }
+    requirements:
+        id: \d+
+    methods: [DELETE]
