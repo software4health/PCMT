@@ -41,7 +41,7 @@
 
 
 <table class="AknGrid AknGrid--unclickable">
-    <% if (!_.isEmpty(data)) { %>
+    <% if (!_.isEmpty(drafts)) { %>
 
     <thead>
     <tr>
@@ -67,7 +67,7 @@
     </thead>
 
     <tbody>
-    <% _.each(data, function (draft) { %>
+    <% _.each(drafts, function (draft) { %>
     <tr class="AknGrid-bodyRow">
         <td class="AknGrid-bodyCell"><%- draft.label %></td>
         <td class="AknGrid-bodyCell"><%- draft.author %></td>
@@ -119,7 +119,15 @@
                 <%- draft.status.name %>
             </div>
         </td>
-        <td class="AknGrid-bodyCell"></td>
+        <td class="AknGrid-bodyCell AknGrid-bodyCell--actions action-cell">
+            <% if (rejectPermission) { %>
+            <a href="javascript:void(0);"
+               class="AknIconButton AknIconButton--small AknIconButton--trash AknButtonList-item draft-reject"
+               title="Reject draft" data-draft-id="<%- draft.id %>">
+                Reject draft
+            </a>
+            <% } %>
+        </td>
     </tr>
     <% }); %>
     </tbody>

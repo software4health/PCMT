@@ -20,10 +20,12 @@ use Akeneo\Tool\Component\StorageUtils\Repository\CursorableRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
+use Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftHistory;
 use Pcmt\PcmtProductBundle\Entity\DraftHistoryInterface;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
+use Pcmt\PcmtProductBundle\Service\DraftStatusListService;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -112,7 +114,7 @@ class PcmtProductController extends ProductController
              $this->userContext->getUser(),
              new \DateTime(),
              ProductDraftInterface::DRAFT_VERSION_NEW,
-             ProductDraftInterface::STATUS_NEW
+             ProductAbstractDraft::STATUS_NEW
          );
          $productHistory = new ProductDraftHistory(
             new \DateTime(),

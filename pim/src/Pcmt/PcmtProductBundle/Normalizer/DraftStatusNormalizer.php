@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Normalizer;
 
-use Pcmt\PcmtProductBundle\Service\DraftStatusService;
+use Pcmt\PcmtProductBundle\Service\DraftStatusListService;
+use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
 use Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 use Psr\Log\LoggerInterface;
@@ -17,11 +18,11 @@ class DraftStatusNormalizer implements NormalizerInterface
      */
     private $logger;
     /**
-     * @var DraftStatusService
+     * @var DraftStatusTranslatorService
      */
     private $draftStatusService;
 
-    public function __construct(LoggerInterface $logger, DraftStatusService $draftStatusService)
+    public function __construct(LoggerInterface $logger, DraftStatusTranslatorService $draftStatusService)
     {
         $this->logger = $logger;
         $this->draftStatusService = $draftStatusService;
@@ -53,11 +54,11 @@ class DraftStatusNormalizer implements NormalizerInterface
     private function getCssClass(int $draftStatusId): string
     {
         switch ($draftStatusId) {
-            case ProductDraftInterface::STATUS_NEW :
+            case ProductAbstractDraft::STATUS_NEW :
                 return 'AknBadge--warning';
-            case ProductDraftInterface::STATUS_APPROVED :
+            case ProductAbstractDraft::STATUS_APPROVED :
                 return 'AknBadge--success';
-            case ProductDraftInterface::STATUS_REJECTED :
+            case ProductAbstractDraft::STATUS_REJECTED :
                 return 'AknBadge--important';
             default:
                 return 'AknBadge--grey';

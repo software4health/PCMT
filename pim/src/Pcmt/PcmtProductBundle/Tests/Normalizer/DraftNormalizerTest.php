@@ -12,6 +12,7 @@ use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
 use Pcmt\PcmtProductBundle\Normalizer\AttributeChangeNormalizer;
 use Pcmt\PcmtProductBundle\Normalizer\DraftNormalizer;
 use Pcmt\PcmtProductBundle\Normalizer\DraftStatusNormalizer;
+use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -32,7 +33,8 @@ class DraftNormalizerTest extends TestCase
     {
         $attributeChangeNormalizer = new AttributeChangeNormalizer();
         $logger = $this->createMock(LoggerInterface::class);
-        $draftStatusNormalizer = new DraftStatusNormalizer($logger);
+        $translator = $this->createMock(DraftStatusTranslatorService::class);
+        $draftStatusNormalizer = new DraftStatusNormalizer($logger, $translator);
         $this->draftNormalizer = new DraftNormalizer($draftStatusNormalizer, $attributeChangeNormalizer);
         parent::setUp();
     }

@@ -3,19 +3,23 @@
 define(
     [
         'pim/form',
+        'backbone',
         'jquery',
         'underscore',
         'oro/translator',
         'routing',
-        'pcmt/product/template/draft-list'
+        'pcmt/product/template/draft-list',
+        'pim/dialog',
+        'pim/security-context'
     ],
-    function (BaseForm, $, _, __, Routing, template) {
+    function (BaseForm, Backbone, $, _, __, Routing, template, Dialog, SecurityContext) {
 
         return BaseForm.extend({
             events: {
                 "click .draft-changes-shortcut": "changesExpand",
                 "click .draft-changes-full": "changesCollapse",
                 "click .draft-status-choice": "statusChoiceChanged",
+                "click .draft-reject": "rejectDraftClicked",
             },
             configure: function () {
                 this.loadParams();
@@ -41,6 +45,28 @@ define(
                 let divShortcutId = '#draft-changes-shortcut-' + id;
                 $(divShortcutId).show();
             },
+            rejectDraftClicked: function (ev) {
+                let draftId = ev.currentTarget.dataset.draftId;
+                Dialog.confirmDelete(
+                    'Are you sure you want to reject this draft?',
+                    'Draft rejection',
+                    function() {
+                        return this.rejectDraft(draftId);
+                    }.bind(this),
+                    'subtitle',
+                    'Reject'
+                );
+            },
+            rejectDraft: function (draftId) {
+                $.ajax({
+                    url: Routing.generate('pcmt_product_drafts_delete', {id: draftId}),
+                    type: 'DELETE'
+                }).done((function() {
+                    this.loadDrafts();
+                }).bind(this)).fail(function() {
+                    console.log("rejecting failed.");
+                });
+            },
             statusChoiceChanged: function (ev) {
                 this.changeStatusChoice(ev.currentTarget.dataset.value);
             },
@@ -50,7 +76,7 @@ define(
                 if (newChosenStatusId === model.chosenStatus.id) {
                     return;
                 }
-                let status = _.find(model.params.statuses, function(s){
+                let status = _.find(model.params.statuses, function (s) {
                     return s.id === newChosenStatusId;
                 });
                 if (!status) {
@@ -94,12 +120,10 @@ define(
             render: function () {
                 const model = this.getFormData();
                 this.$el.html(this.template({
+                    ...model,
                     _: _,
                     __: __,
-                    data: model.drafts,
-                    params: model.params,
-                    loading: model.loading,
-                    chosenStatus: model.chosenStatus
+                    rejectPermission: SecurityContext.isGranted('pcmt_permission_drafts_reject')
                 }));
                 $("#draft_status_choice_" + model.chosenStatus.id).addClass("AknDropdown-menuLink--active active");
             }
