@@ -4,4 +4,4 @@ services:
         arguments:
           - '@pcmt_catalog.draft.fetcher'
         tags:
-          - { name: pim_dashboard.widget, position: 40 }
+          - { name: pim_dashboard.widget-notusedinbeta, position: 40 }
