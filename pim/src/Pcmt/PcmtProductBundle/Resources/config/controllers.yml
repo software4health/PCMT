@@ -3,7 +3,7 @@ services:
         class: Pcmt\PcmtProductBundle\Controller\PcmtProductDraftController
         autowire: true
     ### overrides product controller
-    pim_enrich.controller.rest.product:
+    pim_enrich.controller.rest.product.notusedinbeta:
         class: Pcmt\PcmtProductBundle\Controller\PcmtProductController
         arguments:
             - '@event_dispatcher'
