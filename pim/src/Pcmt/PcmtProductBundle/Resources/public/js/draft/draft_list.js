@@ -20,6 +20,7 @@ define(
                 "click .draft-changes-full": "changesCollapse",
                 "click .draft-status-choice": "statusChoiceChanged",
                 "click .draft-reject": "rejectDraftClicked",
+                "click .draft-approve": "approveDraftClicked",
             },
             configure: function () {
                 this.loadParams();
@@ -45,6 +46,29 @@ define(
                 let divShortcutId = '#draft-changes-shortcut-' + id;
                 $(divShortcutId).show();
             },
+            approveDraftClicked: function (ev) {
+                let draftId = ev.currentTarget.dataset.draftId;
+                Dialog.confirm(
+                    'Are you sure you want to approve this draft?',
+                    'Draft approval',
+                    function() {
+                        return this.approveDraft(draftId);
+                    }.bind(this),
+                    '',
+                    'ok',
+                    'Approve'
+                );
+            },
+            approveDraft: function (draftId) {
+                $.ajax({
+                    url: Routing.generate('pcmt_product_drafts_approve', {id: draftId}),
+                    type: 'PUT'
+                }).done((function() {
+                    this.loadDrafts();
+                }).bind(this)).fail(function() {
+                    console.log('Approving failed.');
+                });
+            },
             rejectDraftClicked: function (ev) {
                 let draftId = ev.currentTarget.dataset.draftId;
                 Dialog.confirmDelete(
@@ -64,7 +88,7 @@ define(
                 }).done((function() {
                     this.loadDrafts();
                 }).bind(this)).fail(function() {
-                    console.log("rejecting failed.");
+                    console.log('rejecting failed.');
                 });
             },
             statusChoiceChanged: function (ev) {
@@ -123,9 +147,10 @@ define(
                     ...model,
                     _: _,
                     __: __,
-                    rejectPermission: SecurityContext.isGranted('pcmt_permission_drafts_reject')
+                    rejectPermission: SecurityContext.isGranted('pcmt_permission_drafts_reject'),
+                    approvePermission: SecurityContext.isGranted('pcmt_permission_drafts_approve')
                 }));
-                $("#draft_status_choice_" + model.chosenStatus.id).addClass("AknDropdown-menuLink--active active");
+                $('#draft_status_choice_' + model.chosenStatus.id).addClass('AknDropdown-menuLink--active active');
             }
         });
     }
