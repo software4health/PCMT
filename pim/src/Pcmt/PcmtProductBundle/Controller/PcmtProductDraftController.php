@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Controller;
 
+use Akeneo\UserManagement\Component\Model\UserInterface;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Pcmt\PcmtProductBundle\Service\DraftStatusListService;
 use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
@@ -14,32 +16,25 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Intl\Exception\NotImplementedException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 use Symfony\Component\Serializer\Serializer;
 
 class PcmtProductDraftController
 {
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     private $entityManager;
-    /**
-     * @var TokenStorageInterface
-     */
+
+    /** @var TokenStorageInterface */
     private $tokenStorage;
-    /**
-     * @var DraftNormalizer
-     */
+
+    /** @var DraftNormalizer */
     private $draftNormalizer;
-    /**
-     * @var DraftStatusTranslatorService
-     */
+
+    /** @var DraftStatusTranslatorService */
     private $draftStatusTranslatorService;
-    /**
-     * @var DraftStatusListService
-     */
+
+    /** @var DraftStatusListService */
     private $draftStatusListService;
 
     public function __construct(
@@ -55,15 +50,6 @@ class PcmtProductDraftController
         $this->draftNormalizer = $draftNormalizer;
         $this->draftStatusTranslatorService = $draftStatusTranslatorService;
         $this->draftStatusListService = $draftStatusListService;
-    }
-
-    /**
-     * approve existig draft
-     * @AclAncestor("pcmt_permission_drafts_approve")
-     */
-    public function approveAction(Request $request): JsonResponse
-    {
-        throw new NotImplementedException('method not impemented');
     }
 
     /**
@@ -106,7 +92,7 @@ class PcmtProductDraftController
     /**
      * @AclAncestor("pcmt_permission_drafts_reject")
      */
-    public function rejectDraft(Request $request, ProductAbstractDraft $draft): JsonResponse
+    public function rejectDraft(ProductAbstractDraft $draft): JsonResponse
     {
         if (!$draft) {
             throw new NotFoundHttpException('The draft does not exist');
@@ -116,6 +102,30 @@ class PcmtProductDraftController
         }
 
         $draft->setStatus(ProductAbstractDraft::STATUS_REJECTED);
+        $this->entityManager->persist($draft);
+        $this->entityManager->flush();
+
+        return new JsonResponse([]);
+    }
+
+    /**
+     * @AclAncestor("pcmt_permission_drafts_approve")
+     */
+    public function approveDraft(ProductAbstractDraft $draft): JsonResponse
+    {
+        if (!$draft) {
+            throw new NotFoundHttpException('The draft does not exist');
+        }
+        if ($draft->getStatus() !== ProductAbstractDraft::STATUS_NEW) {
+            throw new BadRequestHttpException("You can only approve draft of status 'new'");
+        }
+
+
+        $draft->setStatus(ProductAbstractDraft::STATUS_APPROVED);
+        $draft->setApproved(Carbon::now());
+        $user = $this->tokenStorage->getToken()->getUser();
+        /** @var UserInterface $user */
+        $draft->setApprovedBy($user);
         $this->entityManager->persist($draft);
         $this->entityManager->flush();
 

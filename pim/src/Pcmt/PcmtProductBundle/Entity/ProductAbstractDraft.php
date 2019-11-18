@@ -6,7 +6,7 @@ namespace Pcmt\PcmtProductBundle\Entity;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Akeneo\UserManagement\Component\Model\UserInterface;
 use Carbon\Carbon;
 
 
@@ -120,6 +120,22 @@ abstract class ProductAbstractDraft implements ProductDraftInterface
     public function setStatus(int $statusId): void
     {
         $this->status = $statusId;
+    }
+
+    /**
+     * @param \DateTime $approved
+     */
+    public function setApproved(\DateTime $approved): void
+    {
+        $this->approved = $approved;
+    }
+
+    /**
+     * @param UserInterface $approvedBy
+     */
+    public function setApprovedBy(UserInterface $approvedBy): void
+    {
+        $this->approvedBy = $approvedBy;
     }
 
     abstract public function getType(): string;

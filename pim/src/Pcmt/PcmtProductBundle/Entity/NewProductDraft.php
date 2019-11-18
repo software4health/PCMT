@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Entity;
 
-use Symfony\Component\Security\Core\User\UserInterface;
+use Akeneo\UserManagement\Component\Model\UserInterface;
 
 class NewProductDraft extends ProductAbstractDraft
 {

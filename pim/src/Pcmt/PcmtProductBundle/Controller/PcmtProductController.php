@@ -171,29 +171,4 @@ class PcmtProductController extends ProductController
 
         return new JsonResponse(['values' => $normalizedViolations], 400);
     }
-
-    public function approveAction(Request $request, int $id): JsonResponse
-    {
-        if(!$this->userContext->getUser()->hasRole('Catalog_Manager')){
-            return new JsonResponse($request, Response::HTTP_UNAUTHORIZED);
-        }
-
-        $draft = $this->draftRepository->find($id);
-        if(!$draft){
-            throw new NotFoundHttpException(
-                sprintf('Product Draft with id %s could not be found.', $id)
-            );
-        }
-
-        /**
-         * @todo approval logic
-         */
-        $product = $this->draftManager->approveDraft($draft);
-
-        return new JsonResponse($this->normalizer->normalize(
-            $product,
-            'internal_api',
-            $this->getNormalizationContext()
-        ));
-    }
 }

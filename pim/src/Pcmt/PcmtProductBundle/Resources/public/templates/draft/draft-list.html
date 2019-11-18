@@ -120,13 +120,22 @@
             </div>
         </td>
         <td class="AknGrid-bodyCell AknGrid-bodyCell--actions action-cell">
-            <% if (rejectPermission) { %>
-            <a href="javascript:void(0);"
-               class="AknIconButton AknIconButton--small AknIconButton--trash AknButtonList-item draft-reject"
-               title="Reject draft" data-draft-id="<%- draft.id %>">
-                Reject draft
-            </a>
-            <% } %>
+            <div class="AknButtonList AknButtonList--right AknButtonList--expanded">
+                <% if (approvePermission) { %>
+                <a href="javascript:void(0);"
+                   class="AknIconButton AknIconButton--small AknIconButton--edit AknButtonList-item draft-approve"
+                   title="Approve draft" data-draft-id="<%- draft.id %>">
+                    Approve draft
+                </a>
+                <% } %>
+                <% if (rejectPermission) { %>
+                <a href="javascript:void(0);"
+                   class="AknIconButton AknIconButton--small AknIconButton--trash AknButtonList-item draft-reject"
+                   title="Reject draft" data-draft-id="<%- draft.id %>">
+                    Reject draft
+                </a>
+                <% } %>
+            </div>
         </td>
     </tr>
     <% }); %>

@@ -5,7 +5,7 @@ namespace Pcmt\PcmtProductBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Intl\Exception\NotImplementedException;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Akeneo\UserManagement\Component\Model\UserInterface;
 
 class ProductDraftORMRepository extends EntityRepository implements DraftRepositoryInterface
 {
