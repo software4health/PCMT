@@ -59,6 +59,10 @@ dev-cp-app:
 dev-cp-tmp:
 	docker cp -L pcmt_fpm_1:/tmp ./pim/tmp
 
+.PHONY: dev-test-ecs
+dev-test-ecs:
+	docker-compose -f ./docker-compose.yml -f ./docker-compose.dev.yml run fpm /srv/pim/vendor/bin/ecs check src
+
 .PHONY: terraform
 terraform:
 	cd deploy/terraform && ./build.sh
