@@ -4,3 +4,4 @@ pcmt.permission:
     list: View Product Draft list
     approve: Approve Product Draft
     reject: Reject Product Draft
+    edit: Edit Product Draft

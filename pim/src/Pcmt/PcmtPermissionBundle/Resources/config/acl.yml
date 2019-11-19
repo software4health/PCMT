@@ -12,3 +12,8 @@ pcmt_permission_drafts_reject:
   type: action
   label: pcmt.permission.drafts.label.reject
   group_name: pcmt.permission.drafts
+
+pcmt_permission_drafts_edit:
+  type: action
+  label: pcmt.permission.drafts.label.edit
+  group_name: pcmt.permission.drafts
