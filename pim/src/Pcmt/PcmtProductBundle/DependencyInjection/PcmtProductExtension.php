@@ -19,6 +19,8 @@ class PcmtProductExtension extends Extension
         $loader->load('fetchers.yml');
         $loader->load('widget.yml');
         $loader->load('services.yml');
+        $loader->load('writers.yml');
+        $loader->load('steps.yml');
         $loader->load('jobs.yml');
         $loader->load('forms.yml');
         $loader->load('providers.yml');

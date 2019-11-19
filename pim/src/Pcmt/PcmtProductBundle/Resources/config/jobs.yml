@@ -6,6 +6,7 @@ services:
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             -
-                - '@pcmt_connector.step.pcmt_xlsx_datagrid.export'
+                - '@pcmt_connector.step.pcmt_e2open.export'
+                - '@pcmt_connector.step.hash_first_cell'
         tags:
             - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.export_type%' }

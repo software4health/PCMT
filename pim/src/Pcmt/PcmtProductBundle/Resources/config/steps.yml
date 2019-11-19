@@ -1,0 +1,18 @@
+services:
+    pcmt_connector.step.pcmt_e2open.export:
+        class: '%pim_connector.step.item_step.class%'
+        arguments:
+            - 'export'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@pim_connector.reader.database.product'
+            - '@pim_connector.processor.normalization.product'
+            - '@pcmt_connector.writer.file.e2open'
+            - '%pim_job_product_batch_size%'
+
+    pcmt_connector.step.hash_first_cell:
+        class: 'Pcmt\PcmtProductBundle\Connector\Job\Step\HashFirstCellStep'
+        arguments:
+            - 'hash_first_cell'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
