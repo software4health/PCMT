@@ -5,7 +5,7 @@ namespace Pcmt\PcmtProductBundle\Widget;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
-use Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft;
+use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
 use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -35,7 +35,7 @@ class DraftsFetcher
     public function fetch(): array
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        $draftRepository = $this->entityManager->getRepository(ProductAbstractDraft::class);
+        $draftRepository = $this->entityManager->getRepository(AbstractProductDraft::class);
         $drafts =  $draftRepository->getUserDrafts($user);
 
         $fetcherFormatted = [];

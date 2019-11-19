@@ -5,7 +5,7 @@ namespace Pcmt\PcmtProductBundle\Normalizer;
 
 use Pcmt\PcmtProductBundle\Service\DraftStatusListService;
 use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
-use Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft;
+use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -29,7 +29,7 @@ class DraftStatusNormalizer implements NormalizerInterface
     }
 
     /**
-     * @param ProductAbstractDraft $productDraft
+     * @param AbstractProductDraft $productDraft
      * @param null $format
      * @param array $context
      * @return array
@@ -54,11 +54,11 @@ class DraftStatusNormalizer implements NormalizerInterface
     private function getCssClass(int $draftStatusId): string
     {
         switch ($draftStatusId) {
-            case ProductAbstractDraft::STATUS_NEW :
+            case AbstractProductDraft::STATUS_NEW :
                 return 'AknBadge--warning';
-            case ProductAbstractDraft::STATUS_APPROVED :
+            case AbstractProductDraft::STATUS_APPROVED :
                 return 'AknBadge--success';
-            case ProductAbstractDraft::STATUS_REJECTED :
+            case AbstractProductDraft::STATUS_REJECTED :
                 return 'AknBadge--important';
             default:
                 return 'AknBadge--grey';

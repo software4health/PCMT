@@ -7,7 +7,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Pcmt\PcmtProductBundle\Entity\AttributeChange;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
 use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
-use Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft;
+use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -44,7 +44,7 @@ class DraftNormalizer implements NormalizerInterface
         $data = [];
         $data['id'] = $draft->getId();
         $productLabel = 'no label';
-        /** @var ProductAbstractDraft $draft */
+        /** @var AbstractProductDraft $draft */
         switch (get_class($draft)) {
             case NewProductDraft::class:
                 $productLabel = $draft->getProductData()['identifier'] ?? 'no label';
@@ -94,7 +94,7 @@ class DraftNormalizer implements NormalizerInterface
         return new AttributeChange(
             $attribute,
             (string)($product ? $this->getPreviousValue($product, $attribute) : null),
-            (string)$value
+            is_array($value) ? json_encode($value) : (string)$value
         );
     }
 

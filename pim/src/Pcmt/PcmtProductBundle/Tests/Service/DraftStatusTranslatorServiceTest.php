@@ -9,7 +9,7 @@ use Akeneo\Pim\Structure\Component\AttributeTypeRegistry;
 use Akeneo\UserManagement\Component\Model\User;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
 use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
-use Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft;
+use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Normalizer\AttributeChangeNormalizer;
 use Pcmt\PcmtProductBundle\Normalizer\DraftNormalizer;
 use Pcmt\PcmtProductBundle\Normalizer\DraftStatusNormalizer;
@@ -47,14 +47,14 @@ class DraftStatusTranslatorServiceTest extends TestCase
 
     public function testGetName(): void
     {
-        $name = $this->draftStatusTranslatorService->getName(ProductAbstractDraft::STATUS_NEW);
+        $name = $this->draftStatusTranslatorService->getName(AbstractProductDraft::STATUS_NEW);
         $this->assertNotEmpty($name);
         $this->assertIsString($name);
     }
 
     public function testGetNameTranslated(): void
     {
-        $name = $this->draftStatusTranslatorService->getNameTranslated(ProductAbstractDraft::STATUS_NEW);
+        $name = $this->draftStatusTranslatorService->getNameTranslated(AbstractProductDraft::STATUS_NEW);
         $this->assertEquals($this->nameTranslated, $name);
     }
 }

@@ -9,7 +9,7 @@ use Akeneo\UserManagement\Component\Model\UserInterface;
 
 class ProductDraftORMRepository extends EntityRepository implements DraftRepositoryInterface
 {
-    public function findById(): ProductAbstractDraft
+    public function findById(): AbstractProductDraft
     {
         throw new NotImplementedException('method not implemented');
     }
