@@ -5,5 +5,5 @@ namespace Pcmt\PcmtProductBundle\Entity;
 
 interface DraftRepositoryInterface
 {
-    public function findById(): ProductAbstractDraft;
+    public function findById(): AbstractProductDraft;
 }

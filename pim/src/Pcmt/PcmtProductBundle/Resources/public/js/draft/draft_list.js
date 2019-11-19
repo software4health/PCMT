@@ -51,7 +51,7 @@ define(
                 Dialog.confirm(
                     'Are you sure you want to approve this draft?',
                     'Draft approval',
-                    function() {
+                    function () {
                         return this.approveDraft(draftId);
                     }.bind(this),
                     '',
@@ -63,10 +63,13 @@ define(
                 $.ajax({
                     url: Routing.generate('pcmt_product_drafts_approve', {id: draftId}),
                     type: 'PUT'
-                }).done((function() {
+                }).done((function () {
                     this.loadDrafts();
-                }).bind(this)).fail(function() {
-                    console.log('Approving failed.');
+                }).bind(this)).fail(function (jqXHR) {
+                    let messages = _.map(jqXHR.responseJSON.values, function(value) {
+                        return value.attribute + ': ' + value.message;
+                    });
+                    Dialog.alert(messages.join('\n'), 'Problem with approving draft', '');
                 });
             },
             rejectDraftClicked: function (ev) {
@@ -74,7 +77,7 @@ define(
                 Dialog.confirmDelete(
                     'Are you sure you want to reject this draft?',
                     'Draft rejection',
-                    function() {
+                    function () {
                         return this.rejectDraft(draftId);
                     }.bind(this),
                     'subtitle',
@@ -85,9 +88,9 @@ define(
                 $.ajax({
                     url: Routing.generate('pcmt_product_drafts_delete', {id: draftId}),
                     type: 'DELETE'
-                }).done((function() {
+                }).done((function () {
                     this.loadDrafts();
-                }).bind(this)).fail(function() {
+                }).bind(this)).fail(function () {
                     console.log('rejecting failed.');
                 });
             },

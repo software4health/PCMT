@@ -4,13 +4,11 @@ declare(strict_types=1);
 namespace Pcmt\PcmtProductBundle\Entity;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Carbon\Carbon;
 
 
-abstract class ProductAbstractDraft implements ProductDraftInterface
+abstract class AbstractProductDraft implements ProductDraftInterface
 {
     public const STATUS_NEW = 1;
     public const STATUS_REJECTED = 4;
@@ -43,9 +41,6 @@ abstract class ProductAbstractDraft implements ProductDraftInterface
     /** @var UserInterface $approvedBy */
     protected $approvedBy;
 
-    /** @var array $draftHistoryEntries */
-    protected $draftHistoryEntries;
-
     // keep product-related data here.
     // like family, groups etc. all the fields. - it helps rebuild product from new draft.
     /** @var array $productData */
@@ -65,26 +60,11 @@ abstract class ProductAbstractDraft implements ProductDraftInterface
         $this->created = $created;
         $this->version = $version;
         $this->status = $status;
-        $this->draftHistoryEntries = new ArrayCollection();
     }
 
     public function getId(): int
     {
         return $this->id;
-    }
-
-    public function addDraftHistory(DraftHistoryInterface $draftHistory): void
-    {
-        if ($this->draftHistoryEntries->contains($draftHistory)) {
-            return;
-        }
-        $this->draftHistoryEntries->add($draftHistory);
-        $draftHistory->setDraft($this);
-    }
-
-    public function getDraftHistoryEntries(): Collection
-    {
-        return $this->draftHistoryEntries;
     }
 
     public function getCreatedAt(): \DateTime

@@ -2,7 +2,7 @@
 
 namespace Pcmt\PcmtProductBundle\Service;
 
-use Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft;
+use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 
 class DraftStatusListService
 {
@@ -10,9 +10,9 @@ class DraftStatusListService
     public function getAll(): array
     {
         return [
-            ProductAbstractDraft::STATUS_NEW,
-            ProductAbstractDraft::STATUS_APPROVED,
-            ProductAbstractDraft::STATUS_REJECTED,
+            AbstractProductDraft::STATUS_NEW,
+            AbstractProductDraft::STATUS_APPROVED,
+            AbstractProductDraft::STATUS_REJECTED,
         ];
     }
 

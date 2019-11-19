@@ -1,7 +1,9 @@
 services:
-    pcmt_product.controller.rest.drafts:
+    pcmt_product.controller.rest.draft:
         class: Pcmt\PcmtProductBundle\Controller\PcmtProductDraftController
         autowire: true
+        arguments:
+            $constraintViolationNormalizer: '@pim_enrich.normalizer.product_violation'
     ### overrides product controller
     pim_enrich.controller.rest.product:
         class: Pcmt\PcmtProductBundle\Controller\PcmtProductController

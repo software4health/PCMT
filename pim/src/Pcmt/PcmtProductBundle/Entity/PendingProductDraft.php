@@ -6,7 +6,7 @@ namespace Pcmt\PcmtProductBundle\Entity;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 
-class PendingProductDraft extends ProductAbstractDraft
+class PendingProductDraft extends AbstractProductDraft
 {
     private const TYPE = ProductDraftInterface::TYPE_PENDING;
 

@@ -20,18 +20,13 @@ use Akeneo\Tool\Component\StorageUtils\Repository\CursorableRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
-use Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft;
-use Pcmt\PcmtProductBundle\Entity\ProductDraftHistory;
-use Pcmt\PcmtProductBundle\Entity\DraftHistoryInterface;
+use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
-use Pcmt\PcmtProductBundle\Service\DraftStatusListService;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Pcmt\PcmtAttributeBundle\Event\ProductFetchEvent;
@@ -49,9 +44,6 @@ class PcmtProductController extends ProductController
 
     /** @var SaverInterface $draftSaver */
     protected $draftSaver;
-
-    /** @var NormalizerInterface $draftNormalizer */
-    protected $draftNormalizer;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
@@ -85,14 +77,13 @@ class PcmtProductController extends ProductController
         parent::__construct($productRepository, $cursorableRepository, $attributeRepository, $productUpdater, $productSaver, $normalizer, $validator, $userContext, $objectFilter, $productEditDataFilter, $productRemover, $productBuilder, $localizedConverter, $emptyValuesFilter, $productValueConverter, $constraintViolationNormalizer, $variantProductBuilder, $productAttributeFilter, $productClient, $productAndProductModelClient);
     }
 
-    public function getAction($id)
+    public function getAction($id): JsonResponse
     {
         $event = new ProductFetchEvent($id);
-        if($this->eventDispatcher->dispatch(ProductFetchEvent::class, $event))
-
+        if ($this->eventDispatcher->dispatch(ProductFetchEvent::class, $event)) {
             return parent::getAction($id);
+        }
     }
-
 
     public function createAction(Request $request): ?JsonResponse
     {
@@ -102,27 +93,19 @@ class PcmtProductController extends ProductController
 
         $data = json_decode($request->getContent(), true);
 
-         /**
-          * at this stage we create NewDraft, populate it with data (which we will later use to create Product itself)
-          * and prevent Product from being created.
-          * Later, in the DraftController, in approve action, we will check the draft type.
-          * if NewDraft,then create Product, and create PendingDraft.
+        /**
+         * at this stage we create NewDraft, populate it with data (which we will later use to create Product itself)
+         * and prevent Product from being created.
          **/
 
-         $draft = new NewProductDraft(
-             $data,
-             $this->userContext->getUser(),
-             new \DateTime(),
-             ProductDraftInterface::DRAFT_VERSION_NEW,
-             ProductAbstractDraft::STATUS_NEW
-         );
-         $productHistory = new ProductDraftHistory(
+        $draft = new NewProductDraft(
+            $data,
+            $this->userContext->getUser(),
             new \DateTime(),
-             $draft->getAuthor(),
-            [ DraftHistoryInterface::PRODUCT_DRAFT_CREATED ]
+            ProductDraftInterface::DRAFT_VERSION_NEW,
+            AbstractProductDraft::STATUS_NEW
         );
 
-        $draft->addDraftHistory($productHistory);
         $this->draftSaver->save($draft);
 
         return new JsonResponse($this->normalizer->normalize(

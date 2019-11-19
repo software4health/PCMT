@@ -2,21 +2,21 @@ pcmt_product_drafts_index:
     path: /drafts/
 pcmt_product_drafts_api:
     path: /rest/drafts/
-    defaults: { _controller: pcmt_product.controller.rest.drafts:getList }
+    defaults: { _controller: pcmt_product.controller.rest.draft:getList }
     methods: [GET]
 pcmt_product_drafts_params:
     path: /rest/drafts/params/
-    defaults: { _controller: pcmt_product.controller.rest.drafts:getListParams }
+    defaults: { _controller: pcmt_product.controller.rest.draft:getListParams }
     methods: [GET]
 pcmt_product_drafts_delete:
     path: /rest/draft/{id}/
-    defaults: { _controller: pcmt_product.controller.rest.drafts:rejectDraft }
+    defaults: { _controller: pcmt_product.controller.rest.draft:rejectDraft }
     requirements:
         id: \d+
     methods: [DELETE]
 pcmt_product_drafts_approve:
     path: /rest/draft/approval/{id}/
-    defaults: { _controller: pcmt_product.controller.rest.drafts:approveDraft }
+    defaults: { _controller: pcmt_product.controller.rest.draft:approveDraft }
     requirements:
         id: \d+
     methods: [PUT]

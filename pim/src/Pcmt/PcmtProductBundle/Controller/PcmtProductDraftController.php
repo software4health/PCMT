@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Controller;
 
-use Akeneo\UserManagement\Component\Model\UserInterface;
-use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
+use Pcmt\PcmtProductBundle\Exception\DraftViolationException;
+use Pcmt\PcmtProductBundle\Service\DraftFacade;
 use Pcmt\PcmtProductBundle\Service\DraftStatusListService;
 use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
-use Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft;
+use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Normalizer\DraftNormalizer;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 
@@ -18,15 +18,14 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Validator\Exception\ValidatorException;
 
 class PcmtProductDraftController
 {
     /** @var EntityManagerInterface */
     private $entityManager;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
 
     /** @var DraftNormalizer */
     private $draftNormalizer;
@@ -37,19 +36,27 @@ class PcmtProductDraftController
     /** @var DraftStatusListService */
     private $draftStatusListService;
 
+    /** @var DraftFacade */
+    private $draftFacade;
+
+    /** @var NormalizerInterface */
+    protected $constraintViolationNormalizer;
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
         DraftNormalizer $draftNormalizer,
         DraftStatusTranslatorService $draftStatusTranslatorService,
-        DraftStatusListService $draftStatusListService
+        DraftStatusListService $draftStatusListService,
+        DraftFacade $draftFacade,
+        NormalizerInterface $constraintViolationNormalizer
     )
     {
         $this->entityManager = $entityManager;
-        $this->tokenStorage = $tokenStorage;
         $this->draftNormalizer = $draftNormalizer;
         $this->draftStatusTranslatorService = $draftStatusTranslatorService;
         $this->draftStatusListService = $draftStatusListService;
+        $this->draftFacade = $draftFacade;
+        $this->constraintViolationNormalizer = $constraintViolationNormalizer;
     }
 
     /**
@@ -58,9 +65,9 @@ class PcmtProductDraftController
     public function getList(Request $request): JsonResponse
     {
         $criteria = [
-            "status" => $request->query->get('status') ?? ProductAbstractDraft::STATUS_NEW
+            "status" => $request->query->get('status') ?? AbstractProductDraft::STATUS_NEW
         ];
-        $draftRepository = $this->entityManager->getRepository(ProductAbstractDraft::class);
+        $draftRepository = $this->entityManager->getRepository(AbstractProductDraft::class);
 
         $drafts = $draftRepository->findBy($criteria);
 
@@ -92,43 +99,48 @@ class PcmtProductDraftController
     /**
      * @AclAncestor("pcmt_permission_drafts_reject")
      */
-    public function rejectDraft(ProductAbstractDraft $draft): JsonResponse
+    public function rejectDraft(AbstractProductDraft $draft): JsonResponse
     {
         if (!$draft) {
             throw new NotFoundHttpException('The draft does not exist');
         }
-        if ($draft->getStatus() !== ProductAbstractDraft::STATUS_NEW) {
+        if ($draft->getStatus() !== AbstractProductDraft::STATUS_NEW) {
             throw new BadRequestHttpException("You can only reject draft of status 'new'");
         }
+        $this->draftFacade->rejectDraft($draft);
 
-        $draft->setStatus(ProductAbstractDraft::STATUS_REJECTED);
-        $this->entityManager->persist($draft);
-        $this->entityManager->flush();
-
-        return new JsonResponse([]);
+        return new JsonResponse();
     }
 
     /**
      * @AclAncestor("pcmt_permission_drafts_approve")
      */
-    public function approveDraft(ProductAbstractDraft $draft): JsonResponse
+    public function approveDraft(AbstractProductDraft $draft): JsonResponse
     {
         if (!$draft) {
             throw new NotFoundHttpException('The draft does not exist');
         }
-        if ($draft->getStatus() !== ProductAbstractDraft::STATUS_NEW) {
+        if ($draft->getStatus() !== AbstractProductDraft::STATUS_NEW) {
             throw new BadRequestHttpException("You can only approve draft of status 'new'");
         }
 
+        try {
+            $this->draftFacade->approveDraft($draft);
+        } catch (DraftViolationException $e) {
+            $normalizedViolations = [];
+            $product = $e->getProduct();
+            foreach ($e->getViolations() as $violation) {
+                $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
+                    $violation,
+                    'internal_api',
+                    ['product' => $product]
+                );
+            }
 
-        $draft->setStatus(ProductAbstractDraft::STATUS_APPROVED);
-        $draft->setApproved(Carbon::now());
-        $user = $this->tokenStorage->getToken()->getUser();
-        /** @var UserInterface $user */
-        $draft->setApprovedBy($user);
-        $this->entityManager->persist($draft);
-        $this->entityManager->flush();
+            return new JsonResponse(['values' => $normalizedViolations], 400);
 
-        return new JsonResponse([]);
+        }
+
+        return new JsonResponse();
     }
 }

@@ -1,4 +1,4 @@
-Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft:
+Pcmt\PcmtProductBundle\Entity\AbstractProductDraft:
     type: entity
     table: pcmt_catalog_product_draft
     inheritanceType: SINGLE_TABLE
@@ -57,10 +57,3 @@ Pcmt\PcmtProductBundle\Entity\ProductAbstractDraft:
                 updatedBy:
                     referencedColumnName: id
                     onDelete: 'SET NULL'
-    oneToMany:
-        draftHistoryEntries:
-            targetEntity: Pcmt\PcmtProductBundle\Entity\ProductDraftHistory
-            mappedBy: draft
-            fetch: 'EXTRA_LAZY'
-            orphanRemoval: true
-            cascade: ["persist", "remove"]
