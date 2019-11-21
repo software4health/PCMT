@@ -4,18 +4,23 @@ config:
 
         ### Dashboard widget
         pcmt/product/widget/draft-products-widget: pcmtproduct/js/draft/draft-products-widget
-        pcmt/product/draft/list : pcmtproduct/js/draft/draft_list
+        pcmt/product/draft/list: pcmtproduct/js/draft/draft_list
+        pcmt/product/draft/edit: pcmtproduct/js/draft/draft_edit
 
         ### templates ###
         pcmt/product/template/widget/draft-products-widget: pcmtproduct/templates/draft/draft-products-widget.html
         pcmt/product/template/widget/view-all-btn: pcmtproduct/templates/draft/view-all-btn.html
         pcmt/product/template/draft-list: pcmtproduct/templates/draft/draft-list.html
+        pcmt/product/template/draft-edit: pcmtproduct/templates/draft/draft-edit.html
 
         ### controllers ###
         pcmt/product/drafts/index: pcmtproduct/js/controller/drafts_index
+        pcmt/product/drafts/edit: pcmtproduct/js/controller/drafts_edit
 
     config:
         pim/controller-registry:
             controllers:
                 pcmt_product_drafts_index:
                     module: pcmt/product/drafts/index
+                pcmt_product_drafts_edit:
+                    module: pcmt/product/drafts/edit
