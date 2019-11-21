@@ -15,22 +15,12 @@ class PendingProductDraft extends AbstractProductDraft
         array $productData,
         UserInterface $author,
         \DateTime $created,
-        int $version,
         int $status
     )
     {
         $this->product = $product;
         $this->productData = $productData;
-        parent::__construct($author, $created, $version, $status);
-    }
-
-    public function nextVersion(): void
-    {
-        if(!$this->version) {
-            $this->version = ProductDraftInterface::DRAFT_VERSION_NEW;
-            return;
-        }
-        $this->version++;
+        parent::__construct($author, $created, $status);
     }
 
     public function getType(): string

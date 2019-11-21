@@ -52,14 +52,13 @@ abstract class AbstractProductDraft implements ProductDraftInterface
     protected function __construct(
         UserInterface $author,
         \DateTime $created,
-        int $version,
         int $status
     )
     {
         $this->author = $author;
         $this->created = $created;
-        $this->version = $version;
         $this->status = $status;
+        $this->version = AbstractProductDraft::DRAFT_VERSION_NEW;
     }
 
     public function getId(): int
@@ -119,6 +118,4 @@ abstract class AbstractProductDraft implements ProductDraftInterface
     }
 
     abstract public function getType(): string;
-
-    abstract public function nextVersion(): void;
 }

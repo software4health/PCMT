@@ -7,6 +7,8 @@ services:
     pcmt_product.draft.status.normalizer:
         class: Pcmt\PcmtProductBundle\Normalizer\DraftStatusNormalizer
         autowire: true
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 80 }
     pcmt_product.draft.attribute_change.normalizer:
         class: Pcmt\PcmtProductBundle\Normalizer\AttributeChangeNormalizer
         autowire: true

@@ -3,85 +3,132 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Tests\Normalizer;
 
-use Akeneo\Pim\Enrichment\Component\Product\Factory\ValueFactory;
 use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
-use Akeneo\Pim\Structure\Component\AttributeTypeRegistry;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\UserManagement\Component\Model\User;
+use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
+use Pcmt\PcmtProductBundle\Entity\AttributeChange;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
 use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
 use Pcmt\PcmtProductBundle\Normalizer\AttributeChangeNormalizer;
 use Pcmt\PcmtProductBundle\Normalizer\DraftNormalizer;
 use Pcmt\PcmtProductBundle\Normalizer\DraftStatusNormalizer;
+use Pcmt\PcmtProductBundle\Service\AttributeChangesService;
 use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
+use Pcmt\PcmtProductBundle\Service\ProductFromDraftCreator;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-/**
- * To run, type:
- * phpunit src/Pcmt/PcmtProductBundle/Tests/
- * in docker console
- *
- */
 class DraftNormalizerTest extends TestCase
 {
-    /**
-     * @var DraftNormalizer
-     */
+    /** @var DraftNormalizer */
     private $draftNormalizer;
+
+    /** @var ProductInterface|MockObject */
+    private $productNew;
+
+    /** @var ProductInterface|MockObject */
+    private $productExisting;
+
+    /** @var DraftStatusNormalizer */
+    private $draftStatusNormalizer;
+
+    /** @var AttributeChangeNormalizer */
+    private $attributeChangeNormalizer;
+
+    /** @var ProductFromDraftCreator|MockObject */
+    private $creator;
+
+    /** @var AttributeChangesService */
+    private $attributeChangesService;
 
     public function setUp(): void
     {
-        $attributeChangeNormalizer = new AttributeChangeNormalizer();
+        $this->productNew = $this->createMock(Product::class);
+        $this->productExisting = $this->createMock(Product::class);
+
+        $this->attributeChangeNormalizer = new AttributeChangeNormalizer();
         $logger = $this->createMock(LoggerInterface::class);
         $translator = $this->createMock(DraftStatusTranslatorService::class);
-        $draftStatusNormalizer = new DraftStatusNormalizer($logger, $translator);
-        $this->draftNormalizer = new DraftNormalizer($draftStatusNormalizer, $attributeChangeNormalizer);
+        $this->draftStatusNormalizer = new DraftStatusNormalizer($logger, $translator);
+
+        $this->creator = $this->createMock(ProductFromDraftCreator::class);
+        $this->creator->method('getProductToCompare')->willReturn($this->productNew);
+
+        $this->attributeChangesService = $this->createMock(AttributeChangesService::class);
+
         parent::setUp();
     }
 
-    public function testNormalizeNewProductDraft()
+    public function testNormalizeNoChangesNewProduct()
     {
-        $attribute1 = "attribute1";
-        $productData = [
-            $attribute1 => "NEW",
-            "attribute2" => 123
-        ];
+        $this->draftNormalizer = new DraftNormalizer(
+            $this->draftStatusNormalizer,
+            $this->attributeChangeNormalizer,
+            $this->creator,
+            $this->attributeChangesService
+        );
+
+        $draft = $this->createMock(NewProductDraft::class);
         $author = new User();
         $author->setFirstName('Alfred');
         $author->setLastName('Nobel');
-        $created = new \DateTime();
-        $draft = new NewProductDraft($productData, $author, $created, 0, 0);
+        $draft->method('getAuthor')->willReturn($author);
+        $draft->method('getProduct')->willReturn(null);
+        $draft->method('getStatus')->willReturn(AbstractProductDraft::STATUS_NEW);
 
         $array = $this->draftNormalizer->normalize($draft);
 
-        $this->assertNotEmpty($array["changes"]);
-        $this->assertEquals(count($productData), count($array["changes"]));
+        $this->assertEmpty($array["changes"]);
         $this->assertEquals("Alfred Nobel", $array["author"]);
-        $this->assertEquals($attribute1, $array["changes"][0]["attribute"]);
+        $this->assertIsArray($array["status"]);
+        $this->assertArrayHasKey("id", $array["status"]);
+        $this->assertArrayHasKey("name", $array["status"]);
     }
 
-    public function testNormalizePendingProductDraft()
+    public function testNormalizeChangesNewProduct(): void
     {
-        $attribute = "attribute3";
-        $productData = [
-            $attribute => "NEW",
-            "attribute4" => 123
+        $changes = [
+            new AttributeChange('atName', null, 'newVal')
         ];
-        $author = new User();
-        $created = new \DateTime();
+        $this->attributeChangesService->method('get')->willReturn($changes);
 
-        $product = $this->getMockBuilder(Product::class)->getMock();
-        $identifier = 'Id23';
-        $product->method('getIdentifier')->willReturn($identifier);
-
-        $draft = new PendingProductDraft($product, $productData, $author, $created, 0, 0);
+        $this->draftNormalizer = new DraftNormalizer(
+            $this->draftStatusNormalizer,
+            $this->attributeChangeNormalizer,
+            $this->creator,
+            $this->attributeChangesService
+        );
+        $draft = $this->createMock(NewProductDraft::class);
+        $draft->method('getProduct')->willReturn(null);
 
         $array = $this->draftNormalizer->normalize($draft);
 
         $this->assertNotEmpty($array["changes"]);
-        $this->assertEquals(count($productData), count($array["changes"]));
-        $this->assertEquals($attribute, $array["changes"][0]["attribute"]);
-        $this->assertEquals($identifier, $array["label"]);
+        $this->assertCount(1, $array["changes"]);
     }
 
+    public function testNormalizeChangesExistingProduct(): void
+    {
+        $changes = [
+            new AttributeChange('atName', null, 'newVal')
+        ];
+        $this->attributeChangesService->method('get')->willReturn($changes);
+
+        $this->draftNormalizer = new DraftNormalizer(
+            $this->draftStatusNormalizer,
+            $this->attributeChangeNormalizer,
+            $this->creator,
+            $this->attributeChangesService
+        );
+
+        $draft = $this->createMock(PendingProductDraft::class);
+        $draft->method('getProduct')->willReturn($this->productExisting);
+
+        $array = $this->draftNormalizer->normalize($draft);
+
+        $this->assertNotEmpty($array["changes"]);
+        $this->assertCount(1, $array["changes"]);
+    }
 }

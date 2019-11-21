@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Normalizer;
 
-use Pcmt\PcmtProductBundle\Service\DraftStatusListService;
+use Pcmt\PcmtProductBundle\Entity\DraftStatus;
 use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
 use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
-use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -17,6 +16,7 @@ class DraftStatusNormalizer implements NormalizerInterface
      * @var LoggerInterface
      */
     private $logger;
+
     /**
      * @var DraftStatusTranslatorService
      */
@@ -29,14 +29,14 @@ class DraftStatusNormalizer implements NormalizerInterface
     }
 
     /**
-     * @param AbstractProductDraft $productDraft
+     * @param DraftStatus $draftStatus
      * @param null $format
      * @param array $context
      * @return array
      */
-    public function normalize($productDraft, $format = null, array $context = []): array
+    public function normalize($draftStatus, $format = null, array $context = []): array
     {
-        $statusId = $productDraft->getStatus();
+        $statusId = $draftStatus->getId();
         try {
             $name = $this->draftStatusService->getNameTranslated($statusId);
         } catch (\Exception $e) {
@@ -67,6 +67,6 @@ class DraftStatusNormalizer implements NormalizerInterface
 
     public function supportsNormalization($data, $format = null, array $context = []): bool
     {
-        return false;
+        return $data instanceof DraftStatus;
     }
 }

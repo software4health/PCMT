@@ -7,28 +7,23 @@ use Akeneo\Pim\Enrichment\Component\Product\Comparator\Filter\FilterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Localization\Localizer\AttributeConverterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Value\OptionsValue;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
+use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
+use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 use Pcmt\PcmtProductBundle\Exception\DraftViolationException;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class NewProductFromDraftCreator
+class ProductFromDraftCreator
 {
-    /** @var NewProductDraft */
-    private $draft;
-
     /** @var ProductBuilderInterface */
     private $productBuilder;
-
-    /** @var ValidatorInterface */
-    private $validator;
-
-    /** @var SaverInterface */
-    private $productSaver;
 
     /** @var ConverterInterface */
     private $productValueConverter;
@@ -50,8 +45,6 @@ class NewProductFromDraftCreator
 
     public function __construct(
         ProductBuilderInterface $productBuilder,
-        ValidatorInterface $validator,
-        SaverInterface $productSaver,
         ConverterInterface $productValueConverter,
         AttributeConverterInterface $localizedConverter,
         UserContext $userContext,
@@ -61,8 +54,6 @@ class NewProductFromDraftCreator
     )
     {
         $this->productBuilder = $productBuilder;
-        $this->validator = $validator;
-        $this->productSaver = $productSaver;
         $this->productValueConverter = $productValueConverter;
         $this->localizedConverter = $localizedConverter;
         $this->userContext = $userContext;
@@ -71,10 +62,55 @@ class NewProductFromDraftCreator
         $this->productAttributeFilter = $productAttributeFilter;
     }
 
-    public function create(NewProductDraft $draft): void
+    public function getProductToCompare(ProductDraftInterface $draft): ProductInterface
     {
-        $this->draft = $draft;
+        switch (get_class($draft)) {
+            case NewProductDraft::class:
+                return $this->createNewProduct($draft);
+            case PendingProductDraft::class:
+                return $this->createExistingProductForComparing($draft);
+        }
+    }
 
+    public function getProductToSave(ProductDraftInterface $draft): ProductInterface
+    {
+        switch (get_class($draft)) {
+            case NewProductDraft::class:
+                return $this->createNewProduct($draft);
+            case PendingProductDraft::class:
+                return $this->createForSaveForDraftForExistingProduct($draft);
+        }
+    }
+
+    private function createExistingProductForComparing(PendingProductDraft $draft): ProductInterface
+    {
+        $product = $draft->getProduct();
+        $newProduct = clone($product);
+
+        // cloning values, otherwise the original values would also be overwritten
+        $newProduct->setValues(new WriteValueCollection());
+        foreach ($product->getValues() as $value) {
+            $newProduct->addValue($value);
+        }
+        $data = $draft->getProductData();
+        if (isset($data['values'])) {
+            $this->updateProduct($newProduct, $data);
+        }
+        return $newProduct;
+    }
+
+    private function createForSaveForDraftForExistingProduct(PendingProductDraft $draft): ProductInterface
+    {
+        $product = $draft->getProduct();
+        $data = $draft->getProductData();
+        if (isset($data['values'])) {
+            $this->updateProduct($product, $data);
+        }
+        return $product;
+    }
+
+    private function createNewProduct(NewProductDraft $draft): ProductInterface
+    {
         $data = $draft->getProductData();
 
         if (isset($data['parent'])) {
@@ -93,13 +129,7 @@ class NewProductFromDraftCreator
             );
         }
 
-        $violations = $this->validator->validate($product);
-
-        if (0 === $violations->count()) {
-            $this->productSaver->save($product);
-        } else {
-            throw new DraftViolationException($violations, $product);
-        }
+        return $product;
     }
 
     /**

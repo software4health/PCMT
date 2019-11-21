@@ -9,6 +9,7 @@ use Akeneo\Pim\Enrichment\Bundle\Filter\ObjectFilterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Comparator\Filter\FilterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Exception\ObjectNotFoundException;
 use Akeneo\Pim\Enrichment\Component\Product\Localization\Localizer\AttributeConverterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterface;
@@ -21,12 +22,17 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
 use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
+use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Pcmt\PcmtAttributeBundle\Event\ProductFetchEvent;
@@ -85,7 +91,7 @@ class PcmtProductController extends ProductController
         }
     }
 
-    public function createAction(Request $request): ?JsonResponse
+    public function createAction(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
             return new RedirectResponse('/');
@@ -102,7 +108,6 @@ class PcmtProductController extends ProductController
             $data,
             $this->userContext->getUser(),
             new \DateTime(),
-            ProductDraftInterface::DRAFT_VERSION_NEW,
             AbstractProductDraft::STATUS_NEW
         );
 
@@ -113,45 +118,46 @@ class PcmtProductController extends ProductController
             'internal_api',
             $this->getNormalizationContext()
         ));
+    }
 
-        if (isset($data['parent'])) {
-            $product = $this->variantProductBuilder->createProduct(
-                $data['identifier'] ?? null,
-                $data['family'] ?? null
-            );
+    public function postAction(Request $request, $id): Response
+    {
+        if (!$request->isXmlHttpRequest()) {
+            return new RedirectResponse('/');
+        }
 
-            if (isset($data['values'])) {
-                $this->updateProduct($product, $data);
+        $product = $this->findProductOr404($id);
+        if ($this->objectFilter->filterObject($product, 'pim.internal_api.product.edit')) {
+            throw new AccessDeniedHttpException();
+        }
+        $data = json_decode($request->getContent(), true);
+        try {
+            $data = $this->productEditDataFilter->filterCollection($data, null, ['product' => $product]);
+        } catch (ObjectNotFoundException $e) {
+            throw new BadRequestHttpException();
+        }
+
+        $fields = ['created', 'updated'];
+        foreach ($fields as $field) {
+            if (isset($data[$field])) {
+                unset($data[$field]);
             }
-        } else {
-            $product = $this->productBuilder->createProduct(
-                $data['identifier'] ?? null,
-                $data['family'] ?? null
-            );
         }
 
-        $violations = $this->validator->validate($product);
+        $draft = new PendingProductDraft(
+            $product,
+            $data,
+            $this->userContext->getUser(),
+            new \DateTime(),
+            AbstractProductDraft::STATUS_NEW
+        );
 
-        if (0 === $violations->count()) {
-            $this->productSaver->save($product);
+        $this->draftSaver->save($draft);
 
-
-            return new JsonResponse($this->normalizer->normalize(
-                $product,
-                'internal_api',
-                $this->getNormalizationContext()
-            ));
-        }
-
-        $normalizedViolations = [];
-        foreach ($violations as $violation) {
-            $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
-                $violation,
-                'internal_api',
-                ['product' => $product]
-            );
-        }
-
-        return new JsonResponse(['values' => $normalizedViolations], 400);
+        return new JsonResponse($this->normalizer->normalize(
+            $product,
+            'internal_api',
+            $this->getNormalizationContext()
+        ));
     }
 }
