@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+
 namespace Pcmt\PcmtProductBundle\Entity;
 
 use Akeneo\UserManagement\Component\Model\UserInterface;
