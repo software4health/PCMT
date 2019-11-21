@@ -36,20 +36,16 @@ before_script:
 
 .pim_docker_build:
   stage: build
-  script: 
-    - bin/ci-build.sh
-    - bin/ci-push.sh
-
-.run_tests:
   script:
-    - make dev-test-ecs
+    - bin/ci-build.sh
     - make dev-test-unit
+    - make dev-test-ecs
+    - bin/ci-push.sh
 
 pim docker build (on git push):
   extends: 
     - .pim_docker_build
     - .pim_only_changes
-    - .run_tests
 
 pim docker build (manual retry):
   extends: .pim_docker_build
