@@ -13,7 +13,7 @@ class NewDatabaseCommand extends DatabaseCommand
    *
    * @throws \Exception
    */
-  protected function launchCommands(): NewDatabaseCommand
+  protected function launchCommands(): self
   {
     parent::launchCommands();
     if ($this->getContainer()->getParameter('installer_data') === "PcmtCustomDatasetBundle:pcmt_global") {
