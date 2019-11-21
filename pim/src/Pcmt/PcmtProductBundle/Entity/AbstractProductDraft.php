@@ -58,7 +58,7 @@ abstract class AbstractProductDraft implements ProductDraftInterface
         $this->author = $author;
         $this->created = $created;
         $this->status = $status;
-        $this->version = AbstractProductDraft::DRAFT_VERSION_NEW;
+        $this->version = self::DRAFT_VERSION_NEW;
     }
 
     public function getId(): int
