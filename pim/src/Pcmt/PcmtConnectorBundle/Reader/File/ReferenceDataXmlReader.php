@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\Reader\File;
@@ -15,7 +16,7 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
     /** @var Service $xmlReader */
     protected $xmlReader;
 
-    /** @var ArrayConverterInterface $arrayConverter*/
+    /** @var ArrayConverterInterface $arrayConverter */
     protected $arrayConverter;
 
     /** @var StepExecution $stepExecutions */
@@ -49,49 +50,46 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
         $xmlMapping = ($this->stepExecution->getJobParameters()
             ->get('xmlMapping')) ?? null;
 
-
         $this->xmlReader->elementMap = ($xmlMapping) ?? [
             '{http://www.w3.org/2001/XMLSchema-instance}urn' => 'Sabre\Xml\Element\XmlElement',
-            'code' => 'Sabre\Xml\Element\KeyValue'
+            'code' => 'Sabre\Xml\Element\KeyValue',
         ];
 
-        if(!$this->processed){
-            try{
-
+        if (!$this->processed) {
+            try {
                 $this->validateFileExtension($filePath);
                 $input = $this->fileGetContentsWrapper->fileGetContents($filePath);
                 $parsed = $this->xmlReader->parse($input);
 
-                if(!$parsed || !is_array($parsed)){
+                if (!$parsed || !is_array($parsed)) {
                     throw new \Exception('File reading failed. File corrupted or wrong data format.');
                 }
 
                 $className = null;
                 $version = null;
 
-                foreach ($parsed as $number => $value){
-
-                    if(!$className){
+                foreach ($parsed as $number => $value) {
+                    if (!$className) {
                         $className = $this->setClassName($value);
                     }
 
-                    if(!$version){
+                    if (!$version) {
                         $version = $this->setVersion($value);
                     }
 
-                    if(ltrim($value['name'], static::DELIMITER) == 'code'){
+                    if ('code' == ltrim($value['name'], static::DELIMITER)) {
                         $this->processed[] = $this->createReferenceDataArray($value['value'], $className, $version);
                     }
                 }
-
             } catch (\Exception $exception) {
                 $this->stepExecution->addError('Failed to read the input file: ' . $exception->getMessage());
                 $this->stepExecution->addFailureException($exception);
+
                 throw $exception;
             }
         }
 
-        if(null === $this->arrayIterator){
+        if (null === $this->arrayIterator) {
             $arrayObject = new \ArrayObject($this->processed);
             $this->arrayIterator = $arrayObject->getIterator();
             $this->arrayIterator->rewind();
@@ -109,25 +107,30 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
 
     public function setStepExecution(StepExecution $stepExecution)
     {
-       $this->stepExecution = $stepExecution;
+        $this->stepExecution = $stepExecution;
     }
 
     private function setClassName(array $item): ?string
     {
         $delimiter = static::DELIMITER;
-        if(!array_key_exists('name', $item) || ltrim($item['name'], $delimiter) !== 'urn' ) { return null; }
+        if (!array_key_exists('name', $item) || 'urn' !== ltrim($item['name'], $delimiter)) {
+            return null;
+        }
 
         $classMatch = [];
         preg_match('/cl:(.*)/', $item['value'], $classMatch);
 
         $classNameFactory = new ReferenceDataFactory();
+
         return $classNameFactory->getReferenceDataClass($classMatch[1]);
     }
 
     private function setVersion(array $item): ?string
     {
         $delimiter = static::DELIMITER;
-        if(!array_key_exists('name', $item) || ltrim($item['name'], $delimiter) !== 'version' ) { return null; }
+        if (!array_key_exists('name', $item) || 'version' !== ltrim($item['name'], $delimiter)) {
+            return null;
+        }
 
         return ($item['value']) ?? null;
     }
@@ -156,7 +159,7 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
 
     public function validateFileExtension(string $filePath)
     {
-        if(!(substr($filePath, -3) === 'xml')){
+        if (!('xml' === substr($filePath, -3))) {
             throw new \InvalidArgumentException('Invalid file extension');
         }
     }

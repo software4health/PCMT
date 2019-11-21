@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtAttributeBundle\Extension\Factory;
@@ -10,7 +11,7 @@ class PcmtCommandFactory
 {
     public function command(string $attributeClass)
     {
-        switch ($attributeClass){
+        switch ($attributeClass) {
             case ConcatenatedAttribute::class:
                 return new ConcatenatedAttributeCommand();
             default:

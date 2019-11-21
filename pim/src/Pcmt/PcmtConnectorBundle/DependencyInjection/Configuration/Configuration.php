@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\DependencyInjection\Configuration;
@@ -8,13 +9,12 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('pcmt_job_connector');
 
-        #set the dirpath in the DefaultJobProvider to be configurable:
+        //set the dirpath in the DefaultJobProvider to be configurable:
         $rootNode
             ->children()
                 ->arrayNode('data_download')

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtCustomDatasetBundle\ArrayConverter\FlatToStandard;
@@ -15,25 +16,25 @@ use Akeneo\Tool\Component\Connector\ArrayConverter\FieldsRequirementChecker;
  */
 class DatagridView implements ArrayConverterInterface
 {
-  /** @var FieldsRequirementChecker */
-  protected $fieldChecker;
+    /** @var FieldsRequirementChecker */
+    protected $fieldChecker;
 
-  /**
-   * @param FieldsRequirementChecker $fieldChecker
-   */
-  public function __construct(FieldsRequirementChecker $fieldChecker)
-  {
-    $this->fieldChecker = $fieldChecker;
-  }
+    /**
+     * @param FieldsRequirementChecker $fieldChecker
+     */
+    public function __construct(FieldsRequirementChecker $fieldChecker)
+    {
+        $this->fieldChecker = $fieldChecker;
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function convert(array $item, array $options = []): array
-  {
-    $this->fieldChecker->checkFieldsPresence($item, ['label', 'owner', 'datagrid_alias', 'columns']);
-    $this->fieldChecker->checkFieldsFilling($item, ['label', 'owner', 'datagrid_alias', 'columns']);
-    return $item;
-  }
+    /**
+     * {@inheritdoc}
+     */
+    public function convert(array $item, array $options = []): array
+    {
+        $this->fieldChecker->checkFieldsPresence($item, ['label', 'owner', 'datagrid_alias', 'columns']);
+        $this->fieldChecker->checkFieldsFilling($item, ['label', 'owner', 'datagrid_alias', 'columns']);
 
+        return $item;
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtAttributeBundle\Extension\Connector\ArrayConverter\StandardToFlat\Product;
@@ -11,7 +12,7 @@ class ConcatenatedAttributesConverter extends AbstractValueConverter implements 
     protected const VALID_TYPES = [
         'attribute1' => ['string', 'array'],
         'separator' => ['string'],
-        'attribute2' => ['string', 'array']
+        'attribute2' => ['string', 'array'],
     ];
 
     public function convert($attributeCode, $data): array
@@ -19,15 +20,15 @@ class ConcatenatedAttributesConverter extends AbstractValueConverter implements 
         $convertedItem = [];
         $testoutputstring = '';
 
-        if(!is_array($data)){
+        if (!is_array($data)) {
             throw new \InvalidArgumentException('Serialized data should be array.');
         }
-        foreach ($data as $attributeName => $value){
-            if(!array_key_exists($attributeName, self::VALID_TYPES) || !in_array(gettype($value), self::VALID_TYPES[$attributeName])){
+        foreach ($data as $attributeName => $value) {
+            if (!array_key_exists($attributeName, self::VALID_TYPES) || !in_array(gettype($value), self::VALID_TYPES[$attributeName])) {
                 throw new \InvalidArgumentException('Invalid type passed.');
             }
-            if(is_array($value)){
-                foreach ($value as $key => $item){
+            if (is_array($value)) {
+                foreach ($value as $key => $item) {
                     $testoutputstring .= $item;
                 }
             } else {
@@ -36,6 +37,7 @@ class ConcatenatedAttributesConverter extends AbstractValueConverter implements 
         }
 
         $convertedItem[$attributeCode] = $testoutputstring;
+
         return $convertedItem;
     }
 }

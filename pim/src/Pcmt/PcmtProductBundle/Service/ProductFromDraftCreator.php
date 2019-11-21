@@ -9,16 +9,11 @@ use Akeneo\Pim\Enrichment\Component\Product\Localization\Localizer\AttributeConv
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Value\OptionsValue;
-use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
 use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
-use Pcmt\PcmtProductBundle\Exception\DraftViolationException;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductFromDraftCreator
 {
@@ -51,8 +46,7 @@ class ProductFromDraftCreator
         FilterInterface $emptyValuesFilter,
         ObjectUpdaterInterface $productUpdater,
         AttributeFilterInterface $productAttributeFilter
-    )
-    {
+    ) {
         $this->productBuilder = $productBuilder;
         $this->productValueConverter = $productValueConverter;
         $this->localizedConverter = $localizedConverter;
@@ -85,7 +79,7 @@ class ProductFromDraftCreator
     private function createExistingProductForComparing(PendingProductDraft $draft): ProductInterface
     {
         $product = $draft->getProduct();
-        $newProduct = clone($product);
+        $newProduct = clone $product;
 
         // cloning values, otherwise the original values would also be overwritten
         $newProduct->setValues(new WriteValueCollection());
@@ -96,6 +90,7 @@ class ProductFromDraftCreator
         if (isset($data['values'])) {
             $this->updateProduct($newProduct, $data);
         }
+
         return $newProduct;
     }
 
@@ -106,6 +101,7 @@ class ProductFromDraftCreator
         if (isset($data['values'])) {
             $this->updateProduct($product, $data);
         }
+
         return $product;
     }
 
@@ -141,7 +137,7 @@ class ProductFromDraftCreator
         $values = $this->productValueConverter->convert($data['values']);
 
         $values = $this->localizedConverter->convertToDefaultFormats($values, [
-            'locale' => $this->userContext->getUiLocale()->getCode()
+            'locale' => $this->userContext->getUiLocale()->getCode(),
         ]);
 
         $dataFiltered = $this->emptyValuesFilter->filter($product, ['values' => $values]);

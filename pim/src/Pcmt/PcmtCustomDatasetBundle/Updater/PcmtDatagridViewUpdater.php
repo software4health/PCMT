@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtCustomDatasetBundle\Updater;
@@ -18,25 +19,24 @@ use Oro\Bundle\PimDataGridBundle\Entity\DatagridView;
  */
 class PcmtDatagridViewUpdater extends DatagridViewUpdater implements ObjectUpdaterInterface
 {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function update($datagridView, array $data, array $options = []): ObjectUpdaterInterface
-  {
-    if (!$datagridView instanceof DatagridView) {
-      throw InvalidObjectException::objectExpected(
+    /**
+     * {@inheritdoc}
+     */
+    public function update($datagridView, array $data, array $options = []): ObjectUpdaterInterface
+    {
+        if (!$datagridView instanceof DatagridView) {
+            throw InvalidObjectException::objectExpected(
         ClassUtils::getClass($datagridView),
         DatagridView::class
       );
-    }
-    $user = $this->userRepository->findOneByIdentifier($data['owner']);
-    if (null !== $user) {
-      foreach ($data as $field => $value) {
-        $this->setData($datagridView, $field, $value);
-      }
-    }
+        }
+        $user = $this->userRepository->findOneByIdentifier($data['owner']);
+        if (null !== $user) {
+            foreach ($data as $field => $value) {
+                $this->setData($datagridView, $field, $value);
+            }
+        }
 
-    return $this;
-  }
+        return $this;
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtAttributeBundle\Tests\Converter;
@@ -33,7 +34,7 @@ class ConcatenatedAttributesConverterTest extends TestCase
         $concatenatedAttributesConverter = $this->getConcatenatedAttributesConverterInstance();
 
         $this->assertTrue($concatenatedAttributesConverter->supportsAttribute($attribute));
-        $this->assertEquals($converted, $concatenatedAttributesConverter->convert($attribute->getCode(),$input));
+        $this->assertEquals($converted, $concatenatedAttributesConverter->convert($attribute->getCode(), $input));
     }
 
     /** @dataProvider provideInvalidDataToConvert */
@@ -53,12 +54,12 @@ class ConcatenatedAttributesConverterTest extends TestCase
         return [
           [
               ['attribute1' => '100 EUR', 'separator' => ':', 'attribute2' => '0.250KG'],
-              ['concatenated_test' => '100 EUR:0.250KG']
+              ['concatenated_test' => '100 EUR:0.250KG'],
           ],
           [
               ['attribute1' => ['200 PSI', '|', '100 kG/m2'], 'separator' => '%%', 'attribute2' => '80 USD'],
-              ['concatenated_test' => '200 PSI|100 kG/m2%%80 USD']
-          ]
+              ['concatenated_test' => '200 PSI|100 kG/m2%%80 USD'],
+          ],
         ];
     }
 
@@ -66,10 +67,10 @@ class ConcatenatedAttributesConverterTest extends TestCase
     {
         return [
             [
-                ['invalidKey' => '200 EUR', 'separator' => '$$', 'attribute1' => '0.250KG']
+                ['invalidKey' => '200 EUR', 'separator' => '$$', 'attribute1' => '0.250KG'],
             ],
             [
-                'invalidValueType'
+                'invalidValueType',
             ],
         ];
     }

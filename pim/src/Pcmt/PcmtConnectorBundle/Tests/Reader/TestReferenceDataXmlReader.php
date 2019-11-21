@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\Tests\Reader;
@@ -43,7 +44,7 @@ class TestReferenceDataXmlReader extends TestCase
      * @test
      * @dataProvider inputFilePathDataProvider
      */
-    public function testReadCorrectFile(string $filePath):void
+    public function testReadCorrectFile(string $filePath): void
     {
         $reader = $this->getReferenceDataXmlReaderInstance();
         $reader->setStepExecution($this->stepExecutionMock);

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Service;
@@ -18,8 +19,7 @@ class DraftFacade
     public function __construct(
         DraftApprover $draftApprover,
         EntityManagerInterface $entityManager
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->draftApprover = $draftApprover;
     }

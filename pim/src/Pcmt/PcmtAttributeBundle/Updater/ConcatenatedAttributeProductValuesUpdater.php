@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtAttributeBundle\Updater;
@@ -39,10 +40,10 @@ class ConcatenatedAttributeProductValuesUpdater implements ObjectUpdaterInterfac
      */
     protected function updateEntityWithValues(EntityWithValuesInterface $entityWithValues, array $values): void
     {
-        foreach ($values as $code => $value){
-            foreach($value as $data){
+        foreach ($values as $code => $value) {
+            foreach ($value as $data) {
                 $hasData = !('' === $data['data'] || [] === $data['data'] || null === $data['data']);
-                if(!$hasData){
+                if (!$hasData) {
                     return;
                 }
                 $options = ['locale' => $data['locale'], 'scope' => $data['scope']];

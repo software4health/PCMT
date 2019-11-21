@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Entity;
@@ -29,8 +30,7 @@ class ProductDraftHistory implements DraftHistoryInterface
         \DateTime $createdAt,
         UserInterface $author,
         array $changeSet = []
-    )
-    {
+    ) {
         $this->createdAt = $createdAt;
         $this->author = $author;
         $this->changeSet = $changeSet;

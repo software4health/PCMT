@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\JobParameters\DefaultValueProvider;
@@ -9,16 +10,15 @@ use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
-class XmlReferenceDataImport implements  DefaultValuesProviderInterface
+class XmlReferenceDataImport implements DefaultValuesProviderInterface
 {
-   protected $supportedJobNames;
+    protected $supportedJobNames;
 
     protected $fileDirectory = 'Xml';
 
     public function __construct(
         array $supportedJobNames
-    )
-    {
+    ) {
         $this->supportedJobNames = $supportedJobNames;
     }
 
@@ -27,22 +27,20 @@ class XmlReferenceDataImport implements  DefaultValuesProviderInterface
         return  [
             'filePath' => null,
             'dirPath' => 'src/Pcmt/PcmtConnectorBundle/Resources/config/reference_data',
-            'uploadAllowed'     => [
+            'uploadAllowed' => [
                 new Type('bool'),
-                new IsTrue(['groups' => 'UploadExecution'])
+                new IsTrue(['groups' => 'UploadExecution']),
             ],
-            'decimalSeparator'  => new NotBlank(),
+            'decimalSeparator' => new NotBlank(),
             'xmlMapping' => [
                 '{http://www.w3.org/2001/XMLSchema-instance}urn' => 'Sabre\Xml\Element\XmlElement',
-                'code' => 'Sabre\Xml\Element\KeyValue'
-            ]
+                'code' => 'Sabre\Xml\Element\KeyValue',
+            ],
         ];
-
-
     }
 
     public function supports(JobInterface $job): bool
     {
-        return (in_array($job->getName(), $this->supportedJobNames));
+        return in_array($job->getName(), $this->supportedJobNames);
     }
 }

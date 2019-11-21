@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\Writer;
@@ -25,7 +26,7 @@ class ReferenceDataWriter implements ItemWriterInterface, StepExecutionAwareInte
 
     public function write(array $items): void
     {
-        foreach ($items as $item){
+        foreach ($items as $item) {
             $this->incrementCount($item);
         }
         $this->saveAll($items);
@@ -45,9 +46,9 @@ class ReferenceDataWriter implements ItemWriterInterface, StepExecutionAwareInte
         $this->saver->saveAll($items);
     }
 
-    protected function incrementCount(ReferenceDataInterface $item){
-
-        if($item->getId()){
+    protected function incrementCount(ReferenceDataInterface $item)
+    {
+        if ($item->getId()) {
             $this->stepExecution->incrementSummaryInfo('process');
         } else {
             $this->stepExecution->incrementSummaryInfo('create');

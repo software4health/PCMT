@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtAttributeBundle\Provider\Field;
@@ -10,7 +11,7 @@ use Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Component
 class ConcatenatedAttributeFieldProvider implements FieldProviderInterface
 {
     protected $fields = [
-        PcmtAtributeTypes::CONCATENATED_FIELDS => 'pcmt_concatenated_attribute_text_field'
+        PcmtAtributeTypes::CONCATENATED_FIELDS => 'pcmt_concatenated_attribute_text_field',
     ];
 
     public function getField($attribute)

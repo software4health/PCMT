@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Component\Command;
@@ -19,6 +20,7 @@ class ConcatenatedAttributeCommand extends AbstractUpdateCommand
                 break;
             case strpos($field, 'attribute'):
                 $this->updateConcatenatedAttributes($value);
+
                 break;
         }
     }
@@ -30,7 +32,7 @@ class ConcatenatedAttributeCommand extends AbstractUpdateCommand
 
     protected function validateAttribute(AttributeInterface $attribute): void
     {
-        if($attribute->getId() && !$attribute->getType() === PcmtAtributeTypes::CONCATENATED_FIELDS){
+        if ($attribute->getId() && PcmtAtributeTypes::CONCATENATED_FIELDS === !$attribute->getType()) {
             throw new \InvalidArgumentException('Attribute is of a wrong type. Attribute of type '
                 . $attribute->getType() . ' passed, and attribute ' . PcmtAtributeTypes::CONCATENATED_FIELDS . ' expected.');
         }

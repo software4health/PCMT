@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Normalizer;
@@ -11,7 +12,6 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class DraftStatusNormalizer implements NormalizerInterface
 {
-
     /**
      * @var LoggerInterface
      */
@@ -30,13 +30,15 @@ class DraftStatusNormalizer implements NormalizerInterface
 
     /**
      * @param DraftStatus $draftStatus
-     * @param null $format
-     * @param array $context
+     * @param null        $format
+     * @param array       $context
+     *
      * @return array
      */
     public function normalize($draftStatus, $format = null, array $context = []): array
     {
         $statusId = $draftStatus->getId();
+
         try {
             $name = $this->draftStatusService->getNameTranslated($statusId);
         } catch (\Exception $e) {
@@ -54,11 +56,11 @@ class DraftStatusNormalizer implements NormalizerInterface
     private function getCssClass(int $draftStatusId): string
     {
         switch ($draftStatusId) {
-            case AbstractProductDraft::STATUS_NEW :
+            case AbstractProductDraft::STATUS_NEW:
                 return 'AknBadge--warning';
-            case AbstractProductDraft::STATUS_APPROVED :
+            case AbstractProductDraft::STATUS_APPROVED:
                 return 'AknBadge--success';
-            case AbstractProductDraft::STATUS_REJECTED :
+            case AbstractProductDraft::STATUS_REJECTED:
                 return 'AknBadge--important';
             default:
                 return 'AknBadge--grey';

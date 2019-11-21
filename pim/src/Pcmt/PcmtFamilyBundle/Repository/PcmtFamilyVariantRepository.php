@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtFamilyBundle\Repository;
@@ -19,7 +20,7 @@ class PcmtFamilyVariantRepository extends FamilyVariantRepository
                 )
             );
         $qb->setParameters([
-            ':familyVariant' => $familyVariant
+            ':familyVariant' => $familyVariant,
         ]);
 
         return $qb->getQuery()->getSingleResult();

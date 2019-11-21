@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Tests\Normalizer;
@@ -80,17 +81,17 @@ class DraftNormalizerTest extends TestCase
 
         $array = $this->draftNormalizer->normalize($draft);
 
-        $this->assertEmpty($array["changes"]);
-        $this->assertEquals("Alfred Nobel", $array["author"]);
-        $this->assertIsArray($array["status"]);
-        $this->assertArrayHasKey("id", $array["status"]);
-        $this->assertArrayHasKey("name", $array["status"]);
+        $this->assertEmpty($array['changes']);
+        $this->assertEquals('Alfred Nobel', $array['author']);
+        $this->assertIsArray($array['status']);
+        $this->assertArrayHasKey('id', $array['status']);
+        $this->assertArrayHasKey('name', $array['status']);
     }
 
     public function testNormalizeChangesNewProduct(): void
     {
         $changes = [
-            new AttributeChange('atName', null, 'newVal')
+            new AttributeChange('atName', null, 'newVal'),
         ];
         $this->attributeChangesService->method('get')->willReturn($changes);
 
@@ -105,14 +106,14 @@ class DraftNormalizerTest extends TestCase
 
         $array = $this->draftNormalizer->normalize($draft);
 
-        $this->assertNotEmpty($array["changes"]);
-        $this->assertCount(1, $array["changes"]);
+        $this->assertNotEmpty($array['changes']);
+        $this->assertCount(1, $array['changes']);
     }
 
     public function testNormalizeChangesExistingProduct(): void
     {
         $changes = [
-            new AttributeChange('atName', null, 'newVal')
+            new AttributeChange('atName', null, 'newVal'),
         ];
         $this->attributeChangesService->method('get')->willReturn($changes);
 
@@ -128,7 +129,7 @@ class DraftNormalizerTest extends TestCase
 
         $array = $this->draftNormalizer->normalize($draft);
 
-        $this->assertNotEmpty($array["changes"]);
-        $this->assertCount(1, $array["changes"]);
+        $this->assertNotEmpty($array['changes']);
+        $this->assertCount(1, $array['changes']);
     }
 }

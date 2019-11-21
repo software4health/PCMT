@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle;
@@ -10,9 +11,10 @@ class PcmtConnectorBundle extends Bundle
 {
     public function getContainerExtension()
     {
-        if(null === $this->extension){
+        if (null === $this->extension) {
             $this->extension = new PcmtConnectorExtension();
         }
+
         return $this->extension;
     }
 }

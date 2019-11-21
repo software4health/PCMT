@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Entity;
@@ -15,7 +16,6 @@ interface ProductDraftInterface
     public function getId(): int;
 
     public function getProductData(): ?array;
-    
-    public function getProduct(): ?ProductInterface;
 
+    public function getProduct(): ?ProductInterface;
 }

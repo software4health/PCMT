@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\Processor;
@@ -20,8 +21,7 @@ class PcmtReferenceDataProcessor extends ReferenceDataProcessor
         ObjectUpdaterInterface $updater,
         ValidatorInterface $validator,
         ObjectDetacherInterface $detacher
-    )
-    {
+    ) {
         parent::__construct($confRegistry, $em, $updater, $validator, $detacher);
     }
 
@@ -35,6 +35,7 @@ class PcmtReferenceDataProcessor extends ReferenceDataProcessor
         }
 
         $entity = $this->findOrCreateObject($item);
+
         try {
             unset($item['class']);
             $this->updater->update($entity, $item);
@@ -60,6 +61,7 @@ class PcmtReferenceDataProcessor extends ReferenceDataProcessor
             $className = $this->className;
             $entity = new $className();
         }
+
         return $entity;
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\Command\Handler;
@@ -25,21 +26,20 @@ class PcmtReferenceDataDownloadHandler extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        try{
+        try {
             $this->createJobIfNotExists($output);
             $command = $this->getApplication()->find('akeneo:batch:job');
             $arguments = [
                 'code' => ($input->getArgument('code')) ?? self::DEFAULT_JOB_CODE,
             ];
-            if($dirPath = $input->getArgument('dirPath') !== null){
+            if ($dirPath = null !== $input->getArgument('dirPath')) {
                 $arguments['-c'] = $dirPath;
             }
 
             $input = new ArrayInput($arguments);
 
             $command->run($input, $output);
-
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $output->writeln($exception->getMessage());
             die;
         }
@@ -49,7 +49,7 @@ class PcmtReferenceDataDownloadHandler extends ContainerAwareCommand
     {
         $jobCreatror = $this->getApplication()->find('pcmt:job-creator');
         $arguments = [
-            'jobName' => PcmtConnectorJobParametersRegistry::JOB_REFERENCE_DATA_DOWNLOAD_NAME
+            'jobName' => PcmtConnectorJobParametersRegistry::JOB_REFERENCE_DATA_DOWNLOAD_NAME,
         ];
         $input = new ArrayInput($arguments);
         $jobCreatror->run($input, $output);

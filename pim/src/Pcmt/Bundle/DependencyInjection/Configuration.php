@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\Bundle\DependencyInjection;
@@ -10,15 +11,15 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-       $treeBuilder = new TreeBuilder();
-       $rootNode = $treeBuilder->root('pcmtservice');
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('pcmtservice');
 
-       $rootNode
+        $rootNode
            ->children()
                ->booleanNode('pcmtActive')->defaultTrue()->end()
                ->integerNode('defaultSessionTimeMins')->defaultValue(20)->end()
            ->end();
 
-       return $treeBuilder;
+        return $treeBuilder;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\Bundle;
@@ -10,7 +11,7 @@ class PcmtBundle extends Bundle
 {
     public function getContainerExtension()
     {
-        if (null === $this->extension){
+        if (null === $this->extension) {
             $this->extension = new PcmtBundleExtension();
         }
 

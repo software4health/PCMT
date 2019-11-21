@@ -35,8 +35,7 @@ class DraftApprover
         TokenStorageInterface $tokenStorage,
         ProductSaver $productSaver,
         ValidatorInterface $productValidator
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;
         $this->productFromDraftCreator = $productFromDraftCreator;
@@ -49,7 +48,7 @@ class DraftApprover
         $draft->setStatus(AbstractProductDraft::STATUS_APPROVED);
         $draft->setApproved(Carbon::now());
         $user = $this->tokenStorage->getToken()->getUser();
-        /** @var UserInterface $user */
+        /* @var UserInterface $user */
         $draft->setApprovedBy($user);
         $this->entityManager->persist($draft);
         $this->entityManager->flush();

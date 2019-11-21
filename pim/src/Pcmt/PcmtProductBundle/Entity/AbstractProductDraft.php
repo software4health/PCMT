@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Entity;
@@ -6,7 +7,6 @@ namespace Pcmt\PcmtProductBundle\Entity;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Carbon\Carbon;
-
 
 abstract class AbstractProductDraft implements ProductDraftInterface
 {
@@ -53,8 +53,7 @@ abstract class AbstractProductDraft implements ProductDraftInterface
         UserInterface $author,
         \DateTime $created,
         int $status
-    )
-    {
+    ) {
         $this->author = $author;
         $this->created = $created;
         $this->status = $status;

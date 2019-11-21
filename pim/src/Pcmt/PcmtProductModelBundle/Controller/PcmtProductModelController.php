@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtProductModelBundle\Controller;
@@ -115,8 +116,7 @@ class PcmtProductModelController
         AttributeFilterInterface $productModelAttributeFilter,
         Client $productModelClient = null,
         Client $productAndProductModelClient = null
-    )
-    {
+    ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->productModelRepository = $productModelRepository;
         $this->normalizer = $normalizer;
@@ -139,9 +139,6 @@ class PcmtProductModelController
         $this->productAndProductModelClient = $productAndProductModelClient;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getAction(int $id): JsonResponse
     {
         $productModel = $this->findProductModelOr404($id);
@@ -361,7 +358,7 @@ class PcmtProductModelController
      * Remove product model
      *
      * @param Request $request
-     * @param int $id
+     * @param int     $id
      *
      * @AclAncestor("pim_enrich_product_model_remove")
      *
@@ -450,7 +447,7 @@ class PcmtProductModelController
         $values = $this->productValueConverter->convert($data['values']);
 
         $values = $this->localizedConverter->convertToDefaultFormats($values, [
-            'locale' => $this->userContext->getUiLocale()->getCode()
+            'locale' => $this->userContext->getUiLocale()->getCode(),
         ]);
 
         $dataFiltered = $this->emptyValuesFilter->filter($productModel, ['values' => $values]);

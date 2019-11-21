@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtAttributeBundle\Entity;
@@ -22,7 +23,7 @@ class PcmtFamilyRepository extends FamilyRepository
             );
         $qb->setParameters([
             ':familyId' => $familyId,
-            ':backendType' => PcmtAtributeTypes::CONCATENATED_FIELDS
+            ':backendType' => PcmtAtributeTypes::CONCATENATED_FIELDS,
         ]);
 
         return $qb->getQuery()->getResult();

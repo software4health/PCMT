@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Saver;
@@ -22,8 +23,7 @@ class ProductDraftSaver implements SaverInterface
     public function __construct(
         EntityManagerInterface $entityManager,
         EventDispatcherInterface $eventDispatcher
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -32,21 +32,23 @@ class ProductDraftSaver implements SaverInterface
     {
         $this->validateDraft($draft);
         $this->entityManager->beginTransaction();
-        try{
+
+        try {
             $this->entityManager->persist($draft);
             $this->eventDispatcher->dispatch(StorageEvents::PRE_SAVE, new GenericEvent($draft, $options));
             $this->entityManager->flush();
             $this->entityManager->commit();
             $this->eventDispatcher->dispatch(StorageEvents::POST_SAVE, new GenericEvent($draft, $options));
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $this->entityManager->rollback();
+
             throw $exception;
         }
     }
 
     protected function validateDraft($draft): void
     {
-        if(!$draft instanceof ProductDraftInterface){
+        if (!$draft instanceof ProductDraftInterface) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Expects a %s, "%s" provided',
@@ -59,8 +61,8 @@ class ProductDraftSaver implements SaverInterface
         if (!$draft->getId() && $draft->getProduct()) {
             $draftRepository = $this->entityManager->getRepository(AbstractProductDraft::class);
             $criteria = [
-                "status" => AbstractProductDraft::STATUS_NEW,
-                "product" => $draft->getProduct()
+                'status' => AbstractProductDraft::STATUS_NEW,
+                'product' => $draft->getProduct(),
             ];
             $count = $draftRepository->count($criteria);
             if ($count > 0) {
@@ -69,7 +71,5 @@ class ProductDraftSaver implements SaverInterface
                 );
             }
         }
-
-
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtAttributeBundle\Extension;
@@ -16,12 +17,11 @@ class PcmtAttributeManager
         AttributeInterface $attribute,
         string $field,
         array $value
-    ): void
-    {
-        if(null == self::$writeCommandInstance){
+    ): void {
+        if (null == self::$writeCommandInstance) {
             $pcmtCommandFactory = new PcmtCommandFactory();
             self::$writeCommandInstance = $pcmtCommandFactory->command($attributeClass);
         }
-       self::$writeCommandInstance->decorate($attribute, $field, $value);
+        self::$writeCommandInstance->decorate($attribute, $field, $value);
     }
 }

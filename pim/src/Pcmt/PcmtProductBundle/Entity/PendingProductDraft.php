@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Entity;
@@ -16,8 +17,7 @@ class PendingProductDraft extends AbstractProductDraft
         UserInterface $author,
         \DateTime $created,
         int $status
-    )
-    {
+    ) {
         $this->product = $product;
         $this->productData = $productData;
         parent::__construct($author, $created, $status);

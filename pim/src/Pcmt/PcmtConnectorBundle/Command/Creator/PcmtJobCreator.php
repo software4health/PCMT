@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\Command\Creator;
@@ -27,31 +28,27 @@ class PcmtJobCreator extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-
             $jobInstanceParameters = PcmtConnectorJobParametersRegistry::getConfig($input->getArgument('jobName'));
             $jobInstanceClass = $this->getContainer()->getParameter('akeneo_batch.entity.job_instance.class');
             $jobInstance = $this->getEntityManager()->getRepository($jobInstanceClass)->findOneBy(['code' => $jobInstanceParameters['code']]);
 
-            if(null === $jobInstance){
+            if (null === $jobInstance) {
                 throw new UnknownJobException('Job  ' . $jobInstanceParameters['code'] . ' undefinded.');
             }
 
             $output->writeln('Job  ' . $jobInstanceParameters['code'] . ' found. Starting job execution.');
-            return true;
 
-        } catch (UnknownJobException $exception){
+            return true;
+        } catch (UnknownJobException $exception) {
             $output->writeln($exception->getMessage());
 
-            if($this->trialCount > 0){
-
+            if ($this->trialCount > 0) {
                 $this->trialCount --;
                 $output->writeln('Trying to (re)create job instance: ' . $jobInstanceParameters['code']);
 
-                if($this->createJobInstanceFromParameters($jobInstanceParameters, $output)){
-
+                if ($this->createJobInstanceFromParameters($jobInstanceParameters, $output)) {
                     $this->execute($input, $output);
                 }
-
             } else {
                 throw new InvalidJobConfigurationException('Unable to (re)create job instance: ' . $jobInstanceParameters['code'] . ' check jobs.yml.');
             }
@@ -72,7 +69,7 @@ class PcmtJobCreator extends ContainerAwareCommand
 
         $input = new ArrayInput($arguments);
 
-        if($returnCode = $command->run($input, $output) == 0){
+        if ($returnCode = 0 == $command->run($input, $output)) {
             return true;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\JobParameters\ConstraintCollectionProvider;
@@ -14,16 +15,15 @@ class XmlReferenceDataImport implements ConstraintCollectionProviderInterface
 
     public function __construct(
         array $supportedJobNames
-    )
-    {
+    ) {
         $this->supportedJobNames = $supportedJobNames;
     }
 
     public function getConstraintCollection(): Collection
     {
-        return new Collection([ 'fields' => [
-            'filePath' => null
-        ] ]);
+        return new Collection(['fields' => [
+            'filePath' => null,
+        ]]);
     }
 
     public function supports(JobInterface $job): bool

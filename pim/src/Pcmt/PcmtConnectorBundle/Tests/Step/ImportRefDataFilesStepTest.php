@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace PcmtPcmtConnectorBundle\Tests\Step;
@@ -21,7 +22,7 @@ class ImportRefDataFilesStepTest extends TestCase
     /** @var ReferenceDataXmlReader|Mock */
     protected $readerMock;
 
-    /** @var  PcmtReferenceDataProcessor|Mock*/
+    /** @var PcmtReferenceDataProcessor|Mock */
     protected $processorMock;
 
     /** @var ReferenceDataWriter|Mock */
