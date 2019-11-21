@@ -197,7 +197,7 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
    */
   protected function getFamilyCode(array $item): string
   {
-    if (key_exists('family', $item)) {
+    if (array_key_exists('family', $item)) {
       return $item['family'];
     }
 

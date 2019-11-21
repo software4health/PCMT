@@ -323,7 +323,7 @@ class PcmtProductModelController
         $search = $request->query->get('search');
         $options = $request->query->get('options');
         $familyVariantCode = $options['family_variant'];
-        $page = intval($options['page']) - 1;
+        $page = (int) ($options['page']) - 1;
         $familyVariant = $this->getFamilyVariant($familyVariantCode);
 
         $productModels = $this->productModelRepository->searchLastLevelByCode(

@@ -30,7 +30,7 @@ class PcmtCreateCustomDatasetCsvCommand extends ContainerAwareCommand
 
   protected function execute(InputInterface $input, OutputInterface $output): void
   {
-    $bundleDir = dirname(__FILE__).'/../';
+    $bundleDir = __DIR__.'/../';
     $this->filesFolderPath = $bundleDir."Resources/fixtures/pcmt_global/import_files/";
     $fileNameList = $this->getFileNameList();
     $bar = new ProgressBar($output, count($fileNameList)+1);

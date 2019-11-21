@@ -7,9 +7,9 @@ class ConcatenatedAttributeException extends \Exception
 {
     protected const EXCEPTION_TYPE_MISSING_ATTRIBUTE = 'missing member attribute';
 
-    public static function memberAttributeNonExistent(string $memeberAttributeId): ConcatenatedAttributeException
+    public static function memberAttributeNonExistent(string $memeberAttributeId): self
     {
-        return new ConcatenatedAttributeException(
+        return new self(
             'The memeber attribute of ID' . $memeberAttributeId . ' does not exist. Cannot fetch value',
             self::EXCEPTION_TYPE_MISSING_ATTRIBUTE,
             true
