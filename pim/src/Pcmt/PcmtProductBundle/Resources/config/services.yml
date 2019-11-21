@@ -2,21 +2,16 @@ services:
     pcmt.manager.draft_facade:
         class: Pcmt\PcmtProductBundle\Manager\DraftFacade
         autowire: true
-    pcmt.service.draft_approver.draft_approver_factory:
-        class: Pcmt\PcmtProductBundle\Service\DraftApprover\DraftApproverFactory
+    pcmt.service.product_draft_approver:
+        class: Pcmt\PcmtProductBundle\Service\DraftApprover
         autowire: true
-    pcmt.service.draft_approver.new_product_draft_approver:
-        class: Pcmt\PcmtProductBundle\Service\DraftApprover\NewProductDraftApprover
-        autowire: true
-    pcmt.service.draft_approver.existing_product_draft_approver:
-        class: Pcmt\PcmtProductBundle\Service\DraftApprover\ExistingProductDraftApprover
-        autowire: true
-    pcmt.service.new_product_from_draft_creator:
-        class: Pcmt\PcmtProductBundle\Service\NewProductFromDraftCreator
+        arguments:
+            $productValidator: '@pim_catalog.validator.product'
+            $productSaver: '@pim_catalog.saver.product'
+    pcmt.service.product_from_draft_creator:
+        class: Pcmt\PcmtProductBundle\Service\ProductFromDraftCreator
         arguments:
             - '@pim_catalog.builder.product'
-            - '@pim_catalog.validator.product'
-            - '@pim_catalog.saver.product'
             - '@pim_enrich.converter.enrich_to_standard.product_value'
             - '@pim_catalog.localization.localizer.converter'
             - '@pim_user.context.user'

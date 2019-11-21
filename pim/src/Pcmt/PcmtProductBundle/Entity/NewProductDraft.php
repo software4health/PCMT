@@ -14,17 +14,11 @@ class NewProductDraft extends AbstractProductDraft
         array $productData,
         UserInterface $author,
         \DateTime $created,
-        int $version,
         int $status
     )
     {
         $this->productData = $productData;
-        parent::__construct($author, $created, $version, $status);
-    }
-
-    public function nextVersion(): void
-    {
-        $this->version = ProductDraftInterface::DRAFT_VERSION_NEW;
+        parent::__construct($author, $created, $status);
     }
 
     public function getType(): string

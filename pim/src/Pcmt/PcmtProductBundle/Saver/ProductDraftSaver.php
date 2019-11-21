@@ -5,16 +5,16 @@ namespace Pcmt\PcmtProductBundle\Saver;
 
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\StorageEvents;
-use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
+use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
 class ProductDraftSaver implements SaverInterface
 {
-    /** @var EntityManagerInterface $entityManger */
-    protected $entityManger;
+    /** @var EntityManagerInterface $entityManager */
+    protected $entityManager;
 
     /** @var EventDispatcherInterface $eventDispatcher */
     protected $eventDispatcher;
@@ -24,22 +24,22 @@ class ProductDraftSaver implements SaverInterface
         EventDispatcherInterface $eventDispatcher
     )
     {
-        $this->entityManger = $entityManager;
+        $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
     }
 
     public function save($draft, array $options = []): void
     {
         $this->validateDraft($draft);
-        $this->entityManger->beginTransaction();
+        $this->entityManager->beginTransaction();
         try{
-            $this->entityManger->persist($draft);
+            $this->entityManager->persist($draft);
             $this->eventDispatcher->dispatch(StorageEvents::PRE_SAVE, new GenericEvent($draft, $options));
-            $this->entityManger->flush();
-            $this->entityManger->commit();
+            $this->entityManager->flush();
+            $this->entityManager->commit();
             $this->eventDispatcher->dispatch(StorageEvents::POST_SAVE, new GenericEvent($draft, $options));
         } catch (\Exception $exception){
-            $this->entityManger->rollback();
+            $this->entityManager->rollback();
             throw $exception;
         }
     }
@@ -51,9 +51,25 @@ class ProductDraftSaver implements SaverInterface
                 sprintf(
                     'Expects a %s, "%s" provided',
                     ProductDraftInterface::class,
-                    ClassUtils::getClass($draft)
+                    get_class($draft)
                 )
             );
         }
+
+        if (!$draft->getId() && $draft->getProduct()) {
+            $draftRepository = $this->entityManager->getRepository(AbstractProductDraft::class);
+            $criteria = [
+                "status" => AbstractProductDraft::STATUS_NEW,
+                "product" => $draft->getProduct()
+            ];
+            $count = $draftRepository->count($criteria);
+            if ($count > 0) {
+                throw new \InvalidArgumentException(
+                    'There is already a draft for this product'
+                );
+            }
+        }
+
+
     }
 }

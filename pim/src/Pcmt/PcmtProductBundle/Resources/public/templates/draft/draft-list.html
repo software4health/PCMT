@@ -85,11 +85,13 @@
                 </div>
 
                 <% firstChange = _.first(draft.changes) %>
+                <% if (firstChange) { %>
                 <div style="margin-bottom:10px;">
                     <b><%- firstChange.attribute %></b><br>
                     <%- __('pcmt_product.drafts_list.previous_value') %>: <%- firstChange.previousValue %><br>
                     <%- __('pcmt_product.drafts_list.new_value') %>: <%- firstChange.newValue %>
                 </div>
+                <% } %>
             </div>
             <div id="draft-changes-full-<%- draft.id %>"
                  class="draft-changes-full"
