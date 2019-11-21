@@ -1,0 +1,28 @@
+extensions:
+    pcmt-product-drafts-edit:
+        module: pim/common/simple-view
+        config:
+            template: pim/template/common/default-template
+
+    pcmt-product-drafts-edit-user-navigation:
+        module: pim/menu/user-navigation
+        parent: pcmt-product-drafts-edit
+        targetZone: user-menu
+        config:
+            userAccount: pim_menu.user.user_account
+            logout: pim_menu.user.logout
+
+    pcmt-product-drafts-edit-content:
+        module: pcmt/product/draft/edit
+        parent: pcmt-product-drafts-edit
+        targetZone: content
+        config:
+            template: pcmt/product/template/draft-edit
+
+    pcmt-product-drafts-edit-breadcrumbs:
+        module: pim/common/breadcrumbs
+        parent: pcmt-product-drafts-edit
+        targetZone: breadcrumbs
+        config:
+            tab: pim-menu-activity
+            item: pcmt-product-drafts-list-sub-element

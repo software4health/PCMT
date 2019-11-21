@@ -1,5 +1,7 @@
 pcmt_product_drafts_index:
     path: /drafts/
+pcmt_product_drafts_edit:
+    path: /drafts/edit/{id}/
 pcmt_product_drafts_api:
     path: /rest/drafts/
     defaults: { _controller: pcmt_product.controller.rest.draft:getList }
