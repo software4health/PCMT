@@ -38,7 +38,7 @@ class AttributeChangesService
             $previousProduct ? $previousProduct->getIdentifier() : null
         );
 
-        foreach ($newValues as $attribute => $newValue) {
+        foreach ($newValues as $newValue) {
             /** @var ValueInterface $newValue */
             $previousValue = $previousValues ? $previousValues->getByCodes($newValue->getAttributeCode()) : null;
             $this->createChange(

@@ -8,22 +8,22 @@ use Pim\Bundle\CustomEntityBundle\Entity\AbstractCustomEntity;
 
 abstract class GS1Code extends AbstractCustomEntity
 {
-    /** @var string $listName */
+    /** @var string */
     protected $listName;
 
-    /** @var string $name */
+    /** @var string */
     protected $name;
 
-    /** @var string $definition */
+    /** @var string */
     protected $definition;
 
-    /** @var int $version */
+    /** @var int */
     protected $version;
 
-    /** @var \DateTime $changeDate */
+    /** @var \DateTime */
     protected $changeDate;
 
-    /** @var int $status */
+    /** @var int */
     protected $status = 1;
 
     public function __construct()

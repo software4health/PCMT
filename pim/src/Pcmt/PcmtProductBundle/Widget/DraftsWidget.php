@@ -8,7 +8,7 @@ use Akeneo\Platform\Bundle\DashboardBundle\Widget\WidgetInterface;
 
 class DraftsWidget implements WidgetInterface
 {
-    /** @var DraftsFetcher $draftsFetcher */
+    /** @var DraftsFetcher */
     protected $draftsFetcher;
 
     public function __construct(DraftsFetcher $draftsFetcher)

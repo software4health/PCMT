@@ -35,7 +35,7 @@ class PcmtProductModelController
 {
     protected const PRODUCT_MODELS_LIMIT = 20;
 
-    /** @var EventDispatcherInterface $eventDispatcher */
+    /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
     /** @var NormalizerInterface */

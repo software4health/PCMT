@@ -1,5 +1,5 @@
 imports:
-#    - { resource: 'vendor/symplify/easy-coding-standard/config/set/clean-code.yaml' }
+    - { resource: 'vendor/symplify/easy-coding-standard/config/set/clean-code.yaml' }
     - { resource: 'vendor/symplify/easy-coding-standard/config/set/common.yaml' }
     - { resource: 'vendor/symplify/easy-coding-standard/config/set/php70.yaml' }
     - { resource: 'vendor/symplify/easy-coding-standard/config/set/php71.yaml' }

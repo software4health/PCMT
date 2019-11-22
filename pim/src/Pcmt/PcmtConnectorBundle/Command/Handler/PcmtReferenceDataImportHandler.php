@@ -15,10 +15,10 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
 {
     protected const DEFAULT_JOB_CODE = 'reference_data_import_xml';
 
-    /** @var \RegexIterator $fileIterator */
+    /** @var \RegexIterator */
     protected $fileIterator;
 
-    /** @var string $dir */
+    /** @var string */
     protected $dir;
 
     protected static $defaultName = 'pcmt:handler:import_reference_data';
@@ -48,7 +48,7 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
             while ($this->fileIterator->current()) {
                 $currentFile = $this->fileIterator->key();
                 $totalPath = str_replace('/', '\/', $currentFile);
-                $arguments['code'] = ($input->getArgument('code')) ?? self::DEFAULT_JOB_CODE;
+                $arguments['code'] = $input->getArgument('code') ?? self::DEFAULT_JOB_CODE;
                 $arguments['--config'] = sprintf('{"filePath": "%s"}', $totalPath);
                 $returnCode = $this->executeCommand($output, $arguments);
 

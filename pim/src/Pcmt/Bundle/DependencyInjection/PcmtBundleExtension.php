@@ -15,7 +15,7 @@ class PcmtBundleExtension extends Extension
     {
         //load and merge configuration
         $configuration = $this->getConfiguration($configs, $container); //instantiate /DependencyInjection/Configuration class
-        $config = $this->processConfiguration($configuration, $configs);
+        $this->processConfiguration($configuration, $configs);
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/'));
         $loader->load('services.yml');
     }

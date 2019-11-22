@@ -33,7 +33,7 @@ class AttributeUpdater extends BaseAttributeUpdater
     /** @var TranslatableUpdater */
     protected $translatableUpdater;
 
-    /** @var PcmtAttributeManager $pcmtAttributesManager */
+    /** @var PcmtAttributeManager */
     protected $pcmtAttributesManager;
 
     public function __construct(
@@ -83,7 +83,7 @@ class AttributeUpdater extends BaseAttributeUpdater
                 throw InvalidPropertyTypeException::arrayExpected($field, static::class, $data);
             }
 
-            foreach ($data as $key => $value) {
+            foreach ($data as $value) {
                 if (null !== $value && !is_scalar($value)) {
                     throw InvalidPropertyTypeException::validArrayStructureExpected(
                         $field,

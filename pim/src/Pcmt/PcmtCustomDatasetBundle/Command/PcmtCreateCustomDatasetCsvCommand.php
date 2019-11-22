@@ -90,7 +90,6 @@ class PcmtCreateCustomDatasetCsvCommand extends ContainerAwareCommand
     {
         $reader = new XlsxReader();
         $spreadsheet = $reader->load($this->filesFolderPath.$fileName.'.xlsx');
-        $worksheet = $spreadsheet->getActiveSheet();
         $csv_writer = new CsvWriter($spreadsheet);
         $csv_writer->setDelimiter(';');
         $csv_writer->save($this->filesFolderPath.'csv/'.$fileName.'.csv');

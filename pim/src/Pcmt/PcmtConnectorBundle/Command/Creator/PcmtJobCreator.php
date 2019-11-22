@@ -69,7 +69,7 @@ class PcmtJobCreator extends ContainerAwareCommand
 
         $input = new ArrayInput($arguments);
 
-        if ($returnCode = 0 === $command->run($input, $output)) {
+        if (0 === $command->run($input, $output)) {
             return true;
         }
 

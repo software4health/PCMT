@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class AttributeNormalizer extends BaseAttributeNormalizer
 {
-    /** @var NormalizerInterface $concatenatedAttributesNormalizer */
+    /** @var NormalizerInterface */
     private $concatenatedAttributesNormalizer;
 
     /** @var NormalizerInterface */
@@ -62,7 +62,7 @@ class AttributeNormalizer extends BaseAttributeNormalizer
         $normalizedAttribute = [
             'code' => $attribute->getCode(),
             'type' => $attribute->getType(),
-            'group' => ($attribute->getGroup()) ? $attribute->getGroup()->getCode() : null,
+            'group' => $attribute->getGroup() ? $attribute->getGroup()->getCode() : null,
             'unique' => (bool) $attribute->isUnique(),
             'useable_as_grid_filter' => (bool) $attribute->isUseableAsGridFilter(),
             'allowed_extensions' => $attribute->getAllowedExtensions(),

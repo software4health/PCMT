@@ -12,6 +12,6 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): void
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('pcmt_attribute');
+        $treeBuilder->root('pcmt_attribute');
     }
 }

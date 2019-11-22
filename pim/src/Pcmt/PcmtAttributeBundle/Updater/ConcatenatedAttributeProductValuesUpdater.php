@@ -13,7 +13,7 @@ use Doctrine\Common\Util\ClassUtils;
 
 class ConcatenatedAttributeProductValuesUpdater implements ObjectUpdaterInterface
 {
-    /** @var PropertySetterInterface $propertySetter */
+    /** @var PropertySetterInterface */
     protected $propertySetter;
 
     public function __construct(PropertySetterInterface $propertySetter)

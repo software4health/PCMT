@@ -13,13 +13,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class DraftsFetcher
 {
-    /** @var EntityManagerInterface $entityManager */
+    /** @var EntityManagerInterface */
     protected $entityManager;
 
-    /** @var TokenStorageInterface $tokenStorage */
+    /** @var TokenStorageInterface */
     protected $tokenStorage;
 
-    /** @var SecurityFacade $securityFacade */
+    /** @var SecurityFacade */
     protected $securityFacade;
 
     public function __construct(

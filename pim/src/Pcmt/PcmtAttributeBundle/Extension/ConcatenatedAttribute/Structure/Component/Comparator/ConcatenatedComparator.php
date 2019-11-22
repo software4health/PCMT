@@ -8,7 +8,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Comparator\ComparatorInterface;
 
 class ConcatenatedComparator implements ComparatorInterface
 {
-    /** @var array $types */
+    /** @var array */
     protected $types;
 
     public function __construct(array $types)

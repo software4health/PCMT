@@ -13,19 +13,19 @@ use Sabre\Xml\Service;
 
 abstract class ReferenceDataXmlReader implements FileReaderInterface
 {
-    /** @var Service $xmlReader */
+    /** @var Service */
     protected $xmlReader;
 
-    /** @var ArrayConverterInterface $arrayConverter */
+    /** @var ArrayConverterInterface */
     protected $arrayConverter;
 
-    /** @var StepExecution $stepExecutions */
+    /** @var StepExecution */
     protected $stepExecution;
 
-    /** @var array $processed */
+    /** @var array */
     protected $processed;
 
-    /** @var \ArrayIterator $arrayiterator */
+    /** @var \ArrayIterator */
     protected $arrayIterator;
 
     protected $fileGetContentsWrapper;
@@ -50,7 +50,7 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
         $xmlMapping = ($this->stepExecution->getJobParameters()
             ->get('xmlMapping')) ?? null;
 
-        $this->xmlReader->elementMap = ($xmlMapping) ?? [
+        $this->xmlReader->elementMap = $xmlMapping ?? [
             '{http://www.w3.org/2001/XMLSchema-instance}urn' => 'Sabre\Xml\Element\XmlElement',
             'code' => 'Sabre\Xml\Element\KeyValue',
         ];
@@ -68,7 +68,7 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
                 $className = null;
                 $version = null;
 
-                foreach ($parsed as $number => $value) {
+                foreach ($parsed as $value) {
                     if (!$className) {
                         $className = $this->setClassName($value);
                     }
@@ -132,7 +132,7 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
             return null;
         }
 
-        return ($item['value']) ?? null;
+        return $item['value'] ?? null;
     }
 
     private function createReferenceDataArray(array $value, string $entityType, ?string $entityVersion): array
@@ -150,10 +150,10 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
         );
 
         $entityModel['class'] = $entityType;
-        $entityModel['version'] = ($entityVersion) ?? null;
+        $entityModel['version'] = $entityVersion ?? null;
         $entityModel['code'] = $valueReindexed['value'];
         $entityModel['name'] = $valueReindexed['name'];
-        $entityModel['definition'] = ($valueReindexed['description']) ?? null;
+        $entityModel['definition'] = $valueReindexed['description'] ?? null;
 
         return $entityModel;
     }

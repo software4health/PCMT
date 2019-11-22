@@ -53,13 +53,13 @@ class InitializeReferenceDataImport extends ContainerAwareCommand
 
     protected function executeJobs(OutputInterface $output): void // put the jobs into one queue and execute them consecutively
     {
-        foreach (self::CONSECUTIVE_JOBS as $order => $job) {
+        foreach (self::CONSECUTIVE_JOBS as $job) {
             $handler = $this->getApplication()->find($job['job_execution_handler']);
             $output->writeln(sprintf('Executing job:  %s', $job['job_execution_handler']));
 
             $arguments = new ArrayInput([
-                'code' => ($job['code']) ?? null,
-                'dirPath' => ($job['dirPath']) ?? null,
+                'code' => $job['code'] ?? null,
+                'dirPath' => $job['dirPath'] ?? null,
             ]);
 
             $handler->run($arguments, $output);
@@ -69,7 +69,7 @@ class InitializeReferenceDataImport extends ContainerAwareCommand
     protected function checkIfJobsExist(OutputInterface $output, int $trialCount)
     {
         try {
-            foreach (self::CONSECUTIVE_JOBS as $key => $jobInstanceParameters) {
+            foreach (self::CONSECUTIVE_JOBS as $jobInstanceParameters) {
                 $jobInstanceClass = $this->getContainer()->getParameter('akeneo_batch.entity.job_instance.class');
                 $jobInstance = $this->getEntityManager()->getRepository($jobInstanceClass)->findOneBy(['code' => $jobInstanceParameters['code']]);
 
@@ -111,7 +111,7 @@ class InitializeReferenceDataImport extends ContainerAwareCommand
 
         $input = new ArrayInput($arguments);
 
-        if ($returnCode = 0 === $command->run($input, $output)) {
+        if (0 === $command->run($input, $output)) {
             return true;
         }
 

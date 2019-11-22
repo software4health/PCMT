@@ -12,7 +12,7 @@ use Akeneo\Tool\Component\Localization\TranslatableUpdater;
 
 class ConcatenatedAttributeUpdater extends AttributeUpdater
 {
-    /** @var ConcatenatedAttributeFieldsUpdater $attributeFieldsUpdater */
+    /** @var ConcatenatedAttributeFieldsUpdater */
     protected $attributeFieldsUpdater;
 
     public function __construct(

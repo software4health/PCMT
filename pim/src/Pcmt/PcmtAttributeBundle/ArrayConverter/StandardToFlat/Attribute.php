@@ -54,7 +54,7 @@ class Attribute extends BaseAttribute
             break;
         }
 
-        $convertedItem[$property] = (true === $data) ? '1' : '0';
+        $convertedItem[$property] = true === $data ? '1' : '0';
 
                 break;
       default:

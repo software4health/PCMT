@@ -8,7 +8,7 @@ use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 
 abstract class AbstractUpdateCommand
 {
-    /** @var AttributeInterface $attribute */
+    /** @var AttributeInterface */
     protected $attribute;
 
     public function decorate(AttributeInterface $attribute, string $field, array $data): AttributeInterface

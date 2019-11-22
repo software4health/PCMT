@@ -13,10 +13,10 @@ use Akeneo\Tool\Component\StorageUtils\Saver\BulkSaverInterface;
 
 class ReferenceDataWriter implements ItemWriterInterface, StepExecutionAwareInterface, InitializableInterface
 {
-    /** @var StepExecution $stepExecution */
+    /** @var StepExecution */
     protected $stepExecution;
 
-    /** @var BulkSaverInterface $saver */
+    /** @var BulkSaverInterface */
     protected $saver;
 
     public function __construct(BulkSaverInterface $bulkSaver)
