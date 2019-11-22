@@ -43,7 +43,7 @@ class PcmtCreateAllAttributesCommand extends ContainerAwareCommand
                     'ref-data-name' => $code,
                 ];
                 $greetInput = new ArrayInput($arguments);
-                $returnCode = $command->run($greetInput, $output);
+                $command->run($greetInput, $output);
             } catch (Exception $e) {
                 $output->writeln($e);
             }

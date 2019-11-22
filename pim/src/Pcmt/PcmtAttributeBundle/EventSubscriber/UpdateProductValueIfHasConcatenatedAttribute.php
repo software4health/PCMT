@@ -8,10 +8,8 @@ use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductModelRepositoryInt
 use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterface;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
-use Akeneo\Pim\Structure\Component\Repository\FamilyVariantRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Pcmt\PcmtAttributeBundle\Event\ProductFetchEvent;
 use Pcmt\PcmtProductBundle\Event\ProductModelFetchEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -21,61 +19,41 @@ final class UpdateProductValueIfHasConcatenatedAttribute implements EventSubscri
     private const IS_MISSING = 'MISSING';
     private const IS_EMPTY = 'EMPTY';
 
-    /** @var EntityManagerInterface $entityManager */
-    private $entityManager;
-
-    /** @var ProductRepositoryInterface $productRepository */
+    /** @var ProductRepositoryInterface */
     private $productRepository;
 
-    /** @var ProductModelRepositoryInterface $productModelRepository */
+    /** @var ProductModelRepositoryInterface */
     private $productModelRepository;
 
-    /** @var FamilyVariantRepositoryInterface $familyVariantRepository */
-    private $familyVariantRepository;
-
-    /** @var FamilyRepositoryInterface $concatenatedAttributeRepository */
+    /** @var FamilyRepositoryInterface */
     private $concatenatedAttributeRepository;
 
-    /** @var FamilyRepositoryInterface $familyRepository */
-    private $familyRepository;
-
-    /** @var AttributeRepositoryInterface $attributeRepository */
+    /** @var AttributeRepositoryInterface */
     private $attributeRepository;
 
-    /** @var ObjectUpdaterInterface $productValuesUpdater */
+    /** @var ObjectUpdaterInterface */
     private $productValuesUpdater;
 
-    /** @var ObjectUpdaterInterface $productModelValuesUpdater */
-    private $productModelValuesUpdater;
-
-    /** @var SaverInterface $productSaver */
+    /** @var SaverInterface */
     private $productSaver;
 
-    /** @var SaverInterface $productModelSaver */
+    /** @var SaverInterface */
     private $productModelSaver;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
         ProductRepositoryInterface $productRepository,
         ProductModelRepositoryInterface $productModelRepository,
-        FamilyVariantRepositoryInterface $familyVariantRepository,
         FamilyRepositoryInterface $concatenatedAttributeRepository,
-        FamilyRepositoryInterface $familyRepository,
         AttributeRepositoryInterface $attributeRepository,
         ObjectUpdaterInterface $productValuesUpdater,
-        ObjectUpdaterInterface $productModelValuesUpdater,
         SaverInterface $productSaver,
         SaverInterface $productModelSaver
     ) {
-        $this->entityManager = $entityManager;
         $this->productRepository = $productRepository;
         $this->productModelRepository = $productModelRepository;
-        $this->familyVariantRepository = $familyVariantRepository;
         $this->concatenatedAttributeRepository = $concatenatedAttributeRepository;
-        $this->familyRepository = $familyRepository;
         $this->attributeRepository = $attributeRepository;
         $this->productValuesUpdater = $productValuesUpdater;
-        $this->productModelValuesUpdater = $productModelValuesUpdater;
         $this->productSaver = $productSaver;
         $this->productModelSaver = $productModelSaver;
     }
@@ -102,7 +80,7 @@ final class UpdateProductValueIfHasConcatenatedAttribute implements EventSubscri
         $concatenatedAttributes = $this->concatenatedAttributeRepository->getConcatenatedAttributes($family);
 
         $values = [];
-        foreach ($concatenatedAttributes as $counter => $concatenatedAttribute) {
+        foreach ($concatenatedAttributes as $concatenatedAttribute) {
             $attributeName = $concatenatedAttribute['code'];
             $memberAttributes = $this->attributeRepository->findBy(['code' => explode(',', $concatenatedAttribute['properties']['attributes']),
             ]);
@@ -144,7 +122,7 @@ final class UpdateProductValueIfHasConcatenatedAttribute implements EventSubscri
         );
 
         $values = [];
-        foreach ($concatenatedAttributes as $counter => $concatenatedAttribute) {
+        foreach ($concatenatedAttributes as $concatenatedAttribute) {
             $attributeName = $concatenatedAttribute['code'];
             $memberAttributes = $this->attributeRepository->findBy(['code' => explode(',', $concatenatedAttribute['properties']['attributes']),
             ]);

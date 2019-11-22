@@ -34,7 +34,7 @@ class ReadConfigHelperCommand extends ContainerAwareCommand
 
             $output = $parser->parse($input);
 
-            foreach ($output as $key => $values) {
+            foreach ($output as $values) {
                 if ('{}code' === !$values['name'] || !is_array($values['value'])) {
                     continue;
                 }

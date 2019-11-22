@@ -14,10 +14,10 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 
 class ProductDraftSaver implements SaverInterface
 {
-    /** @var EntityManagerInterface $entityManager */
+    /** @var EntityManagerInterface */
     protected $entityManager;
 
-    /** @var EventDispatcherInterface $eventDispatcher */
+    /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
     public function __construct(

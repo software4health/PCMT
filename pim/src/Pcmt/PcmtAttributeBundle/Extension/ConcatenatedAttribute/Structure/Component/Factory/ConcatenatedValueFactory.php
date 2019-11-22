@@ -12,13 +12,13 @@ use Pcmt\PcmtAttributeBundle\Entity\PcmtFamilyRepository;
 
 class ConcatenatedValueFactory extends AbstractValueFactory
 {
-    /** @var AttributeRepositoryInterface $attributesRepository */
+    /** @var AttributeRepositoryInterface */
     protected $attributesRepository;
 
-    /** @var PcmtFamilyRepository $concatenatedAttributeRepository */
+    /** @var PcmtFamilyRepository */
     protected $concatenatedAttributeRepository;
 
-    /** @var ValueFactory $valueFactory */
+    /** @var ValueFactory */
     protected $valueFactory;
 
     public function __construct(

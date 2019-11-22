@@ -11,19 +11,19 @@ use Akeneo\UserManagement\Component\Model\UserInterface;
  */
 class ProductDraftHistory implements DraftHistoryInterface
 {
-    /** @var int $id */
+    /** @var int */
     protected $id;
 
-    /** @var ProductDraftInterface $draft */
+    /** @var ProductDraftInterface */
     protected $draft;
 
-    /** @var array $changeSet */
+    /** @var array */
     protected $changeSet;
 
-    /** @var \DateTime $createdAt */
+    /** @var \DateTime */
     protected $createdAt;
 
-    /** @var UserInterface $author */
+    /** @var UserInterface */
     protected $author;
 
     public function __construct(

@@ -16,7 +16,7 @@ class ConcatenatedAttributesConverterTest extends TestCase
     /** @var AttributeColumnsResolver|Mock */
     protected $columnsResolverMock;
 
-    /** @var array $supportedAttributeTypes */
+    /** @var array */
     private $supportedAttributeTypes;
 
     protected function setUp(): void

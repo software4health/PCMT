@@ -15,10 +15,10 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 
 class ReferenceDataBulkSaver implements BulkSaverInterface, SaverInterface
 {
-    /** @var EntityManagerInterface $em */
+    /** @var EntityManagerInterface */
     protected $em;
 
-    /** @var EventDispatcherInterface $eventDispatcher */
+    /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
     public function __construct(

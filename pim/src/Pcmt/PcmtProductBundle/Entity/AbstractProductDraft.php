@@ -14,39 +14,39 @@ abstract class AbstractProductDraft implements ProductDraftInterface
     public const STATUS_REJECTED = 4;
     public const STATUS_APPROVED = 2;
 
-    /** @var int $id */
+    /** @var int */
     protected $id = 0;
 
-    /** @var \DateTime $created */
+    /** @var \DateTime */
     protected $created;
 
-    /** @var \DateTime $updated */
+    /** @var \DateTime */
     protected $updated;
 
-    /** @var \DateTime $approved */
+    /** @var \DateTime */
     protected $approved;
 
-    /** @var int $version */
+    /** @var int */
     protected $version;
 
-    /** @var int $status */
+    /** @var int */
     protected $status;
 
-    /** @var UserInterface $author */
+    /** @var UserInterface */
     protected $author;
 
-    /** @var UserInterface $updatedBy */
+    /** @var UserInterface */
     protected $updatedBy;
 
-    /** @var UserInterface $approvedBy */
+    /** @var UserInterface */
     protected $approvedBy;
 
     // keep product-related data here.
     // like family, groups etc. all the fields. - it helps rebuild product from new draft.
-    /** @var array $productData */
+    /** @var array */
     protected $productData;
 
-    /** @var ProductInterface|null $product */
+    /** @var ProductInterface|null */
     protected $product;
 
     protected function __construct(

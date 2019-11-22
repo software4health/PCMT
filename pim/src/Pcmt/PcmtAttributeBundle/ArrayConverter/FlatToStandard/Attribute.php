@@ -63,9 +63,9 @@ class Attribute extends BaseAttribute
         } elseif ('number_min' === $field || 'number_max' === $field || 'max_file_size' === $field) {
             $convertedItem[$field] = $this->convertFloat($data);
         } elseif ('sort_order' === $field || 'max_characters' === $field || 'minimum_input_length' === $field) {
-            $convertedItem[$field] = ('' === $data) ? null : (int) $data;
+            $convertedItem[$field] = '' === $data ? null : (int) $data;
         } elseif ('options' === $field || 'available_locales' === $field || 'allowed_extensions' === $field) {
-            $convertedItem[$field] = ('' === $data) ? [] : explode(',', $data);
+            $convertedItem[$field] = '' === $data ? [] : explode(',', $data);
         } elseif ('date_min' === $field || 'date_max' === $field) {
             $convertedItem[$field] = $this->convertDate($data);
         } elseif (in_array($field, $booleanFields, true) && '' !== $data) {

@@ -16,10 +16,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 // step is used to import .xml files and save them to the directory
 class ImportRefDataFiles extends AbstractStep
 {
-    /** @var string $directory */
+    /** @var string */
     protected $directory;
 
-    /** @var ClientInterface $guzzleClient */
+    /** @var ClientInterface */
     protected $guzzleClient;
 
     public function __construct($name, EventDispatcherInterface $eventDispatcher, JobRepositoryInterface $jobRepository)

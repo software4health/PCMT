@@ -30,7 +30,7 @@ class PcmtReferenceDataDownloadHandler extends ContainerAwareCommand
             $this->createJobIfNotExists($output);
             $command = $this->getApplication()->find('akeneo:batch:job');
             $arguments = [
-                'code' => ($input->getArgument('code')) ?? self::DEFAULT_JOB_CODE,
+                'code' => $input->getArgument('code') ?? self::DEFAULT_JOB_CODE,
             ];
             if ($dirPath = null !== $input->getArgument('dirPath')) {
                 $arguments['-c'] = $dirPath;

@@ -10,7 +10,7 @@ class ProductModelFetchEvent extends Event
 {
     protected const NAME = 'product_model.fetched';
 
-    /** @var int $productModelId */
+    /** @var int */
     protected $productModelId;
 
     public function __construct($productModelId)

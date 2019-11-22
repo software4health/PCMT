@@ -12,10 +12,10 @@ class XmlReferenceDataDownload implements DefaultValuesProviderInterface
     /** @var string */
     protected $fileDirectory;
 
-    /** @var string $refDirName */
+    /** @var string */
     protected $refDirName;
 
-    /** @var array $supportedJobNames */
+    /** @var array */
     protected $supportedJobNames;
 
     public function __construct(
@@ -25,7 +25,7 @@ class XmlReferenceDataDownload implements DefaultValuesProviderInterface
     ) {
         $this->supportedJobNames = $supportedJobNames;
         $this->refDirName = $refDirName;
-        $this->fileDirectory = ($fileDirectory) ?? 'reference_data/';
+        $this->fileDirectory = $fileDirectory ?? 'reference_data/';
     }
 
     public function getDefaultValues(): array

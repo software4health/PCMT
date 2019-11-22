@@ -56,7 +56,7 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
                 '--config' => sprintf('{"filePath": "%s"}', $totalPath),
             ];
             $output->writeln("\nnow: ".$import['code'].'...');
-            $returnCode = $this->executeCommand($output, $arguments);
+            $this->executeCommand($output, $arguments);
             $bar->advance();
         }
         $bar->finish();

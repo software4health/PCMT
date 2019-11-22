@@ -13,7 +13,7 @@ class PcmtDashboardExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
     }
 
     public function getAlias(): string

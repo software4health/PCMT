@@ -28,7 +28,7 @@ class ConcatenatedAttributesConverter extends AbstractValueConverter implements 
                 throw new \InvalidArgumentException('Invalid type passed.');
             }
             if (is_array($value)) {
-                foreach ($value as $key => $item) {
+                foreach ($value as $item) {
                     $testoutputstring .= $item;
                 }
             } else {

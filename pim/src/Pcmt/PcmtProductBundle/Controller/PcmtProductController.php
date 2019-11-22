@@ -41,13 +41,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class PcmtProductController extends ProductController
 {
-    /** @var EventDispatcherInterface $eventDispatcher */
+    /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
-    /** @var VersionRepository $versionRepository */
+    /** @var VersionRepository */
     protected $versionRepository;
 
-    /** @var SaverInterface $draftSaver */
+    /** @var SaverInterface */
     protected $draftSaver;
 
     public function __construct(

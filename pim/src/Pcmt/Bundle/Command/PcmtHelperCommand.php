@@ -23,6 +23,7 @@ class PcmtHelperCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
+        $this->getEntityManager();
     }
 
     private function getEntityManager(): EntityManagerInterface
