@@ -55,13 +55,13 @@ class AttributeUpdaterTest extends TestCase
     private function getAttributeUpdaterInstance(): AttributeUpdater
     {
         return new AttributeUpdater(
-      $this->attrGroupRepoMock,
-      $this->localeRepositoryMock,
-      $this->registryMock,
-      $this->translatableUpdaterMock,
-      $this->attributeManager,
-      $this->propertiesMock
-    );
+            $this->attrGroupRepoMock,
+            $this->localeRepositoryMock,
+            $this->registryMock,
+            $this->translatableUpdaterMock,
+            $this->attributeManager,
+            $this->propertiesMock
+        );
     }
     private function getWrongAttributeClassType(): AttributeUpdater
     {

@@ -28,7 +28,7 @@ class DatagridView extends AbstractSimpleArrayConverter implements ArrayConverte
             $convertedItem[$labelKey] = $label;
         }
 
-        break;
+                break;
       default:
         $convertedItem[$property] = (string) $data;
     }

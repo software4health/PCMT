@@ -35,13 +35,13 @@ class AttributeUpdater extends BaseAttributeUpdater
     protected $pcmtAttributesManager;
 
     public function __construct(
-      AttributeGroupRepositoryInterface $attrGroupRepo,
-      LocaleRepositoryInterface $localeRepository,
-      AttributeTypeRegistry $registry,
-      \Akeneo\Tool\Component\Localization\TranslatableUpdater $translatableUpdater,
-      PcmtAttributeManager $pcmtAttributesManager,
-      array $properties
-  ) {
+        AttributeGroupRepositoryInterface $attrGroupRepo,
+        LocaleRepositoryInterface $localeRepository,
+        AttributeTypeRegistry $registry,
+        \Akeneo\Tool\Component\Localization\TranslatableUpdater $translatableUpdater,
+        PcmtAttributeManager $pcmtAttributesManager,
+        array $properties
+    ) {
         $this->pcmtAttributesManager = $pcmtAttributesManager;
         parent::__construct($attrGroupRepo, $localeRepository, $registry, $translatableUpdater, $properties);
     }
@@ -53,9 +53,9 @@ class AttributeUpdater extends BaseAttributeUpdater
     {
         if (!$attribute instanceof AttributeInterface) {
             throw InvalidObjectException::objectExpected(
-        ClassUtils::getClass($attribute),
-        AttributeInterface::class
-      );
+                ClassUtils::getClass($attribute),
+                AttributeInterface::class
+            );
         }
         foreach ($data as $field => $value) {
             $this->validateDataType($field, $value);
@@ -84,44 +84,44 @@ class AttributeUpdater extends BaseAttributeUpdater
             foreach ($data as $key => $value) {
                 if (null !== $value && !is_scalar($value)) {
                     throw InvalidPropertyTypeException::validArrayStructureExpected(
-            $field,
-            sprintf('one of the "%s" values is not a scalar', $field),
-            static::class,
-            $data
-          );
+                        $field,
+                        sprintf('one of the "%s" values is not a scalar', $field),
+                        static::class,
+                        $data
+                    );
                 }
             }
         } elseif (in_array(
-      $field,
-      [
-        'code',
-        'type',
-        'group',
-        'unique',
-        'useable_as_grid_filter',
-        'metric_family',
-        'default_metric_unit',
-        'reference_data_name',
-        'max_characters',
-        'validation_rule',
-        'validation_regexp',
-        'wysiwyg_enabled',
-        'number_min',
-        'number_max',
-        'decimals_allowed',
-        'negative_allowed',
-        'date_min',
-        'date_max',
-        'max_file_size',
-        'minimum_input_length',
-        'sort_order',
-        'localizable',
-        'scopable',
-        'required',
-        'auto_option_sorting',
-        'concatenated',
-      ]
-    )) {
+            $field,
+            [
+            'code',
+            'type',
+            'group',
+            'unique',
+            'useable_as_grid_filter',
+            'metric_family',
+            'default_metric_unit',
+            'reference_data_name',
+            'max_characters',
+            'validation_rule',
+            'validation_regexp',
+            'wysiwyg_enabled',
+            'number_min',
+            'number_max',
+            'decimals_allowed',
+            'negative_allowed',
+            'date_min',
+            'date_max',
+            'max_file_size',
+            'minimum_input_length',
+            'sort_order',
+            'localizable',
+            'scopable',
+            'required',
+            'auto_option_sorting',
+            'concatenated',
+            ]
+        )) {
             if (null !== $data && !is_scalar($data)) {
                 throw InvalidPropertyTypeException::scalarExpected($field, static::class, $data);
             }
@@ -141,48 +141,48 @@ class AttributeUpdater extends BaseAttributeUpdater
       case 'type':
         $this->setType($attribute, $data);
 
-        break;
+                break;
       case 'labels':
         $this->translatableUpdater->update($attribute, $data);
 
-        break;
+                break;
       // Add @DND
       case 'descriptions':
         $this->translatableUpdater->updateDescription($attribute, $data); // update localizable attribute description fields
-        break;
+                break;
       // / Add @DND
       case 'group':
         $this->setGroup($attribute, $data);
 
-        break;
+                break;
       case 'available_locales':
         $this->setAvailableLocales($attribute, $field, $data);
 
-        break;
+                break;
       case 'date_min':
         $this->validateDateFormat('date_min', $data);
         $date = $this->getDate($data);
         $attribute->setDateMin($date);
 
-        break;
+                break;
       case 'date_max':
         $this->validateDateFormat('date_max', $data);
         $date = $this->getDate($data);
         $attribute->setDateMax($date);
 
-        break;
+                break;
       case 'allowed_extensions':
         $attribute->setAllowedExtensions(implode(',', $data));
 
-        break;
+                break;
       case 'auto_option_sorting':
         $attribute->setProperty('auto_option_sorting', $data);
 
-        break;
+                break;
         case 'concatenated':
         $this->pcmtAttributesManager::decorateAttributeInstance(ConcatenatedAttribute::class, $attribute, $field, $data);
 
-        break;
+                break;
       default:
         $this->setValue($attribute, $field, $data);
     }

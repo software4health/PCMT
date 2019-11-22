@@ -42,7 +42,6 @@ class DraftsFetcher
         foreach ($drafts as $draft) {
             switch (get_class($draft)) {
                 case NewProductDraft::class:
-
                     $productLabel = $draft->getProductData()['identifier'] ?? '-no product-';
 
                     break;

@@ -26,9 +26,9 @@ class PcmtDatagridViewUpdater extends DatagridViewUpdater implements ObjectUpdat
     {
         if (!$datagridView instanceof DatagridView) {
             throw InvalidObjectException::objectExpected(
-        ClassUtils::getClass($datagridView),
-        DatagridView::class
-      );
+                ClassUtils::getClass($datagridView),
+                DatagridView::class
+            );
         }
         $user = $this->userRepository->findOneByIdentifier($data['owner']);
         if (null !== $user) {

@@ -13,7 +13,8 @@ class E2OpenWriter extends ProductWriter
     {
         $jobExecution = $this->stepExecution->getJobExecution();
         $placeholders = array_merge(
-            $placeholders, ['%datetime%' => $jobExecution->getStartTime()->format($this->datetimeFormat)]
+            $placeholders,
+            ['%datetime%' => $jobExecution->getStartTime()->format($this->datetimeFormat)]
         );
 
         return parent::getPath($placeholders);
