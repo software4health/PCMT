@@ -15,10 +15,13 @@ class ConcatenatedAttributeCommand extends AbstractUpdateCommand
     protected function updatePropertyValue(string $field, $value): void
     {
         switch ($field) {
-            case strpos($field, 'separator'):
-                $this->attribute->setProperty('separators', $value); // @todo - add ability to serialize more than one separator in MVP++
+            case mb_strpos($field, 'separator'):
+                $this->attribute->setProperty(
+                    'separators',
+                    $value
+                ); // @todo - add ability to serialize more than one separator in MVP++
                 break;
-            case strpos($field, 'attribute'):
+            case mb_strpos($field, 'attribute'):
                 $this->updateConcatenatedAttributes($value);
 
                 break;
@@ -33,8 +36,14 @@ class ConcatenatedAttributeCommand extends AbstractUpdateCommand
     protected function validateAttribute(AttributeInterface $attribute): void
     {
         if ($attribute->getId() && PcmtAtributeTypes::CONCATENATED_FIELDS === !$attribute->getType()) {
-            throw new \InvalidArgumentException('Attribute is of a wrong type. Attribute of type '
-                . $attribute->getType() . ' passed, and attribute ' . PcmtAtributeTypes::CONCATENATED_FIELDS . ' expected.');
+            $message = sprintf(
+                'Attribute is of a wrong type. Attribute of type ',
+                $attribute->getType(),
+                ' passed, and attribute ',
+                PcmtAtributeTypes::CONCATENATED_FIELDS,
+                ' expected.'
+            );
+            throw new \InvalidArgumentException($message);
         }
 
         $this->attribute = $attribute;
