@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pcmt\PcmtProductBundle\Tests\Service;
 
 use Akeneo\Pim\Enrichment\Bundle\Doctrine\Common\Saver\ProductSaver;

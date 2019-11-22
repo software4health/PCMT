@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pcmt\Bundle\Helper;
 
 final class GsCodesHelper

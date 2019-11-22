@@ -14,12 +14,12 @@ class ReadConfigHelperCommand extends ContainerAwareCommand
 {
     protected static $defaultName = 'pcmt:measures';
 
-    public function configure()
+    public function configure(): void
     {
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $parser = new Service();
         $fileGetContentsWrapper = new FileGetContentsWrapper();
@@ -41,7 +41,7 @@ class ReadConfigHelperCommand extends ContainerAwareCommand
 
                 dump(strtoupper($values['value']['{}name'] . ': ') . $values['value']['{}name']);
             }
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             dump($exception);
             die;
         }

@@ -18,13 +18,13 @@ class PcmtCreateAttributeForRefDataCommand extends ContainerAwareCommand
      */
     protected static $defaultName = 'pcmt:generate-ref-data-attr';
 
-    public function configure()
+    public function configure(): void
     {
         parent::configure();
         $this->addArgument('ref-data-name', InputArgument::REQUIRED, 'The name of the reference data.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $output->writeln([
       'Reference Data Attribute Creator',
@@ -38,7 +38,7 @@ class PcmtCreateAttributeForRefDataCommand extends ContainerAwareCommand
         $output->writeln('done');
     }
 
-    private function createAttributeForReferenceData($refDataName)
+    private function createAttributeForReferenceData($refDataName): void
     {
         /** @var AttributeFactory */
         $attributeFactory = $this->getContainer()->get('pim_catalog.factory.attribute');

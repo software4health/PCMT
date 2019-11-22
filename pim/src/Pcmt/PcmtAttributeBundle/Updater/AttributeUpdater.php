@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pcmt\PcmtAttributeBundle\Updater;
 
 use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
@@ -74,7 +76,7 @@ class AttributeUpdater extends BaseAttributeUpdater
      * @throws InvalidPropertyTypeException
      * @throws UnknownPropertyException
      */
-    protected function validateDataType($field, $data)
+    protected function validateDataType($field, $data): void
     {
         if (in_array($field, ['labels', 'available_locales', 'allowed_extensions', 'descriptions', 'concatenated'])) {
             if (!is_array($data)) {
@@ -135,7 +137,7 @@ class AttributeUpdater extends BaseAttributeUpdater
      * @param string             $field
      * @param mixed              $data
      */
-    protected function setData(AttributeInterface $attribute, $field, $data)
+    protected function setData(AttributeInterface $attribute, $field, $data): void
     {
         switch ($field) {
       case 'type':

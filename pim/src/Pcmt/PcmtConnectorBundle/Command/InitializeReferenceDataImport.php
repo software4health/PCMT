@@ -33,7 +33,7 @@ class InitializeReferenceDataImport extends ContainerAwareCommand
 
     protected static $defaultName = 'pcmt:reference_data:create';
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         /**
          * first check for download job instance, and if not there, create it
@@ -81,7 +81,7 @@ class InitializeReferenceDataImport extends ContainerAwareCommand
             }
 
             return true;
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $output->writeln($exception->getMessage());
 
             if ($trialCount > 0) {

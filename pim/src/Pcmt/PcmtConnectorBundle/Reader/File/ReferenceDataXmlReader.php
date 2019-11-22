@@ -36,7 +36,7 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
         $this->fileGetContentsWrapper = $wrapper;
     }
 
-    public function flush()
+    public function flush(): void
     {
         $this->processed = null;
         $this->arrayIterator = null;
@@ -81,7 +81,7 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
                         $this->processed[] = $this->createReferenceDataArray($value['value'], $className, $version);
                     }
                 }
-            } catch (\Exception $exception) {
+            } catch (\Throwable $exception) {
                 $this->stepExecution->addError('Failed to read the input file: ' . $exception->getMessage());
                 $this->stepExecution->addFailureException($exception);
 
@@ -105,7 +105,7 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
         return $this->processed;
     }
 
-    public function setStepExecution(StepExecution $stepExecution)
+    public function setStepExecution(StepExecution $stepExecution): void
     {
         $this->stepExecution = $stepExecution;
     }
@@ -143,7 +143,7 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
 
         array_walk(
             $value,
-            function ($code, $key) use ($delimiter, &$valueReindexed) {
+            function ($code, $key) use ($delimiter, &$valueReindexed): void {
                 $key = ltrim($key, $delimiter);
                 $valueReindexed[$key] = $code;
             }
@@ -158,7 +158,7 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
         return $entityModel;
     }
 
-    public function validateFileExtension(string $filePath)
+    public function validateFileExtension(string $filePath): void
     {
         if (!('xml' === substr($filePath, -3))) {
             throw new \InvalidArgumentException('Invalid file extension');

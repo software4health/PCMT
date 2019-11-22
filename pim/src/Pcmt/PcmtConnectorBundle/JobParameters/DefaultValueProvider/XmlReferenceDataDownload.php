@@ -21,7 +21,7 @@ class XmlReferenceDataDownload implements DefaultValuesProviderInterface
     public function __construct(
         array $supportedJobNames,
         string $refDirName,
-        string $fileDirectory = null
+        ?string $fileDirectory = null
     ) {
         $this->supportedJobNames = $supportedJobNames;
         $this->refDirName = $refDirName;

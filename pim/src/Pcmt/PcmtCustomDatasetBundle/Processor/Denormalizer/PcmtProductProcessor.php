@@ -188,7 +188,7 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
      */
     protected function getIdentifier(array $item): ?string
     {
-        return isset($item['identifier']) ? $item['identifier'] : null;
+        return $item['identifier'] ?? null;
     }
 
     /**
@@ -268,7 +268,7 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
         $this->detacher->detach($product);
     }
 
-    private function skipItemAndReturnException(array $item, $message, \Exception $previousException = null): InvalidItemException
+    private function skipItemAndReturnException(array $item, $message, ?\Throwable $previousException = null): InvalidItemException
     {
         if ($this->stepExecution) {
             $this->stepExecution->incrementSummaryInfo('skip');

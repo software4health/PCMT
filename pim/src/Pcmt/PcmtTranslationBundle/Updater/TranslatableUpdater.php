@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pcmt\PcmtTranslationBundle\Updater;
 
 use Akeneo\Tool\Component\Localization\Model\AbstractTranslation;
@@ -23,7 +25,7 @@ class TranslatableUpdater extends BaseTranslatableUpdater
      * @param TranslatableInterface $object
      * @param array                 $data
      */
-    public function update(TranslatableInterface $object, array $data)
+    public function update(TranslatableInterface $object, array $data): void
     {
         foreach ($data as $localeCode => $label) {
             $object->setLocale($localeCode);
@@ -45,7 +47,7 @@ class TranslatableUpdater extends BaseTranslatableUpdater
      * @param TranslatableInterface $object
      * @param array                 $data
      */
-    public function updateDescription(TranslatableInterface $object, array $data)
+    public function updateDescription(TranslatableInterface $object, array $data): void
     {
         // Add @DND
     foreach ($data as $localeCode => $description) { // update localizable attribute description fields
@@ -68,7 +70,7 @@ class TranslatableUpdater extends BaseTranslatableUpdater
      *
      * @param TranslatableInterface $object
      */
-    public function checkTranslationValues(TranslatableInterface $object)
+    public function checkTranslationValues(TranslatableInterface $object): void
     {
         /** @var AbstractTranslation $translation */
         $translation = $object->getTranslation();

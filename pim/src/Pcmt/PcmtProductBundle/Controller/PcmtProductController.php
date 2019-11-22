@@ -72,8 +72,8 @@ class PcmtProductController extends ProductController
         NormalizerInterface $constraintViolationNormalizer,
         ProductBuilderInterface $variantProductBuilder,
         AttributeFilterInterface $productAttributeFilter,
-        Client $productClient = null,
-        Client $productAndProductModelClient = null
+        ?Client $productClient = null,
+        ?Client $productAndProductModelClient = null
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->versionRepository = $versionRepository;

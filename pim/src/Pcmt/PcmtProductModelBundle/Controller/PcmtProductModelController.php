@@ -114,8 +114,8 @@ class PcmtProductModelController
         NormalizerInterface $violationNormalizer,
         FamilyVariantRepositoryInterface $familyVariantRepository,
         AttributeFilterInterface $productModelAttributeFilter,
-        Client $productModelClient = null,
-        Client $productAndProductModelClient = null
+        ?Client $productModelClient = null,
+        ?Client $productAndProductModelClient = null
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->productModelRepository = $productModelRepository;

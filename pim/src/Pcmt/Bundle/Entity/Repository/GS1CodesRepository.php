@@ -14,7 +14,7 @@ class GS1CodesRepository extends CustomEntityRepository
      * @param array        $options
      *                              Override method
      */
-    protected function selectFields(QueryBuilder $qb, array $options)
+    protected function selectFields(QueryBuilder $qb, array $options): void
     {
         $labelProperty = $this->getReferenceDataLabelProperty();
         $identifierField = isset($options['type']) && 'code' === $options['type'] ? 'code' : 'id';

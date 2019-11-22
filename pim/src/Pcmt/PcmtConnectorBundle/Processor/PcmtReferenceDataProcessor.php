@@ -39,7 +39,7 @@ class PcmtReferenceDataProcessor extends ReferenceDataProcessor
         try {
             unset($item['class']);
             $this->updater->update($entity, $item);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->skipItemWithMessage($item, $e->getMessage(), $e);
         }
 

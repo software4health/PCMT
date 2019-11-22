@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pcmt\PcmtProductBundle\Connector\Job\Step;
 
 use Akeneo\Tool\Component\Batch\Model\StepExecution;

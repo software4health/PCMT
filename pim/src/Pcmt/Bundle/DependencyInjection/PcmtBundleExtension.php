@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class PcmtBundleExtension extends Extension
 {
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         //load and merge configuration
         $configuration = $this->getConfiguration($configs, $container); //instantiate /DependencyInjection/Configuration class

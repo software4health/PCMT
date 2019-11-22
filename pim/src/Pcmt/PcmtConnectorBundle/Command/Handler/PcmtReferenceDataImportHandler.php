@@ -33,14 +33,14 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
         parent::__construct();
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this->addArgument('dirPath', InputArgument::OPTIONAL, 'Can override default directory where xmls are saved.');
         $this->addArgument('code', InputArgument::OPTIONAL, 'Can override default job code name.');
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         try {
             $this->createJobIfNotExists($output);
@@ -56,7 +56,7 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
                     $this->fileIterator->next();
                 }
             }
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $output->writeln($exception->getMessage());
             die;
         }
@@ -69,7 +69,7 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
             $input = new ArrayInput($arguments);
 
             return $command->run($input, $output);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $output->writeln($exception);
             die;
         }
