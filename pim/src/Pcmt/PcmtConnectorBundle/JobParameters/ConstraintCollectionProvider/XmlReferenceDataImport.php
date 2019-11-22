@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints\Collection;
 class XmlReferenceDataImport implements ConstraintCollectionProviderInterface
 {
     /** @var array */
-    protected $supportedJobNames;
+    protected $supportedJobNames = [];
 
     public function __construct(
         array $supportedJobNames
@@ -21,9 +21,11 @@ class XmlReferenceDataImport implements ConstraintCollectionProviderInterface
 
     public function getConstraintCollection(): Collection
     {
-        return new Collection(['fields' => [
-            'filePath' => null,
-        ]]);
+        return new Collection([
+            'fields' => [
+                'filePath' => null,
+            ],
+        ]);
     }
 
     public function supports(JobInterface $job): bool

@@ -30,7 +30,8 @@ class ReadConfigHelperCommand extends ContainerAwareCommand
 
             $parser->elementMap = [
                 '{http://www.w3.org/2001/XMLSchema-instance}urn' => 'Sabre\Xml\Element\XmlElement',
-                'code' => 'Sabre\Xml\Element\KeyValue', ];
+                'code' => 'Sabre\Xml\Element\KeyValue',
+            ];
 
             $output = $parser->parse($input);
 
@@ -39,10 +40,10 @@ class ReadConfigHelperCommand extends ContainerAwareCommand
                     continue;
                 }
 
-                dump(strtoupper($values['value']['{}name'] . ': ') . $values['value']['{}name']);
+//                dump(strtoupper($values['value']['{}name'] . ': ') . $values['value']['{}name']);
             }
         } catch (\Throwable $exception) {
-            dump($exception);
+//            dump($exception);
             die;
         }
     }

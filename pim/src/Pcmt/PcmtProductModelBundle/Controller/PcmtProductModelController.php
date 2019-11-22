@@ -342,7 +342,7 @@ class PcmtProductModelController
      *
      * @return JsonResponse
      */
-    public function listFamilyVariantProductModels(Request $request)
+    public function listFamilyVariantProductModels(Request $request): JsonResponse
     {
         $search = trim($request->query->get('search'));
         $options = $request->query->get('options');
@@ -426,7 +426,9 @@ class PcmtProductModelController
      */
     private function normalizeProductModel(ProductModelInterface $productModel): array
     {
-        $normalizationContext = $this->userContext->toArray() + ['filter_types' => []];
+        $normalizationContext = $this->userContext->toArray() + [
+            'filter_types' => [],
+        ];
 
         return $this->normalizer->normalize(
             $productModel,

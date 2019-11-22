@@ -20,7 +20,7 @@ class AttributeNormalizer extends BaseAttributeNormalizer
     private $dateTimeNormalizer;
 
     /** @var array */
-    private $properties;
+    private $properties = [];
 
     /**
      * AttributeNormalizer constructor.

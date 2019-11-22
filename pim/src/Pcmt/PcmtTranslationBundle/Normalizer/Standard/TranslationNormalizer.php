@@ -23,7 +23,7 @@ class TranslationNormalizer extends BaseTranslationNormalizer
      *
      * @return array
      */
-    public function normalizeDescription($object, array $context = [])
+    public function normalizeDescription($object, array $context = []): array
     {
         $context = array_merge(
             [

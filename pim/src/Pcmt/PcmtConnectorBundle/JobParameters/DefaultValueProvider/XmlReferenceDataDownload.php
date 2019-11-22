@@ -16,7 +16,7 @@ class XmlReferenceDataDownload implements DefaultValuesProviderInterface
     protected $refDirName;
 
     /** @var array */
-    protected $supportedJobNames;
+    protected $supportedJobNames = [];
 
     public function __construct(
         array $supportedJobNames,

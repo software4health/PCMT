@@ -132,26 +132,68 @@ class AttributeUpdaterTest extends TestCase
     public function dataWithRightDescriptions()
     {
         return [
-            'single description' => [['descriptions' => ['en_US' => 'alo']], 'code' => 'test'],
-            'single description with other data' => [['descriptions' => ['en_US' => 'alo']]],
-            'multi description' => [['descriptions' => ['en_US' => 'alo', 'de' => 'lol']]],
-            'multi description with other data' => [['descriptions' => ['en_US' => 'alo', 'de' => 'lol']], 'code' => 'test'],
-            'empty array' => [['descriptions' => []]],
+            'single description' => [
+                [
+                    'descriptions' => [
+                        'en_US' => 'alo',
+                    ],
+                ],
+                'code' => 'test',
+            ],
+            'single description with other data' => [[
+                'descriptions' => [
+                    'en_US' => 'alo',
+                ],
+            ]],
+            'multi description' => [[
+                'descriptions' => [
+                    'en_US' => 'alo',
+                    'de' => 'lol',
+                ],
+            ]],
+            'multi description with other data' => [
+                [
+                    'descriptions' => [
+                        'en_US' => 'alo',
+                        'de' => 'lol',
+                    ],
+                ],
+                'code' => 'test',
+            ],
+            'empty array' => [[
+                'descriptions' => [],
+            ]],
         ];
     }
     public function dataWithUnknownProperty()
     {
         return [
-            'one of property is unknown' => [['descriptions' => ['en_US' => 'alo'], 'unknown_property' => 0]],
-            'wrong property' => [['description' => ['en_US' => 'alo']]],
+            'one of property is unknown' => [[
+                'descriptions' => [
+                    'en_US' => 'alo',
+                ],
+                'unknown_property' => 0,
+            ]],
+            'wrong property' => [[
+                'description' => [
+                    'en_US' => 'alo',
+                ],
+            ]],
         ];
     }
     public function dataWithInvalidPropertyType()
     {
         return [
             'not an array' => [['descriptions' => 'en_US']],
-            'not a scalar' => [['descriptions' => [[]]]],
-            'one is not a scalar' => [['descriptions' => ['en_US' => 'alo', 'de' => []]]],
+            'not a scalar' => [[
+                'descriptions' => [[]],
+            ]],
+            'one is not a scalar' => [[
+                'descriptions' => [
+                    'en_US' => 'alo',
+                    'de' => [],
+                ],
+            ]],
         ];
     }
 }

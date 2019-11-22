@@ -23,7 +23,7 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
     protected $stepExecution;
 
     /** @var array */
-    protected $processed;
+    protected $processed = [];
 
     /** @var \ArrayIterator */
     protected $arrayIterator;

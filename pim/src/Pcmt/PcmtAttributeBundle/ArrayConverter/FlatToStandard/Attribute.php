@@ -30,12 +30,15 @@ class Attribute extends BaseAttribute
         $this->fieldChecker->checkFieldsFilling($item, ['code']);
 
         // Add @DND
-    $convertedItem = ['labels' => [], 'descriptions' => []]; // add descriptions field to convertedItem array
-    // / Add @DND
+        $convertedItem = [
+            'labels' => [],
+            'descriptions' => [],
+        ]; // add descriptions field to convertedItem array
+        // / Add @DND
 
-    foreach ($item as $field => $data) {
-        $convertedItem = $this->convertFields($field, $this->booleanFields, $data, $convertedItem);
-    }
+        foreach ($item as $field => $data) {
+            $convertedItem = $this->convertFields($field, $this->booleanFields, $data, $convertedItem);
+        }
 
         return $convertedItem;
     }
@@ -48,7 +51,7 @@ class Attribute extends BaseAttribute
      *
      * @return array
      */
-    protected function convertFields($field, $booleanFields, $data, $convertedItem)
+    protected function convertFields($field, $booleanFields, $data, $convertedItem): array
     {
         if (false !== strpos($field, 'label-', 0)) {
             $labelTokens = explode('-', $field);
