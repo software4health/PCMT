@@ -27,9 +27,9 @@ class PcmtCreateAttributeForRefDataCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $output->writeln([
-      'Reference Data Attribute Creator',
-      '============',
-    ]);
+            'Reference Data Attribute Creator',
+            '============',
+        ]);
         // retrieve the argument value using getArgument()
         $refDataName = $input->getArgument('ref-data-name');
         $output->writeln('Reference Data: '.$refDataName);
@@ -50,12 +50,12 @@ class PcmtCreateAttributeForRefDataCommand extends ContainerAwareCommand
         $gs1Attribute = $attributeFactory->create();
         // set attribute's data
         $attributeUpdater->update($gs1Attribute, [
-      'code' => strtolower($refDataName),
-      'group' => 'technical',
-      'reference_data_name' => $refDataName,
-      'type' => 'pim_reference_data_simpleselect',
-      'required' => false,
-    ]);
+            'code' => strtolower($refDataName),
+            'group' => 'technical',
+            'reference_data_name' => $refDataName,
+            'type' => 'pim_reference_data_simpleselect',
+            'required' => false,
+        ]);
         // save attribute into database
         $attributeSaver->save($gs1Attribute);
     }

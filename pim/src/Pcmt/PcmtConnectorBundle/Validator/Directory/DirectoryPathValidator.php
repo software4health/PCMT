@@ -34,7 +34,7 @@ class DirectoryPathValidator
         if (is_array($value)) {
             foreach ($configuration[$key] as $configValue) {
                 if (strpos($configValue, $value)) {
-                    return  true;
+                    return true;
                 }
             }
         }

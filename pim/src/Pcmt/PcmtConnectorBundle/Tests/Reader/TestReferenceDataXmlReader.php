@@ -24,7 +24,7 @@ class TestReferenceDataXmlReader extends TestCase
     /** @var FileGetContentsWrapper|Mock */
     protected $fileGetContentsWrapperMock;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->xmlParserMock = $this->createMock(Service::class);
         $this->fileGetContentsWrapperMock = $this->createMock(FileGetContentsWrapper::class);
@@ -41,7 +41,6 @@ class TestReferenceDataXmlReader extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider inputFilePathDataProvider
      */
     public function testReadCorrectFile(string $filePath): void
@@ -86,7 +85,6 @@ class TestReferenceDataXmlReader extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider invalidInputFilePathDataProvider
      */
     public function testReadNullOrCorruptedOrWrongFileFormat($filePath): void

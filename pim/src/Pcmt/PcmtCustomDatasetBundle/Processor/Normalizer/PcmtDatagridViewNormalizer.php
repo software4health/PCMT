@@ -25,13 +25,13 @@ class PcmtDatagridViewNormalizer implements NormalizerInterface
     public function normalize($object, $format = null, array $context = []): array
     {
         return [
-      'owner' => (string) $object->getOwner()->getUsername(),
-      'label' => (string) $object->getLabel(),
-      'type' => (string) $object->getType(),
-      'datagrid_alias' => (string) $object->getDatagridAlias(),
-      'columns' => (string) $object->getOrder(),
-      'filters' => (string) $object->getFilters(),
-    ];
+            'owner' => (string) $object->getOwner()->getUsername(),
+            'label' => (string) $object->getLabel(),
+            'type' => (string) $object->getType(),
+            'datagrid_alias' => (string) $object->getDatagridAlias(),
+            'columns' => (string) $object->getOrder(),
+            'filters' => (string) $object->getFilters(),
+        ];
     }
 
     /**

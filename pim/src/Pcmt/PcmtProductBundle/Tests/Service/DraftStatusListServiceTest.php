@@ -19,7 +19,7 @@ class DraftStatusListServiceTest extends TestCase
      */
     private $draftStatusListService;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->draftStatusListService = new DraftStatusListService();
         parent::setUp();

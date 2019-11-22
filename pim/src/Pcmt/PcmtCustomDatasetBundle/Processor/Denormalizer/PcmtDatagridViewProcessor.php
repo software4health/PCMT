@@ -195,8 +195,8 @@ class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcess
     protected function findOneByIdentifier($itemIdentifier): ?object
     {
         return $this->repository->findOneBy([
-      'type' => DatagridView::TYPE_PUBLIC,
-      'label' => $itemIdentifier,
-    ]);
+            'type' => DatagridView::TYPE_PUBLIC,
+            'label' => $itemIdentifier,
+        ]);
     }
 }

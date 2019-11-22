@@ -19,7 +19,7 @@ class ConcatenatedAttributesConverterTest extends TestCase
     /** @var array $supportedAttributeTypes */
     private $supportedAttributeTypes;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->supportedAttributeTypes = [PcmtAtributeTypes::CONCATENATED_FIELDS];
         $this->columnsResolverMock = $this->createMock(AttributeColumnsResolver::class);
@@ -34,7 +34,7 @@ class ConcatenatedAttributesConverterTest extends TestCase
         $concatenatedAttributesConverter = $this->getConcatenatedAttributesConverterInstance();
 
         $this->assertTrue($concatenatedAttributesConverter->supportsAttribute($attribute));
-        $this->assertEquals($converted, $concatenatedAttributesConverter->convert($attribute->getCode(), $input));
+        $this->assertSame($converted, $concatenatedAttributesConverter->convert($attribute->getCode(), $input));
     }
 
     /** @dataProvider provideInvalidDataToConvert */
@@ -52,14 +52,14 @@ class ConcatenatedAttributesConverterTest extends TestCase
     public function provideValidDataToConvert(): array
     {
         return [
-          [
-              ['attribute1' => '100 EUR', 'separator' => ':', 'attribute2' => '0.250KG'],
-              ['concatenated_test' => '100 EUR:0.250KG'],
-          ],
-          [
-              ['attribute1' => ['200 PSI', '|', '100 kG/m2'], 'separator' => '%%', 'attribute2' => '80 USD'],
-              ['concatenated_test' => '200 PSI|100 kG/m2%%80 USD'],
-          ],
+            [
+                ['attribute1' => '100 EUR', 'separator' => ':', 'attribute2' => '0.250KG'],
+                ['concatenated_test' => '100 EUR:0.250KG'],
+            ],
+            [
+                ['attribute1' => ['200 PSI', '|', '100 kG/m2'], 'separator' => '%%', 'attribute2' => '80 USD'],
+                ['concatenated_test' => '200 PSI|100 kG/m2%%80 USD'],
+            ],
         ];
     }
 

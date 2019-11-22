@@ -34,7 +34,7 @@ class ImportRefDataFilesStepTest extends TestCase
     /** @var EventDispatcher|Mock */
     protected $eventDispatcherMock;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->readerMock = $this->createMock(GS1ReferenceDataXmlReader::class);
         $this->processorMock = $this->createMock(PcmtReferenceDataProcessor::class);
@@ -44,9 +44,6 @@ class ImportRefDataFilesStepTest extends TestCase
         parent::setUp();
     }
 
-    /**
-     * @test
-     */
     public function testWillExecuteTaskConsecutively(): void
     {
         $step = $this->getItemStepInstance();
@@ -60,7 +57,7 @@ class ImportRefDataFilesStepTest extends TestCase
             ->method('process');
 
         $this->writerMock->expects($this->at(0))
-                   ->method('write');
+            ->method('write');
 
         $step->doExecute(new StepExecution($stepName, $jobExecution));
     }

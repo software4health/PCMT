@@ -15,10 +15,10 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('pcmtservice');
 
         $rootNode
-           ->children()
-               ->booleanNode('pcmtActive')->defaultTrue()->end()
-               ->integerNode('defaultSessionTimeMins')->defaultValue(20)->end()
-           ->end();
+            ->children()
+            ->booleanNode('pcmtActive')->defaultTrue()->end()
+            ->integerNode('defaultSessionTimeMins')->defaultValue(20)->end()
+            ->end();
 
         return $treeBuilder;
     }

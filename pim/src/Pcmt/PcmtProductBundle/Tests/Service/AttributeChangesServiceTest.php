@@ -18,7 +18,7 @@ class AttributeChangesServiceTest extends TestCase
     /** @var \PHPUnit\Framework\MockObject\MockObject */
     private $productExisting;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->productNew = $this->createMock(Product::class);
         $this->productExisting = $this->createMock(Product::class);

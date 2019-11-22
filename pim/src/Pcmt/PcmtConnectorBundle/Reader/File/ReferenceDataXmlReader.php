@@ -77,7 +77,7 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
                         $version = $this->setVersion($value);
                     }
 
-                    if ('code' == ltrim($value['name'], static::DELIMITER)) {
+                    if ('code' === ltrim($value['name'], static::DELIMITER)) {
                         $this->processed[] = $this->createReferenceDataArray($value['value'], $className, $version);
                     }
                 }

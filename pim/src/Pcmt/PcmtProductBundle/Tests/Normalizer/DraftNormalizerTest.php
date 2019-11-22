@@ -44,7 +44,7 @@ class DraftNormalizerTest extends TestCase
     /** @var AttributeChangesService */
     private $attributeChangesService;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->productNew = $this->createMock(Product::class);
         $this->productExisting = $this->createMock(Product::class);
@@ -82,7 +82,7 @@ class DraftNormalizerTest extends TestCase
         $array = $this->draftNormalizer->normalize($draft);
 
         $this->assertEmpty($array['changes']);
-        $this->assertEquals('Alfred Nobel', $array['author']);
+        $this->assertSame('Alfred Nobel', $array['author']);
         $this->assertIsArray($array['status']);
         $this->assertArrayHasKey('id', $array['status']);
         $this->assertArrayHasKey('name', $array['status']);

@@ -18,7 +18,7 @@ class PcmtAttributeManager
         string $field,
         array $value
     ): void {
-        if (null == self::$writeCommandInstance) {
+        if (null === self::$writeCommandInstance) {
             $pcmtCommandFactory = new PcmtCommandFactory();
             self::$writeCommandInstance = $pcmtCommandFactory->command($attributeClass);
         }

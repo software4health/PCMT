@@ -26,7 +26,7 @@ class DraftStatusTranslatorServiceTest extends TestCase
      */
     private $nameTranslated = 'name translated';
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $translatorService = $this->createMock(TranslatorInterface::class);
         $translatorService->method('trans')->willReturn($this->nameTranslated);
@@ -44,6 +44,6 @@ class DraftStatusTranslatorServiceTest extends TestCase
     public function testGetNameTranslated(): void
     {
         $name = $this->draftStatusTranslatorService->getNameTranslated(AbstractProductDraft::STATUS_NEW);
-        $this->assertEquals($this->nameTranslated, $name);
+        $this->assertSame($this->nameTranslated, $name);
     }
 }

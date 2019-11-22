@@ -28,9 +28,9 @@ class PcmtCreateAllAttributesCommand extends ContainerAwareCommand
     {
         $codeList = GsCodesHelper::getGsCodes();
         $output->writeln([
-      'All Reference Data Attribute Creator',
-      '============',
-    ]);
+            'All Reference Data Attribute Creator',
+            '============',
+        ]);
         $bar = new ProgressBar($output, count($codeList));
         $bar->setFormat('very_verbose');
         $bar->start();
@@ -39,9 +39,9 @@ class PcmtCreateAllAttributesCommand extends ContainerAwareCommand
             try {
                 $command = $this->getApplication()->find('pcmt:generate-ref-data-attr');
                 $arguments = [
-          'command' => 'pcmt:generate-ref-data-attr',
-          'ref-data-name' => $code,
-        ];
+                    'command' => 'pcmt:generate-ref-data-attr',
+                    'ref-data-name' => $code,
+                ];
                 $greetInput = new ArrayInput($arguments);
                 $returnCode = $command->run($greetInput, $output);
             } catch (Exception $e) {

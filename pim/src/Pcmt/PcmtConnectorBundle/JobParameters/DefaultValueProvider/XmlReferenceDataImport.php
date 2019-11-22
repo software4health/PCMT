@@ -24,7 +24,7 @@ class XmlReferenceDataImport implements DefaultValuesProviderInterface
 
     public function getDefaultValues(): array
     {
-        return  [
+        return [
             'filePath' => null,
             'dirPath' => 'src/Pcmt/PcmtConnectorBundle/Resources/config/reference_data',
             'uploadAllowed' => [

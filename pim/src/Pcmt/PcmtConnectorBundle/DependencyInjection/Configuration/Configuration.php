@@ -17,8 +17,8 @@ class Configuration implements ConfigurationInterface
         //set the dirpath in the DefaultJobProvider to be configurable:
         $rootNode
             ->children()
-                ->arrayNode('data_download')
-                    ->children()
-                        ->scalarNode('dirPath')->end(); //implement default value
+            ->arrayNode('data_download')
+            ->children()
+            ->scalarNode('dirPath')->end(); //implement default value
     }
 }
