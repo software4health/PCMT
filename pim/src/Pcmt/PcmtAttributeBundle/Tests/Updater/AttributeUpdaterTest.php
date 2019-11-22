@@ -71,17 +71,17 @@ class AttributeUpdaterTest extends TestCase
     /**
      * @dataProvider dataWithRightDescriptions
      */
-    public function testUpdateFunctionShouldInvokeValidateDataTypeMethodAndSetDataMethodWhenRightData($data)
+    public function testUpdateFunctionShouldInvokeValidateDataTypeMethodAndSetDataMethodWhenRightData($data): void
     {
         $attributeUpdater = $this->getMockBuilder(AttributeUpdater::class)
       ->setMethods(['validateDataType', 'setData'])
-      ->setConstructorArgs(array(
+      ->setConstructorArgs([
         $this->attrGroupRepoMock,
         $this->localeRepositoryMock,
         $this->registryMock,
         $this->translatableUpdaterMock,
         $this->attributeManager,
-        $this->propertiesMock, ))
+        $this->propertiesMock, ])
       ->getMock();
         $attributeUpdater->expects($this->atLeastOnce())->method('validateDataType');
         $attributeUpdater->expects($this->atLeastOnce())->method('setData');
@@ -91,7 +91,7 @@ class AttributeUpdaterTest extends TestCase
     /**
      * @dataProvider dataWithRightDescriptions
      */
-    public function testUpdateFunctionShouldThrowExceptionWhenWrongAttributeClassType($data)
+    public function testUpdateFunctionShouldThrowExceptionWhenWrongAttributeClassType($data): void
     {
         $attribute = $this->getWrongAttributeClassType();
         $attributeUpdater = $this->getAttributeUpdaterInstance();
@@ -102,7 +102,7 @@ class AttributeUpdaterTest extends TestCase
     /**
      * @dataProvider dataWithUnknownProperty
      */
-    public function testUpdateFunctionShouldThrowUnknownPropertyExceptionWhenUnknownPropertyInData($data)
+    public function testUpdateFunctionShouldThrowUnknownPropertyExceptionWhenUnknownPropertyInData($data): void
     {
         $attributeUpdater = $this->getAttributeUpdaterInstance();
         $this->expectException(UnknownPropertyException::class);
@@ -112,7 +112,7 @@ class AttributeUpdaterTest extends TestCase
     /**
      * @dataProvider dataWithInvalidPropertyType
      */
-    public function testUpdateFunctionShouldThrowInvalidPropertyTypeExceptionWithWrongData($data)
+    public function testUpdateFunctionShouldThrowInvalidPropertyTypeExceptionWithWrongData($data): void
     {
         $attributeUpdater = $this->getAttributeUpdaterInstance();
         $this->expectException(InvalidPropertyTypeException::class);
@@ -121,7 +121,7 @@ class AttributeUpdaterTest extends TestCase
     /**
      * @dataProvider dataWithRightDescriptions
      */
-    public function testUpdateFunctionShouldUpdateDescriptionsViaSetDataFunctionWhenRightData($data)
+    public function testUpdateFunctionShouldUpdateDescriptionsViaSetDataFunctionWhenRightData($data): void
     {
         $attributeUpdater = $this->getAttributeUpdaterInstance();
         $this->translatableUpdaterMock->expects($this->atLeastOnce())

@@ -109,7 +109,7 @@ class TestReferenceDataXmlReader extends TestCase
             ->with('xmlMapping')
             ->willReturn(null);
 
-        $this->expectException(\Exception::class);
+        $this->expectException(\Throwable::class);
         $reader->read();
     }
 

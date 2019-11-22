@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pcmt\PcmtProductBundle\Service;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;

@@ -62,7 +62,7 @@ class DraftNormalizerTest extends TestCase
         parent::setUp();
     }
 
-    public function testNormalizeNoChangesNewProduct()
+    public function testNormalizeNoChangesNewProduct(): void
     {
         $this->draftNormalizer = new DraftNormalizer(
             $this->draftStatusNormalizer,

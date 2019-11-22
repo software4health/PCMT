@@ -17,14 +17,14 @@ class PcmtReferenceDataDownloadHandler extends ContainerAwareCommand
 
     protected static $defaultName = 'pcmt:handler:download_reference_data';
 
-    public function configure()
+    public function configure(): void
     {
         $this->addArgument('code', InputArgument::OPTIONAL, 'Can override default job code name.');
         $this->addArgument('dirPath', InputArgument::OPTIONAL, 'Can override default directory where xmls are saved.');
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         try {
             $this->createJobIfNotExists($output);
@@ -39,7 +39,7 @@ class PcmtReferenceDataDownloadHandler extends ContainerAwareCommand
             $input = new ArrayInput($arguments);
 
             $command->run($input, $output);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $output->writeln($exception->getMessage());
             die;
         }

@@ -39,7 +39,7 @@ class ProductDraftSaver implements SaverInterface
             $this->entityManager->flush();
             $this->entityManager->commit();
             $this->eventDispatcher->dispatch(StorageEvents::POST_SAVE, new GenericEvent($draft, $options));
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $this->entityManager->rollback();
 
             throw $exception;

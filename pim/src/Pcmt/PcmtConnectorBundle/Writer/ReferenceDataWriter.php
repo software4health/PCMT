@@ -32,7 +32,7 @@ class ReferenceDataWriter implements ItemWriterInterface, StepExecutionAwareInte
         $this->saveAll($items);
     }
 
-    public function setStepExecution(StepExecution $stepExecution)
+    public function setStepExecution(StepExecution $stepExecution): void
     {
         $this->stepExecution = $stepExecution;
     }
@@ -46,7 +46,7 @@ class ReferenceDataWriter implements ItemWriterInterface, StepExecutionAwareInte
         $this->saver->saveAll($items);
     }
 
-    protected function incrementCount(ReferenceDataInterface $item)
+    protected function incrementCount(ReferenceDataInterface $item): void
     {
         if ($item->getId()) {
             $this->stepExecution->incrementSummaryInfo('process');

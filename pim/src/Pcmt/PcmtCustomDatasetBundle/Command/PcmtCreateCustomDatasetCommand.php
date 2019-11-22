@@ -99,7 +99,7 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
             $input = new ArrayInput($arguments);
 
             return $command->run($input, $output);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $output->writeln($exception);
             die;
         }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pcmt\PcmtProductBundle\Exception;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
@@ -18,7 +20,7 @@ class DraftViolationException extends UnprocessableEntityHttpException
         ConstraintViolationListInterface $violations,
         ProductInterface $product,
         $message = 'Validation failed.',
-        \Exception $previous = null,
+        ?\Throwable $previous = null,
         $code = 0
     ) {
         parent::__construct($message, $previous, $code);

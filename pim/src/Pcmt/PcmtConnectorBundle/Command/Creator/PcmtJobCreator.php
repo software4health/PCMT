@@ -20,7 +20,7 @@ class PcmtJobCreator extends ContainerAwareCommand
 
     private $trialCount = 4;
 
-    public function configure()
+    public function configure(): void
     {
         $this->addArgument('jobName', InputArgument::REQUIRED, 'Pcmt Job registry code. Used to parse job creation parameters. Defined in PcmtConnectorJobParametersRegistry::class');
     }

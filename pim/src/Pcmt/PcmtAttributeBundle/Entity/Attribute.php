@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pcmt\PcmtAttributeBundle\Entity;
 
 use Akeneo\Pim\Structure\Component\Model\Attribute as BaseAttribute;

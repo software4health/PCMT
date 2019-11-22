@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pcmt\PcmtProductBundle\Connector\Job\Writer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Connector\Writer\File\Xlsx\ProductWriter;

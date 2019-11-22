@@ -21,7 +21,7 @@ class DirectoryCreator
 
             try {
                 mkdir($buildPath, 0777);
-            } catch (\Exception $exception) {
+            } catch (\Throwable $exception) {
                 throw new \Exception('Error creating directory: ' . $exception->getMessage());
             }
         }

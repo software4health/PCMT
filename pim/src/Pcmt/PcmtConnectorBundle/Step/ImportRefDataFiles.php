@@ -28,7 +28,7 @@ class ImportRefDataFiles extends AbstractStep
         parent::__construct($name, $eventDispatcher, $jobRepository);
     }
 
-    protected function doExecute(StepExecution $stepExecution)
+    protected function doExecute(StepExecution $stepExecution): void
     {
         $jobParameters = $stepExecution->getJobParameters();
         $urls = $jobParameters->get('xml_data_pick_urls');
@@ -50,7 +50,7 @@ class ImportRefDataFiles extends AbstractStep
                 $response = $this->guzzleClient->get($url, ['save_to' => $filePath]);
                 $stepExecution->addSummaryInfo('Succesful parse', 'url: ' . $url . ' code: ' .$response->getStatusCode());
                 fclose($filePath);
-            } catch (\Exception $exception) {
+            } catch (\Throwable $exception) {
                 $stepExecution->addError('Failed to parse url: ' . $url . 'error: ' . $exception->getMessage());
 
                 continue;

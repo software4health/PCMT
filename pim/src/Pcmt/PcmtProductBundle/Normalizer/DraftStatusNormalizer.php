@@ -41,7 +41,7 @@ class DraftStatusNormalizer implements NormalizerInterface
 
         try {
             $name = $this->draftStatusService->getNameTranslated($statusId);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $name = 'Unknown';
             $this->logger->error($e->getMessage());
         }

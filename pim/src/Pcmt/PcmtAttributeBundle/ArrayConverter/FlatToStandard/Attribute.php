@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pcmt\PcmtAttributeBundle\ArrayConverter\FlatToStandard;
 
 use Akeneo\Pim\Structure\Component\ArrayConverter\FlatToStandard\Attribute as BaseAttribute;

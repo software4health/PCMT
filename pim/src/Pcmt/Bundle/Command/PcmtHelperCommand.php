@@ -16,12 +16,12 @@ class PcmtHelperCommand extends ContainerAwareCommand
      */
     protected static $defaultName = 'pcmt:command';
 
-    public function configure()
+    public function configure(): void
     {
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
     }
 

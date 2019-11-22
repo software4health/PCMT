@@ -13,14 +13,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SupplierAttributeType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('code', TextType::class, ['constraints' => [new NotBlank()]])
                 ->add('name', TextType::class, ['constraints' => [new NotBlank()]]);
         parent::buildForm($builder, $options);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Supplier::class,
