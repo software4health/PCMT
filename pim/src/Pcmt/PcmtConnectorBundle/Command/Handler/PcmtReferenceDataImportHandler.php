@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\Command\Handler;
@@ -41,36 +42,34 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        try{
+        try {
             $this->createJobIfNotExists($output);
             $this->fileIterator->rewind();
-            while($this->fileIterator->current()){
-
+            while ($this->fileIterator->current()) {
                 $currentFile = $this->fileIterator->key();
                 $totalPath = str_replace('/', '\/', $currentFile);
                 $arguments['code'] = ($input->getArgument('code')) ?? self::DEFAULT_JOB_CODE;
-                $arguments['--config'] =  sprintf('{"filePath": "%s"}', $totalPath);
+                $arguments['--config'] = sprintf('{"filePath": "%s"}', $totalPath);
                 $returnCode = $this->executeCommand($output, $arguments);
 
-                if($returnCode == 0){
+                if (0 == $returnCode) {
                     $this->fileIterator->next();
                 }
             }
-
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $output->writeln($exception->getMessage());
             die;
         }
-
     }
 
     private function executeCommand(OutputInterface $output, array $arguments): int
     {
-        try{
+        try {
             $command = $this->getApplication()->find('akeneo:batch:job');
             $input = new ArrayInput($arguments);
-            return $command->run($input,$output);
-        } catch (\Exception $exception){
+
+            return $command->run($input, $output);
+        } catch (\Exception $exception) {
             $output->writeln($exception);
             die;
         }
@@ -80,7 +79,7 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
     {
         $jobCreatror = $this->getApplication()->find('pcmt:job-creator');
         $arguments = [
-            'jobName' => PcmtConnectorJobParametersRegistry::JOB_REFERENCE_DATA_IMPORT_NAME
+            'jobName' => PcmtConnectorJobParametersRegistry::JOB_REFERENCE_DATA_IMPORT_NAME,
         ];
         $input = new ArrayInput($arguments);
         $jobCreatror->run($input, $output);

@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtAttributeBundle\EventSubscriber;
 
 use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductModelRepositoryInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterface;
-use Akeneo\Pim\Structure\Component\Model\FamilyVariant;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use Akeneo\Pim\Structure\Component\Repository\FamilyVariantRepositoryInterface;
@@ -40,19 +40,19 @@ final class UpdateProductValueIfHasConcatenatedAttribute implements EventSubscri
     private $familyRepository;
 
     /** @var AttributeRepositoryInterface $attributeRepository */
-    protected $attributeRepository;
+    private $attributeRepository;
 
     /** @var ObjectUpdaterInterface $productValuesUpdater */
-    protected $productValuesUpdater;
+    private $productValuesUpdater;
 
     /** @var ObjectUpdaterInterface $productModelValuesUpdater */
-    protected $productModelValuesUpdater;
+    private $productModelValuesUpdater;
 
     /** @var SaverInterface $productSaver */
-    protected $productSaver;
+    private $productSaver;
 
     /** @var SaverInterface $productModelSaver */
-    protected  $productModelSaver;
+    private $productModelSaver;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -66,8 +66,7 @@ final class UpdateProductValueIfHasConcatenatedAttribute implements EventSubscri
         ObjectUpdaterInterface $productModelValuesUpdater,
         SaverInterface $productSaver,
         SaverInterface $productModelSaver
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->productRepository = $productRepository;
         $this->productModelRepository = $productModelRepository;
@@ -85,11 +84,11 @@ final class UpdateProductValueIfHasConcatenatedAttribute implements EventSubscri
     {
         return [
           ProductFetchEvent::class => [
-              ['onProductFetch', 10]
+              ['onProductFetch', 10],
           ],
           ProductModelFetchEvent::class => [
-              ['onProductModelFetch', 10]
-          ]
+              ['onProductModelFetch', 10],
+          ],
         ];
     }
 
@@ -103,24 +102,20 @@ final class UpdateProductValueIfHasConcatenatedAttribute implements EventSubscri
         $concatenatedAttributes = $this->concatenatedAttributeRepository->getConcatenatedAttributes($family);
 
         $values = [];
-        foreach ($concatenatedAttributes as $counter => $concatenatedAttribute){
-
+        foreach ($concatenatedAttributes as $counter => $concatenatedAttribute) {
             $attributeName = $concatenatedAttribute['code'];
-            $memberAttributes = $this->attributeRepository->findBy(['code' =>
-                explode(',', $concatenatedAttribute['properties']['attributes'])
+            $memberAttributes = $this->attributeRepository->findBy(['code' => explode(',', $concatenatedAttribute['properties']['attributes']),
             ]);
 
-            $separator =  $concatenatedAttribute['properties']['separators'];
+            $separator = $concatenatedAttribute['properties']['separators'];
             $concatenatedValue = [];
 
-            foreach ($memberAttributes as $memberAttribute){
-
-                if($product->hasAttribute($memberAttribute->getCode())){
-
+            foreach ($memberAttributes as $memberAttribute) {
+                if ($product->hasAttribute($memberAttribute->getCode())) {
                     $value = $product->getValue($memberAttribute->getCode());
-                    if(!(null == $value || '' == $value || [] == $value)){
+                    if (!(null == $value || '' == $value || [] == $value)) {
                         $concatenatedValue[] = $value->__toString();
-                    }else {
+                    } else {
                         $concatenatedValue[] = $memberAttribute->getCode() . ' ' . self::IS_EMPTY;
                     }
                 } else {
@@ -128,7 +123,7 @@ final class UpdateProductValueIfHasConcatenatedAttribute implements EventSubscri
                 }
             }
 
-            $values[$attributeName]['data']['data'] = [implode($separator,$concatenatedValue)];
+            $values[$attributeName]['data']['data'] = [implode($separator, $concatenatedValue)];
             $values[$attributeName]['data']['locale'] = null;
             $values[$attributeName]['data']['scope'] = null;
 
@@ -149,24 +144,20 @@ final class UpdateProductValueIfHasConcatenatedAttribute implements EventSubscri
         );
 
         $values = [];
-        foreach ($concatenatedAttributes as $counter => $concatenatedAttribute){
-
+        foreach ($concatenatedAttributes as $counter => $concatenatedAttribute) {
             $attributeName = $concatenatedAttribute['code'];
-            $memberAttributes = $this->attributeRepository->findBy(['code' =>
-                explode(',', $concatenatedAttribute['properties']['attributes'])
+            $memberAttributes = $this->attributeRepository->findBy(['code' => explode(',', $concatenatedAttribute['properties']['attributes']),
             ]);
 
-            $separator =  $concatenatedAttribute['properties']['separators'];
+            $separator = $concatenatedAttribute['properties']['separators'];
             $concatenatedValue = [];
 
-            foreach ($memberAttributes as $memberAttribute){
-
-                if($productModel->hasAttribute($memberAttribute->getCode())){
-
+            foreach ($memberAttributes as $memberAttribute) {
+                if ($productModel->hasAttribute($memberAttribute->getCode())) {
                     $value = $productModel->getValue($memberAttribute->getCode());
-                    if(!(null == $value || '' == $value || [] == $value)){
+                    if (!(null == $value || '' == $value || [] == $value)) {
                         $concatenatedValue[] = $value->__toString();
-                    }else {
+                    } else {
                         $concatenatedValue[] = $memberAttribute->getCode() . ' ' . self::IS_EMPTY;
                     }
                 } else {
@@ -174,7 +165,7 @@ final class UpdateProductValueIfHasConcatenatedAttribute implements EventSubscri
                 }
             }
 
-            $values[$attributeName]['data']['data'] = [implode($separator,$concatenatedValue)];
+            $values[$attributeName]['data']['data'] = [implode($separator, $concatenatedValue)];
             $values[$attributeName]['data']['locale'] = null;
             $values[$attributeName]['data']['scope'] = null;
 

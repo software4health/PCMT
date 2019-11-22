@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\Bundle\Entity;
@@ -142,7 +143,6 @@ abstract class GS1Code extends AbstractCustomEntity
         $this->status = $status;
     }
 
-
     public function getType(): string
     {
         return 'gs1_code';
@@ -153,7 +153,7 @@ abstract class GS1Code extends AbstractCustomEntity
         return static::getClass();
     }
 
-    abstract public function getReferenceDataEntityType(): string ;
+    abstract public function getReferenceDataEntityType(): string;
 
     abstract protected static function getClass(): string;
 }

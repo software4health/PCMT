@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\Bundle\Command;
@@ -11,45 +12,43 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Acl\Exception\Exception;
 
-
 class PcmtCreateAllAttributesCommand extends ContainerAwareCommand
 {
-  /**
-   * run inside terminal in fpm docker: bin/console $defaultName
-   */
-  protected static $defaultName = 'pcmt:generate-ref-data-attr-all';
+    /**
+     * run inside terminal in fpm docker: bin/console $defaultName
+     */
+    protected static $defaultName = 'pcmt:generate-ref-data-attr-all';
 
-  public function configure()
-  {
-    parent::configure();
-  }
+    public function configure()
+    {
+        parent::configure();
+    }
 
-  protected function execute(InputInterface $input, OutputInterface $output)
-  {
-    $codeList = GsCodesHelper::getGsCodes();
-    $output->writeln([
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $codeList = GsCodesHelper::getGsCodes();
+        $output->writeln([
       'All Reference Data Attribute Creator',
       '============',
     ]);
-    $bar = new ProgressBar($output, count($codeList));
-    $bar->setFormat("very_verbose");
-    $bar->start();
-    foreach ($codeList as $code) {
-      // create as Attribute
-      try {
-        $command = $this->getApplication()->find('pcmt:generate-ref-data-attr');
-        $arguments = [
+        $bar = new ProgressBar($output, count($codeList));
+        $bar->setFormat('very_verbose');
+        $bar->start();
+        foreach ($codeList as $code) {
+            // create as Attribute
+            try {
+                $command = $this->getApplication()->find('pcmt:generate-ref-data-attr');
+                $arguments = [
           'command' => 'pcmt:generate-ref-data-attr',
-          'ref-data-name' => $code
+          'ref-data-name' => $code,
         ];
-        $greetInput = new ArrayInput($arguments);
-        $returnCode = $command->run($greetInput, $output);
-      } catch (Exception $e) {
-        $output->writeln($e);
-      }
-      $bar->advance();
+                $greetInput = new ArrayInput($arguments);
+                $returnCode = $command->run($greetInput, $output);
+            } catch (Exception $e) {
+                $output->writeln($e);
+            }
+            $bar->advance();
+        }
+        $bar->finish();
     }
-    $bar->finish();
-  }
-
 }

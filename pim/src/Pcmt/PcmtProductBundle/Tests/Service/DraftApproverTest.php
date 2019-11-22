@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Pcmt\PcmtProductBundle\Tests\Service;
-
 
 use Akeneo\Pim\Enrichment\Bundle\Doctrine\Common\Saver\ProductSaver;
 use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
@@ -29,7 +27,7 @@ class DraftApproverTest extends TestCase
     public function testApprove(): void
     {
         $creator = $this->createMock(ProductFromDraftCreator::class);
-        $creator->expects($this->once())->method("getProductToSave")->willReturn(new Product());
+        $creator->expects($this->once())->method('getProductToSave')->willReturn(new Product());
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $user = $this->createMock(UserInterface::class);
         $token = $this->createMock(TokenInterface::class);
@@ -40,28 +38,26 @@ class DraftApproverTest extends TestCase
         $productValidator = $this->createMock(ValidatorInterface::class);
 
         $violations = $this->createMock(ConstraintViolationListInterface::class);
-        $violations->method("count")->willReturn(0);
+        $violations->method('count')->willReturn(0);
         $productValidator->method('validate')->willReturn($violations);
 
         $productSaver = $this->createMock(ProductSaver::class);
 
         $service = new DraftApprover($creator, $entityManager, $tokenStorage, $productSaver, $productValidator);
 
-        $attribute1 = "attribute1";
+        $attribute1 = 'attribute1';
         $productData = [
-            $attribute1 => "NEW",
-            "attribute2" => 123
+            $attribute1 => 'NEW',
+            'attribute2' => 123,
         ];
         $author = new User();
         $author->setFirstName('Alfred');
         $author->setLastName('Nobel');
         $created = new \DateTime();
-        $draft = new NewProductDraft($productData, $author, $created,AbstractProductDraft::STATUS_NEW);
+        $draft = new NewProductDraft($productData, $author, $created, AbstractProductDraft::STATUS_NEW);
 
         $service->approve($draft);
 
         $this->assertEquals(AbstractProductDraft::STATUS_APPROVED, $draft->getStatus());
     }
-
-
 }

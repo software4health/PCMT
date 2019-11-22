@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Controller;
@@ -11,15 +12,12 @@ use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
 use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Normalizer\DraftNormalizer;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Validator\Exception\ValidatorException;
 
 class PcmtProductDraftController
 {
@@ -48,8 +46,7 @@ class PcmtProductDraftController
         DraftStatusListService $draftStatusListService,
         DraftFacade $draftFacade,
         NormalizerInterface $constraintViolationNormalizer
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->draftNormalizer = $draftNormalizer;
         $this->draftStatusTranslatorService = $draftStatusTranslatorService;
@@ -64,7 +61,7 @@ class PcmtProductDraftController
     public function getList(Request $request): JsonResponse
     {
         $criteria = [
-            "status" => $request->query->get('status') ?? AbstractProductDraft::STATUS_NEW
+            'status' => $request->query->get('status') ?? AbstractProductDraft::STATUS_NEW,
         ];
         $draftRepository = $this->entityManager->getRepository(AbstractProductDraft::class);
 
@@ -72,6 +69,7 @@ class PcmtProductDraftController
 
         $serializer = new Serializer([$this->draftNormalizer]);
         $data = $serializer->normalize($drafts);
+
         return new JsonResponse($data);
     }
 
@@ -85,7 +83,7 @@ class PcmtProductDraftController
         foreach ($ids as $id) {
             $statuses[] = [
                 'id' => $id,
-                'name' => $this->draftStatusTranslatorService->getNameTranslated($id)
+                'name' => $this->draftStatusTranslatorService->getNameTranslated($id),
             ];
         }
         $data = [
@@ -103,7 +101,7 @@ class PcmtProductDraftController
         if (!$draft) {
             throw new NotFoundHttpException('The draft does not exist');
         }
-        if ($draft->getStatus() !== AbstractProductDraft::STATUS_NEW) {
+        if (AbstractProductDraft::STATUS_NEW !== $draft->getStatus()) {
             throw new BadRequestHttpException("You can only reject draft of status 'new'");
         }
         $this->draftFacade->rejectDraft($draft);
@@ -119,7 +117,7 @@ class PcmtProductDraftController
         if (!$draft) {
             throw new NotFoundHttpException('The draft does not exist');
         }
-        if ($draft->getStatus() !== AbstractProductDraft::STATUS_NEW) {
+        if (AbstractProductDraft::STATUS_NEW !== $draft->getStatus()) {
             throw new BadRequestHttpException("You can only approve draft of status 'new'");
         }
 
@@ -137,7 +135,6 @@ class PcmtProductDraftController
             }
 
             return new JsonResponse(['values' => $normalizedViolations], 400);
-
         }
 
         return new JsonResponse();

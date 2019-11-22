@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Controller;
@@ -23,7 +24,6 @@ use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
 use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
-use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,7 +32,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Pcmt\PcmtAttributeBundle\Event\ProductFetchEvent;
@@ -75,8 +74,7 @@ class PcmtProductController extends ProductController
         AttributeFilterInterface $productAttributeFilter,
         Client $productClient = null,
         Client $productAndProductModelClient = null
-    )
-    {
+    ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->versionRepository = $versionRepository;
         $this->draftSaver = $draftSaver;
@@ -103,7 +101,6 @@ class PcmtProductController extends ProductController
          * at this stage we create NewDraft, populate it with data (which we will later use to create Product itself)
          * and prevent Product from being created.
          **/
-
         $draft = new NewProductDraft(
             $data,
             $this->userContext->getUser(),
@@ -131,6 +128,7 @@ class PcmtProductController extends ProductController
             throw new AccessDeniedHttpException();
         }
         $data = json_decode($request->getContent(), true);
+
         try {
             $data = $this->productEditDataFilter->filterCollection($data, null, ['product' => $product]);
         } catch (ObjectNotFoundException $e) {

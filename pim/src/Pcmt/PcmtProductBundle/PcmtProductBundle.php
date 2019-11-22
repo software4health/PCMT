@@ -4,6 +4,6 @@ namespace Pcmt\PcmtProductBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class PcmtProductBundle extends Bundle {
-
+class PcmtProductBundle extends Bundle
+{
 }

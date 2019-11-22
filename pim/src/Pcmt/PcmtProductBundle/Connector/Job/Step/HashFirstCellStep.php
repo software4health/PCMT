@@ -15,20 +15,18 @@ class HashFirstCellStep extends AbstractStep
     /** @var string DateTime format for the file path placeholder */
     protected $datetimeFormat = 'Y-m-d_H-i-s';
 
-
     protected function doExecute(StepExecution $stepExecution): void
     {
         $this->setStepExecution($stepExecution);
-        $cell = "A1";
+        $cell = 'A1';
         $reader = new XlsxReader();
         $spreadsheet = $reader->load($this->getPath());
         $worksheet = $spreadsheet->getActiveSheet();
         $value = $worksheet->getCell($cell)->getFormattedValue();
-        $worksheet->setCellValue($cell, "#" . $value);
+        $worksheet->setCellValue($cell, '#' . $value);
         $writer = new XlsxWriter($spreadsheet);
         $writer->save($this->getPath());
     }
-
 
     private function getPath(): string
     {
@@ -38,7 +36,7 @@ class HashFirstCellStep extends AbstractStep
             $jobExecution = $this->stepExecution->getJobExecution();
             $datetime = $jobExecution->getStartTime()->format($this->datetimeFormat);
             $defaultPlaceholders = [
-                '%datetime%'  => $datetime,
+                '%datetime%' => $datetime,
                 '%job_label%' => '',
             ];
             if (null !== $jobExecution->getJobInstance()) {
@@ -46,6 +44,7 @@ class HashFirstCellStep extends AbstractStep
             }
             $filePath = strtr($filePath, $defaultPlaceholders);
         }
+
         return $filePath;
     }
 

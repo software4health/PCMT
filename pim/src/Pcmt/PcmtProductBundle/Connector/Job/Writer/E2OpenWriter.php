@@ -4,7 +4,6 @@ namespace Pcmt\PcmtProductBundle\Connector\Job\Writer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Connector\Writer\File\Xlsx\ProductWriter;
 
-
 class E2OpenWriter extends ProductWriter
 {
     /**
@@ -16,6 +15,7 @@ class E2OpenWriter extends ProductWriter
         $placeholders = array_merge(
             $placeholders, ['%datetime%' => $jobExecution->getStartTime()->format($this->datetimeFormat)]
         );
+
         return parent::getPath($placeholders);
     }
 }

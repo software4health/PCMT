@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtAttributeBundle\Command;
@@ -23,24 +24,24 @@ class ReadConfigHelperCommand extends ContainerAwareCommand
         $parser = new Service();
         $fileGetContentsWrapper = new FileGetContentsWrapper();
 
-        try{
+        try {
             $filePath = __DIR__.'/MeasurementUnitCode_GDSN.xml';
             $input = $fileGetContentsWrapper->fileGetContents($filePath);
 
             $parser->elementMap = [
                     '{http://www.w3.org/2001/XMLSchema-instance}urn' => 'Sabre\Xml\Element\XmlElement',
-                    'code' => 'Sabre\Xml\Element\KeyValue'];
+                    'code' => 'Sabre\Xml\Element\KeyValue', ];
 
             $output = $parser->parse($input);
 
             foreach ($output as $key => $values) {
-                if (!$values['name'] === '{}code' || !is_array($values['value'])) {
+                if ('{}code' === !$values['name'] || !is_array($values['value'])) {
                     continue;
                 }
 
-                dump(strtoupper($values['value']['{}name'] . ": ") . $values['value']['{}name']);
+                dump(strtoupper($values['value']['{}name'] . ': ') . $values['value']['{}name']);
             }
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             dump($exception);
             die;
         }

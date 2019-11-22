@@ -6,7 +6,6 @@ use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 
 class DraftStatusListService
 {
-
     public function getAll(): array
     {
         return [
@@ -15,5 +14,4 @@ class DraftStatusListService
             AbstractProductDraft::STATUS_REJECTED,
         ];
     }
-
 }

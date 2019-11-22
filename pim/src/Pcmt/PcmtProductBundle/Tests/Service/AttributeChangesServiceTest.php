@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Pcmt\PcmtProductBundle\Tests\Service;
-
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
 use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
@@ -74,7 +72,4 @@ class AttributeChangesServiceTest extends TestCase
         $this->assertNotEmpty($changes);
         $this->assertCount(2, $changes);
     }
-
-
-
 }

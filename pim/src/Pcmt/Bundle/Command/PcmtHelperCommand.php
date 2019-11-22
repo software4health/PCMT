@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\Bundle\Command;
@@ -22,7 +23,6 @@ class PcmtHelperCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
     }
 
     private function getEntityManager(): EntityManagerInterface

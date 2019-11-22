@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Pcmt\PcmtProductBundle\Service;
-
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
@@ -58,9 +56,8 @@ class AttributeChangesService
         }
         $this->changes[] = new AttributeChange(
             $attribute,
-            is_array($previousValue) ? json_encode($previousValue) : (string)$previousValue,
-            is_array($value) ? json_encode($value) : (string)$value
+            is_array($previousValue) ? json_encode($previousValue) : (string) $previousValue,
+            is_array($value) ? json_encode($value) : (string) $value
         );
     }
-
 }

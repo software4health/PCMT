@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Entity;
@@ -22,7 +23,7 @@ class ProductDraftORMRepository extends EntityRepository implements DraftReposit
         );
 
         $qb->setParameters([
-            ':author' => $user
+            ':author' => $user,
         ]);
 
         return $qb->getQuery()->getResult();

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtCustomDatasetBundle\ArrayConverter\StandardToFlat;
@@ -15,22 +16,23 @@ use Akeneo\Tool\Component\Connector\ArrayConverter\StandardToFlat\AbstractSimple
  */
 class DatagridView extends AbstractSimpleArrayConverter implements ArrayConverterInterface
 {
-  /**
-   * {@inheritdoc}
-   */
-  protected function convertProperty($property, $data, array $convertedItem, array $options): array
-  {
-    switch ($property) {
+    /**
+     * {@inheritdoc}
+     */
+    protected function convertProperty($property, $data, array $convertedItem, array $options): array
+    {
+        switch ($property) {
       case 'labels':
         foreach ($data as $localeCode => $label) {
-          $labelKey = sprintf('label-%s', $localeCode);
-          $convertedItem[$labelKey] = $label;
+            $labelKey = sprintf('label-%s', $localeCode);
+            $convertedItem[$labelKey] = $label;
         }
+
         break;
       default:
         $convertedItem[$property] = (string) $data;
     }
 
-    return $convertedItem;
-  }
+        return $convertedItem;
+    }
 }

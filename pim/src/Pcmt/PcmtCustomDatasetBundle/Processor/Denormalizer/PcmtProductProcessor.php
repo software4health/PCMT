@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtCustomDatasetBundle\Processor\Denormalizer;
@@ -34,31 +35,31 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
 {
-  /** @var FindProductToImport */
-  private $findProductToImport;
+    /** @var FindProductToImport */
+    private $findProductToImport;
 
-  /** @var AddParent */
-  private $addParent;
+    /** @var AddParent */
+    private $addParent;
 
-  /** @var ObjectUpdaterInterface */
-  protected $updater;
+    /** @var ObjectUpdaterInterface */
+    protected $updater;
 
-  /** @var ValidatorInterface */
-  protected $validator;
+    /** @var ValidatorInterface */
+    protected $validator;
 
-  /** @var ObjectDetacherInterface */
-  protected $detacher;
+    /** @var ObjectDetacherInterface */
+    protected $detacher;
 
-  /** @var FilterInterface */
-  protected $productFilter;
+    /** @var FilterInterface */
+    protected $productFilter;
 
-  /** @var AttributeFilterInterface */
-  private $productAttributeFilter;
+    /** @var AttributeFilterInterface */
+    private $productAttributeFilter;
 
-  /** @var MediaStorer */
-  private $mediaStorer;
+    /** @var MediaStorer */
+    private $mediaStorer;
 
-  public function __construct(
+    public function __construct(
     IdentifiableObjectRepositoryInterface $repository,
     FindProductToImport $findProductToImport,
     AddParent $addParent,
@@ -69,212 +70,212 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
     AttributeFilterInterface $productAttributeFilter,
     MediaStorer $mediaStorer
   ) {
-    parent::__construct($repository);
+        parent::__construct($repository);
 
-    $this->findProductToImport = $findProductToImport;
-    $this->addParent = $addParent;
-    $this->updater = $updater;
-    $this->validator = $validator;
-    $this->detacher = $detacher;
-    $this->productFilter = $productFilter;
-    $this->productAttributeFilter = $productAttributeFilter;
-    $this->repository = $repository;
-    $this->mediaStorer = $mediaStorer;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function process($item): ProductInterface
-  {
-    $itemHasStatus = isset($item['enabled']);
-    if (!isset($item['enabled'])) {
-      $item['enabled'] = $jobParameters = $this->stepExecution->getJobParameters()->get('enabled');
+        $this->findProductToImport = $findProductToImport;
+        $this->addParent = $addParent;
+        $this->updater = $updater;
+        $this->validator = $validator;
+        $this->detacher = $detacher;
+        $this->productFilter = $productFilter;
+        $this->productAttributeFilter = $productAttributeFilter;
+        $this->repository = $repository;
+        $this->mediaStorer = $mediaStorer;
     }
 
-    $identifier = $this->getIdentifier($item);
+    /**
+     * {@inheritdoc}
+     */
+    public function process($item): ProductInterface
+    {
+        $itemHasStatus = isset($item['enabled']);
+        if (!isset($item['enabled'])) {
+            $item['enabled'] = $jobParameters = $this->stepExecution->getJobParameters()->get('enabled');
+        }
 
-    if (null === $identifier) {
-      $this->skipItemWithMessage($item, 'The identifier must be filled');
-    }
+        $identifier = $this->getIdentifier($item);
 
-    $parentProductModelCode = $item['parent'] ?? '';
+        if (null === $identifier) {
+            $this->skipItemWithMessage($item, 'The identifier must be filled');
+        }
 
-    try {
-      $familyCode = $this->getFamilyCode($item);
-      $item['family'] = $familyCode;
+        $parentProductModelCode = $item['parent'] ?? '';
 
-      $item = $this->productAttributeFilter->filter($item);
-      $filteredItem = $this->filterItemData($item);
+        try {
+            $familyCode = $this->getFamilyCode($item);
+            $item['family'] = $familyCode;
 
-      $product = $this->findProductToImport->fromFlatData($identifier, $familyCode);
-    } catch (AccessDeniedException $e) {
-      throw $this->skipItemAndReturnException($item, $e->getMessage(), $e);
-    }
+            $item = $this->productAttributeFilter->filter($item);
+            $filteredItem = $this->filterItemData($item);
 
-    if (false === $itemHasStatus && null !== $product->getId()) {
-      unset($filteredItem['enabled']);
-    }
+            $product = $this->findProductToImport->fromFlatData($identifier, $familyCode);
+        } catch (AccessDeniedException $e) {
+            throw $this->skipItemAndReturnException($item, $e->getMessage(), $e);
+        }
 
-    $jobParameters = $this->stepExecution->getJobParameters();
-    $enabledComparison = $jobParameters->get('enabledComparison');
-    if ($enabledComparison) {
-      $filteredItem = $this->filterIdenticalData($product, $filteredItem);
+        if (false === $itemHasStatus && null !== $product->getId()) {
+            unset($filteredItem['enabled']);
+        }
 
-      if (empty($filteredItem) && null !== $product->getId()) {
-        $this->detachProduct($product);
-        $this->stepExecution->incrementSummaryInfo('product_skipped_no_diff');
+        $jobParameters = $this->stepExecution->getJobParameters();
+        $enabledComparison = $jobParameters->get('enabledComparison');
+        if ($enabledComparison) {
+            $filteredItem = $this->filterIdenticalData($product, $filteredItem);
 
-        return null;
-      }
-    }
+            if (empty($filteredItem) && null !== $product->getId()) {
+                $this->detachProduct($product);
+                $this->stepExecution->incrementSummaryInfo('product_skipped_no_diff');
 
-    if ('' !== $parentProductModelCode && !$product->isVariant()) {
-      try {
-        $product = $this->addParent->to($product, $parentProductModelCode);
-      } catch (\InvalidArgumentException $e) {
-        $this->detachProduct($product);
-        $this->skipItemWithMessage($item, $e->getMessage(), $e);
-      }
-    }
+                return null;
+            }
+        }
 
-    if (isset($filteredItem['values'])) {
-      try {
-        $filteredItem['values'] = $this->mediaStorer->store($filteredItem['values']);
-      } catch (InvalidPropertyException $e) {
-        $this->detachProduct($product);
-        $this->skipItemWithMessage($item, $e->getMessage(), $e);
-      }
-    }
+        if ('' !== $parentProductModelCode && !$product->isVariant()) {
+            try {
+                $product = $this->addParent->to($product, $parentProductModelCode);
+            } catch (\InvalidArgumentException $e) {
+                $this->detachProduct($product);
+                $this->skipItemWithMessage($item, $e->getMessage(), $e);
+            }
+        }
 
-    try {
-      $this->updateProduct($product, $filteredItem);
-    } catch (PropertyException $exception) {
-      $this->detachProduct($product);
-      $message = sprintf('%s: %s', $exception->getPropertyName(), $exception->getMessage());
-      $this->skipItemWithMessage($item, $message, $exception);
-    } catch (InvalidArgumentException | AccessDeniedException $exception) {
-      $this->detachProduct($product);
-      $this->skipItemWithMessage($item, $exception->getMessage(), $exception);
-    }
-// HERE IS THE PROBLEM WITH LONG LOADING DATA
+        if (isset($filteredItem['values'])) {
+            try {
+                $filteredItem['values'] = $this->mediaStorer->store($filteredItem['values']);
+            } catch (InvalidPropertyException $e) {
+                $this->detachProduct($product);
+                $this->skipItemWithMessage($item, $e->getMessage(), $e);
+            }
+        }
+
+        try {
+            $this->updateProduct($product, $filteredItem);
+        } catch (PropertyException $exception) {
+            $this->detachProduct($product);
+            $message = sprintf('%s: %s', $exception->getPropertyName(), $exception->getMessage());
+            $this->skipItemWithMessage($item, $message, $exception);
+        } catch (InvalidArgumentException | AccessDeniedException $exception) {
+            $this->detachProduct($product);
+            $this->skipItemWithMessage($item, $exception->getMessage(), $exception);
+        }
+        // HERE IS THE PROBLEM WITH LONG LOADING DATA
 //    $violations = $this->validateProduct($product);
 //
 //    if ($violations->count() > 0) {
 //      $this->detachProduct($product);
 //      $this->skipItemWithConstraintViolations($item, $violations);
 //    }
-// END HERE IS THE PROBLEM WITH LONG LOADING DATA
+        // END HERE IS THE PROBLEM WITH LONG LOADING DATA
 
-    return $product;
-  }
-
-  /**
-   * @param ProductInterface $product
-   * @param array            $filteredItem
-   *
-   * @return array
-   */
-  protected function filterIdenticalData(ProductInterface $product, array $filteredItem): array
-  {
-    return $this->productFilter->filter($product, $filteredItem);
-  }
-
-  /**
-   * @param array $item
-   *
-   * @return string|null
-   */
-  protected function getIdentifier(array $item): ?string
-  {
-    return isset($item['identifier']) ? $item['identifier'] : null;
-  }
-
-  /**
-   * @param array $item
-   *
-   * @return string
-   */
-  protected function getFamilyCode(array $item): string
-  {
-    if (array_key_exists('family', $item)) {
-      return $item['family'];
+        return $product;
     }
 
-    $product = $this->repository->findOneByIdentifier($item['identifier']);
-    if (null === $product) {
-      return '';
+    /**
+     * @param ProductInterface $product
+     * @param array            $filteredItem
+     *
+     * @return array
+     */
+    protected function filterIdenticalData(ProductInterface $product, array $filteredItem): array
+    {
+        return $this->productFilter->filter($product, $filteredItem);
     }
 
-    $family = $product->getFamily();
-    if (null === $family) {
-      return '';
+    /**
+     * @param array $item
+     *
+     * @return string|null
+     */
+    protected function getIdentifier(array $item): ?string
+    {
+        return isset($item['identifier']) ? $item['identifier'] : null;
     }
 
-    return $family->getCode();
-  }
+    /**
+     * @param array $item
+     *
+     * @return string
+     */
+    protected function getFamilyCode(array $item): string
+    {
+        if (array_key_exists('family', $item)) {
+            return $item['family'];
+        }
 
-  /**
-   * Filters item data to remove associations which are imported through a dedicated processor because we need to
-   * create any products before to associate them
-   *
-   * @param array $item
-   *
-   * @return array
-   */
-  protected function filterItemData(array $item): array
-  {
-    foreach ($this->repository->getIdentifierProperties() as $identifierProperty) {
-      unset($item['values'][$identifierProperty]);
+        $product = $this->repository->findOneByIdentifier($item['identifier']);
+        if (null === $product) {
+            return '';
+        }
+
+        $family = $product->getFamily();
+        if (null === $family) {
+            return '';
+        }
+
+        return $family->getCode();
     }
-    unset($item['identifier']);
-    unset($item['associations']);
 
-    return $item;
-  }
+    /**
+     * Filters item data to remove associations which are imported through a dedicated processor because we need to
+     * create any products before to associate them
+     *
+     * @param array $item
+     *
+     * @return array
+     */
+    protected function filterItemData(array $item): array
+    {
+        foreach ($this->repository->getIdentifierProperties() as $identifierProperty) {
+            unset($item['values'][$identifierProperty]);
+        }
+        unset($item['identifier']);
+        unset($item['associations']);
 
-  /**
-   * @param ProductInterface $product
-   * @param array            $filteredItem
-   *
-   * @throws PropertyException
-   */
-  protected function updateProduct(ProductInterface $product, array $filteredItem): void
-  {
-    $this->updater->update($product, $filteredItem);
-  }
-
-  /**
-   * @param ProductInterface $product
-   *
-   * @throws \InvalidArgumentException
-   *
-   * @return ConstraintViolationListInterface
-   */
-  protected function validateProduct(ProductInterface $product): ConstraintViolationListInterface
-  {
-    return $this->validator->validate($product);
-  }
-
-  /**
-   * Detaches the product from the unit of work is the responsibility of the writer but in this case we
-   * want ensure that an updated and invalid product will not be used in the association processor
-   *
-   * @param ProductInterface $product
-   */
-  protected function detachProduct(ProductInterface $product): void
-  {
-    $this->detacher->detach($product);
-  }
-
-  private function skipItemAndReturnException(array $item, $message, \Exception $previousException = null): InvalidItemException
-  {
-    if ($this->stepExecution) {
-      $this->stepExecution->incrementSummaryInfo('skip');
+        return $item;
     }
-    $itemPosition = null !== $this->stepExecution ? $this->stepExecution->getSummaryInfo('item_position') : 0;
-    $invalidItem = new FileInvalidItem($item, $itemPosition);
 
-    return new InvalidItemException($message, $invalidItem, [], 0, $previousException);
-  }
+    /**
+     * @param ProductInterface $product
+     * @param array            $filteredItem
+     *
+     * @throws PropertyException
+     */
+    protected function updateProduct(ProductInterface $product, array $filteredItem): void
+    {
+        $this->updater->update($product, $filteredItem);
+    }
+
+    /**
+     * @param ProductInterface $product
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return ConstraintViolationListInterface
+     */
+    protected function validateProduct(ProductInterface $product): ConstraintViolationListInterface
+    {
+        return $this->validator->validate($product);
+    }
+
+    /**
+     * Detaches the product from the unit of work is the responsibility of the writer but in this case we
+     * want ensure that an updated and invalid product will not be used in the association processor
+     *
+     * @param ProductInterface $product
+     */
+    protected function detachProduct(ProductInterface $product): void
+    {
+        $this->detacher->detach($product);
+    }
+
+    private function skipItemAndReturnException(array $item, $message, \Exception $previousException = null): InvalidItemException
+    {
+        if ($this->stepExecution) {
+            $this->stepExecution->incrementSummaryInfo('skip');
+        }
+        $itemPosition = null !== $this->stepExecution ? $this->stepExecution->getSummaryInfo('item_position') : 0;
+        $invalidItem = new FileInvalidItem($item, $itemPosition);
+
+        return new InvalidItemException($message, $invalidItem, [], 0, $previousException);
+    }
 }

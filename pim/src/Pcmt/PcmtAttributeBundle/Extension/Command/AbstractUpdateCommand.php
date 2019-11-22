@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtAttributeBundle\Extension\Command;
@@ -12,14 +13,13 @@ abstract class AbstractUpdateCommand
 
     public function decorate(AttributeInterface $attribute, string $field, array $data): AttributeInterface
     {
-        try{
+        try {
             $this->validateAttribute($attribute);
             $this->validateDataFields($field);
 
-            foreach ($data as $field => $value){
+            foreach ($data as $field => $value) {
                 $this->updatePropertyValue($field, $value);
             }
-
         } catch (\InvalidArgumentException $argumentException) {
             return $attribute; // @todo -add logging if necessary
         }
@@ -29,7 +29,7 @@ abstract class AbstractUpdateCommand
 
     protected function validateDataFields(string $field): void
     {
-        if(!in_array($field, $this->getAvailableFields())) {
+        if (!in_array($field, $this->getAvailableFields())) {
             throw new \InvalidArgumentException('Invalid attribute field name: ' . $field);
         }
     }
@@ -39,5 +39,4 @@ abstract class AbstractUpdateCommand
     abstract protected function getAvailableFields(): array;
 
     abstract protected function updatePropertyValue(string $field, string $value): void;
-
 }

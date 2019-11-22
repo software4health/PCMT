@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\Services\Factory\ReferenceData;
@@ -26,7 +27,6 @@ class ReferenceDataFactory
     public function getReferenceDataClass(string $className): ?string
     {
         switch ($className) {
-
                 case 'AdditionalTradeItemClassificationCodeListCode':
                     return  AdditionalTradeItemClassificationCodeListCode::class;
                 case 'AdditionalTradeItemIdentificationTypeCode':
@@ -65,5 +65,4 @@ class ReferenceDataFactory
                     return null;
             }
     }
-
 }

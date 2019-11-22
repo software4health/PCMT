@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 
@@ -10,14 +11,12 @@ class NewProductDraft extends AbstractProductDraft
 {
     private const TYPE = ProductDraftInterface::TYPE_NEW;
 
-    public function __construct
-    (
+    public function __construct(
         array $productData,
         UserInterface $author,
         \DateTime $created,
         int $status
-    )
-    {
+    ) {
         $this->productData = $productData;
         parent::__construct($author, $created, $status);
     }

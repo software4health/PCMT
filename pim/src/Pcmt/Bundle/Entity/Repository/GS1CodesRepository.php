@@ -1,19 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\Bundle\Entity\Repository;
 
 use Doctrine\ORM\QueryBuilder;
-use PHPUnit\Util\Json;
 use Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class GS1CodesRepository extends CustomEntityRepository
 {
     /**
      * @param QueryBuilder $qb
-     * @param array $options
-     * Override method
+     * @param array        $options
+     *                              Override method
      */
     protected function selectFields(QueryBuilder $qb, array $options)
     {

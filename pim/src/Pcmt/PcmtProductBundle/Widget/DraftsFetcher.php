@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Widget;
@@ -25,8 +26,7 @@ class DraftsFetcher
         EntityManagerInterface $entityManager,
         TokenStorageInterface $tokenStorage,
         SecurityFacade $securityFacade
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;
         $this->securityFacade = $securityFacade;
@@ -36,18 +36,19 @@ class DraftsFetcher
     {
         $user = $this->tokenStorage->getToken()->getUser();
         $draftRepository = $this->entityManager->getRepository(AbstractProductDraft::class);
-        $drafts =  $draftRepository->getUserDrafts($user);
+        $drafts = $draftRepository->getUserDrafts($user);
 
         $fetcherFormatted = [];
-        foreach ($drafts as $draft){
-
-            switch(get_class($draft)){
+        foreach ($drafts as $draft) {
+            switch (get_class($draft)) {
                 case NewProductDraft::class:
 
                     $productLabel = $draft->getProductData()['identifier'] ?? '-no product-';
+
                     break;
                 case PendingProductDraft::class:
                     $productLabel = $draft->getProduct()->getIdentifier();
+
                     break;
             }
 
@@ -56,7 +57,7 @@ class DraftsFetcher
             $createdAt = $draft->getCreatedAt();
             $createdAt->format('Y-m-d H:i');
             $fetcherFormatted[$draft->getId()]['createdAt'] = $draft->getCreatedAtFormatted();
-            $fetcherFormatted[$draft->getId()]['author'] =  $user->getFirstName() . ' ' . $user->getLastName();
+            $fetcherFormatted[$draft->getId()]['author'] = $user->getFirstName() . ' ' . $user->getLastName();
         }
 
         return $fetcherFormatted;

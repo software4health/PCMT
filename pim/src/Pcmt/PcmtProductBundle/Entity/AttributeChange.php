@@ -4,7 +4,6 @@ namespace Pcmt\PcmtProductBundle\Entity;
 
 /**
  * Value Object for expressing difference between draft and 'original' product
- *
  */
 class AttributeChange
 {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtAttributeBundle\Event;
@@ -14,7 +15,7 @@ class ProductFetchEvent extends Event
 
     public function __construct(string $productId)
     {
-        $this->productId = (int)$productId;
+        $this->productId = (int) $productId;
     }
 
     public function getProductId(): int

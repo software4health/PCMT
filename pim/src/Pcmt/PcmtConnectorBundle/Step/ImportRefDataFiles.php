@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\Step;
@@ -30,9 +31,9 @@ class ImportRefDataFiles extends AbstractStep
     protected function doExecute(StepExecution $stepExecution)
     {
         $jobParameters = $stepExecution->getJobParameters();
-        $urls =$jobParameters->get('xml_data_pick_urls');
+        $urls = $jobParameters->get('xml_data_pick_urls');
         $dirPath = $jobParameters->get('dirPath');
-        if($dirPath){
+        if ($dirPath) {
             $this->directory = $dirPath;
         }
         $directoryValidator = new DirectoryPathValidator();
@@ -41,16 +42,17 @@ class ImportRefDataFiles extends AbstractStep
         $this->createDirectories($this->directory);
         DirectoryCreator::createDirectory($this->directory);
 
-        foreach ($urls as $url){
-            try{
+        foreach ($urls as $url) {
+            try {
                 $path = $this->createFileNameForReferenceData($url);
                 $filePath = fopen($path, 'w');
                 sleep(1);
                 $response = $this->guzzleClient->get($url, ['save_to' => $filePath]);
                 $stepExecution->addSummaryInfo('Succesful parse', 'url: ' . $url . ' code: ' .$response->getStatusCode());
                 fclose($filePath);
-            } catch (\Exception $exception){
+            } catch (\Exception $exception) {
                 $stepExecution->addError('Failed to parse url: ' . $url . 'error: ' . $exception->getMessage());
+
                 continue;
             }
         }
@@ -69,14 +71,17 @@ class ImportRefDataFiles extends AbstractStep
     {
         $path_split = explode('/', $path); //array
         $buildPath = '';
-        foreach($path_split as $pathElem){
-            if($pathElem === "") { continue; }
+        foreach ($path_split as $pathElem) {
+            if ('' === $pathElem) {
+                continue;
+            }
             $buildPath .= $pathElem . '/';
-            if(is_dir($buildPath)){
+            if (is_dir($buildPath)) {
                 continue;
             }
             mkdir($buildPath, 0777);
         }
+
         return true;
     }
 }

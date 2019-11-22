@@ -6,17 +6,17 @@ use Akeneo\Pim\Structure\Component\Model\AttributeTranslation as BaseAttributeTr
 
 class AttributeTranslation extends BaseAttributeTranslation
 {
-  protected $description;
+    protected $description;
 
-  public function getDescription()
-  {
-    return $this->description;
-  }
+    public function getDescription()
+    {
+        return $this->description;
+    }
 
-  public function setDescription($description)
-  {
-    $this->description = $description;
+    public function setDescription($description)
+    {
+        $this->description = $description;
 
-    return $this;
-  }
+        return $this;
+    }
 }

@@ -20,8 +20,7 @@ class DraftViolationException extends UnprocessableEntityHttpException
         $message = 'Validation failed.',
         \Exception $previous = null,
         $code = 0
-    )
-    {
+    ) {
         parent::__construct($message, $previous, $code);
 
         $this->violations = $violations;
@@ -37,5 +36,4 @@ class DraftViolationException extends UnprocessableEntityHttpException
     {
         return $this->product;
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtCustomDatasetBundle\Processor\Normalizer;
@@ -15,29 +16,29 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  */
 class PcmtDatagridViewNormalizer implements NormalizerInterface
 {
-  /** @var array */
-  protected $supportedFormat = ['internal_api'];
+    /** @var array */
+    protected $supportedFormat = ['internal_api'];
 
-  /**
-   * {@inheritdoc}
-   */
-  public function normalize($object, $format = null, array $context = []): array
-  {
-    return [
-      'owner'          => (string) $object->getOwner()->getUsername(),
-      'label'          => (string) $object->getLabel(),
-      'type'           => (string) $object->getType(),
+    /**
+     * {@inheritdoc}
+     */
+    public function normalize($object, $format = null, array $context = []): array
+    {
+        return [
+      'owner' => (string) $object->getOwner()->getUsername(),
+      'label' => (string) $object->getLabel(),
+      'type' => (string) $object->getType(),
       'datagrid_alias' => (string) $object->getDatagridAlias(),
-      'columns'        => (string) $object->getOrder(),
-      'filters'        => (string) $object->getFilters(),
+      'columns' => (string) $object->getOrder(),
+      'filters' => (string) $object->getFilters(),
     ];
-  }
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function supportsNormalization($data, $format = null): bool
-  {
-    return $data instanceof DatagridView && in_array($format, $this->supportedFormat);
-  }
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsNormalization($data, $format = null): bool
+    {
+        return $data instanceof DatagridView && in_array($format, $this->supportedFormat);
+    }
 }

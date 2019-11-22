@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Normalizer;
@@ -7,7 +8,6 @@ use Pcmt\PcmtProductBundle\Entity\DraftStatus;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
 use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
-
 use Pcmt\PcmtProductBundle\Service\AttributeChangesService;
 use Pcmt\PcmtProductBundle\Service\ProductFromDraftCreator;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -32,8 +32,7 @@ class DraftNormalizer implements NormalizerInterface
         AttributeChangeNormalizer $attributeChangeNormalizer,
         ProductFromDraftCreator $productFromDraftCreator,
         AttributeChangesService $attributeChangesService
-    )
-    {
+    ) {
         $this->statusNormalizer = $statusNormalizer;
         $this->attributeChangeNormalizer = $attributeChangeNormalizer;
         $this->productFromDraftCreator = $productFromDraftCreator;
@@ -42,8 +41,9 @@ class DraftNormalizer implements NormalizerInterface
 
     /**
      * @param ProductDraftInterface $draft
-     * @param null $format
-     * @param array $context
+     * @param null                  $format
+     * @param array                 $context
+     *
      * @return array
      */
     public function normalize($draft, $format = null, array $context = []): array
@@ -56,10 +56,12 @@ class DraftNormalizer implements NormalizerInterface
         switch (get_class($draft)) {
             case NewProductDraft::class:
                 $productLabel = $newProduct->getIdentifier();
+
                 break;
             case PendingProductDraft::class:
                 $product = $draft->getProduct();
                 $productLabel = $product ? $product->getIdentifier() : 'no product id';
+
                 break;
         }
         $data['label'] = $productLabel;

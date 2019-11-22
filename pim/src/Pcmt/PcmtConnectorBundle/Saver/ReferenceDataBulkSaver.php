@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\Saver;
@@ -23,8 +24,7 @@ class ReferenceDataBulkSaver implements BulkSaverInterface, SaverInterface
     public function __construct(
         EntityManagerInterface $em,
         EventDispatcherInterface $eventDispatcher
-    )
-    {
+    ) {
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -32,14 +32,13 @@ class ReferenceDataBulkSaver implements BulkSaverInterface, SaverInterface
     public function saveAll(array $objects, array $options = []): void
     {
         foreach ($objects as $object) {
-
             $this->validateReferenceData($object);
             $this->eventDispatcher->dispatch(StorageEvents::PRE_SAVE, new GenericEvent($object, $options));
             $this->em->persist($object);
         }
         $this->em->flush();
 
-        foreach ($objects as $object){
+        foreach ($objects as $object) {
             $this->eventDispatcher->dispatch(StorageEvents::POST_SAVE, new GenericEvent($object, $options));
         }
 

@@ -11,7 +11,7 @@ class Attribute extends BaseAttribute
     {
         $translated = ($this->getTranslation()) ? $this->getTranslation()->getDescription() : null;
 
-        return ($translated !== '' && $translated !== null) ? $translated : '['.$this->getCode().']';
+        return ('' !== $translated && null !== $translated) ? $translated : '['.$this->getCode().']';
     }
 
     public function setDescription($description)

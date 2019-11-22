@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\JobParameters\DefaultValueProvider;
@@ -8,7 +9,7 @@ use Akeneo\Tool\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface
 
 class XmlReferenceDataDownload implements DefaultValuesProviderInterface
 {
-    /** @var string  */
+    /** @var string */
     protected $fileDirectory;
 
     /** @var string $refDirName */
@@ -21,11 +22,10 @@ class XmlReferenceDataDownload implements DefaultValuesProviderInterface
         array $supportedJobNames,
         string $refDirName,
         string $fileDirectory = null
-    )
-    {
-       $this->supportedJobNames = $supportedJobNames;
-       $this->refDirName = $refDirName;
-       $this->fileDirectory = ($fileDirectory) ?? 'reference_data/';
+    ) {
+        $this->supportedJobNames = $supportedJobNames;
+        $this->refDirName = $refDirName;
+        $this->fileDirectory = ($fileDirectory) ?? 'reference_data/';
     }
 
     public function getDefaultValues(): array
@@ -48,10 +48,10 @@ class XmlReferenceDataDownload implements DefaultValuesProviderInterface
                     'http://apps.gs1.org/GDD/Pages/CLXMLReport.aspx?semanticURN=urn:gs1:gdd:cl:ShippingContainerTypeCode&release=1',
                     'http://apps.gs1.org/GDD/Pages/CLXMLReport.aspx?semanticURN=urn:gs1:gdd:cl:SizeCodeListCode&release=2',
                     'http://apps.gs1.org/GDD/Pages/CLXMLReport.aspx?semanticURN=urn:gs1:gdd:cl:TemperatureQualifierCode&release=2',
-                    'http://apps.gs1.org/GDD/Pages/CLXMLReport.aspx?semanticURN=urn:gs1:gdd:cl:TradeItemUnitDescriptorCode&release=1'
+                    'http://apps.gs1.org/GDD/Pages/CLXMLReport.aspx?semanticURN=urn:gs1:gdd:cl:TradeItemUnitDescriptorCode&release=1',
                 ],
-                'dirPath'         => 'src/Pcmt/PcmtConnectorBundle/Resources/config/' . $this->fileDirectory . $this->refDirName . '/',
-                'filePath'        => null
+                'dirPath' => 'src/Pcmt/PcmtConnectorBundle/Resources/config/' . $this->fileDirectory . $this->refDirName . '/',
+                'filePath' => null,
         ];
     }
 
