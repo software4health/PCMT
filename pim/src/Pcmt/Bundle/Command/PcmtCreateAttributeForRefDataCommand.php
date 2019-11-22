@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Pcmt\Bundle\Command;
 
+use Akeneo\Pim\Structure\Bundle\Doctrine\ORM\Saver\AttributeSaver;
+use Akeneo\Pim\Structure\Component\Factory\AttributeFactory;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Akeneo\Pim\Structure\Bundle\Doctrine\ORM\Saver\AttributeSaver;
-use Akeneo\Pim\Structure\Component\Factory\AttributeFactory;
 
 class PcmtCreateAttributeForRefDataCommand extends ContainerAwareCommand
 {

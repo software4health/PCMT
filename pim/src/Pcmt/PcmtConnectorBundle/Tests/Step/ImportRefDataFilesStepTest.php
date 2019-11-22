@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PcmtPcmtConnectorBundle\Tests\Step;
 
+use Akeneo\Tool\Bundle\BatchBundle\Job\DoctrineJobRepository;
 use Akeneo\Tool\Component\Batch\Job\JobRepositoryInterface;
 use Akeneo\Tool\Component\Batch\Model\JobExecution;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
@@ -12,10 +13,9 @@ use Pcmt\PcmtConnectorBundle\Processor\PcmtReferenceDataProcessor;
 use Pcmt\PcmtConnectorBundle\Reader\File\GS1ReferenceDataXmlReader;
 use Pcmt\PcmtConnectorBundle\Reader\File\ReferenceDataXmlReader;
 use Pcmt\PcmtConnectorBundle\Writer\ReferenceDataWriter;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject as Mock;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Akeneo\Tool\Bundle\BatchBundle\Job\DoctrineJobRepository;
 
 class ImportRefDataFilesStepTest extends TestCase
 {

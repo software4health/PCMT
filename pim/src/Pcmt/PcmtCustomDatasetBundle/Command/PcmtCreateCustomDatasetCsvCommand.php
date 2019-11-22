@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Pcmt\PcmtCustomDatasetBundle\Command;
 
 use Pcmt\PcmtCustomDatasetBundle\Helper\ReadFilter;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
+use PhpOffice\PhpSpreadsheet\Writer\Csv as CsvWriter;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use PhpOffice\PhpSpreadsheet\Writer\Csv as CsvWriter;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
 
 /**
  * Command that we can use in terminal to create csv files from xlsx files

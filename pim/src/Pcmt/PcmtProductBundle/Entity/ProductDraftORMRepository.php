@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Entity;
 
+use Akeneo\UserManagement\Component\Model\UserInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Intl\Exception\NotImplementedException;
-use Akeneo\UserManagement\Component\Model\UserInterface;
 
 class ProductDraftORMRepository extends EntityRepository implements DraftRepositoryInterface
 {

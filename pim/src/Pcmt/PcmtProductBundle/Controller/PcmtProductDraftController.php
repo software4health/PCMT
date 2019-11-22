@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Pcmt\PcmtProductBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
+use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Exception\DraftViolationException;
+use Pcmt\PcmtProductBundle\Normalizer\DraftNormalizer;
 use Pcmt\PcmtProductBundle\Service\DraftFacade;
 use Pcmt\PcmtProductBundle\Service\DraftStatusListService;
 use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
-use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
-use Pcmt\PcmtProductBundle\Normalizer\DraftNormalizer;
-use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;

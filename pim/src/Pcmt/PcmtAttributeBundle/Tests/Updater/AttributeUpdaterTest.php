@@ -10,12 +10,12 @@ use Akeneo\Pim\Structure\Component\Repository\AttributeGroupRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use Akeneo\Tool\Component\StorageUtils\Exception\UnknownPropertyException;
+use Pcmt\PcmtAttributeBundle\Entity\Attribute;
 use Pcmt\PcmtAttributeBundle\Extension\PcmtAttributeManager;
 use Pcmt\PcmtAttributeBundle\Updater\AttributeUpdater;
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\MockObject\MockObject as Mock;
 use Pcmt\PcmtTranslationBundle\Updater\TranslatableUpdater;
-use Pcmt\PcmtAttributeBundle\Entity\Attribute;
+use PHPUnit\Framework\MockObject\MockObject as Mock;
+use PHPUnit\Framework\TestCase;
 
 class AttributeUpdaterTest extends TestCase
 {
