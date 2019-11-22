@@ -22,9 +22,10 @@ use Akeneo\Tool\Component\StorageUtils\Repository\CursorableRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
+use Pcmt\PcmtAttributeBundle\Event\ProductFetchEvent;
 use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
-use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
+use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -34,7 +35,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Pcmt\PcmtAttributeBundle\Event\ProductFetchEvent;
 
 /**
  * This is skeleton of the ProductDraftController as it will serve both Drafts and Products // -it can change and be refactored

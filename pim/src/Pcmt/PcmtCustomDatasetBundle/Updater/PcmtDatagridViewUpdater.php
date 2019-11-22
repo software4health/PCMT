@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtCustomDatasetBundle\Updater;
 
-use Oro\Bundle\PimDataGridBundle\Updater\DatagridViewUpdater;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Oro\Bundle\PimDataGridBundle\Entity\DatagridView;
+use Oro\Bundle\PimDataGridBundle\Updater\DatagridViewUpdater;
 
 /**
  * Update the datagrid view properties

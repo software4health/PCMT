@@ -3,8 +3,8 @@
 namespace Pcmt\PcmtAttributeBundle\Normalizer\Standard;
 
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Akeneo\Pim\Structure\Component\Normalizer\Standard\AttributeNormalizer as BaseAttributeNormalizer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class AttributeNormalizer extends BaseAttributeNormalizer
 {

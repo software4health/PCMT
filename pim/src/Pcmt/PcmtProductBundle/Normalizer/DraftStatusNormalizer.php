@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Normalizer;
 
+use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Entity\DraftStatus;
 use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
-use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 

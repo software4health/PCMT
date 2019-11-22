@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Entity;
 
-use Akeneo\UserManagement\Component\Model\UserInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\UserManagement\Component\Model\UserInterface;
 
 class PendingProductDraft extends AbstractProductDraft
 {

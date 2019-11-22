@@ -4,16 +4,16 @@ namespace Pcmt\PcmtAttributeBundle\Updater;
 
 use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
 use Akeneo\Pim\Structure\Component\AttributeTypeRegistry;
+use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Pim\Structure\Component\Repository\AttributeGroupRepositoryInterface;
+use Akeneo\Pim\Structure\Component\Updater\AttributeUpdater as BaseAttributeUpdater;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use Akeneo\Tool\Component\StorageUtils\Exception\UnknownPropertyException;
 use Doctrine\Common\Util\ClassUtils;
-use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
-use Akeneo\Pim\Structure\Component\Updater\AttributeUpdater as BaseAttributeUpdater;
-use Pcmt\PcmtTranslationBundle\Updater\TranslatableUpdater;
-use Pcmt\PcmtAttributeBundle\Extension\PcmtAttributeManager;
 use Pcmt\PcmtAttributeBundle\Entity\ConcatenatedAttribute;
+use Pcmt\PcmtAttributeBundle\Extension\PcmtAttributeManager;
+use Pcmt\PcmtTranslationBundle\Updater\TranslatableUpdater;
 
 /**
  * @override: Handle localizable attribute description when updating an attribute

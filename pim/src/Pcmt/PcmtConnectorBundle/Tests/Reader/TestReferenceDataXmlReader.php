@@ -9,9 +9,9 @@ use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Pcmt\PcmtConnectorBundle\Reader\File\GS1ReferenceDataXmlReader;
 use Pcmt\PcmtConnectorBundle\Reader\File\ReferenceDataXmlReader;
 use Pcmt\PcmtConnectorBundle\Util\Adapter\FileGetContentsWrapper;
+use PHPUnit\Framework\MockObject\MockObject as Mock;
 use PHPUnit\Framework\TestCase;
 use Sabre\Xml\Service;
-use PHPUnit\Framework\MockObject\MockObject as Mock;
 
 class TestReferenceDataXmlReader extends TestCase
 {
