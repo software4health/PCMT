@@ -44,7 +44,7 @@ abstract class AbstractProductDraft implements ProductDraftInterface
     // keep product-related data here.
     // like family, groups etc. all the fields. - it helps rebuild product from new draft.
     /** @var array */
-    protected $productData;
+    protected $productData = [];
 
     /** @var ProductInterface|null */
     protected $product;

@@ -46,7 +46,10 @@ class ConcatenatedAttributeProductValuesUpdater implements ObjectUpdaterInterfac
                 if (!$hasData) {
                     return;
                 }
-                $options = ['locale' => $data['locale'], 'scope' => $data['scope']];
+                $options = [
+                    'locale' => $data['locale'],
+                    'scope' => $data['scope'],
+                ];
                 $this->propertySetter->setData($entityWithValues, $code, $data['data'], $options);
             }
         }

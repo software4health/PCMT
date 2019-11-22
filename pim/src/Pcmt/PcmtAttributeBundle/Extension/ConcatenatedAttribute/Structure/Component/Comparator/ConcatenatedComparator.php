@@ -9,7 +9,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Comparator\ComparatorInterface;
 class ConcatenatedComparator implements ComparatorInterface
 {
     /** @var array */
-    protected $types;
+    protected $types = [];
 
     public function __construct(array $types)
     {
@@ -23,7 +23,11 @@ class ConcatenatedComparator implements ComparatorInterface
 
     public function compare($data, $originals): ?array
     {
-        $default = ['locale' => null, 'scope' => null, 'data' => null];
+        $default = [
+            'locale' => null,
+            'scope' => null,
+            'data' => null,
+        ];
         $originals = array_merge($default, $originals);
 
         return (string) $data['data'] === (string) $originals['data'] ? $data : null;

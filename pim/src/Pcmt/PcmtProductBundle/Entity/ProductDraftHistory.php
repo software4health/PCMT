@@ -18,7 +18,7 @@ class ProductDraftHistory implements DraftHistoryInterface
     protected $draft;
 
     /** @var array */
-    protected $changeSet;
+    protected $changeSet = [];
 
     /** @var \DateTime */
     protected $createdAt;

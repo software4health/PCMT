@@ -15,8 +15,12 @@ class SupplierAttributeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('code', TextType::class, ['constraints' => [new NotBlank()]])
-            ->add('name', TextType::class, ['constraints' => [new NotBlank()]]);
+        $builder->add('code', TextType::class, [
+            'constraints' => [new NotBlank()],
+        ])
+            ->add('name', TextType::class, [
+                'constraints' => [new NotBlank()],
+            ]);
         parent::buildForm($builder, $options);
     }
 
