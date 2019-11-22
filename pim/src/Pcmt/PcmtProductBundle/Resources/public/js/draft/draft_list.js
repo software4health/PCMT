@@ -10,9 +10,10 @@ define(
         'routing',
         'pcmt/product/template/draft-list',
         'pim/dialog',
-        'pim/security-context'
+        'pim/security-context',
+        'pim/router'
     ],
-    function (BaseForm, Backbone, $, _, __, Routing, template, Dialog, SecurityContext) {
+    function (BaseForm, Backbone, $, _, __, Routing, template, Dialog, SecurityContext, Router) {
 
         return BaseForm.extend({
             events: {
@@ -21,6 +22,7 @@ define(
                 "click .draft-status-choice": "statusChoiceChanged",
                 "click .draft-reject": "rejectDraftClicked",
                 "click .draft-approve": "approveDraftClicked",
+                "click .draft-edit": "editDraftClicked",
             },
             configure: function () {
                 this.loadParams();
@@ -58,6 +60,11 @@ define(
                     'ok',
                     'Approve'
                 );
+            },
+            editDraftClicked: function (ev) {
+                var draftId = ev.currentTarget.dataset.draftId;
+
+                Router.navigate('/' + Routing.generate('pcmt_product_drafts_edit', {id: draftId}), true);
             },
             approveDraft: function (draftId) {
                 $.ajax({
@@ -151,7 +158,8 @@ define(
                     _: _,
                     __: __,
                     rejectPermission: SecurityContext.isGranted('pcmt_permission_drafts_reject'),
-                    approvePermission: SecurityContext.isGranted('pcmt_permission_drafts_approve')
+                    approvePermission: SecurityContext.isGranted('pcmt_permission_drafts_approve'),
+                    editPermission: SecurityContext.isGranted('pcmt_permission_drafts_edit')
                 }));
                 $('#draft_status_choice_' + model.chosenStatus.id).addClass('AknDropdown-menuLink--active active');
             }
