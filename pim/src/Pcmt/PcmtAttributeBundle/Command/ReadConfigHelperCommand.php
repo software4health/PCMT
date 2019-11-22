@@ -29,8 +29,8 @@ class ReadConfigHelperCommand extends ContainerAwareCommand
             $input = $fileGetContentsWrapper->fileGetContents($filePath);
 
             $parser->elementMap = [
-                    '{http://www.w3.org/2001/XMLSchema-instance}urn' => 'Sabre\Xml\Element\XmlElement',
-                    'code' => 'Sabre\Xml\Element\KeyValue', ];
+                '{http://www.w3.org/2001/XMLSchema-instance}urn' => 'Sabre\Xml\Element\XmlElement',
+                'code' => 'Sabre\Xml\Element\KeyValue', ];
 
             $output = $parser->parse($input);
 

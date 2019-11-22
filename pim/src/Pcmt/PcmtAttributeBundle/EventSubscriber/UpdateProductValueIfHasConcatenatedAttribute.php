@@ -83,12 +83,12 @@ final class UpdateProductValueIfHasConcatenatedAttribute implements EventSubscri
     public static function getSubscribedEvents(): array
     {
         return [
-          ProductFetchEvent::class => [
-              ['onProductFetch', 10],
-          ],
-          ProductModelFetchEvent::class => [
-              ['onProductModelFetch', 10],
-          ],
+            ProductFetchEvent::class => [
+                ['onProductFetch', 10],
+            ],
+            ProductModelFetchEvent::class => [
+                ['onProductModelFetch', 10],
+            ],
         ];
     }
 
@@ -113,7 +113,7 @@ final class UpdateProductValueIfHasConcatenatedAttribute implements EventSubscri
             foreach ($memberAttributes as $memberAttribute) {
                 if ($product->hasAttribute($memberAttribute->getCode())) {
                     $value = $product->getValue($memberAttribute->getCode());
-                    if (!(null == $value || '' == $value || [] == $value)) {
+                    if (!(null === $value || '' === $value || [] === $value)) {
                         $concatenatedValue[] = $value->__toString();
                     } else {
                         $concatenatedValue[] = $memberAttribute->getCode() . ' ' . self::IS_EMPTY;
@@ -155,7 +155,7 @@ final class UpdateProductValueIfHasConcatenatedAttribute implements EventSubscri
             foreach ($memberAttributes as $memberAttribute) {
                 if ($productModel->hasAttribute($memberAttribute->getCode())) {
                     $value = $productModel->getValue($memberAttribute->getCode());
-                    if (!(null == $value || '' == $value || [] == $value)) {
+                    if (!(null === $value || '' === $value || [] === $value)) {
                         $concatenatedValue[] = $value->__toString();
                     } else {
                         $concatenatedValue[] = $memberAttribute->getCode() . ' ' . self::IS_EMPTY;

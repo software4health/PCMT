@@ -53,7 +53,7 @@ class AttributeChangesService
 
     private function createChange($attribute, $value, $previousValue): void
     {
-        if ($value == $previousValue) {
+        if ($value === $previousValue) {
             return;
         }
         $this->changes[] = new AttributeChange(

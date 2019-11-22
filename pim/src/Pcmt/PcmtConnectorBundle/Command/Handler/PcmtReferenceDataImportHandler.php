@@ -52,7 +52,7 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
                 $arguments['--config'] = sprintf('{"filePath": "%s"}', $totalPath);
                 $returnCode = $this->executeCommand($output, $arguments);
 
-                if (0 == $returnCode) {
+                if (0 === $returnCode) {
                     $this->fileIterator->next();
                 }
             }

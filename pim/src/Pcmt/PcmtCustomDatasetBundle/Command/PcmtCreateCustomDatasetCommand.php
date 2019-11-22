@@ -42,19 +42,19 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
         $bar->setFormat('verbose');
         $bar->start();
         foreach ($importList as $import) {
-            if (0 == strncasecmp($import['fileName'], '/tmp/', 5)) {
+            if (0 === strncasecmp($import['fileName'], '/tmp/', 5)) {
                 $currentFilePath = $import['fileName'];
             } else {
                 $currentFilePath = $this->filesFolderPath.$import['fileName'];
             }
             $totalPath = str_replace('/', '\/', $currentFilePath);
             $arguments = [
-        'code' => $import['code'],
-        '--no-debug' => true,
-        '--no-log' => true,
-        '-v' => true,
-        '--config' => sprintf('{"filePath": "%s"}', $totalPath),
-      ];
+                'code' => $import['code'],
+                '--no-debug' => true,
+                '--no-log' => true,
+                '-v' => true,
+                '--config' => sprintf('{"filePath": "%s"}', $totalPath),
+            ];
             $output->writeln("\nnow: ".$import['code'].'...');
             $returnCode = $this->executeCommand($output, $arguments);
             $bar->advance();
@@ -74,7 +74,7 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
         $worksheet = $spreadsheet->getActiveSheet();
         $highestColumn = $worksheet->getHighestColumn();
         $highestColumn++;
-        for ($col = 'A'; $col != $highestColumn; ++$col) {
+        for ($col = 'A'; $col !== $highestColumn; ++$col) {
             $value = $worksheet->getCell($col . '1')->getFormattedValue();
             if ('attributes' === $value) {
                 $columnToFilter = $col;
@@ -108,7 +108,7 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
     private function removeTmpFile(): void
     {
         foreach ($this->getImportList() as $import) {
-            if (0 == strncasecmp($import['fileName'], '/tmp/', 5)) {
+            if (0 === strncasecmp($import['fileName'], '/tmp/', 5)) {
                 unlink($import['fileName']) or die("Couldn't delete file");
             }
         }
@@ -117,17 +117,17 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
     private function getImportList(): array
     {
         return [
-      ['code' => 'xlsx_attribute_group_import', 'fileName' => $this->tmpAttributeGroupsFile],
-      ['code' => 'xlsx_category_import', 'fileName' => '1_categories.xlsx'],
-      ['code' => 'xlsx_attribute_import', 'fileName' => '3_attributes.xlsx'],
-      ['code' => 'xlsx_attribute_option_import', 'fileName' => '4_attribute_options.xlsx'],
-      ['code' => 'xlsx_family_import', 'fileName' => '5_families.xlsx'],
-      ['code' => 'xlsx_family_variant_import', 'fileName' => '6_family_variants.xlsx'],
-      ['code' => 'xlsx_product_model_import', 'fileName' => '7_product_models.xlsx'],
-      ['code' => 'pcmt_xlsx_product_import', 'fileName' => '8_products.xlsx'],
-      ['code' => 'pcmt_xlsx_product_import', 'fileName' => '8_products_gs1.xlsx'],
-      ['code' => 'import_map_suppliers', 'fileName' => '9_masterdata_entries.xlsx'],
-      ['code' => 'pcmt_xlsx_datagrid_view_import', 'fileName' => '11_datagrid_view.xlsx'],
-    ];
+            ['code' => 'xlsx_attribute_group_import', 'fileName' => $this->tmpAttributeGroupsFile],
+            ['code' => 'xlsx_category_import', 'fileName' => '1_categories.xlsx'],
+            ['code' => 'xlsx_attribute_import', 'fileName' => '3_attributes.xlsx'],
+            ['code' => 'xlsx_attribute_option_import', 'fileName' => '4_attribute_options.xlsx'],
+            ['code' => 'xlsx_family_import', 'fileName' => '5_families.xlsx'],
+            ['code' => 'xlsx_family_variant_import', 'fileName' => '6_family_variants.xlsx'],
+            ['code' => 'xlsx_product_model_import', 'fileName' => '7_product_models.xlsx'],
+            ['code' => 'pcmt_xlsx_product_import', 'fileName' => '8_products.xlsx'],
+            ['code' => 'pcmt_xlsx_product_import', 'fileName' => '8_products_gs1.xlsx'],
+            ['code' => 'import_map_suppliers', 'fileName' => '9_masterdata_entries.xlsx'],
+            ['code' => 'pcmt_xlsx_datagrid_view_import', 'fileName' => '11_datagrid_view.xlsx'],
+        ];
     }
 }

@@ -21,7 +21,7 @@ class ReadFilter implements IReadFilter
      */
     public function readCell($column, $row, $worksheetName = ''): bool
     {
-        if (1 == $row || $column !== $this->columnToFilter) {
+        if (1 === $row || $column !== $this->columnToFilter) {
             return true;
         }
 

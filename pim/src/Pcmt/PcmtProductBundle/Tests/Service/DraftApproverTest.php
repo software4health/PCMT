@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DraftApproverTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -60,6 +60,6 @@ class DraftApproverTest extends TestCase
 
         $service->approve($draft);
 
-        $this->assertEquals(AbstractProductDraft::STATUS_APPROVED, $draft->getStatus());
+        $this->assertSame(AbstractProductDraft::STATUS_APPROVED, $draft->getStatus());
     }
 }

@@ -27,8 +27,8 @@ class TranslationNormalizer extends BaseTranslationNormalizer
     {
         $context = array_merge(
             [
-            'property' => 'description',
-            'locales' => [],
+                'property' => 'description',
+                'locales' => [],
             ],
             $context
         );
@@ -44,8 +44,8 @@ class TranslationNormalizer extends BaseTranslationNormalizer
             }
 
             if (empty($context['locales']) || in_array($translation->getLocale(), $context['locales'])) {
-                $translations[$translation->getLocale()] = '' === $translation->$method(
-                ) ? null : $translation->$method();
+                $translations[$translation->getLocale()] = '' === $translation->{$method}(
+                ) ? null : $translation->{$method}();
             }
         }
 

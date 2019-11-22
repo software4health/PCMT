@@ -64,7 +64,7 @@ class PcmtCreateCustomDatasetCsvCommand extends ContainerAwareCommand
         $worksheet = $spreadsheet->getActiveSheet();
         $highestColumn = $worksheet->getHighestColumn();
         $highestColumn++;
-        for ($col = 'A'; $col != $highestColumn; ++$col) {
+        for ($col = 'A'; $col !== $highestColumn; ++$col) {
             $value = $worksheet->getCell($col . '1')->getFormattedValue();
             if ('attributes' === $value) {
                 $columnToFilter = $col;
@@ -74,11 +74,11 @@ class PcmtCreateCustomDatasetCsvCommand extends ContainerAwareCommand
         }
         $filterSubset = new ReadFilter($columnToFilter);
         $output->writeln([
-      '',
-      '--------------------------------',
-      'Column to filter in 2_attribute_groups.xlsx: '.$columnToFilter,
-      '--------------------------------',
-    ]);
+            '',
+            '--------------------------------',
+            'Column to filter in 2_attribute_groups.xlsx: '.$columnToFilter,
+            '--------------------------------',
+        ]);
         $reader->setReadFilter($filterSubset);
         $spreadsheet = $reader->load($this->filesFolderPath.$fileName.'.xlsx');
         $csv_writer = new CsvWriter($spreadsheet);
@@ -99,15 +99,15 @@ class PcmtCreateCustomDatasetCsvCommand extends ContainerAwareCommand
     private function getFileNameList(): array
     {
         return [
-      '1_categories',
-      '3_attributes',
-      '4_attribute_options',
-      '5_families',
-      '6_family_variants',
-      '7_product_models',
-      '8_products',
-      '8_products_gs1',
-      '9_masterdata_entries',
-    ];
+            '1_categories',
+            '3_attributes',
+            '4_attribute_options',
+            '5_families',
+            '6_family_variants',
+            '7_product_models',
+            '8_products',
+            '8_products_gs1',
+            '9_masterdata_entries',
+        ];
     }
 }
