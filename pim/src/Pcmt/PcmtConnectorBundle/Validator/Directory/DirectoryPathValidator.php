@@ -28,12 +28,12 @@ class DirectoryPathValidator
         }
 
         if (!is_array($value)) {
-            return strpos($configuration[$key], $value);
+            return mb_strpos($configuration[$key], $value);
         }
 
         if (is_array($value)) {
             foreach ($configuration[$key] as $configValue) {
-                if (strpos($configValue, $value)) {
+                if (mb_strpos($configValue, $value)) {
                     return true;
                 }
             }

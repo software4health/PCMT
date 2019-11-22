@@ -160,7 +160,7 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
 
     public function validateFileExtension(string $filePath): void
     {
-        if (!('xml' === substr($filePath, -3))) {
+        if (!('xml' === mb_substr($filePath, -3))) {
             throw new \InvalidArgumentException('Invalid file extension');
         }
     }

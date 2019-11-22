@@ -24,8 +24,7 @@ services:
 
     PhpCsFixer\Fixer\ClassNotation\FinalInternalClassFixer: ~
 
-#    mb changes
-#    PhpCsFixer\Fixer\Alias\MbStrFunctionsFixer: ~
+    PhpCsFixer\Fixer\Alias\MbStrFunctionsFixer: ~
 
     PhpCsFixer\Fixer\Basic\Psr0Fixer: ~
     PhpCsFixer\Fixer\Basic\Psr4Fixer: ~
@@ -73,7 +72,7 @@ services:
     PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer: ~
     PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer: ~
 
-#    Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff: ~
+    Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff: ~
     PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer:
         order:
             - 'use_trait'

@@ -51,12 +51,12 @@ class Attribute extends BaseAttribute
      */
     protected function convertFields($field, $booleanFields, $data, $convertedItem): array
     {
-        if (false !== strpos($field, 'label-', 0)) {
+        if (false !== mb_strpos($field, 'label-', 0)) {
             $labelTokens = explode('-', $field);
             $labelLocale = $labelTokens[1];
             $convertedItem['labels'][$labelLocale] = $data;
         // Add @DND
-        } elseif (false !== strpos($field, 'description-', 0)) {
+        } elseif (false !== mb_strpos($field, 'description-', 0)) {
             $descriptionTokens = explode('-', $field);
             $descriptionLocale = $descriptionTokens[1];
             $convertedItem['descriptions'][$descriptionLocale] = $data; // convert all localizable values of  attribute description field

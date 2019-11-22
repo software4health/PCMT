@@ -34,7 +34,7 @@ class HashFirstCellStep extends AbstractStep
     {
         $parameters = $this->stepExecution->getJobParameters();
         $filePath = $parameters->get('filePath');
-        if (false !== strpos($filePath, '%')) {
+        if (false !== mb_strpos($filePath, '%')) {
             $jobExecution = $this->stepExecution->getJobExecution();
             $datetime = $jobExecution->getStartTime()->format($this->datetimeFormat);
             $defaultPlaceholders = [
