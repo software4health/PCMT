@@ -24,12 +24,12 @@ class TranslationNormalizer extends BaseTranslationNormalizer
     public function normalizeDescription($object, array $context = [])
     {
         $context = array_merge(
-      [
-        'property' => 'description',
-        'locales' => [],
-      ],
-      $context
-    );
+            [
+            'property' => 'description',
+            'locales' => [],
+            ],
+            $context
+        );
 
         $translations = array_fill_keys($context['locales'], null);
         $method = sprintf('get%s', ucfirst($context['property']));
@@ -37,13 +37,13 @@ class TranslationNormalizer extends BaseTranslationNormalizer
         foreach ($object->getTranslations() as $translation) {
             if (false === method_exists($translation, $method)) {
                 throw new \LogicException(
-          sprintf("Class %s doesn't provide method %s", get_class($translation), $method)
-        );
+                    sprintf("Class %s doesn't provide method %s", get_class($translation), $method)
+                );
             }
 
             if (empty($context['locales']) || in_array($translation->getLocale(), $context['locales'])) {
                 $translations[$translation->getLocale()] = '' === $translation->$method(
-        ) ? null : $translation->$method();
+                ) ? null : $translation->$method();
             }
         }
 

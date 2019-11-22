@@ -31,4 +31,3 @@ class XmlReferenceDataImport implements ConstraintCollectionProviderInterface
         return in_array($job->getName(), $this->supportedJobNames);
     }
 }
-

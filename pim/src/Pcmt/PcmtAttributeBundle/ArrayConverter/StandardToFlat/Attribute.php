@@ -29,7 +29,7 @@ class Attribute extends BaseAttribute
             $convertedItem[$labelKey] = $label;
         }
 
-        break;
+                break;
       // Add @DND
       case 'descriptions':
         foreach ($data as $localeCode => $description) {
@@ -37,14 +37,14 @@ class Attribute extends BaseAttribute
             $convertedItem[$descriptionKey] = $description; // convert all localizable values of  attribute description field
         }
 
-        break;
+                break;
       // / Add @DND
       case 'options':
       case 'available_locales':
       case 'allowed_extensions':
         $convertedItem[$property] = implode(',', $data);
 
-        break;
+                break;
       case in_array($property, $this->booleanFields):
         if (null === $data) {
             $convertedItem[$property] = '';
@@ -54,7 +54,7 @@ class Attribute extends BaseAttribute
 
         $convertedItem[$property] = (true === $data) ? '1' : '0';
 
-        break;
+                break;
       default:
         $convertedItem[$property] = (string) $data;
     }

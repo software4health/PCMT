@@ -29,15 +29,16 @@ class AttributeNormalizer extends BaseAttributeNormalizer
      * @param array               $properties
      */
     public function __construct(
-    NormalizerInterface $concatenatedNormalizer,
-    NormalizerInterface $translationNormalizer,
-    NormalizerInterface $dateTimeNormalizer,
-    array $properties
-  ) {
+        NormalizerInterface $concatenatedNormalizer,
+        NormalizerInterface $translationNormalizer,
+        NormalizerInterface $dateTimeNormalizer,
+        array $properties
+    ) {
         parent::__construct(
-      $translationNormalizer,
-      $dateTimeNormalizer,
-      $properties);
+            $translationNormalizer,
+            $dateTimeNormalizer,
+            $properties
+        );
         $this->concatenatedAttributesNormalizer = $concatenatedNormalizer;
         $this->translationNormalizer = $translationNormalizer;
         $this->dateTimeNormalizer = $dateTimeNormalizer;

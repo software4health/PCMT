@@ -60,16 +60,16 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
     private $mediaStorer;
 
     public function __construct(
-    IdentifiableObjectRepositoryInterface $repository,
-    FindProductToImport $findProductToImport,
-    AddParent $addParent,
-    ObjectUpdaterInterface $updater,
-    ValidatorInterface $validator,
-    ObjectDetacherInterface $detacher,
-    FilterInterface $productFilter,
-    AttributeFilterInterface $productAttributeFilter,
-    MediaStorer $mediaStorer
-  ) {
+        IdentifiableObjectRepositoryInterface $repository,
+        FindProductToImport $findProductToImport,
+        AddParent $addParent,
+        ObjectUpdaterInterface $updater,
+        ValidatorInterface $validator,
+        ObjectDetacherInterface $detacher,
+        FilterInterface $productFilter,
+        AttributeFilterInterface $productAttributeFilter,
+        MediaStorer $mediaStorer
+    ) {
         parent::__construct($repository);
 
         $this->findProductToImport = $findProductToImport;

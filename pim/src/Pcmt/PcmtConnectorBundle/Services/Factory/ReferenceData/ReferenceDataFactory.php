@@ -28,41 +28,41 @@ class ReferenceDataFactory
     {
         switch ($className) {
                 case 'AdditionalTradeItemClassificationCodeListCode':
-                    return  AdditionalTradeItemClassificationCodeListCode::class;
+                return  AdditionalTradeItemClassificationCodeListCode::class;
                 case 'AdditionalTradeItemIdentificationTypeCode':
-                    return  AdditionalTradeItemIdentificationTypeCode::class;
+                return  AdditionalTradeItemIdentificationTypeCode::class;
                 case 'ColourCodeListCode':
-                    return ColourCodeListCode::class;
+                return ColourCodeListCode::class;
                 case 'CountryCode':
-                    return  CountryCode::class;
+                return  CountryCode::class;
                 case 'DataCarrierTypeCode':
-                    return  DataCarrierTypeCode::class;
+                return  DataCarrierTypeCode::class;
                 case 'GS1TradeItemIdentificationKeyTypeCode':
-                    return  Gs1TradeItemIdentificationKeyCode::class;
+                return  Gs1TradeItemIdentificationKeyCode::class;
                 case 'ImportClassificationTypeCode':
-                    return  ImportClassificationTypeCode::class;
+                return  ImportClassificationTypeCode::class;
                 case 'MeasurementUnitCode_GDSN':
-                    return  GDSNMeasurementUnitCode::class;
+                return  GDSNMeasurementUnitCode::class;
                 case 'NonfoodIngredientOfConcernCode':
-                    return  NonfoodIngredientOfConcernCode::class;
+                return  NonfoodIngredientOfConcernCode::class;
                 case 'PackageTypeCode':
-                    return  PackageTypeCode::class;
+                return  PackageTypeCode::class;
                 case 'PlatformTypeCode':
-                    return  PlatformTypeCode::class;
+                return  PlatformTypeCode::class;
                 case 'ReferencedFileTypeCode':
-                    return  ReferencedFileTypeCode::class;
+                return  ReferencedFileTypeCode::class;
                 case 'ShippingContainerTypeCode':
-                    return  ShippingContainerTypeCode::class;
+                return  ShippingContainerTypeCode::class;
                 case 'SizeCodeListCode':
-                    return  SizeCodeListCode::class;
+                return  SizeCodeListCode::class;
                 case 'TemperatureQualifierCode':
-                    return  TemperatureQualifierCode::class;
+                return  TemperatureQualifierCode::class;
                 case 'TradeItemUnitDescriptorCode':
-                    return TradeItemUnitDescriptorCode::class;
+                return TradeItemUnitDescriptorCode::class;
                 case 'RegulationTypeCode':
-                    return RegulationTypeCode::class;
+                return RegulationTypeCode::class;
                 default:
-                    return null;
+                return null;
             }
     }
 }

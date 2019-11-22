@@ -16,7 +16,8 @@ class PcmtFamilyVariantRepository extends FamilyVariantRepository
             ->join('fv.family', 'f')
             ->where(
                 $qb->expr()->eq(
-                    'fv', ':familyVariant'
+                    'fv',
+                    ':familyVariant'
                 )
             );
         $qb->setParameters([

@@ -146,7 +146,8 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
             function ($code, $key) use ($delimiter, &$valueReindexed) {
                 $key = ltrim($key, $delimiter);
                 $valueReindexed[$key] = $code;
-            });
+            }
+        );
 
         $entityModel['class'] = $entityType;
         $entityModel['version'] = ($entityVersion) ?? null;

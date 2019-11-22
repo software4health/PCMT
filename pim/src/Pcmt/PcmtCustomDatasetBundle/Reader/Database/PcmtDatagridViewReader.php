@@ -23,8 +23,8 @@ class PcmtDatagridViewReader extends AbstractReader implements ItemReaderInterfa
     protected $datagridViewRepository;
 
     public function __construct(
-    DatagridViewRepository $datagridViewRepository
-  ) {
+        DatagridViewRepository $datagridViewRepository
+    ) {
         $this->datagridViewRepository = $datagridViewRepository;
     }
 

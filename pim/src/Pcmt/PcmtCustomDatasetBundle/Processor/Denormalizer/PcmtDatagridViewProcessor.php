@@ -46,12 +46,12 @@ class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcess
      * @param ObjectDetacherInterface $objectDetacher
      */
     public function __construct(
-    DatagridViewRepository $repository,
-    SimpleFactoryInterface $factory,
-    ObjectUpdaterInterface $updater,
-    ValidatorInterface $validator,
-    ObjectDetacherInterface $objectDetacher
-  ) {
+        DatagridViewRepository $repository,
+        SimpleFactoryInterface $factory,
+        ObjectUpdaterInterface $updater,
+        ValidatorInterface $validator,
+        ObjectDetacherInterface $objectDetacher
+    ) {
         $this->repository = $repository;
         $this->factory = $factory;
         $this->updater = $updater;
@@ -162,10 +162,10 @@ class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcess
         foreach ($properties as $property) {
             if (!isset($item[$property])) {
                 throw new MissingIdentifierException(sprintf(
-          'Missing identifier column "%s". Columns found: %s.',
-          $property,
-          implode(', ', array_keys($item))
-        ));
+                    'Missing identifier column "%s". Columns found: %s.',
+                    $property,
+                    implode(', ', array_keys($item))
+                ));
             }
             $references[] = $item[$property];
         }
