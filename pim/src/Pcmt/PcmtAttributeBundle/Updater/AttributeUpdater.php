@@ -71,7 +71,6 @@ class AttributeUpdater extends BaseAttributeUpdater
      * Validate the data type of a field.
      *
      * @param string $field
-     * @param mixed  $data
      *
      * @throws InvalidPropertyTypeException
      * @throws UnknownPropertyException
@@ -133,9 +132,7 @@ class AttributeUpdater extends BaseAttributeUpdater
     }
 
     /**
-     * @param AttributeInterface $attribute
-     * @param string             $field
-     * @param mixed              $data
+     * @param string $field
      */
     protected function setData(AttributeInterface $attribute, $field, $data): void
     {

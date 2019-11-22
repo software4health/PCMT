@@ -49,7 +49,7 @@ class DraftApproverTest extends TestCase
 
         $attribute1 = 'attribute1';
         $productData = [
-            $attribute1 => 'NEW',
+            $attribute1  => 'NEW',
             'attribute2' => 123,
         ];
         $author = new User();

@@ -6,6 +6,6 @@ namespace Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Com
 
 final class PcmtAtributeTypes
 {
-    const CONCATENATED_FIELDS = 'pcmt_catalog_concatenated';
-    const BACKEND_TYPE_CONCATENATED = 'concatenated';
+    public const CONCATENATED_FIELDS = 'pcmt_catalog_concatenated';
+    public const BACKEND_TYPE_CONCATENATED = 'concatenated';
 }

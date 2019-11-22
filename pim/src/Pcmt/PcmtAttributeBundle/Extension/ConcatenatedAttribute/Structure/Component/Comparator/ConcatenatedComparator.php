@@ -25,8 +25,8 @@ class ConcatenatedComparator implements ComparatorInterface
     {
         $default = [
             'locale' => null,
-            'scope' => null,
-            'data' => null,
+            'scope'  => null,
+            'data'   => null,
         ];
         $originals = array_merge($default, $originals);
 

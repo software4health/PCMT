@@ -21,10 +21,6 @@ use Akeneo\Tool\Component\Localization\TranslatableUpdater as BaseTranslatableUp
  */
 class TranslatableUpdater extends BaseTranslatableUpdater
 {
-    /**
-     * @param TranslatableInterface $object
-     * @param array                 $data
-     */
     public function update(TranslatableInterface $object, array $data): void
     {
         foreach ($data as $localeCode => $label) {
@@ -43,10 +39,6 @@ class TranslatableUpdater extends BaseTranslatableUpdater
         }
     }
 
-    /**
-     * @param TranslatableInterface $object
-     * @param array                 $data
-     */
     public function updateDescription(TranslatableInterface $object, array $data): void
     {
         // Add @DND
@@ -67,8 +59,6 @@ class TranslatableUpdater extends BaseTranslatableUpdater
 
     /**
      * Check the database row, then remove it if both label and description fields are null
-     *
-     * @param TranslatableInterface $object
      */
     public function checkTranslationValues(TranslatableInterface $object): void
     {

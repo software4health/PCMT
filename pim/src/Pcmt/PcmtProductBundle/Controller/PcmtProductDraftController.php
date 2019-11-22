@@ -82,7 +82,7 @@ class PcmtProductDraftController
         $ids = $this->draftStatusListService->getAll();
         foreach ($ids as $id) {
             $statuses[] = [
-                'id' => $id,
+                'id'   => $id,
                 'name' => $this->draftStatusTranslatorService->getNameTranslated($id),
             ];
         }

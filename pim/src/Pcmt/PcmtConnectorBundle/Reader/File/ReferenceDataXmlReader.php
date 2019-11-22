@@ -52,7 +52,7 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
 
         $this->xmlReader->elementMap = $xmlMapping ?? [
             '{http://www.w3.org/2001/XMLSchema-instance}urn' => 'Sabre\Xml\Element\XmlElement',
-            'code' => 'Sabre\Xml\Element\KeyValue',
+            'code'                                           => 'Sabre\Xml\Element\KeyValue',
         ];
 
         if (!$this->processed) {

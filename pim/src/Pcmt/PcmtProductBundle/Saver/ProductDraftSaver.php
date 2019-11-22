@@ -61,7 +61,7 @@ class ProductDraftSaver implements SaverInterface
         if (!$draft->getId() && $draft->getProduct()) {
             $draftRepository = $this->entityManager->getRepository(AbstractProductDraft::class);
             $criteria = [
-                'status' => AbstractProductDraft::STATUS_NEW,
+                'status'  => AbstractProductDraft::STATUS_NEW,
                 'product' => $draft->getProduct(),
             ];
             $count = $draftRepository->count($criteria);

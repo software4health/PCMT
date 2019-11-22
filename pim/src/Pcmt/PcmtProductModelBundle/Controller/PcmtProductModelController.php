@@ -151,11 +151,7 @@ class PcmtProductModelController
     }
 
     /**
-     * @param string $identifier
-     *
      * @throws NotFoundHttpException If product model is not found or the user cannot see it
-     *
-     * @return JsonResponse
      */
     public function getByCodeAction(string $identifier): JsonResponse
     {
@@ -175,10 +171,6 @@ class PcmtProductModelController
 
     /**
      * Returns a set of product models from identifiers parameter
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
     public function indexAction(Request $request): JsonResponse
     {
@@ -193,11 +185,7 @@ class PcmtProductModelController
     }
 
     /**
-     * @param Request $request
-     *
      * @AclAncestor("pim_enrich_product_model_create")
-     *
-     * @return Response
      */
     public function createAction(Request $request): Response
     {
@@ -232,12 +220,7 @@ class PcmtProductModelController
     }
 
     /**
-     * @param Request $request
-     * @param int     $id
-     *
      * @AclAncestor("pim_enrich_product_model_edit_attributes")
-     *
-     * @return Response
      */
     public function postAction(Request $request, int $id): Response
     {
@@ -274,10 +257,6 @@ class PcmtProductModelController
 
     /**
      * Return direct children (products or product models) of the parent's given id
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
     public function childrenAction(Request $request): JsonResponse
     {
@@ -310,10 +289,6 @@ class PcmtProductModelController
 
     /**
      * Returns the last level of product models belonging to a Family Variant with a given search code
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
     public function searchLastLevelProductModelByCode(Request $request): JsonResponse
     {
@@ -337,10 +312,6 @@ class PcmtProductModelController
 
     /**
      * Returns all the product models (sub and root) of a family variant
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
     public function listFamilyVariantProductModels(Request $request): JsonResponse
     {
@@ -357,12 +328,9 @@ class PcmtProductModelController
     /**
      * Remove product model
      *
-     * @param Request $request
-     * @param int     $id
+     * @param int $id
      *
      * @AclAncestor("pim_enrich_product_model_remove")
-     *
-     * @return Response
      */
     public function removeAction(Request $request, $id): Response
     {
@@ -384,11 +352,7 @@ class PcmtProductModelController
     /**
      * Returns the family variant object from a family variant code
      *
-     * @param string $familyVariantCode
-     *
      * @throws \InvalidArgumentException
-     *
-     * @return FamilyVariantInterface
      */
     private function getFamilyVariant(string $familyVariantCode): FamilyVariantInterface
     {
@@ -402,10 +366,6 @@ class PcmtProductModelController
 
     /**
      * Returns an array of normalized product models from an array of product model objects
-     *
-     * @param array $productModels
-     *
-     * @return array
      */
     private function buildNormalizedProductModels(array $productModels): array
     {
@@ -419,11 +379,6 @@ class PcmtProductModelController
         return $normalizedProductModels;
     }
 
-    /**
-     * @param ProductModelInterface $productModel
-     *
-     * @return array
-     */
     private function normalizeProductModel(ProductModelInterface $productModel): array
     {
         $normalizationContext = $this->userContext->toArray() + [
@@ -439,9 +394,6 @@ class PcmtProductModelController
 
     /**
      * Updates product with the provided request data
-     *
-     * @param ProductModelInterface $productModel
-     * @param array                 $data
      */
     private function updateProductModel(ProductModelInterface $productModel, array $data): void
     {
@@ -473,8 +425,6 @@ class PcmtProductModelController
      * @param string $id the product id
      *
      * @throws NotFoundHttpException
-     *
-     * @return ProductModelInterface
      */
     protected function findProductModelOr404($id): ProductModelInterface
     {

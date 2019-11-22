@@ -42,9 +42,6 @@ class DraftNormalizer implements NormalizerInterface
     /**
      * @param ProductDraftInterface $draft
      * @param null                  $format
-     * @param array                 $context
-     *
-     * @return array
      */
     public function normalize($draft, $format = null, array $context = []): array
     {

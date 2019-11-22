@@ -22,7 +22,7 @@ class PcmtFamilyRepository extends FamilyRepository
                 )
             );
         $qb->setParameters([
-            ':familyId' => $familyId,
+            ':familyId'    => $familyId,
             ':backendType' => PcmtAtributeTypes::CONCATENATED_FIELDS,
         ]);
 

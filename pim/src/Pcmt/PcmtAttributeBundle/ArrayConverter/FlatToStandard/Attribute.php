@@ -31,7 +31,7 @@ class Attribute extends BaseAttribute
 
         // Add @DND
         $convertedItem = [
-            'labels' => [],
+            'labels'       => [],
             'descriptions' => [],
         ]; // add descriptions field to convertedItem array
         // / Add @DND
@@ -48,8 +48,6 @@ class Attribute extends BaseAttribute
      * @param array  $booleanFields
      * @param array  $data
      * @param array  $convertedItem
-     *
-     * @return array
      */
     protected function convertFields($field, $booleanFields, $data, $convertedItem): array
     {

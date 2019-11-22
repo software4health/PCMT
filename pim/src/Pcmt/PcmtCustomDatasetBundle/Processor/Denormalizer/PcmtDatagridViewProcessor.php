@@ -38,13 +38,6 @@ class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcess
     /** @var ObjectDetacherInterface */
     protected $objectDetacher;
 
-    /**
-     * @param DatagridViewRepository  $repository
-     * @param SimpleFactoryInterface  $factory
-     * @param ObjectUpdaterInterface  $updater
-     * @param ValidatorInterface      $validator
-     * @param ObjectDetacherInterface $objectDetacher
-     */
     public function __construct(
         DatagridViewRepository $repository,
         SimpleFactoryInterface $factory,
@@ -87,8 +80,6 @@ class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcess
     }
 
     /**
-     * @param string $itemIdentifier
-     *
      * @return mixed
      */
     protected function findOrCreateObject(string $itemIdentifier): ?object
@@ -104,10 +95,6 @@ class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcess
     /**
      * Creates an empty new object to process.
      * We look first if there is already a processed item save in the execution context for the same identifier.
-     *
-     * @param string $itemIdentifier
-     *
-     * @return object
      */
     protected function createObject(string $itemIdentifier): object
     {
@@ -123,20 +110,12 @@ class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcess
 
     /**
      * Validates the processed entity.
-     *
-     * @param mixed $entity
-     *
-     * @return ConstraintViolationListInterface
      */
     protected function validate($entity): ConstraintViolationListInterface
     {
         return $this->validator->validate($entity);
     }
 
-    /**
-     * @param string $itemIdentifier
-     * @param mixed  $processedItem
-     */
     protected function saveProcessedItemInStepExecutionContext(string $itemIdentifier, $processedItem): void
     {
         $executionContext = $this->stepExecution->getExecutionContext();
@@ -149,11 +128,8 @@ class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcess
      * Get the identifier of a processed item
      *
      * @param DatagridViewRepository $repository
-     * @param array                  $item
      *
      * @throws MissingIdentifierException if the processed item doesn't contain the identifier properties
-     *
-     * @return string
      */
     protected function getItemIdentifier($repository, array $item): string
     {
@@ -181,8 +157,6 @@ class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcess
      *
      * @throws MissingIdentifierException in case the processed data do not allow to retrieve an object
      *                                    by its identifiers properly
-     *
-     * @return object|null
      */
     protected function findObject($repository, array $data): ?object
     {
@@ -195,7 +169,7 @@ class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcess
     protected function findOneByIdentifier($itemIdentifier): ?object
     {
         return $this->repository->findOneBy([
-            'type' => DatagridView::TYPE_PUBLIC,
+            'type'  => DatagridView::TYPE_PUBLIC,
             'label' => $itemIdentifier,
         ]);
     }

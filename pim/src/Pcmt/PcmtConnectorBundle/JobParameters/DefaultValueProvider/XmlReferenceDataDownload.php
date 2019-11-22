@@ -50,7 +50,7 @@ class XmlReferenceDataDownload implements DefaultValuesProviderInterface
                 'http://apps.gs1.org/GDD/Pages/CLXMLReport.aspx?semanticURN=urn:gs1:gdd:cl:TemperatureQualifierCode&release=2',
                 'http://apps.gs1.org/GDD/Pages/CLXMLReport.aspx?semanticURN=urn:gs1:gdd:cl:TradeItemUnitDescriptorCode&release=1',
             ],
-            'dirPath' => 'src/Pcmt/PcmtConnectorBundle/Resources/config/' . $this->fileDirectory . $this->refDirName . '/',
+            'dirPath'  => 'src/Pcmt/PcmtConnectorBundle/Resources/config/' . $this->fileDirectory . $this->refDirName . '/',
             'filePath' => null,
         ];
     }

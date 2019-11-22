@@ -50,11 +50,11 @@ class PcmtCreateAttributeForRefDataCommand extends ContainerAwareCommand
         $gs1Attribute = $attributeFactory->create();
         // set attribute's data
         $attributeUpdater->update($gs1Attribute, [
-            'code' => strtolower($refDataName),
-            'group' => 'technical',
+            'code'                => strtolower($refDataName),
+            'group'               => 'technical',
             'reference_data_name' => $refDataName,
-            'type' => 'pim_reference_data_simpleselect',
-            'required' => false,
+            'type'                => 'pim_reference_data_simpleselect',
+            'required'            => false,
         ]);
         // save attribute into database
         $attributeSaver->save($gs1Attribute);

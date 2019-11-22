@@ -49,11 +49,11 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
             }
             $totalPath = str_replace('/', '\/', $currentFilePath);
             $arguments = [
-                'code' => $import['code'],
+                'code'       => $import['code'],
                 '--no-debug' => true,
-                '--no-log' => true,
-                '-v' => true,
-                '--config' => sprintf('{"filePath": "%s"}', $totalPath),
+                '--no-log'   => true,
+                '-v'         => true,
+                '--config'   => sprintf('{"filePath": "%s"}', $totalPath),
             ];
             $output->writeln("\nnow: ".$import['code'].'...');
             $this->executeCommand($output, $arguments);
@@ -118,47 +118,47 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
     {
         return [
             [
-                'code' => 'xlsx_attribute_group_import',
+                'code'     => 'xlsx_attribute_group_import',
                 'fileName' => $this->tmpAttributeGroupsFile,
             ],
             [
-                'code' => 'xlsx_category_import',
+                'code'     => 'xlsx_category_import',
                 'fileName' => '1_categories.xlsx',
             ],
             [
-                'code' => 'xlsx_attribute_import',
+                'code'     => 'xlsx_attribute_import',
                 'fileName' => '3_attributes.xlsx',
             ],
             [
-                'code' => 'xlsx_attribute_option_import',
+                'code'     => 'xlsx_attribute_option_import',
                 'fileName' => '4_attribute_options.xlsx',
             ],
             [
-                'code' => 'xlsx_family_import',
+                'code'     => 'xlsx_family_import',
                 'fileName' => '5_families.xlsx',
             ],
             [
-                'code' => 'xlsx_family_variant_import',
+                'code'     => 'xlsx_family_variant_import',
                 'fileName' => '6_family_variants.xlsx',
             ],
             [
-                'code' => 'xlsx_product_model_import',
+                'code'     => 'xlsx_product_model_import',
                 'fileName' => '7_product_models.xlsx',
             ],
             [
-                'code' => 'pcmt_xlsx_product_import',
+                'code'     => 'pcmt_xlsx_product_import',
                 'fileName' => '8_products.xlsx',
             ],
             [
-                'code' => 'pcmt_xlsx_product_import',
+                'code'     => 'pcmt_xlsx_product_import',
                 'fileName' => '8_products_gs1.xlsx',
             ],
             [
-                'code' => 'import_map_suppliers',
+                'code'     => 'import_map_suppliers',
                 'fileName' => '9_masterdata_entries.xlsx',
             ],
             [
-                'code' => 'pcmt_xlsx_datagrid_view_import',
+                'code'     => 'pcmt_xlsx_datagrid_view_import',
                 'fileName' => '11_datagrid_view.xlsx',
             ],
         ];

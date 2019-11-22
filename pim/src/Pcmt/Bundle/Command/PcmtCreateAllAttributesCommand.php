@@ -39,7 +39,7 @@ class PcmtCreateAllAttributesCommand extends ContainerAwareCommand
             try {
                 $command = $this->getApplication()->find('pcmt:generate-ref-data-attr');
                 $arguments = [
-                    'command' => 'pcmt:generate-ref-data-attr',
+                    'command'       => 'pcmt:generate-ref-data-attr',
                     'ref-data-name' => $code,
                 ];
                 $greetInput = new ArrayInput($arguments);

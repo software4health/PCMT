@@ -100,17 +100,11 @@ abstract class AbstractProductDraft implements ProductDraftInterface
         $this->status = $statusId;
     }
 
-    /**
-     * @param \DateTime $approved
-     */
     public function setApproved(\DateTime $approved): void
     {
         $this->approved = $approved;
     }
 
-    /**
-     * @param UserInterface $approvedBy
-     */
     public function setApprovedBy(UserInterface $approvedBy): void
     {
         $this->approvedBy = $approvedBy;

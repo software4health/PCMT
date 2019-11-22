@@ -55,7 +55,7 @@ class ConcatenatedAttributesConverterTest extends TestCase
             [
                 [
                     'attribute1' => '100 EUR',
-                    'separator' => ':',
+                    'separator'  => ':',
                     'attribute2' => '0.250KG',
                 ],
                 ['concatenated_test' => '100 EUR:0.250KG'],
@@ -63,7 +63,7 @@ class ConcatenatedAttributesConverterTest extends TestCase
             [
                 [
                     'attribute1' => ['200 PSI', '|', '100 kG/m2'],
-                    'separator' => '%%',
+                    'separator'  => '%%',
                     'attribute2' => '80 USD',
                 ],
                 ['concatenated_test' => '200 PSI|100 kG/m2%%80 USD'],
@@ -77,7 +77,7 @@ class ConcatenatedAttributesConverterTest extends TestCase
             [
                 [
                     'invalidKey' => '200 EUR',
-                    'separator' => '$$',
+                    'separator'  => '$$',
                     'attribute1' => '0.250KG',
                 ],
             ],

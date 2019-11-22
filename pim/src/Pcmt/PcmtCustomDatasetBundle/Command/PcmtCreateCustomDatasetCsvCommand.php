@@ -49,8 +49,6 @@ class PcmtCreateCustomDatasetCsvCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception

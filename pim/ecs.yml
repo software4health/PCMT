@@ -20,7 +20,7 @@ services:
     PhpCsFixer\Fixer\PhpUnit\PhpUnitMethodCasingFixer: ~
 
     Symplify\CodingStandard\Sniffs\Debug\DebugFunctionCallSniff: ~
-#    Symplify\CodingStandard\Sniffs\Debug\CommentedOutCodeSniff: ~
+    Symplify\CodingStandard\Sniffs\Debug\CommentedOutCodeSniff: ~
 
     PhpCsFixer\Fixer\ClassNotation\FinalInternalClassFixer: ~
 
@@ -53,11 +53,11 @@ services:
         'position_after_anonymous_constructs': 'same'
 
     PhpCsFixer\Fixer\ClassNotation\NoBlankLinesAfterClassOpeningFixer: ~
-#    PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer:
-#        elements:
-#            - 'const'
-#            - 'method'
-#            - 'property'
+    PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer:
+        elements:
+            - 'const'
+            - 'method'
+            - 'property'
     PhpCsFixer\Fixer\Operator\TernaryOperatorSpacesFixer: ~
     PhpCsFixer\Fixer\FunctionNotation\ReturnTypeDeclarationFixer: ~
     PhpCsFixer\Fixer\Whitespace\NoTrailingWhitespaceFixer: ~
@@ -67,19 +67,19 @@ services:
     PhpCsFixer\Fixer\ArrayNotation\WhitespaceAfterCommaInArrayFixer: ~
 
     PhpCsFixer\Fixer\LanguageConstruct\CombineConsecutiveIssetsFixer: ~
-#    PhpCsFixer\Fixer\LanguageConstruct\CombineConsecutiveUnsetsFixer: ~
+    PhpCsFixer\Fixer\LanguageConstruct\CombineConsecutiveUnsetsFixer: ~
 
     PhpCsFixer\Fixer\FunctionNotation\PhpdocToReturnTypeFixer: ~
     PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer: ~
-#    PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer: ~
+    PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer: ~
 
 #    Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff: ~
     PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer:
         order:
             - 'use_trait'
-#    PhpCsFixer\Fixer\Operator\BinaryOperatorSpacesFixer:
-#        operators:
-#            =>: align
+    PhpCsFixer\Fixer\Operator\BinaryOperatorSpacesFixer:
+        operators:
+            =>: align
     PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: ~
     PhpCsFixer\Fixer\Operator\ConcatSpaceFixer:
         spacing: 'one'
