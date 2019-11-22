@@ -61,10 +61,10 @@ class PcmtJobCreator extends ContainerAwareCommand
 
         $arguments = [
             'connector' => $jobInstanceParameters['connector'],
-            'job' => $jobInstanceParameters['job'],
-            'type' => $jobInstanceParameters['type'],
-            'code' => $jobInstanceParameters['code'],
-            'config' => $jobInstanceParameters['config'] ?? null,
+            'job'       => $jobInstanceParameters['job'],
+            'type'      => $jobInstanceParameters['type'],
+            'code'      => $jobInstanceParameters['code'],
+            'config'    => $jobInstanceParameters['config'] ?? null,
         ];
 
         $input = new ArrayInput($arguments);

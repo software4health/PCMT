@@ -11,7 +11,7 @@ class ConcatenatedAttributesConverter extends AbstractValueConverter implements 
 {
     protected const VALID_TYPES = [
         'attribute1' => ['string', 'array'],
-        'separator' => ['string'],
+        'separator'  => ['string'],
         'attribute2' => ['string', 'array'],
     ];
 

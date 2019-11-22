@@ -66,9 +66,6 @@ class ProductDraftHistory implements DraftHistoryInterface
         return $this->author;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;

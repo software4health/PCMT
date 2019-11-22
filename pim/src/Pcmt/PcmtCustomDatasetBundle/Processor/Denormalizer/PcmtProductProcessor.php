@@ -158,44 +158,20 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
             $this->detachProduct($product);
             $this->skipItemWithMessage($item, $exception->getMessage(), $exception);
         }
-        // HERE IS THE PROBLEM WITH LONG LOADING DATA
-//    $violations = $this->validateProduct($product);
-//
-//    if ($violations->count() > 0) {
-//      $this->detachProduct($product);
-//      $this->skipItemWithConstraintViolations($item, $violations);
-//    }
-        // END HERE IS THE PROBLEM WITH LONG LOADING DATA
 
         return $product;
     }
 
-    /**
-     * @param ProductInterface $product
-     * @param array            $filteredItem
-     *
-     * @return array
-     */
     protected function filterIdenticalData(ProductInterface $product, array $filteredItem): array
     {
         return $this->productFilter->filter($product, $filteredItem);
     }
 
-    /**
-     * @param array $item
-     *
-     * @return string|null
-     */
     protected function getIdentifier(array $item): ?string
     {
         return $item['identifier'] ?? null;
     }
 
-    /**
-     * @param array $item
-     *
-     * @return string
-     */
     protected function getFamilyCode(array $item): string
     {
         if (array_key_exists('family', $item)) {
@@ -218,26 +194,18 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
     /**
      * Filters item data to remove associations which are imported through a dedicated processor because we need to
      * create any products before to associate them
-     *
-     * @param array $item
-     *
-     * @return array
      */
     protected function filterItemData(array $item): array
     {
         foreach ($this->repository->getIdentifierProperties() as $identifierProperty) {
             unset($item['values'][$identifierProperty]);
         }
-        unset($item['identifier']);
-        unset($item['associations']);
+        unset($item['identifier'], $item['associations']);
 
         return $item;
     }
 
     /**
-     * @param ProductInterface $product
-     * @param array            $filteredItem
-     *
      * @throws PropertyException
      */
     protected function updateProduct(ProductInterface $product, array $filteredItem): void
@@ -246,11 +214,7 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
     }
 
     /**
-     * @param ProductInterface $product
-     *
      * @throws \InvalidArgumentException
-     *
-     * @return ConstraintViolationListInterface
      */
     protected function validateProduct(ProductInterface $product): ConstraintViolationListInterface
     {
@@ -260,8 +224,6 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
     /**
      * Detaches the product from the unit of work is the responsibility of the writer but in this case we
      * want ensure that an updated and invalid product will not be used in the association processor
-     *
-     * @param ProductInterface $product
      */
     protected function detachProduct(ProductInterface $product): void
     {

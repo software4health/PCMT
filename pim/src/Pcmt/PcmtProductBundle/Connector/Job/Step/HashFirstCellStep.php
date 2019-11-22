@@ -38,7 +38,7 @@ class HashFirstCellStep extends AbstractStep
             $jobExecution = $this->stepExecution->getJobExecution();
             $datetime = $jobExecution->getStartTime()->format($this->datetimeFormat);
             $defaultPlaceholders = [
-                '%datetime%' => $datetime,
+                '%datetime%'  => $datetime,
                 '%job_label%' => '',
             ];
             if (null !== $jobExecution->getJobInstance()) {

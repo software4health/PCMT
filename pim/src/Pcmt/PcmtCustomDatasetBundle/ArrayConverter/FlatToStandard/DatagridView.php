@@ -19,9 +19,6 @@ class DatagridView implements ArrayConverterInterface
     /** @var FieldsRequirementChecker */
     protected $fieldChecker;
 
-    /**
-     * @param FieldsRequirementChecker $fieldChecker
-     */
     public function __construct(FieldsRequirementChecker $fieldChecker)
     {
         $this->fieldChecker = $fieldChecker;

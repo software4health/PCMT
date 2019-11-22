@@ -30,7 +30,7 @@ class ReadConfigHelperCommand extends ContainerAwareCommand
 
             $parser->elementMap = [
                 '{http://www.w3.org/2001/XMLSchema-instance}urn' => 'Sabre\Xml\Element\XmlElement',
-                'code' => 'Sabre\Xml\Element\KeyValue',
+                'code'                                           => 'Sabre\Xml\Element\KeyValue',
             ];
 
             $output = $parser->parse($input);

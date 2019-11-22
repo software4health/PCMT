@@ -15,18 +15,18 @@ class InitializeReferenceDataImport extends ContainerAwareCommand
 {
     protected const CONSECUTIVE_JOBS = [
         1 => [
-            'connector' => 'Pcmt Connector',
-            'job' => 'reference_data_download_xmls',
-            'code' => 'reference_data_download_xmls',
-            'type' => 'data_download',
+            'connector'             => 'Pcmt Connector',
+            'job'                   => 'reference_data_download_xmls',
+            'code'                  => 'reference_data_download_xmls',
+            'type'                  => 'data_download',
             'job_execution_handler' => 'pcmt:handler:download_reference_data',
         ],
         2 => [
-            'connector' => 'Pcmt Connector',
-            'job' => 'reference_data_import_xml',
-            'code' => 'reference_data_import_xml',
-            'type' => 'import',
-            'config' => '{"dirPath": "%s"}',
+            'connector'             => 'Pcmt Connector',
+            'job'                   => 'reference_data_import_xml',
+            'code'                  => 'reference_data_import_xml',
+            'type'                  => 'import',
+            'config'                => '{"dirPath": "%s"}',
             'job_execution_handler' => 'pcmt:handler:import_reference_data',
         ],
     ];
@@ -58,7 +58,7 @@ class InitializeReferenceDataImport extends ContainerAwareCommand
             $output->writeln(sprintf('Executing job:  %s', $job['job_execution_handler']));
 
             $arguments = new ArrayInput([
-                'code' => $job['code'] ?? null,
+                'code'    => $job['code'] ?? null,
                 'dirPath' => $job['dirPath'] ?? null,
             ]);
 
@@ -103,10 +103,10 @@ class InitializeReferenceDataImport extends ContainerAwareCommand
 
         $arguments = [
             'connector' => $parameters['connector'],
-            'job' => $parameters['job'],
-            'type' => $parameters['type'],
-            'code' => $parameters['code'],
-            'config' => $parameters['config'] ?? null,
+            'job'       => $parameters['job'],
+            'type'      => $parameters['type'],
+            'code'      => $parameters['code'],
+            'config'    => $parameters['config'] ?? null,
         ];
 
         $input = new ArrayInput($arguments);

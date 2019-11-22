@@ -31,9 +31,6 @@ class DraftStatusNormalizer implements NormalizerInterface
     /**
      * @param DraftStatus $draftStatus
      * @param null        $format
-     * @param array       $context
-     *
-     * @return array
      */
     public function normalize($draftStatus, $format = null, array $context = []): array
     {
@@ -47,8 +44,8 @@ class DraftStatusNormalizer implements NormalizerInterface
         }
 
         return [
-            'id' => $statusId,
-            'name' => $name,
+            'id'    => $statusId,
+            'name'  => $name,
             'class' => $this->getCssClass($statusId),
         ];
     }

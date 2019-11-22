@@ -25,16 +25,16 @@ class XmlReferenceDataImport implements DefaultValuesProviderInterface
     public function getDefaultValues(): array
     {
         return [
-            'filePath' => null,
-            'dirPath' => 'src/Pcmt/PcmtConnectorBundle/Resources/config/reference_data',
+            'filePath'      => null,
+            'dirPath'       => 'src/Pcmt/PcmtConnectorBundle/Resources/config/reference_data',
             'uploadAllowed' => [
                 new Type('bool'),
                 new IsTrue(['groups' => 'UploadExecution']),
             ],
             'decimalSeparator' => new NotBlank(),
-            'xmlMapping' => [
+            'xmlMapping'       => [
                 '{http://www.w3.org/2001/XMLSchema-instance}urn' => 'Sabre\Xml\Element\XmlElement',
-                'code' => 'Sabre\Xml\Element\KeyValue',
+                'code'                                           => 'Sabre\Xml\Element\KeyValue',
             ],
         ];
     }

@@ -12,9 +12,6 @@ class AttributeChangeNormalizer implements NormalizerInterface
     /**
      * @param AttributeChange $change
      * @param null            $format
-     * @param array           $context
-     *
-     * @return array
      */
     public function normalize($change, $format = null, array $context = []): array
     {

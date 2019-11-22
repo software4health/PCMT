@@ -48,7 +48,7 @@ class ConcatenatedAttributeProductValuesUpdater implements ObjectUpdaterInterfac
                 }
                 $options = [
                     'locale' => $data['locale'],
-                    'scope' => $data['scope'],
+                    'scope'  => $data['scope'],
                 ];
                 $this->propertySetter->setData($entityWithValues, $code, $data['data'], $options);
             }
@@ -57,8 +57,6 @@ class ConcatenatedAttributeProductValuesUpdater implements ObjectUpdaterInterfac
 
     /**
      * Check the structure of the given entity with values.
-     *
-     * @param mixed $entityWithValues
      *
      * @throws InvalidPropertyTypeException
      */

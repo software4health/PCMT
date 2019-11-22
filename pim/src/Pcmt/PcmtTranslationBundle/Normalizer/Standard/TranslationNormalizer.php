@@ -19,16 +19,13 @@ class TranslationNormalizer extends BaseTranslationNormalizer
 {
     /**
      * @param $object
-     * @param array $context
-     *
-     * @return array
      */
     public function normalizeDescription($object, array $context = []): array
     {
         $context = array_merge(
             [
                 'property' => 'description',
-                'locales' => [],
+                'locales'  => [],
             ],
             $context
         );

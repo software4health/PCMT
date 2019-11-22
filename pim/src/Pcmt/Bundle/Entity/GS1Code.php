@@ -31,9 +31,6 @@ abstract class GS1Code extends AbstractCustomEntity
         $this->setListName(static::getClass());
     }
 
-    /**
-     * @param int $id
-     */
     public function setId(int $id): void
     {
         $this->id = $id;
@@ -47,17 +44,11 @@ abstract class GS1Code extends AbstractCustomEntity
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getListName(): string
     {
         return $this->listName;
     }
 
-    /**
-     * @param string $listName
-     */
     protected function setListName(string $listName): void
     {
         $this->listName = $listName;
@@ -79,9 +70,6 @@ abstract class GS1Code extends AbstractCustomEntity
         $this->name = $codeName;
     }
 
-    /**
-     * @return string
-     */
     public function getDefinition(): string
     {
         return $this->definition;
@@ -95,49 +83,31 @@ abstract class GS1Code extends AbstractCustomEntity
         $this->definition = $definition;
     }
 
-    /**
-     * @param \DateTime $changeDate
-     */
     public function setChangeDate(\DateTime $changeDate): void
     {
         $this->changeDate = $changeDate;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getChangeDate(): \DateTime
     {
         return $this->changeDate;
     }
 
-    /**
-     * @return int
-     */
     public function getVersion(): int
     {
         return $this->version;
     }
 
-    /**
-     * @param int $version
-     */
     public function setVersion(int $version): void
     {
         $this->version = $version;
     }
 
-    /**
-     * @return int
-     */
     public function getStatus(): int
     {
         return $this->status;
     }
 
-    /**
-     * @param int $status
-     */
     public function setStatus(int $status): void
     {
         $this->status = $status;

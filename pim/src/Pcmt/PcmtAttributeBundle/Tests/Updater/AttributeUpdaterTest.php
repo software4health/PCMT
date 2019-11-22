@@ -148,14 +148,14 @@ class AttributeUpdaterTest extends TestCase
             'multi description' => [[
                 'descriptions' => [
                     'en_US' => 'alo',
-                    'de' => 'lol',
+                    'de'    => 'lol',
                 ],
             ]],
             'multi description with other data' => [
                 [
                     'descriptions' => [
                         'en_US' => 'alo',
-                        'de' => 'lol',
+                        'de'    => 'lol',
                     ],
                 ],
                 'code' => 'test',
@@ -191,7 +191,7 @@ class AttributeUpdaterTest extends TestCase
             'one is not a scalar' => [[
                 'descriptions' => [
                     'en_US' => 'alo',
-                    'de' => [],
+                    'de'    => [],
                 ],
             ]],
         ];
