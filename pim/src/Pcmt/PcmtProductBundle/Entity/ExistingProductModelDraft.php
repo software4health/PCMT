@@ -4,27 +4,22 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Entity;
 
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 
-class PendingProductDraft extends AbstractProductDraft
+class ExistingProductModelDraft extends AbstractProductModelDraft
 {
-    private const TYPE = ProductDraftInterface::TYPE_PENDING;
+    public const TYPE = 'existing product model draft';
 
     public function __construct(
-        ProductInterface $product,
+        ProductModelInterface $productModel,
         array $productData,
         UserInterface $author,
         \DateTime $created,
         int $status
     ) {
-        $this->product = $product;
+        $this->productModel = $productModel;
         $this->productData = $productData;
         parent::__construct($author, $created, $status);
-    }
-
-    public function getType(): string
-    {
-        return self::TYPE;
     }
 }

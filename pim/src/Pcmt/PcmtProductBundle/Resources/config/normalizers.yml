@@ -14,8 +14,15 @@ services:
         autowire: true
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 120 }
-    pcmt_product.draft.normalizer:
-        class: Pcmt\PcmtProductBundle\Normalizer\DraftNormalizer
+    pcmt_product.draft.product_normalizer:
+        class: Pcmt\PcmtProductBundle\Normalizer\ProductDraftNormalizer
+        autowire: true
+        calls:
+            - [setProductFromDraftCreator, ['@pcmt.service.product_from_draft_creator']]
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 110 }
+    pcmt_product.draft.product_model_normalizer:
+        class: Pcmt\PcmtProductBundle\Normalizer\ProductModelDraftNormalizer
         autowire: true
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 110 }

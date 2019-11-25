@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Entity;
 
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 
-abstract class AbstractProductDraft extends AbstractDraft implements ProductDraftInterface
+abstract class AbstractProductModelDraft extends AbstractDraft implements ProductModelDraftInterface
 {
     protected function __construct(
         UserInterface $author,
@@ -17,11 +17,11 @@ abstract class AbstractProductDraft extends AbstractDraft implements ProductDraf
         $this->author = $author;
         $this->created = $created;
         $this->status = $status;
-        $this->version = self::DRAFT_VERSION_NEW;
+        $this->version = ProductDraftInterface::DRAFT_VERSION_NEW;
     }
 
-    public function getProduct(): ?ProductInterface
+    public function getProductModel(): ?ProductModelInterface
     {
-        return $this->product;
+        return $this->productModel;
     }
 }

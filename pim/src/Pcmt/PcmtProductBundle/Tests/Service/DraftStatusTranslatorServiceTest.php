@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Tests\Service;
 
-use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
+use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
 use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -36,14 +36,14 @@ class DraftStatusTranslatorServiceTest extends TestCase
 
     public function testGetName(): void
     {
-        $name = $this->draftStatusTranslatorService->getName(AbstractProductDraft::STATUS_NEW);
+        $name = $this->draftStatusTranslatorService->getName(AbstractDraft::STATUS_NEW);
         $this->assertNotEmpty($name);
         $this->assertIsString($name);
     }
 
     public function testGetNameTranslated(): void
     {
-        $name = $this->draftStatusTranslatorService->getNameTranslated(AbstractProductDraft::STATUS_NEW);
+        $name = $this->draftStatusTranslatorService->getNameTranslated(AbstractDraft::STATUS_NEW);
         $this->assertSame($this->nameTranslated, $name);
     }
 }

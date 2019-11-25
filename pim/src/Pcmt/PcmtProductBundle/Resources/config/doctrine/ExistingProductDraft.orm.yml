@@ -1,4 +1,4 @@
-Pcmt\PcmtProductBundle\Entity\PendingProductDraft:
+Pcmt\PcmtProductBundle\Entity\ExistingProductDraft:
     type: entity
     repositoryClass: Pcmt\PcmtProductBundle\Entity\ProductDraftORMRepository
 

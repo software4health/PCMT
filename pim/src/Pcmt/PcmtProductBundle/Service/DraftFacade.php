@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Pcmt\PcmtProductBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
+use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 
 class DraftFacade
@@ -31,7 +31,7 @@ class DraftFacade
 
     public function rejectDraft(ProductDraftInterface $draft): void
     {
-        $draft->setStatus(AbstractProductDraft::STATUS_REJECTED);
+        $draft->setStatus(AbstractDraft::STATUS_REJECTED);
         $this->entityManager->persist($draft);
         $this->entityManager->flush();
     }

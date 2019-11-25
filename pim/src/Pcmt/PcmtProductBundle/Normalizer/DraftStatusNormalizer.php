@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Normalizer;
 
-use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
+use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
 use Pcmt\PcmtProductBundle\Entity\DraftStatus;
 use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
 use Psr\Log\LoggerInterface;
@@ -53,11 +53,11 @@ class DraftStatusNormalizer implements NormalizerInterface
     private function getCssClass(int $draftStatusId): string
     {
         switch ($draftStatusId) {
-            case AbstractProductDraft::STATUS_NEW:
+            case AbstractDraft::STATUS_NEW:
                 return 'AknBadge--warning';
-            case AbstractProductDraft::STATUS_APPROVED:
+            case AbstractDraft::STATUS_APPROVED:
                 return 'AknBadge--success';
-            case AbstractProductDraft::STATUS_REJECTED:
+            case AbstractDraft::STATUS_REJECTED:
                 return 'AknBadge--important';
             default:
                 return 'AknBadge--grey';

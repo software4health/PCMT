@@ -6,21 +6,17 @@ namespace Pcmt\PcmtProductBundle\Entity;
 
 use Akeneo\UserManagement\Component\Model\UserInterface;
 
-class NewProductDraft extends AbstractProductDraft
+class NewProductModelDraft extends AbstractProductModelDraft
 {
-    public const TYPE = 'new product draft';
+    public const TYPE = 'new product model draft';
 
     public function __construct(
-        array $productData,
+        array $productModelData,
         UserInterface $author,
         \DateTime $created,
         int $status
     ) {
-        $this->productData = $productData;
+        $this->productData = $productModelData;
         parent::__construct($author, $created, $status);
-    }
-
-    public function getLabel(): void
-    {
     }
 }

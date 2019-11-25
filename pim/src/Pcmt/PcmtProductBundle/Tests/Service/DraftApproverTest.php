@@ -9,7 +9,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
 use Akeneo\UserManagement\Component\Model\User;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
+use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
 use Pcmt\PcmtProductBundle\Service\DraftApprover;
 use Pcmt\PcmtProductBundle\Service\ProductFromDraftCreator;
@@ -56,10 +56,10 @@ class DraftApproverTest extends TestCase
         $author->setFirstName('Alfred');
         $author->setLastName('Nobel');
         $created = new \DateTime();
-        $draft = new NewProductDraft($productData, $author, $created, AbstractProductDraft::STATUS_NEW);
+        $draft = new NewProductDraft($productData, $author, $created, AbstractDraft::STATUS_NEW);
 
         $service->approve($draft);
 
-        $this->assertSame(AbstractProductDraft::STATUS_APPROVED, $draft->getStatus());
+        $this->assertSame(AbstractDraft::STATUS_APPROVED, $draft->getStatus());
     }
 }

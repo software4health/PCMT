@@ -16,16 +16,15 @@ use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterI
 use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterface;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use Akeneo\Tool\Bundle\ElasticsearchBundle\Client;
-use Akeneo\Tool\Bundle\VersioningBundle\Doctrine\ORM\VersionRepository;
 use Akeneo\Tool\Component\StorageUtils\Remover\RemoverInterface;
 use Akeneo\Tool\Component\StorageUtils\Repository\CursorableRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
 use Pcmt\PcmtAttributeBundle\Event\ProductFetchEvent;
-use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
+use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
+use Pcmt\PcmtProductBundle\Entity\ExistingProductDraft;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
-use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -44,15 +43,11 @@ class PcmtProductController extends ProductController
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
-    /** @var VersionRepository */
-    protected $versionRepository;
-
     /** @var SaverInterface */
     protected $draftSaver;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
-        VersionRepository $versionRepository,
         SaverInterface $draftSaver,
         ProductRepositoryInterface $productRepository,
         CursorableRepositoryInterface $cursorableRepository,
@@ -76,7 +71,6 @@ class PcmtProductController extends ProductController
         ?Client $productAndProductModelClient = null
     ) {
         $this->eventDispatcher = $eventDispatcher;
-        $this->versionRepository = $versionRepository;
         $this->draftSaver = $draftSaver;
         parent::__construct($productRepository, $cursorableRepository, $attributeRepository, $productUpdater, $productSaver, $normalizer, $validator, $userContext, $objectFilter, $productEditDataFilter, $productRemover, $productBuilder, $localizedConverter, $emptyValuesFilter, $productValueConverter, $constraintViolationNormalizer, $variantProductBuilder, $productAttributeFilter, $productClient, $productAndProductModelClient);
     }
@@ -105,7 +99,7 @@ class PcmtProductController extends ProductController
             $data,
             $this->userContext->getUser(),
             new \DateTime(),
-            AbstractProductDraft::STATUS_NEW
+            AbstractDraft::STATUS_NEW
         );
 
         $this->draftSaver->save($draft);
@@ -142,12 +136,12 @@ class PcmtProductController extends ProductController
             }
         }
 
-        $draft = new PendingProductDraft(
+        $draft = new ExistingProductDraft(
             $product,
             $data,
             $this->userContext->getUser(),
             new \DateTime(),
-            AbstractProductDraft::STATUS_NEW
+            AbstractDraft::STATUS_NEW
         );
 
         $this->draftSaver->save($draft);
