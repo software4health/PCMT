@@ -17,6 +17,9 @@ config:
         pcmt/product/drafts/index: pcmtproduct/js/controller/drafts_index
         pcmt/product/drafts/edit: pcmtproduct/js/controller/drafts_edit
 
+        ### fetchers ###
+        pcmt/draft-fetcher: pcmtproduct/js/draft/fetcher/draft_fetcher
+
     config:
         pim/controller-registry:
             controllers:
@@ -24,3 +27,13 @@ config:
                     module: pcmt/product/drafts/index
                 pcmt_product_drafts_edit:
                     module: pcmt/product/drafts/edit
+                    config:
+                        entity: draft
+        pim/fetcher-registry:
+            fetchers:
+                draft:
+                    module: pcmt/draft-fetcher
+                    options:
+                        urls:
+                            get: pcmt_product_drafts_api
+
