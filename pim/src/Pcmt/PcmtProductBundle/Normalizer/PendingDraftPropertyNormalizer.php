@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Normalizer;
 
-use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
+use Pcmt\PcmtProductBundle\Entity\ExistingProductDraft;
 use Symfony\Component\Intl\Exception\MethodNotImplementedException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -17,6 +17,6 @@ class PendingDraftPropertyNormalizer implements NormalizerInterface
 
     public function supportsNormalization($data, $format = null): bool
     {
-        return $data instanceof PendingProductDraft;
+        return $data instanceof ExistingProductDraft;
     }
 }

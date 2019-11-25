@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Service;
 
-use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
+use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class DraftStatusTranslatorService
@@ -27,11 +27,11 @@ class DraftStatusTranslatorService
     public function getName($statusId): string
     {
         switch ($statusId) {
-            case AbstractProductDraft::STATUS_NEW:
+            case AbstractDraft::STATUS_NEW:
                 return 'pcmt_product.draft.status_new';
-            case AbstractProductDraft::STATUS_APPROVED:
+            case AbstractDraft::STATUS_APPROVED:
                 return 'pcmt_product.draft.status_approved';
-            case AbstractProductDraft::STATUS_REJECTED:
+            case AbstractDraft::STATUS_REJECTED:
                 return 'pcmt_product.draft.status_rejected';
             default:
                 throw new \Exception('No draft status name for: ' . $statusId);

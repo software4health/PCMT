@@ -8,7 +8,7 @@ use Akeneo\Pim\Enrichment\Bundle\Doctrine\Common\Saver\ProductSaver;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
-use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
+use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 use Pcmt\PcmtProductBundle\Exception\DraftViolationException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -47,7 +47,7 @@ class DraftApprover
 
     protected function updateDraftEntity(ProductDraftInterface $draft): void
     {
-        $draft->setStatus(AbstractProductDraft::STATUS_APPROVED);
+        $draft->setStatus(AbstractDraft::STATUS_APPROVED);
         $draft->setApproved(Carbon::now());
         $user = $this->tokenStorage->getToken()->getUser();
         /** @var UserInterface $user */

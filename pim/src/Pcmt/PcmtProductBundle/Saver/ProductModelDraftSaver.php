@@ -8,12 +8,12 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\StorageEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
-use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
-use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
+use Pcmt\PcmtProductBundle\Entity\AbstractProductModelDraft;
+use Pcmt\PcmtProductBundle\Entity\ProductModelDraftInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
-class ProductDraftSaver implements SaverInterface
+class ProductModelDraftSaver implements SaverInterface
 {
     /** @var EntityManagerInterface */
     protected $entityManager;
@@ -49,26 +49,26 @@ class ProductDraftSaver implements SaverInterface
 
     protected function validateDraft($draft): void
     {
-        if (!$draft instanceof ProductDraftInterface) {
+        if (!$draft instanceof ProductModelDraftInterface) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Expects a %s, "%s" provided',
-                    ProductDraftInterface::class,
+                    ProductModelDraftInterface::class,
                     get_class($draft)
                 )
             );
         }
 
-        if (!$draft->getId() && $draft->getProduct()) {
-            $draftRepository = $this->entityManager->getRepository(AbstractProductDraft::class);
+        if (!$draft->getId() && $draft->getProductModel()) {
+            $draftRepository = $this->entityManager->getRepository(AbstractProductModelDraft::class);
             $criteria = [
-                'status'  => AbstractDraft::STATUS_NEW,
-                'product' => $draft->getProduct(),
+                'status'       => AbstractDraft::STATUS_NEW,
+                'productModel' => $draft->getProductModel(),
             ];
             $count = $draftRepository->count($criteria);
             if ($count > 0) {
                 throw new \InvalidArgumentException(
-                    'There is already a draft for this product'
+                    'There is already a draft for this product model'
                 );
             }
         }

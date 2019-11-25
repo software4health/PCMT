@@ -9,7 +9,6 @@ services:
         class: Pcmt\PcmtProductBundle\Controller\PcmtProductController
         arguments:
             - '@event_dispatcher'
-            - '@pim_versioning.repository.version'
             - '@pcmt_product.save.productDraft'
             - '@pim_catalog.repository.product'
             - '@pim_catalog.repository.product'
@@ -31,3 +30,31 @@ services:
             - '@pim_enrich.filter.product_attribute_filter'
             - '@akeneo_elasticsearch.client.product'
             - '@akeneo_elasticsearch.client.product_and_product_model'
+
+    ### overrides product model controller
+    pim_enrich.controller.rest.product_model:
+        class: Pcmt\PcmtProductBundle\Controller\PcmtProductModelController
+        arguments:
+            - '@pim_catalog.repository.product_model'
+            - '@pim_internal_api_serializer'
+            - '@pim_user.context.user'
+            - '@pim_catalog.filter.chained'
+            - '@pim_catalog.localization.localizer.converter'
+            - '@pim_catalog.comparator.filter.product_model'
+            - '@pim_enrich.converter.enrich_to_standard.product_value'
+            - '@pim_catalog.updater.product_model'
+            - '@pim_catalog.remover.product_model'
+            - '@pim_catalog.validator.product'
+            - '@pim_catalog.saver.product_model'
+            - '@pim_enrich.normalizer.product_violation'
+            - '@pim_enrich.normalizer.entity_with_family_variant'
+            - '@pim_catalog.factory.product_model'
+            - '@pim_enrich.normalizer.violation'
+            - '@pim_catalog.repository.family_variant'
+            - '@pim_enrich.filter.product_model_attribute_filter'
+            - '@akeneo_elasticsearch.client.product_model'
+            - '@akeneo_elasticsearch.client.product_and_product_model'
+        calls:
+            - [setUserContextProtected, ['@pim_user.context.user']]
+            - [setNormalizerProtected, ['@pim_internal_api_serializer']]
+            - [setDraftSaver, ['@pcmt_product.save.productModelDraft']]

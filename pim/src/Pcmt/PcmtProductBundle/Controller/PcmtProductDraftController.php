@@ -6,9 +6,11 @@ namespace Pcmt\PcmtProductBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
+use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
 use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Exception\DraftViolationException;
-use Pcmt\PcmtProductBundle\Normalizer\DraftNormalizer;
+use Pcmt\PcmtProductBundle\Normalizer\ProductDraftNormalizer;
+use Pcmt\PcmtProductBundle\Normalizer\ProductModelDraftNormalizer;
 use Pcmt\PcmtProductBundle\Service\DraftFacade;
 use Pcmt\PcmtProductBundle\Service\DraftStatusListService;
 use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
@@ -24,8 +26,8 @@ class PcmtProductDraftController
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    /** @var DraftNormalizer */
-    private $draftNormalizer;
+    /** @var ProductDraftNormalizer */
+    private $productDraftNormalizer;
 
     /** @var DraftStatusTranslatorService */
     private $draftStatusTranslatorService;
@@ -38,21 +40,27 @@ class PcmtProductDraftController
 
     /** @var NormalizerInterface */
     protected $constraintViolationNormalizer;
+    /**
+     * @var ProductModelDraftNormalizer
+     */
+    private $productModelDraftNormalizer;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        DraftNormalizer $draftNormalizer,
+        ProductDraftNormalizer $productDraftNormalizer,
+        ProductModelDraftNormalizer $productModelDraftNormalizer,
         DraftStatusTranslatorService $draftStatusTranslatorService,
         DraftStatusListService $draftStatusListService,
         DraftFacade $draftFacade,
         NormalizerInterface $constraintViolationNormalizer
     ) {
         $this->entityManager = $entityManager;
-        $this->draftNormalizer = $draftNormalizer;
+        $this->productDraftNormalizer = $productDraftNormalizer;
         $this->draftStatusTranslatorService = $draftStatusTranslatorService;
         $this->draftStatusListService = $draftStatusListService;
         $this->draftFacade = $draftFacade;
         $this->constraintViolationNormalizer = $constraintViolationNormalizer;
+        $this->productModelDraftNormalizer = $productModelDraftNormalizer;
     }
 
     /**
@@ -61,13 +69,13 @@ class PcmtProductDraftController
     public function getList(Request $request): JsonResponse
     {
         $criteria = [
-            'status' => $request->query->get('status') ?? AbstractProductDraft::STATUS_NEW,
+            'status' => $request->query->get('status') ?? AbstractDraft::STATUS_NEW,
         ];
-        $draftRepository = $this->entityManager->getRepository(AbstractProductDraft::class);
+        $draftRepository = $this->entityManager->getRepository(AbstractDraft::class);
 
         $drafts = $draftRepository->findBy($criteria);
 
-        $serializer = new Serializer([$this->draftNormalizer]);
+        $serializer = new Serializer([$this->productDraftNormalizer, $this->productModelDraftNormalizer]);
         $data = $serializer->normalize($drafts);
 
         return new JsonResponse($data);
@@ -101,7 +109,7 @@ class PcmtProductDraftController
         if (!$draft) {
             throw new NotFoundHttpException('The draft does not exist');
         }
-        if (AbstractProductDraft::STATUS_NEW !== $draft->getStatus()) {
+        if (AbstractDraft::STATUS_NEW !== $draft->getStatus()) {
             throw new BadRequestHttpException("You can only reject draft of status 'new'");
         }
         $this->draftFacade->rejectDraft($draft);
@@ -117,7 +125,7 @@ class PcmtProductDraftController
         if (!$draft) {
             throw new NotFoundHttpException('The draft does not exist');
         }
-        if (AbstractProductDraft::STATUS_NEW !== $draft->getStatus()) {
+        if (AbstractDraft::STATUS_NEW !== $draft->getStatus()) {
             throw new BadRequestHttpException("You can only approve draft of status 'new'");
         }
 

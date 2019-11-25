@@ -10,7 +10,7 @@ use Symfony\Component\Intl\Exception\NotImplementedException;
 
 class ProductDraftORMRepository extends EntityRepository implements DraftRepositoryInterface
 {
-    public function findById(): AbstractProductDraft
+    public function findById(): AbstractDraft
     {
         throw new NotImplementedException('method not implemented');
     }

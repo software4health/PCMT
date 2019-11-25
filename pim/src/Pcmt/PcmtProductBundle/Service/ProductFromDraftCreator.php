@@ -13,8 +13,8 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
+use Pcmt\PcmtProductBundle\Entity\ExistingProductDraft;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
-use Pcmt\PcmtProductBundle\Entity\PendingProductDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 
 class ProductFromDraftCreator
@@ -63,7 +63,7 @@ class ProductFromDraftCreator
         switch (get_class($draft)) {
             case NewProductDraft::class:
                 return $this->createNewProduct($draft);
-            case PendingProductDraft::class:
+            case ExistingProductDraft::class:
                 return $this->createExistingProductForComparing($draft);
         }
     }
@@ -73,12 +73,12 @@ class ProductFromDraftCreator
         switch (get_class($draft)) {
             case NewProductDraft::class:
                 return $this->createNewProduct($draft);
-            case PendingProductDraft::class:
+            case ExistingProductDraft::class:
                 return $this->createForSaveForDraftForExistingProduct($draft);
         }
     }
 
-    private function createExistingProductForComparing(PendingProductDraft $draft): ProductInterface
+    private function createExistingProductForComparing(ExistingProductDraft $draft): ProductInterface
     {
         $product = $draft->getProduct();
         $newProduct = clone $product;
@@ -96,7 +96,7 @@ class ProductFromDraftCreator
         return $newProduct;
     }
 
-    private function createForSaveForDraftForExistingProduct(PendingProductDraft $draft): ProductInterface
+    private function createForSaveForDraftForExistingProduct(ExistingProductDraft $draft): ProductInterface
     {
         $product = $draft->getProduct();
         $data = $draft->getProductData();
