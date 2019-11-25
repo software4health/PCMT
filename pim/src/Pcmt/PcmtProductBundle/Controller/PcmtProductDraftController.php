@@ -16,6 +16,7 @@ use Pcmt\PcmtProductBundle\Service\DraftStatusListService;
 use Pcmt\PcmtProductBundle\Service\DraftStatusTranslatorService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -77,6 +78,22 @@ class PcmtProductDraftController
 
         $serializer = new Serializer([$this->productDraftNormalizer, $this->productModelDraftNormalizer]);
         $data = $serializer->normalize($drafts);
+
+        return new JsonResponse($data);
+    }
+
+    public function getDraft(int $id): Response
+    {
+        $draftRepository = $this->entityManager->getRepository(AbstractProductDraft::class);
+
+        $draft = $draftRepository->find($id);
+
+        if (!$draft) {
+            throw new NotFoundHttpException('The draft does not exist');
+        }
+
+        $serializer = new Serializer([$this->draftNormalizer]);
+        $data = $serializer->normalize($draft);
 
         return new JsonResponse($data);
     }
