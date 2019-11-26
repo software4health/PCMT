@@ -16,7 +16,7 @@ abstract class AbstractDraft implements DraftInterface
 
     // keep product or product-model related data here.
     // like family, groups etc. all the fields. - it helps rebuild product from new draft.
-    /** @var array */
+    /** @var mixed[] */
     protected $productData = [];
 
     /** @var int */

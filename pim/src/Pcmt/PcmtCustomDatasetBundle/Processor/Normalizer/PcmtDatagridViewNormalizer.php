@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  */
 class PcmtDatagridViewNormalizer implements NormalizerInterface
 {
-    /** @var array */
+    /** @var string[] */
     protected $supportedFormat = ['internal_api'];
 
     /**

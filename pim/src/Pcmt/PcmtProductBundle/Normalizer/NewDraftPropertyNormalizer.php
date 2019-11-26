@@ -10,11 +10,17 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class NewDraftPropertyNormalizer implements NormalizerInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function normalize($object, $format = null, array $context = []): array
     {
         throw new MethodNotImplementedException('method not implemented');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsNormalization($data, $format = null): bool
     {
         return $data instanceof NewProductDraft;

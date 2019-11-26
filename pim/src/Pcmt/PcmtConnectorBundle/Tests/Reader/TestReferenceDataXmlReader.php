@@ -31,7 +31,7 @@ class TestReferenceDataXmlReader extends TestCase
         $this->stepExecutionMock = $this->createMock(StepExecution::class);
     }
 
-    public function inputFilePathDataProvider()
+    public function inputFilePathDataProvider(): array
     {
         return [
             ['testDirectory/file01.xml'],   //proper path and file format
@@ -75,7 +75,7 @@ class TestReferenceDataXmlReader extends TestCase
         $reader->read();
     }
 
-    public function invalidInputFilePathDataProvider()
+    public function invalidInputFilePathDataProvider(): array
     {
         return [
             ['testDirectory/file01.yml'],
@@ -87,7 +87,7 @@ class TestReferenceDataXmlReader extends TestCase
     /**
      * @dataProvider invalidInputFilePathDataProvider
      */
-    public function testReadNullOrCorruptedOrWrongFileFormat($filePath): void
+    public function testReadNullOrCorruptedOrWrongFileFormat(string $filePath): void
     {
         $reader = $this->getReferenceDataXmlReaderInstance();
         $reader->setStepExecution($this->stepExecutionMock);

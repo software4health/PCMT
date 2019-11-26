@@ -13,7 +13,15 @@ class AttributeChange
      * @var string
      */
     private $attributeName;
+
+    /**
+     * @var string|null
+     */
     private $previousValue;
+
+    /**
+     * @var string|null
+     */
     private $newValue;
 
     public function __construct(string $attributeName, ?string $previousValue, ?string $newValue)

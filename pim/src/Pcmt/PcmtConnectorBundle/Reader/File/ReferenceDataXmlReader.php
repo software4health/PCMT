@@ -22,12 +22,13 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
     /** @var StepExecution */
     protected $stepExecution;
 
-    /** @var array */
+    /** @var mixed[] */
     protected $processed = [];
 
     /** @var \ArrayIterator */
     protected $arrayIterator;
 
+    /** @var FileGetContentsWrapper */
     protected $fileGetContentsWrapper;
 
     public function __construct(FileGetContentsWrapper $wrapper)
@@ -42,6 +43,11 @@ abstract class ReferenceDataXmlReader implements FileReaderInterface
         $this->arrayIterator = null;
     }
 
+    /**
+     * @return mixed|null
+     *
+     * @throws \Throwable
+     */
     public function read()
     {
         $filePath = $this->stepExecution->getJobParameters()

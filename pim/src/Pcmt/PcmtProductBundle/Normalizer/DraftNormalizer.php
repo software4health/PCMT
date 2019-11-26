@@ -24,6 +24,9 @@ class DraftNormalizer implements NormalizerInterface
         $this->attributeChangeNormalizer = $attributeChangeNormalizer;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function normalize($draft, $format = null, array $context = []): array
     {
         /** @var DraftInterface $draft */
@@ -39,6 +42,9 @@ class DraftNormalizer implements NormalizerInterface
         return $data;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         return false;

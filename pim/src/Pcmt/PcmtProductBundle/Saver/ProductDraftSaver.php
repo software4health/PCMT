@@ -28,6 +28,9 @@ class ProductDraftSaver implements SaverInterface
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function save($draft, array $options = []): void
     {
         $this->validateDraft($draft);

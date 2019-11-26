@@ -12,8 +12,10 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class XmlReferenceDataImport implements DefaultValuesProviderInterface
 {
-    protected $supportedJobNames;
+    /** @var string[] */
+    protected $supportedJobNames = [];
 
+    /** @var string */
     protected $fileDirectory = 'Xml';
 
     public function __construct(

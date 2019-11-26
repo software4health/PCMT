@@ -21,6 +21,9 @@ class ConcatenatedAttributeProductValuesUpdater implements ObjectUpdaterInterfac
         $this->propertySetter = $propertySetter;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function update($entityWithValues, array $data, array $options = []): void
     {
         if (!$entityWithValues instanceof EntityWithValuesInterface) {

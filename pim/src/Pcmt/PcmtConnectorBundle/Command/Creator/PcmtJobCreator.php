@@ -16,8 +16,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class PcmtJobCreator extends ContainerAwareCommand
 {
+    /** @var string */
     protected static $defaultName = 'pcmt:job-creator';
 
+    /** @var int */
     private $trialCount = 4;
 
     public function configure(): void
@@ -25,6 +27,11 @@ class PcmtJobCreator extends ContainerAwareCommand
         $this->addArgument('jobName', InputArgument::REQUIRED, 'Pcmt Job registry code. Used to parse job creation parameters. Defined in PcmtConnectorJobParametersRegistry::class');
     }
 
+    /**
+     * @return bool|int|null
+     *
+     * @throws InvalidJobConfigurationException
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
@@ -55,7 +62,7 @@ class PcmtJobCreator extends ContainerAwareCommand
         }
     }
 
-    private function createJobInstanceFromParameters(array $jobInstanceParameters, OutputInterface $output)
+    private function createJobInstanceFromParameters(array $jobInstanceParameters, OutputInterface $output): bool
     {
         $command = $this->getApplication()->find('akeneo:batch:create-job');
 

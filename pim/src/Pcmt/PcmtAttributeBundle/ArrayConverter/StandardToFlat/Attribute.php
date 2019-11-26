@@ -25,41 +25,43 @@ class Attribute extends BaseAttribute
     protected function convertProperty($property, $data, array $convertedItem, array $options)
     {
         switch ($property) {
-      case 'labels':
-        foreach ($data as $localeCode => $label) {
-            $labelKey = sprintf('label-%s', $localeCode);
-            $convertedItem[$labelKey] = $label;
+            case 'labels':
+                foreach ($data as $localeCode => $label) {
+                    $labelKey = sprintf('label-%s', $localeCode);
+                    $convertedItem[$labelKey] = $label;
+                }
+
+                break;
+            // Add @DND
+            case 'descriptions':
+                foreach ($data as $localeCode => $description) {
+                    $descriptionKey = sprintf('description-%s', $localeCode);
+                    $convertedItem[$descriptionKey] = $description; // convert all localizable values of  attribute description field
+                }
+
+                break;
+            // / Add @DND
+            case 'options':
+            case 'available_locales':
+            case 'allowed_extensions':
+                $convertedItem[$property] = implode(',', $data);
+
+                break;
+            case in_array($property, $this->booleanFields):
+                if (null === $data) {
+                    $convertedItem[$property] = '';
+
+                    break;
+                }
+
+                $convertedItem[$property] = true === $data ? '1' : '0';
+
+                break;
+            case 'concatenated':
+                break;
+            default:
+                $convertedItem[$property] = (string) $data;
         }
-
-                break;
-      // Add @DND
-      case 'descriptions':
-        foreach ($data as $localeCode => $description) {
-            $descriptionKey = sprintf('description-%s', $localeCode);
-            $convertedItem[$descriptionKey] = $description; // convert all localizable values of  attribute description field
-        }
-
-                break;
-      // / Add @DND
-      case 'options':
-      case 'available_locales':
-      case 'allowed_extensions':
-        $convertedItem[$property] = implode(',', $data);
-
-                break;
-      case in_array($property, $this->booleanFields):
-        if (null === $data) {
-            $convertedItem[$property] = '';
-
-            break;
-        }
-
-        $convertedItem[$property] = true === $data ? '1' : '0';
-
-                break;
-      default:
-        $convertedItem[$property] = (string) $data;
-    }
 
         return $convertedItem;
     }

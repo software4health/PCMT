@@ -68,12 +68,7 @@ class AttributeUpdater extends BaseAttributeUpdater
     }
 
     /**
-     * Validate the data type of a field.
-     *
-     * @param string $field
-     *
-     * @throws InvalidPropertyTypeException
-     * @throws UnknownPropertyException
+     * {@inheritdoc}
      */
     protected function validateDataType($field, $data): void
     {
@@ -132,7 +127,7 @@ class AttributeUpdater extends BaseAttributeUpdater
     }
 
     /**
-     * @param string $field
+     * {@inheritdoc}
      */
     protected function setData(AttributeInterface $attribute, $field, $data): void
     {

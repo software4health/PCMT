@@ -230,7 +230,7 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
         $this->detacher->detach($product);
     }
 
-    private function skipItemAndReturnException(array $item, $message, ?\Throwable $previousException = null): InvalidItemException
+    private function skipItemAndReturnException(array $item, string $message, ?\Throwable $previousException = null): InvalidItemException
     {
         if ($this->stepExecution) {
             $this->stepExecution->incrementSummaryInfo('skip');

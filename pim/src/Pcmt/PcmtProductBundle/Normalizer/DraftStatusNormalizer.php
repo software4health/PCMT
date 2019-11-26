@@ -29,8 +29,7 @@ class DraftStatusNormalizer implements NormalizerInterface
     }
 
     /**
-     * @param DraftStatus $draftStatus
-     * @param null        $format
+     * {@inheritdoc}
      */
     public function normalize($draftStatus, $format = null, array $context = []): array
     {
@@ -64,6 +63,9 @@ class DraftStatusNormalizer implements NormalizerInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         return $data instanceof DraftStatus;

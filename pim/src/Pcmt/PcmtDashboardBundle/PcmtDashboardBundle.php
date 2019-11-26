@@ -9,6 +9,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class PcmtDashboardBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getContainerExtension()
     {
         return new PcmtDashboardExtension();

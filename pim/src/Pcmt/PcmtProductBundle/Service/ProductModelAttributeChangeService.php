@@ -51,6 +51,9 @@ class ProductModelAttributeChangeService
         return $this->changes;
     }
 
+    /**
+     * @param string $attribute
+     */
     private function createChange($attribute, $value, $previousValue): void
     {
         if ($value === $previousValue) {

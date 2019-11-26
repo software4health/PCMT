@@ -30,6 +30,9 @@ class ProductModelDraftNormalizer extends DraftNormalizer implements NormalizerI
         $this->productModelAttributeChangeService = $productModelAttributeChangeService;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function normalize($draft, $format = null, array $context = []): array
     {
         /** @var ProductModelDraftInterface $draft */
@@ -55,6 +58,9 @@ class ProductModelDraftNormalizer extends DraftNormalizer implements NormalizerI
         return $data;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         return $data instanceof ProductModelDraftInterface;

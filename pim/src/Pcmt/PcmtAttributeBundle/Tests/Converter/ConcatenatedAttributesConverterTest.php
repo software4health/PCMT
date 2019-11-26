@@ -16,7 +16,7 @@ class ConcatenatedAttributesConverterTest extends TestCase
     /** @var AttributeColumnsResolver|Mock */
     protected $columnsResolverMock;
 
-    /** @var array */
+    /** @var mixed[] */
     private $supportedAttributeTypes = [];
 
     protected function setUp(): void
@@ -37,7 +37,10 @@ class ConcatenatedAttributesConverterTest extends TestCase
         $this->assertSame($converted, $concatenatedAttributesConverter->convert($attribute->getCode(), $input));
     }
 
-    /** @dataProvider provideInvalidDataToConvert */
+    /**
+     * @var mixed
+     * @dataProvider provideInvalidDataToConvert
+     */
     public function testShouldThrowExceptionIfInvalidDataFormat($input): void
     {
         $attribute = new Attribute();

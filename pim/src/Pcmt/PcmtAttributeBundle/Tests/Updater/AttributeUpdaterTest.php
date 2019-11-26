@@ -31,7 +31,7 @@ class AttributeUpdaterTest extends TestCase
     /** @var TranslatableUpdater|Mock */
     protected $translatableUpdaterMock;
 
-    /** @var array|Mock */
+    /** @var mixed[]|Mock */
     protected $propertiesMock;
 
     /** @var Attribute|Mock */
@@ -71,7 +71,7 @@ class AttributeUpdaterTest extends TestCase
     /**
      * @dataProvider dataWithRightDescriptions
      */
-    public function testUpdateFunctionShouldInvokeValidateDataTypeMethodAndSetDataMethodWhenRightData($data): void
+    public function testUpdateFunctionShouldInvokeValidateDataTypeMethodAndSetDataMethodWhenRightData(array $data): void
     {
         $attributeUpdater = $this->getMockBuilder(AttributeUpdater::class)
             ->setMethods(['validateDataType', 'setData'])
@@ -91,7 +91,7 @@ class AttributeUpdaterTest extends TestCase
     /**
      * @dataProvider dataWithRightDescriptions
      */
-    public function testUpdateFunctionShouldThrowExceptionWhenWrongAttributeClassType($data): void
+    public function testUpdateFunctionShouldThrowExceptionWhenWrongAttributeClassType(array $data): void
     {
         $attribute = $this->getWrongAttributeClassType();
         $attributeUpdater = $this->getAttributeUpdaterInstance();
@@ -102,7 +102,7 @@ class AttributeUpdaterTest extends TestCase
     /**
      * @dataProvider dataWithUnknownProperty
      */
-    public function testUpdateFunctionShouldThrowUnknownPropertyExceptionWhenUnknownPropertyInData($data): void
+    public function testUpdateFunctionShouldThrowUnknownPropertyExceptionWhenUnknownPropertyInData(array $data): void
     {
         $attributeUpdater = $this->getAttributeUpdaterInstance();
         $this->expectException(UnknownPropertyException::class);
@@ -112,7 +112,7 @@ class AttributeUpdaterTest extends TestCase
     /**
      * @dataProvider dataWithInvalidPropertyType
      */
-    public function testUpdateFunctionShouldThrowInvalidPropertyTypeExceptionWithWrongData($data): void
+    public function testUpdateFunctionShouldThrowInvalidPropertyTypeExceptionWithWrongData(array $data): void
     {
         $attributeUpdater = $this->getAttributeUpdaterInstance();
         $this->expectException(InvalidPropertyTypeException::class);
@@ -121,7 +121,7 @@ class AttributeUpdaterTest extends TestCase
     /**
      * @dataProvider dataWithRightDescriptions
      */
-    public function testUpdateFunctionShouldUpdateDescriptionsViaSetDataFunctionWhenRightData($data): void
+    public function testUpdateFunctionShouldUpdateDescriptionsViaSetDataFunctionWhenRightData(array $data): void
     {
         $attributeUpdater = $this->getAttributeUpdaterInstance();
         $this->translatableUpdaterMock->expects($this->atLeastOnce())
@@ -129,7 +129,7 @@ class AttributeUpdaterTest extends TestCase
         $attributeUpdater->update($this->attribute, $data);
     }
 
-    public function dataWithRightDescriptions()
+    public function dataWithRightDescriptions(): array
     {
         return [
             'single description' => [
@@ -165,7 +165,7 @@ class AttributeUpdaterTest extends TestCase
             ]],
         ];
     }
-    public function dataWithUnknownProperty()
+    public function dataWithUnknownProperty(): array
     {
         return [
             'one of property is unknown' => [[
@@ -181,7 +181,8 @@ class AttributeUpdaterTest extends TestCase
             ]],
         ];
     }
-    public function dataWithInvalidPropertyType()
+
+    public function dataWithInvalidPropertyType(): array
     {
         return [
             'not an array' => [['descriptions' => 'en_US']],

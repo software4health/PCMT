@@ -18,7 +18,8 @@ use Akeneo\Pim\Enrichment\Component\Product\Normalizer\Standard\TranslationNorma
 class TranslationNormalizer extends BaseTranslationNormalizer
 {
     /**
-     * @param $object
+     * @param mixed $object  Object to normalize
+     * @param array $context Context options for the normalizer
      */
     public function normalizeDescription($object, array $context = []): array
     {

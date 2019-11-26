@@ -8,7 +8,7 @@ use Pcmt\PcmtConnectorBundle\Validator\Directory\Provider\ValidPathProvider;
 
 class DirectoryPathValidator
 {
-    /** @var array */
+    /** @var mixed[] */
     protected $configProviders = [];
 
     public function __construct()

@@ -45,6 +45,9 @@ class ReferenceDataBulkSaver implements BulkSaverInterface, SaverInterface
         $this->eventDispatcher->dispatch(StorageEvents::POST_SAVE_ALL, new GenericEvent($objects, $options));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function save($object, array $options = []): void
     {
         $this->validateReferenceData($object);
