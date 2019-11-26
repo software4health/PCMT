@@ -7,26 +7,40 @@ namespace Pcmt\PcmtProductBundle\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
 use Pcmt\PcmtProductBundle\Entity\DraftInterface;
+use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
+use Pcmt\PcmtProductBundle\Entity\ProductModelDraftInterface;
 
 class DraftFacade
 {
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    /** @var DraftApprover */
-    private $draftApprover;
+    /** @var ProductDraftApprover */
+    private $productDraftApprover;
+
+    /** @var ProductModelDraftApprover */
+    private $productModelDraftApprover;
 
     public function __construct(
-        DraftApprover $draftApprover,
+        ProductDraftApprover $productDraftApprover,
+        ProductModelDraftApprover $productModelDraftApprover,
         EntityManagerInterface $entityManager
     ) {
         $this->entityManager = $entityManager;
-        $this->draftApprover = $draftApprover;
+        $this->productDraftApprover = $productDraftApprover;
+        $this->productModelDraftApprover = $productModelDraftApprover;
     }
 
     public function approveDraft(DraftInterface $draft): void
     {
-        $this->draftApprover->approve($draft);
+        if ($draft instanceof ProductDraftInterface) {
+            $this->productDraftApprover->approve($draft);
+        } elseif ($draft instanceof ProductModelDraftInterface) {
+            $this->productModelDraftApprover->approve($draft);
+        } else {
+            $class = get_class($draft);
+            throw new \Exception('Unknown class: ' . $class);
+        }
     }
 
     public function rejectDraft(DraftInterface $draft): void

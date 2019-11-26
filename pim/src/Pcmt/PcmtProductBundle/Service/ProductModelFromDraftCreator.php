@@ -98,7 +98,13 @@ class ProductModelFromDraftCreator
 
     private function createForSaveForDraftForExistingProductModel(ExistingProductModelDraft $draft): ProductModelInterface
     {
-        return $draft->getProductModel();
+        $productModel = $draft->getProductModel();
+        $data = $draft->getProductData();
+        if (isset($data['values'])) {
+            $this->updateProductModel($productModel, $data);
+        }
+
+        return $productModel;
     }
 
     private function createNewProductModel(NewProductModelDraft $draft): ProductModelInterface

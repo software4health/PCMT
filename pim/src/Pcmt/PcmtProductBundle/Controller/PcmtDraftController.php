@@ -21,13 +21,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 
-class PcmtProductDraftController
+class PcmtDraftController
 {
     /** @var EntityManagerInterface */
     private $entityManager;
 
     /** @var ProductDraftNormalizer */
     private $productDraftNormalizer;
+
+    /** @var ProductModelDraftNormalizer */
+    private $productModelDraftNormalizer;
 
     /** @var DraftStatusTranslatorService */
     private $draftStatusTranslatorService;
@@ -40,10 +43,6 @@ class PcmtProductDraftController
 
     /** @var NormalizerInterface */
     protected $constraintViolationNormalizer;
-    /**
-     * @var ProductModelDraftNormalizer
-     */
-    private $productModelDraftNormalizer;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -56,11 +55,11 @@ class PcmtProductDraftController
     ) {
         $this->entityManager = $entityManager;
         $this->productDraftNormalizer = $productDraftNormalizer;
+        $this->productModelDraftNormalizer = $productModelDraftNormalizer;
         $this->draftStatusTranslatorService = $draftStatusTranslatorService;
         $this->draftStatusListService = $draftStatusListService;
         $this->draftFacade = $draftFacade;
         $this->constraintViolationNormalizer = $constraintViolationNormalizer;
-        $this->productModelDraftNormalizer = $productModelDraftNormalizer;
     }
 
     /**
@@ -149,12 +148,18 @@ class PcmtProductDraftController
             $this->draftFacade->approveDraft($draft);
         } catch (DraftViolationException $e) {
             $normalizedViolations = [];
-            $product = $e->getProduct();
+            $context = [];
+            if ($e->getProduct()) {
+                $context['product'] = $e->getProduct();
+            }
+            if ($e->getProductModel()) {
+                $context['productModel'] = $e->getProductModel();
+            }
             foreach ($e->getViolations() as $violation) {
                 $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
                     $violation,
                     'internal_api',
-                    ['product' => $product]
+                    $context
                 );
             }
 

@@ -11,7 +11,7 @@ use Akeneo\UserManagement\Component\Model\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
-use Pcmt\PcmtProductBundle\Service\DraftApprover;
+use Pcmt\PcmtProductBundle\Service\ProductDraftApprover;
 use Pcmt\PcmtProductBundle\Service\ProductFromDraftCreator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class DraftApproverTest extends TestCase
+class ProductDraftApproverTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -45,7 +45,10 @@ class DraftApproverTest extends TestCase
 
         $productSaver = $this->createMock(ProductSaver::class);
 
-        $service = new DraftApprover($creator, $entityManager, $tokenStorage, $productSaver, $productValidator);
+        $service = new ProductDraftApprover($entityManager, $tokenStorage);
+        $service->setCreator($creator);
+        $service->setSaver($productSaver);
+        $service->setValidator($productValidator);
 
         $attribute1 = 'attribute1';
         $productData = [

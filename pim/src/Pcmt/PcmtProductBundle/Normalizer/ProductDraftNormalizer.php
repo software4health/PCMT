@@ -50,6 +50,7 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
                 break;
         }
         $data['label'] = $productLabel;
+
         $changes = $this->productAttributeChangeService->get($newProduct, $draft->getProduct());
         $serializer = new Serializer([$this->attributeChangeNormalizer]);
         $data['changes'] = $serializer->normalize($changes);
