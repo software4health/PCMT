@@ -22,6 +22,9 @@ class ImportRefDataFiles extends AbstractStep
     /** @var ClientInterface */
     protected $guzzleClient;
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct($name, EventDispatcherInterface $eventDispatcher, JobRepositoryInterface $jobRepository)
     {
         $this->guzzleClient = new Client();
@@ -67,7 +70,7 @@ class ImportRefDataFiles extends AbstractStep
         return $this->directory . $filename;
     }
 
-    private function createDirectories(string $path)
+    private function createDirectories(string $path): bool
     {
         $path_split = explode('/', $path); //array
         $buildPath = '';

@@ -27,6 +27,9 @@ class ConcatenatedAttributeUpdater extends AttributeUpdater
         parent::__construct($attrGroupRepo, $localeRepository, $registry, $translatableUpdater, $properties);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function setData(AttributeInterface $attribute, $field, $data): void
     {
         if ($attribute instanceof ConcatenatedAttributeWriteModel) {

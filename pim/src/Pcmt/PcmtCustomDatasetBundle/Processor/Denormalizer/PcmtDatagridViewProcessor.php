@@ -151,9 +151,8 @@ class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcess
     /**
      * Find an object according to its identifiers from a repository.
      *
-//   * @param DatagridViewRepository $repository the repository to search inside
-//   * cannot declare as strict_types=1 because of different type than parent
-     * @param array $data the data that is currently processed
+     * @param mixed $repository the repository to search inside
+     * @param array $data       the data that is currently processed
      *
      * @throws MissingIdentifierException in case the processed data do not allow to retrieve an object
      *                                    by its identifiers properly
@@ -166,7 +165,7 @@ class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcess
         return $this->findOneByIdentifier($itemIdentifier);
     }
 
-    protected function findOneByIdentifier($itemIdentifier): ?object
+    protected function findOneByIdentifier(string $itemIdentifier): ?object
     {
         return $this->repository->findOneBy([
             'type'  => DatagridView::TYPE_PUBLIC,

@@ -72,6 +72,9 @@ class PcmtProductController extends ProductController
         parent::__construct($productRepository, $cursorableRepository, $attributeRepository, $productUpdater, $productSaver, $normalizer, $validator, $userContext, $objectFilter, $productEditDataFilter, $productRemover, $productBuilder, $localizedConverter, $emptyValuesFilter, $productValueConverter, $constraintViolationNormalizer, $variantProductBuilder, $productAttributeFilter, $productClient, $productAndProductModelClient);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getAction($id): JsonResponse
     {
         $event = new ProductFetchEvent($id);
@@ -108,6 +111,9 @@ class PcmtProductController extends ProductController
         ));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function postAction(Request $request, $id): Response
     {
         if (!$request->isXmlHttpRequest()) {

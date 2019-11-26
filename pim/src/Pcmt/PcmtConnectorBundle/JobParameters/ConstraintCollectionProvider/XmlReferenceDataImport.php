@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints\Collection;
 
 class XmlReferenceDataImport implements ConstraintCollectionProviderInterface
 {
-    /** @var array */
+    /** @var string[] */
     protected $supportedJobNames = [];
 
     public function __construct(

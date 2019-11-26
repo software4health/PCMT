@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PcmtReferenceDataProcessor extends ReferenceDataProcessor
 {
+    /** @var mixed */
     protected $className;
 
     public function __construct(
@@ -52,6 +53,9 @@ class PcmtReferenceDataProcessor extends ReferenceDataProcessor
         return $entity;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function findOrCreateObject(array $item)
     {
         $this->className = $item['class'];

@@ -62,7 +62,7 @@ class ImportRefDataFilesStepTest extends TestCase
         $step->doExecute(new StepExecution($stepName, $jobExecution));
     }
 
-    protected function getItemStepInstance()
+    protected function getItemStepInstance(): ItemStep
     {
         return new ItemStep(
             'process',

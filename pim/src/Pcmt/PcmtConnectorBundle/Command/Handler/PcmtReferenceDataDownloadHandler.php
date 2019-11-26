@@ -15,6 +15,7 @@ class PcmtReferenceDataDownloadHandler extends ContainerAwareCommand
 {
     protected const DEFAULT_JOB_CODE = 'reference_data_download_xmls';
 
+    /** @var string */
     protected static $defaultName = 'pcmt:handler:download_reference_data';
 
     public function configure(): void

@@ -6,7 +6,7 @@ namespace Pcmt\PcmtConnectorBundle\Validator\Directory\Provider;
 
 class ValidPathProvider
 {
-    public function getConfig()
+    public function getConfig(): array
     {
         return [
             'reference_data_files_path' => 'src/Pcmt/PcmtConnectorBundle/Resources/config/reference_data',

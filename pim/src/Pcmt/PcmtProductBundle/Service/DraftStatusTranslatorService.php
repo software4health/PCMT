@@ -19,12 +19,12 @@ class DraftStatusTranslatorService
         $this->translator = $translator;
     }
 
-    public function getNameTranslated($statusId): string
+    public function getNameTranslated(int $statusId): string
     {
         return $this->translator->trans($this->getName($statusId));
     }
 
-    public function getName($statusId): string
+    public function getName(int $statusId): string
     {
         switch ($statusId) {
             case AbstractDraft::STATUS_NEW:

@@ -31,6 +31,7 @@ class InitializeReferenceDataImport extends ContainerAwareCommand
         ],
     ];
 
+    /** @var string */
     protected static $defaultName = 'pcmt:reference_data:create';
 
     protected function execute(InputInterface $input, OutputInterface $output): void
@@ -66,7 +67,7 @@ class InitializeReferenceDataImport extends ContainerAwareCommand
         }
     }
 
-    protected function checkIfJobsExist(OutputInterface $output, int $trialCount)
+    protected function checkIfJobsExist(OutputInterface $output, int $trialCount): bool
     {
         try {
             foreach (self::CONSECUTIVE_JOBS as $jobInstanceParameters) {

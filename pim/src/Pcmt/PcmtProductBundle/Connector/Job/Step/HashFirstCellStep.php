@@ -55,7 +55,7 @@ class HashFirstCellStep extends AbstractStep
         $this->stepExecution = $stepExecution;
     }
 
-    private function sanitize($value): string
+    private function sanitize(string $value): string
     {
         return preg_replace('#[^A-Za-z0-9\.]#', '_', $value);
     }

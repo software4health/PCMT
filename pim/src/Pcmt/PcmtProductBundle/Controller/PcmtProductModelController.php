@@ -90,6 +90,9 @@ class PcmtProductModelController extends ProductModelController
         return new JsonResponse([]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function postAction(Request $request, $id): Response
     {
         if (!$request->isXmlHttpRequest()) {

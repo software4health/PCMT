@@ -9,6 +9,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class PcmtConnectorBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getContainerExtension()
     {
         if (null === $this->extension) {

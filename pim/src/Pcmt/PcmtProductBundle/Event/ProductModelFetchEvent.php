@@ -13,7 +13,7 @@ class ProductModelFetchEvent extends Event
     /** @var int */
     protected $productModelId;
 
-    public function __construct($productModelId)
+    public function __construct(?int $productModelId)
     {
         $this->productModelId = (int) $productModelId;
     }

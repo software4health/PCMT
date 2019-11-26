@@ -21,6 +21,7 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
     /** @var string */
     protected $dir;
 
+    /** @var string */
     protected static $defaultName = 'pcmt:handler:import_reference_data';
 
     public function __construct()
