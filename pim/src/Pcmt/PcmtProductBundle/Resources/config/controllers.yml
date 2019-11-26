@@ -58,3 +58,5 @@ services:
             - [setUserContextProtected, ['@pim_user.context.user']]
             - [setNormalizerProtected, ['@pim_internal_api_serializer']]
             - [setDraftSaver, ['@pcmt_product.save.productModelDraft']]
+            - [setObjectFilterProtected, ['@pim_catalog.filter.chained']]
+            - [setProductModelRepositoryProtected, ['@pim_catalog.repository.product_model']]

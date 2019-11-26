@@ -7,7 +7,6 @@ namespace Pcmt\PcmtProductBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
-use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Exception\DraftViolationException;
 use Pcmt\PcmtProductBundle\Normalizer\ProductDraftNormalizer;
 use Pcmt\PcmtProductBundle\Normalizer\ProductModelDraftNormalizer;
@@ -121,7 +120,7 @@ class PcmtProductDraftController
     /**
      * @AclAncestor("pcmt_permission_drafts_reject")
      */
-    public function rejectDraft(AbstractProductDraft $draft): JsonResponse
+    public function rejectDraft(AbstractDraft $draft): JsonResponse
     {
         if (!$draft) {
             throw new NotFoundHttpException('The draft does not exist');
@@ -137,7 +136,7 @@ class PcmtProductDraftController
     /**
      * @AclAncestor("pcmt_permission_drafts_approve")
      */
-    public function approveDraft(AbstractProductDraft $draft): JsonResponse
+    public function approveDraft(AbstractDraft $draft): JsonResponse
     {
         if (!$draft) {
             throw new NotFoundHttpException('The draft does not exist');

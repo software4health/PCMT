@@ -7,10 +7,10 @@ namespace Pcmt\PcmtProductBundle\Tests\Service;
 use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
 use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
 use Akeneo\Pim\Enrichment\Component\Product\Value\ScalarValue;
-use Pcmt\PcmtProductBundle\Service\AttributeChangesService;
+use Pcmt\PcmtProductBundle\Service\ProductAttributeChangeService;
 use PHPUnit\Framework\TestCase;
 
-class AttributeChangesServiceTest extends TestCase
+class ProductAttributeChangeServiceTest extends TestCase
 {
     /** @var \PHPUnit\Framework\MockObject\MockObject */
     private $productNew;
@@ -27,7 +27,7 @@ class AttributeChangesServiceTest extends TestCase
 
     public function testGetEmpty(): void
     {
-        $service = new AttributeChangesService();
+        $service = new ProductAttributeChangeService();
         $this->productNew->method('getValues')->willReturn(new WriteValueCollection());
         $changes = $service->get($this->productNew, null);
         $this->assertEmpty($changes);
@@ -35,7 +35,7 @@ class AttributeChangesServiceTest extends TestCase
 
     public function testGetNotEmpty(): void
     {
-        $service = new AttributeChangesService();
+        $service = new ProductAttributeChangeService();
         $collection = new WriteValueCollection();
         $value = ScalarValue::value('code', 'value');
         $collection->add($value);
@@ -47,7 +47,7 @@ class AttributeChangesServiceTest extends TestCase
 
     public function testGetTwoSameProducts(): void
     {
-        $service = new AttributeChangesService();
+        $service = new ProductAttributeChangeService();
         $collection = new WriteValueCollection();
         $value = ScalarValue::value('code', 'value');
         $collection->add($value);
@@ -59,7 +59,7 @@ class AttributeChangesServiceTest extends TestCase
 
     public function testGetTwoDifferentProducts(): void
     {
-        $service = new AttributeChangesService();
+        $service = new ProductAttributeChangeService();
         $collection = new WriteValueCollection();
         $value = ScalarValue::value('code', 'value');
         $collection->add($value);

@@ -17,7 +17,7 @@ abstract class AbstractProductModelDraft extends AbstractDraft implements Produc
         $this->author = $author;
         $this->created = $created;
         $this->status = $status;
-        $this->version = ProductDraftInterface::DRAFT_VERSION_NEW;
+        $this->version = self::DRAFT_VERSION_NEW;
     }
 
     public function getProductModel(): ?ProductModelInterface

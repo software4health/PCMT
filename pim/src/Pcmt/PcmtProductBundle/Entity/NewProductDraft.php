@@ -19,8 +19,4 @@ class NewProductDraft extends AbstractProductDraft
         $this->productData = $productData;
         parent::__construct($author, $created, $status);
     }
-
-    public function getLabel(): void
-    {
-    }
 }

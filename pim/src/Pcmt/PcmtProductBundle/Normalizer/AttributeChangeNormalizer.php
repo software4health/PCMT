@@ -9,12 +9,9 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class AttributeChangeNormalizer implements NormalizerInterface
 {
-    /**
-     * @param AttributeChange $change
-     * @param null            $format
-     */
     public function normalize($change, $format = null, array $context = []): array
     {
+        /** @var AttributeChange $change */
         $data = [];
         $data['attribute'] = $change->getAttributeName();
         $data['previousValue'] = $change->getPreviousValue();
