@@ -48,13 +48,9 @@ class ProductModelDraftNormalizer extends DraftNormalizer implements NormalizerI
         }
         $data['label'] = $productLabel;
 
-        if (!empty($newProductModel)) {
-            $changes = $this->productModelAttributeChangeService->get($newProductModel, $draft->getProductModel());
-            $serializer = new Serializer([$this->attributeChangeNormalizer]);
-            $data['changes'] = $serializer->normalize($changes);
-        } else {
-            $data['changes'] = []; // @todo implement for existing product model
-        }
+        $changes = $this->productModelAttributeChangeService->get($newProductModel, $draft->getProductModel());
+        $serializer = new Serializer([$this->attributeChangeNormalizer]);
+        $data['changes'] = $serializer->normalize($changes);
 
         return $data;
     }

@@ -3,11 +3,19 @@ services:
         class: Pcmt\PcmtProductBundle\Manager\DraftFacade
         autowire: true
     pcmt.service.product_draft_approver:
-        class: Pcmt\PcmtProductBundle\Service\DraftApprover
+        class: Pcmt\PcmtProductBundle\Service\ProductDraftApprover
         autowire: true
-        arguments:
-            $productValidator: '@pim_catalog.validator.product'
-            $productSaver: '@pim_catalog.saver.product'
+        calls:
+            - [setValidator, ['@pim_catalog.validator.product']]
+            - [setSaver, ['@pim_catalog.saver.product']]
+            - [setCreator, ['@pcmt.service.product_from_draft_creator']]
+    pcmt.service.product_model_draft_approver:
+        class: Pcmt\PcmtProductBundle\Service\ProductModelDraftApprover
+        autowire: true
+        calls:
+            - [setValidator, ['@pim_catalog.validator.product']]
+            - [setSaver, ['@pim_catalog.saver.product_model']]
+            - [setCreator, ['@pcmt.service.product_model_from_draft_creator']]
     pcmt.service.product_from_draft_creator:
         class: Pcmt\PcmtProductBundle\Service\ProductFromDraftCreator
         arguments:

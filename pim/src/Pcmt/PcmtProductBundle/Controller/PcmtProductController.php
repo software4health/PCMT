@@ -35,9 +35,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-/**
- * This is skeleton of the ProductDraftController as it will serve both Drafts and Products // -it can change and be refactored
- */
 class PcmtProductController extends ProductController
 {
     /** @var EventDispatcherInterface */

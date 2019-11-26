@@ -122,6 +122,7 @@
             </div>
         </td>
         <td class="AknGrid-bodyCell AknGrid-bodyCell--actions action-cell">
+            <% if (draft.status.id === 1) { %>
             <div class="AknButtonList AknButtonList--right AknButtonList--expanded">
                 <% if (editPermission) { %>
                 <a href="javascript:void(0);"
@@ -145,6 +146,7 @@
                 </a>
                 <% } %>
             </div>
+            <% } %>
         </td>
     </tr>
     <% }); %>
