@@ -19,6 +19,7 @@ services:
         autowire: true
         calls:
             - [setProductFromDraftCreator, ['@pcmt.service.product_from_draft_creator']]
+            - [setProductAttributeChangeService, ['@pcmt.service.product_attribute_change']]
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 110 }
     pcmt_product.draft.product_model_normalizer:
@@ -26,6 +27,9 @@ services:
         autowire: true
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 110 }
+        calls:
+            - [setProductModelFromDraftCreator, ['@pcmt.service.product_model_from_draft_creator']]
+            - [setProductModelAttributeChangeService, ['@pcmt.service.product_model_attribute_change']]
 
 
 

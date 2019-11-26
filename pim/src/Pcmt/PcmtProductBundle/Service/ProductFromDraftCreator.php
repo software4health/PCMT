@@ -13,6 +13,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
+use Pcmt\PcmtProductBundle\Entity\DraftInterface;
 use Pcmt\PcmtProductBundle\Entity\ExistingProductDraft;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
@@ -65,10 +66,12 @@ class ProductFromDraftCreator
                 return $this->createNewProduct($draft);
             case ExistingProductDraft::class:
                 return $this->createExistingProductForComparing($draft);
+            default:
+                throw new \Exception('Wrong class: ' . get_class($draft));
         }
     }
 
-    public function getProductToSave(ProductDraftInterface $draft): ProductInterface
+    public function getProductToSave(DraftInterface $draft): ProductInterface
     {
         switch (get_class($draft)) {
             case NewProductDraft::class:

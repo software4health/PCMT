@@ -4,38 +4,38 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Service;
 
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Pcmt\PcmtProductBundle\Entity\AttributeChange;
 
-class AttributeChangesService
+class ProductModelAttributeChangeService
 {
     /** @var AttributeChange[] */
     private $changes = [];
 
-    public function get(?ProductInterface $newProduct, ?ProductInterface $previousProduct): array
+    public function get(?ProductModelInterface $newProductModel, ?ProductModelInterface $previousProductModel): array
     {
         $this->changes = [];
 
-        if (!$newProduct) {
+        if (!$newProductModel) {
             return $this->changes;
         }
 
-        $newValues = $newProduct->getValues();
-        $previousValues = $previousProduct ? $previousProduct->getValues() : null;
+        $newValues = $newProductModel->getValues();
+        $previousValues = $previousProductModel ? $previousProductModel->getValues() : null;
 
         $this->createChange(
-            'Family',
-            $newProduct && $newProduct->getFamily() ?
-                $newProduct->getFamily()->getCode() : null,
-            $previousProduct && $previousProduct->getFamily() ?
-                $previousProduct->getFamily()->getCode() : null
+            'Family Variant',
+            $newProductModel && $newProductModel->getFamilyVariant() ?
+                $newProductModel->getFamilyVariant()->getCode() : null,
+            $previousProductModel && $previousProductModel->getFamilyVariant() ?
+                $previousProductModel->getFamilyVariant()->getCode() : null
         );
 
         $this->createChange(
-            'Identifier',
-            $newProduct ? $newProduct->getIdentifier() : null,
-            $previousProduct ? $previousProduct->getIdentifier() : null
+            'Code',
+            $newProductModel ? $newProductModel->getCode() : null,
+            $previousProductModel ? $previousProductModel->getCode() : null
         );
 
         foreach ($newValues as $newValue) {
@@ -56,6 +56,7 @@ class AttributeChangesService
         if ($value === $previousValue) {
             return;
         }
+
         $this->changes[] = new AttributeChange(
             $attribute,
             is_array($previousValue) ? json_encode($previousValue) : (string) $previousValue,

@@ -8,8 +8,6 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 
 interface ProductDraftInterface extends DraftInterface
 {
-    public const DRAFT_VERSION_NEW = 1;
-
     public const TYPE_NEW = 'new product draft';
     public const TYPE_PENDING = 'existing product draft';
 

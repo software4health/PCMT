@@ -8,7 +8,6 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\StorageEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
-use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -60,7 +59,7 @@ class ProductDraftSaver implements SaverInterface
         }
 
         if (!$draft->getId() && $draft->getProduct()) {
-            $draftRepository = $this->entityManager->getRepository(AbstractProductDraft::class);
+            $draftRepository = $this->entityManager->getRepository(AbstractDraft::class);
             $criteria = [
                 'status'  => AbstractDraft::STATUS_NEW,
                 'product' => $draft->getProduct(),

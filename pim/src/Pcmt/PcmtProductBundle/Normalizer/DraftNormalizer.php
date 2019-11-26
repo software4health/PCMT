@@ -6,13 +6,8 @@ namespace Pcmt\PcmtProductBundle\Normalizer;
 
 use Pcmt\PcmtProductBundle\Entity\DraftInterface;
 use Pcmt\PcmtProductBundle\Entity\DraftStatus;
-use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
-use Pcmt\PcmtProductBundle\Service\AttributeChangesService;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-/**
- * Class DraftNormalizer
- */
 class DraftNormalizer implements NormalizerInterface
 {
     /** @var DraftStatusNormalizer */
@@ -21,25 +16,17 @@ class DraftNormalizer implements NormalizerInterface
     /** @var AttributeChangeNormalizer */
     protected $attributeChangeNormalizer;
 
-    /** @var AttributeChangesService */
-    protected $attributeChangesService;
-
     public function __construct(
         DraftStatusNormalizer $statusNormalizer,
-        AttributeChangeNormalizer $attributeChangeNormalizer,
-        AttributeChangesService $attributeChangesService
+        AttributeChangeNormalizer $attributeChangeNormalizer
     ) {
         $this->statusNormalizer = $statusNormalizer;
         $this->attributeChangeNormalizer = $attributeChangeNormalizer;
-        $this->attributeChangesService = $attributeChangesService;
     }
 
-    /**
-     * @param DraftInterface $draft
-     * @param null           $format
-     */
     public function normalize($draft, $format = null, array $context = []): array
     {
+        /** @var DraftInterface $draft */
         $data = [];
         $data['id'] = $draft->getId();
         $data['createdAt'] = $draft->getCreatedAtFormatted();
@@ -54,6 +41,6 @@ class DraftNormalizer implements NormalizerInterface
 
     public function supportsNormalization($data, $format = null, array $context = []): bool
     {
-        return $data instanceof ProductDraftInterface;
+        return false;
     }
 }

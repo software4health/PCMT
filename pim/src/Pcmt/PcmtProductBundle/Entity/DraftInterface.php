@@ -6,5 +6,7 @@ namespace Pcmt\PcmtProductBundle\Entity;
 
 interface DraftInterface
 {
+    public const DRAFT_VERSION_NEW = 1;
+
     public function getId(): int;
 }

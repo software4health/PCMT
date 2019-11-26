@@ -9,7 +9,7 @@ use Akeneo\UserManagement\Component\Model\UserInterface;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
-use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
+use Pcmt\PcmtProductBundle\Entity\DraftInterface;
 use Pcmt\PcmtProductBundle\Exception\DraftViolationException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -45,7 +45,7 @@ class DraftApprover
         $this->productValidator = $productValidator;
     }
 
-    protected function updateDraftEntity(ProductDraftInterface $draft): void
+    protected function updateDraftEntity(DraftInterface $draft): void
     {
         $draft->setStatus(AbstractDraft::STATUS_APPROVED);
         $draft->setApproved(Carbon::now());
@@ -56,7 +56,7 @@ class DraftApprover
         $this->entityManager->flush();
     }
 
-    public function approve(ProductDraftInterface $draft): void
+    public function approve(DraftInterface $draft): void
     {
         $product = $this->productFromDraftCreator->getProductToSave($draft);
 
