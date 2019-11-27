@@ -5,41 +5,44 @@ declare(strict_types=1);
 namespace Pcmt\PcmtProductBundle\Tests\Service;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
-use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
-use Akeneo\Pim\Enrichment\Component\Product\Value\ScalarValue;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Pcmt\PcmtProductBundle\Service\ProductAttributeChangeService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Serializer\Serializer;
 
 class ProductAttributeChangeServiceTest extends TestCase
 {
-    /** @var \PHPUnit\Framework\MockObject\MockObject */
+    /** @var MockObject|ProductInterface */
     private $productNew;
 
-    /** @var \PHPUnit\Framework\MockObject\MockObject */
+    /** @var MockObject|ProductInterface */
     private $productExisting;
+
+    /** @var MockObject|Serializer */
+    private $versioningSerializer;
 
     protected function setUp(): void
     {
         $this->productNew = $this->createMock(Product::class);
         $this->productExisting = $this->createMock(Product::class);
+        $this->versioningSerializer = $this->createMock(Serializer::class);
         parent::setUp();
     }
 
     public function testGetEmpty(): void
     {
-        $service = new ProductAttributeChangeService();
-        $this->productNew->method('getValues')->willReturn(new WriteValueCollection());
+        $this->versioningSerializer->method('normalize')->willReturn([]);
+        $service = new ProductAttributeChangeService($this->versioningSerializer);
         $changes = $service->get($this->productNew, null);
         $this->assertEmpty($changes);
     }
 
     public function testGetNotEmpty(): void
     {
-        $service = new ProductAttributeChangeService();
-        $collection = new WriteValueCollection();
-        $value = ScalarValue::value('code', 'value');
-        $collection->add($value);
-        $this->productNew->method('getValues')->willReturn($collection);
+        $this->versioningSerializer->method('normalize')
+            ->will($this->onConsecutiveCalls(['attribute1' => 'value1']));
+        $service = new ProductAttributeChangeService($this->versioningSerializer);
         $changes = $service->get($this->productNew, null);
         $this->assertNotEmpty($changes);
         $this->assertCount(1, $changes);
@@ -47,29 +50,28 @@ class ProductAttributeChangeServiceTest extends TestCase
 
     public function testGetTwoSameProducts(): void
     {
-        $service = new ProductAttributeChangeService();
-        $collection = new WriteValueCollection();
-        $value = ScalarValue::value('code', 'value');
-        $collection->add($value);
-        $this->productNew->method('getValues')->willReturn($collection);
-        $this->productExisting->method('getValues')->willReturn($collection);
+        $this->versioningSerializer->method('normalize')
+            ->will($this->onConsecutiveCalls(
+                ['attribute1' => 'value1'],
+                ['attribute1' => 'value1']
+            ));
+        $service = new ProductAttributeChangeService($this->versioningSerializer);
         $changes = $service->get($this->productNew, $this->productExisting);
         $this->assertEmpty($changes);
     }
 
     public function testGetTwoDifferentProducts(): void
     {
-        $service = new ProductAttributeChangeService();
-        $collection = new WriteValueCollection();
-        $value = ScalarValue::value('code', 'value');
-        $collection->add($value);
-        $this->productNew->method('getValues')->willReturn($collection);
-        $this->productNew->method('getIdentifier')->willReturn('ident');
+        $this->versioningSerializer->method('normalize')
+            ->will($this->onConsecutiveCalls(
+                [
+                    'attribute1' => 'value1',
+                    'attribute2' => 'value2',
+                ],
+                ['attribute1' => 'value3']
+            ));
 
-        $collection2 = new WriteValueCollection();
-        $value = ScalarValue::value('code', 'value2');
-        $collection2->add($value);
-        $this->productExisting->method('getValues')->willReturn($collection2);
+        $service = new ProductAttributeChangeService($this->versioningSerializer);
         $changes = $service->get($this->productNew, $this->productExisting);
         $this->assertNotEmpty($changes);
         $this->assertCount(2, $changes);

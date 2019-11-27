@@ -5,13 +5,21 @@ declare(strict_types=1);
 namespace Pcmt\PcmtProductBundle\Service;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Pcmt\PcmtProductBundle\Entity\AttributeChange;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class ProductAttributeChangeService
 {
     /** @var AttributeChange[] */
     private $changes = [];
+
+    /** @var SerializerInterface */
+    private $versioningSerializer;
+
+    public function __construct(SerializerInterface $versioningSerializer)
+    {
+        $this->versioningSerializer = $versioningSerializer;
+    }
 
     public function get(?ProductInterface $newProduct, ?ProductInterface $previousProduct): array
     {
@@ -21,31 +29,14 @@ class ProductAttributeChangeService
             return $this->changes;
         }
 
-        $newValues = $newProduct->getValues();
-        $previousValues = $previousProduct ? $previousProduct->getValues() : null;
+        $newValues = $this->versioningSerializer->normalize($newProduct, 'flat');
+        $previousValues = $previousProduct ?
+            $this->versioningSerializer->normalize($previousProduct, 'flat') :
+            [];
 
-        $this->createChange(
-            'Family',
-            $newProduct && $newProduct->getFamily() ?
-                $newProduct->getFamily()->getCode() : null,
-            $previousProduct && $previousProduct->getFamily() ?
-                $previousProduct->getFamily()->getCode() : null
-        );
-
-        $this->createChange(
-            'Identifier',
-            $newProduct ? $newProduct->getIdentifier() : null,
-            $previousProduct ? $previousProduct->getIdentifier() : null
-        );
-
-        foreach ($newValues as $newValue) {
-            /** @var ValueInterface $newValue */
-            $previousValue = $previousValues ? $previousValues->getByCodes($newValue->getAttributeCode()) : null;
-            $this->createChange(
-                $newValue->getAttributeCode(),
-                $newValue->getData(),
-                $previousValue ? $previousValue->getData() : null
-            );
+        foreach ($newValues as $attribute => $newValue) {
+            $previousValue = $previousValues[$attribute] ?? null;
+            $this->createChange($attribute, $newValue, $previousValue);
         }
 
         return $this->changes;
@@ -56,13 +47,12 @@ class ProductAttributeChangeService
      */
     private function createChange($attribute, $value, $previousValue): void
     {
+        $value = $value ?? null;
+        $previousValue = $previousValue ?? null;
+
         if ($value === $previousValue) {
             return;
         }
-        $this->changes[] = new AttributeChange(
-            $attribute,
-            is_array($previousValue) ? json_encode($previousValue) : (string) $previousValue,
-            is_array($value) ? json_encode($value) : (string) $value
-        );
+        $this->changes[] = new AttributeChange($attribute, (string) $previousValue, (string) $value);
     }
 }

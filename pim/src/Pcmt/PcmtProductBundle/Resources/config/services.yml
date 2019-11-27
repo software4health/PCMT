@@ -42,4 +42,6 @@ services:
         autowire: true
     pcmt.service.product_attribute_change:
         class: Pcmt\PcmtProductBundle\Service\ProductAttributeChangeService
+        arguments:
+            - '@pim_versioning.serializer'
         autowire: true
