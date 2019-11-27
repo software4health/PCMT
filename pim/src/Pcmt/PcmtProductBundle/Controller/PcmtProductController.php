@@ -5,22 +5,8 @@ declare(strict_types=1);
 namespace Pcmt\PcmtProductBundle\Controller;
 
 use Akeneo\Pim\Enrichment\Bundle\Controller\InternalApi\ProductController;
-use Akeneo\Pim\Enrichment\Bundle\Filter\CollectionFilterInterface;
-use Akeneo\Pim\Enrichment\Bundle\Filter\ObjectFilterInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Comparator\Filter\FilterInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Exception\ObjectNotFoundException;
-use Akeneo\Pim\Enrichment\Component\Product\Localization\Localizer\AttributeConverterInterface;
-use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterface;
-use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
-use Akeneo\Tool\Bundle\ElasticsearchBundle\Client;
-use Akeneo\Tool\Component\StorageUtils\Remover\RemoverInterface;
-use Akeneo\Tool\Component\StorageUtils\Repository\CursorableRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
-use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
-use Akeneo\UserManagement\Bundle\Context\UserContext;
 use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
 use Pcmt\PcmtProductBundle\Entity\ExistingProductDraft;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
@@ -31,8 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PcmtProductController extends ProductController
 {
@@ -41,35 +25,6 @@ class PcmtProductController extends ProductController
 
     /** @var SaverInterface */
     protected $draftSaver;
-
-    public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        SaverInterface $draftSaver,
-        ProductRepositoryInterface $productRepository,
-        CursorableRepositoryInterface $cursorableRepository,
-        AttributeRepositoryInterface $attributeRepository,
-        ObjectUpdaterInterface $productUpdater,
-        SaverInterface $productSaver,
-        NormalizerInterface $normalizer,
-        ValidatorInterface $validator,
-        UserContext $userContext,
-        ObjectFilterInterface $objectFilter,
-        CollectionFilterInterface $productEditDataFilter,
-        RemoverInterface $productRemover,
-        ProductBuilderInterface $productBuilder,
-        AttributeConverterInterface $localizedConverter,
-        FilterInterface $emptyValuesFilter,
-        ConverterInterface $productValueConverter,
-        NormalizerInterface $constraintViolationNormalizer,
-        ProductBuilderInterface $variantProductBuilder,
-        AttributeFilterInterface $productAttributeFilter,
-        ?Client $productClient = null,
-        ?Client $productAndProductModelClient = null
-    ) {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->draftSaver = $draftSaver;
-        parent::__construct($productRepository, $cursorableRepository, $attributeRepository, $productUpdater, $productSaver, $normalizer, $validator, $userContext, $objectFilter, $productEditDataFilter, $productRemover, $productBuilder, $localizedConverter, $emptyValuesFilter, $productValueConverter, $constraintViolationNormalizer, $variantProductBuilder, $productAttributeFilter, $productClient, $productAndProductModelClient);
-    }
 
     public function createAction(Request $request): Response
     {
@@ -139,5 +94,15 @@ class PcmtProductController extends ProductController
             'internal_api',
             $this->getNormalizationContext()
         ));
+    }
+
+    public function setDraftSaver(SaverInterface $draftSaver): void
+    {
+        $this->draftSaver = $draftSaver;
+    }
+
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher): void
+    {
+        $this->eventDispatcher = $eventDispatcher;
     }
 }

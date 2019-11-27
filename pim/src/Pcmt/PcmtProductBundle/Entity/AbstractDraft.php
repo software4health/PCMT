@@ -102,7 +102,7 @@ abstract class AbstractDraft implements DraftInterface
 
     public function getType(): string
     {
-        return self::TYPE;
+        return static::TYPE;
     }
 
     public function getProductData(): ?array

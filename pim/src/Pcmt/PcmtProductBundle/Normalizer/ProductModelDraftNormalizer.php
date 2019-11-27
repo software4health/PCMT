@@ -43,10 +43,10 @@ class ProductModelDraftNormalizer extends DraftNormalizer implements NormalizerI
         /** @var ProductModelDraftInterface $draft */
         switch (get_class($draft)) {
             case NewProductModelDraft::class:
-                $productLabel = 'Draft of new product model: '. $newProductModel->getCode();
+                $productLabel = $newProductModel->getCode();
                 break;
             case ExistingProductModelDraft::class:
-                $productLabel = 'Draft of change in existing product model';
+                $productLabel = $draft->getProductModel()->getCode();
                 break;
         }
         $data['label'] = $productLabel;

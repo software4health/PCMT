@@ -69,7 +69,10 @@
     <tbody>
     <% _.each(drafts, function (draft) { %>
     <tr class="AknGrid-bodyRow">
-        <td class="AknGrid-bodyCell"><%- draft.label %></td>
+        <td class="AknGrid-bodyCell">
+            <%- draft.type %><br>
+            <%- draft.label %>
+        </td>
         <td class="AknGrid-bodyCell"><%- draft.author %></td>
         <td class="AknGrid-bodyCell">
             <div id="draft-changes-shortcut-<%- draft.id %>"
@@ -88,8 +91,14 @@
                 <% if (firstChange) { %>
                 <div style="margin-bottom:10px;">
                     <b><%- firstChange.attribute %></b><br>
-                    <%- __('pcmt_product.drafts_list.previous_value') %>: <%- firstChange.previousValue %><br>
-                    <%- __('pcmt_product.drafts_list.new_value') %>: <%- firstChange.newValue %>
+                    <span class="AknDiff--remove">
+                        <%- __('pcmt_product.drafts_list.previous_value') %>:
+                    </span>
+                    <%- firstChange.previousValue %><br>
+                    <span class="AknDiff--add">
+                        <%- __('pcmt_product.drafts_list.new_value') %>:
+                    </span>
+                    <%- firstChange.newValue %>
                 </div>
                 <% } %>
             </div>
@@ -108,8 +117,14 @@
                 <% _.each(draft.changes, function (change) { %>
                 <div style="margin-bottom:10px;">
                     <b><%- change.attribute %></b><br>
-                    <%- __('pcmt_product.drafts_list.previous_value') %>: <%- change.previousValue %><br>
-                    <%- __('pcmt_product.drafts_list.new_value') %>: <%- change.newValue %>
+                    <span class="AknDiff--remove">
+                        <%- __('pcmt_product.drafts_list.previous_value') %>:
+                    </span>
+                    <%- change.previousValue %><br>
+                    <span class="AknDiff--add">
+                    <%- __('pcmt_product.drafts_list.new_value') %>:
+                    </span>
+                    <%- change.newValue %>
                 </div>
                 <% }); %>
 
