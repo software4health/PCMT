@@ -18,7 +18,7 @@ class ConcatenatedAttributesConverter extends AbstractValueConverter implements 
     public function convert($attributeCode, $data): array
     {
         $convertedItem = [];
-        $testoutputstring = '';
+        $outputString = '';
 
         if (!is_array($data)) {
             throw new \InvalidArgumentException('Serialized data should be array.');
@@ -29,14 +29,14 @@ class ConcatenatedAttributesConverter extends AbstractValueConverter implements 
             }
             if (is_array($value)) {
                 foreach ($value as $item) {
-                    $testoutputstring .= $item;
+                    $outputString .= $item;
                 }
             } else {
-                $testoutputstring .= $value;
+                $outputString .= $value;
             }
         }
 
-        $convertedItem[$attributeCode] = $testoutputstring;
+        $convertedItem[$attributeCode] = $outputString;
 
         return $convertedItem;
     }
