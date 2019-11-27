@@ -60,7 +60,7 @@ class ReferenceDataBulkSaver implements BulkSaverInterface, SaverInterface
         $this->eventDispatcher->dispatch(StorageEvents::POST_SAVE, new GenericEvent($object, $options));
     }
 
-    private function validateReferenceData($referenceData): void
+    private function validateReferenceData(object $referenceData): void
     {
         if (!$referenceData instanceof ReferenceDataInterface) {
             throw new \InvalidArgumentException(

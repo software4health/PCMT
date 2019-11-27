@@ -89,7 +89,7 @@ services:
     Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff:
         maxCognitiveComplexity: 30
 
-#    SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff: ~
+    SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff: ~
 
 parameters:
     cache_directory: var/cache/ecs

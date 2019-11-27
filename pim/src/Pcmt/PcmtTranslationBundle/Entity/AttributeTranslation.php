@@ -16,12 +16,7 @@ class AttributeTranslation extends BaseAttributeTranslation
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     *
-     * @return AttributeTranslation
-     */
-    public function setDescription($description): self
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 

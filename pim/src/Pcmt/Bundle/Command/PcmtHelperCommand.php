@@ -17,6 +17,7 @@ class PcmtHelperCommand extends ContainerAwareCommand
     /**
      * run inside terminal in fpm docker: bin/console pcmt:command
      */
+    /** @var string */
     protected static $defaultName = 'pcmt:command';
 
     public function configure(): void

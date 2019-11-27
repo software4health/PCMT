@@ -16,6 +16,9 @@ class DirectoryPathValidator
         $this->configProviders = [new ValidPathProvider()];
     }
 
+    /**
+     * @param array|string|null $value
+     */
     public function validate(string $key, $value): bool
     {
         $configuration = [];

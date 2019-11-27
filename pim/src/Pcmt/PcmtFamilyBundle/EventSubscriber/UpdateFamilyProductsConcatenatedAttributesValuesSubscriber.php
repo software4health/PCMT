@@ -35,7 +35,7 @@ final class UpdateFamilyProductsConcatenatedAttributesValuesSubscriber implement
     /** @var bool */
     private $runningUpdateJobRequired = false;
 
-    /** @var array */
+    /** @var mixed[] */
     private $concatenatedAttributesToUpdate = [];
 
     public function __construct(

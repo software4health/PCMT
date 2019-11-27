@@ -181,7 +181,7 @@ class ComputeConcatenatedAttributeValuesOfProductsTasklet implements TaskletInte
         $this->cacheClearer->clear();
     }
 
-    private function assignEntityToSaveBatch($entity, array $saveBatch): array
+    private function assignEntityToSaveBatch(object $entity, array $saveBatch): array
     {
         if ($entity instanceof ProductModelInterface) {
             $saveBatch['productModels'][] = $entity;

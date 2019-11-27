@@ -38,7 +38,7 @@ class ConcatenatedAttributesUpdaterTest extends TestCase
     /**
      * @dataProvider getValidProductDataToUpdate
      */
-    public function testUpdate($mockProductEntityObject, array $parameters, array $normalized): void
+    public function testUpdate(object $mockProductEntityObject, array $parameters, array $normalized): void
     {
         $updater = $this->getConcatenatedAttributesUpdaterInstance();
 
@@ -74,7 +74,7 @@ class ConcatenatedAttributesUpdaterTest extends TestCase
     /**
      * @dataProvider getInvalidProductDataToUpdate
      */
-    public function testThrowsExceptionWhenInvalidData($object, array $parameters): void
+    public function testThrowsExceptionWhenInvalidData(object $object, array $parameters): void
     {
         $updater = $this->getConcatenatedAttributesUpdaterInstance();
         $this->expectException(\InvalidArgumentException::class);

@@ -10,16 +10,23 @@ use Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Component
 
 class ConcatenatedAttributeFieldProvider implements FieldProviderInterface
 {
+    /** @var mixed[] */
     protected $fields = [
         PcmtAtributeTypes::CONCATENATED_FIELDS => 'pcmt_concatenated_attribute_text_field',
     ];
 
-    public function getField($attribute)
+    /**
+     * {@inheritdoc}
+     */
+    public function getField($attribute): string
     {
         return $this->fields[$attribute->getType()];
     }
 
-    public function supports($element)
+    /**
+     * {@inheritdoc}
+     */
+    public function supports($element): bool
     {
         return $element instanceof AttributeInterface &&
             in_array($element->getType(), array_keys($this->fields));

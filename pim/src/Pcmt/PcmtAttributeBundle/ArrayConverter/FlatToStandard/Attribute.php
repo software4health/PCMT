@@ -44,10 +44,7 @@ class Attribute extends BaseAttribute
     }
 
     /**
-     * @param string $field
-     * @param array  $booleanFields
-     * @param array  $data
-     * @param array  $convertedItem
+     * {@inheritdoc}
      */
     protected function convertFields($field, $booleanFields, $data, $convertedItem): array
     {

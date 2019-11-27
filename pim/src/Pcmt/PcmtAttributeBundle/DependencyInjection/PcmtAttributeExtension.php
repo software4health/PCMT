@@ -26,6 +26,9 @@ class PcmtAttributeExtension extends Extension
         $loader->load('renderers.yml');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getAlias()
     {
         return 'pcmt_attribute';

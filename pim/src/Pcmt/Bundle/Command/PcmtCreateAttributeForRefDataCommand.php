@@ -16,6 +16,7 @@ class PcmtCreateAttributeForRefDataCommand extends ContainerAwareCommand
     /**
      * run inside terminal in fpm docker: bin/console $defaultName
      */
+    /** @var string */
     protected static $defaultName = 'pcmt:generate-ref-data-attr';
 
     public function configure(): void
@@ -38,7 +39,7 @@ class PcmtCreateAttributeForRefDataCommand extends ContainerAwareCommand
         $output->writeln('done');
     }
 
-    private function createAttributeForReferenceData($refDataName): void
+    private function createAttributeForReferenceData(string $refDataName): void
     {
         /** @var AttributeFactory */
         $attributeFactory = $this->getContainer()->get('pim_catalog.factory.attribute');

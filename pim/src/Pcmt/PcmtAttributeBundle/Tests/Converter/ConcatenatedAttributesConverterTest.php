@@ -38,7 +38,7 @@ class ConcatenatedAttributesConverterTest extends TestCase
     }
 
     /**
-     * @var mixed
+     * @param array|string $input
      * @dataProvider provideInvalidDataToConvert
      */
     public function testShouldThrowExceptionIfInvalidDataFormat($input): void

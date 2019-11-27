@@ -49,7 +49,7 @@ class ProductDraftSaver implements SaverInterface
         }
     }
 
-    protected function validateDraft($draft): void
+    protected function validateDraft(object $draft): void
     {
         if (!$draft instanceof ProductDraftInterface) {
             throw new \InvalidArgumentException(
