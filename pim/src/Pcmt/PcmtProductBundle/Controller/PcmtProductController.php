@@ -21,7 +21,6 @@ use Akeneo\Tool\Component\StorageUtils\Repository\CursorableRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
-use Pcmt\PcmtAttributeBundle\Event\ProductFetchEvent;
 use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
 use Pcmt\PcmtProductBundle\Entity\ExistingProductDraft;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
@@ -72,17 +71,6 @@ class PcmtProductController extends ProductController
         parent::__construct($productRepository, $cursorableRepository, $attributeRepository, $productUpdater, $productSaver, $normalizer, $validator, $userContext, $objectFilter, $productEditDataFilter, $productRemover, $productBuilder, $localizedConverter, $emptyValuesFilter, $productValueConverter, $constraintViolationNormalizer, $variantProductBuilder, $productAttributeFilter, $productClient, $productAndProductModelClient);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAction($id): JsonResponse
-    {
-        $event = new ProductFetchEvent($id);
-        if ($this->eventDispatcher->dispatch(ProductFetchEvent::class, $event)) {
-            return parent::getAction($id);
-        }
-    }
-
     public function createAction(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
@@ -111,9 +99,6 @@ class PcmtProductController extends ProductController
         ));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function postAction(Request $request, $id): Response
     {
         if (!$request->isXmlHttpRequest()) {

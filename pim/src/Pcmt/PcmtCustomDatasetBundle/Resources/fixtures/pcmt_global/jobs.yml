@@ -1,5 +1,5 @@
 jobs:
-#Akeneo_minimal
+    #Akeneo_minimal
     update_product_value:
         connector: Akeneo Mass Edit Connector
         alias:     update_product_value
@@ -131,8 +131,8 @@ jobs:
         alias:     compute_family_variant_structure_changes
         label:     Compute variant structure changes
         type:      compute_family_variant_structure_changes
-#PCMT
-#xlsx_imports
+    #PCMT
+    #xlsx_imports
     #1
     xlsx_category_import:
         connector: Akeneo XLSX Connector
@@ -258,7 +258,7 @@ jobs:
             filePath:      /tmp/datagrid_view.xlsx
             uploadAllowed: true
 
-#xlsx_exports
+    #xlsx_exports
     #1
     xlsx_category_export:
         connector: Akeneo XLSX Connector
@@ -331,8 +331,7 @@ jobs:
             filePath:   /tmp/7_product_models.xlsx
             filters:
                 data:
-                    -
-                        field: categories
+                    -   field: categories
                         operator: 'IN CHILDREN'
                         value: ['master']
                 structure:
@@ -352,16 +351,13 @@ jobs:
             with_media: true
             filters:
                 data:
-                    -
-                        field: enabled
+                    -   field: enabled
                         operator: '='
                         value: true
-                    -
-                        field: categories
+                    -   field: categories
                         operator: 'IN'
                         value: ['Products_and_Trade_Items']
-                    -
-                        field: completeness
+                    -   field: completeness
                         operator: 'ALL'
                         value: 100
                         context:
@@ -383,22 +379,18 @@ jobs:
             with_media: true
             filters:
                 data:
-                    -
-                        field: enabled
+                    -   field: enabled
                         operator: '='
                         value: true
-                    -
-                        field: completeness
+                    -   field: completeness
                         operator: 'ALL'
                         value: 100
                         context:
                             locales: ['en_US']
-                    -
-                        field: categories
+                    -   field: categories
                         operator: 'IN'
                         value: ['GDSN']
-                    -
-                        field: family
+                    -   field: family
                         operator: 'IN'
                         value: ['GS1_GDSN']
                 structure:
@@ -419,18 +411,15 @@ jobs:
             with_media: true
             filters:
                 data:
-                    -
-                        field: enabled
+                    -   field: enabled
                         operator: '='
                         value: true
-                    -
-                        field: completeness
+                    -   field: completeness
                         operator: 'GREATER OR EQUALS THAN ON AT LEAST ONE LOCALE'
                         value: 100
                         context:
                             locales: ['en_US']
-                    -
-                        field: categories
+                    -   field: categories
                         operator: 'IN'
                         value: ['MASTER_DATA']
                 structure:
@@ -438,7 +427,7 @@ jobs:
                     locales:
                         - en_US
 
-  #11
+    #11
     pcmt_xlsx_datagrid_view_export:
         connector: PCMT XLSX Connector
         alias:     pcmt_xlsx_datagrid_view_export
@@ -448,3 +437,10 @@ jobs:
             withHeader: true
             linesPerFile: 10000
             filePath:   /tmp/11_datagrid_view.xlsx
+
+    #12
+    compute_concatenated_attributes_values:
+        connector: compute_concatenated_attributes_values
+        alias: compute_concatenated_attributes_values
+        label: compute_concatenated_attributes_values
+        type: compute_concatenated_attributes_values

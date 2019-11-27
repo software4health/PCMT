@@ -1,0 +1,8 @@
+services:
+
+    Pcmt\PcmtProductBundle\EventSubscriber\UpdateConcatenatedAttributesOnProductSaveSubscriber:
+        arguments:
+            - '@pim_catalog.repository.attribute'
+            - '@pcmt_catalog.product.updater.concatenated_attributes_for_product_and_model'
+        tags:
+            - { name: kernel.event_subscriber }

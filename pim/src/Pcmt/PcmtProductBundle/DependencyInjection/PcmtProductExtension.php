@@ -15,6 +15,7 @@ class PcmtProductExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('savers.yml');
+        $loader->load('updaters.yml');
         $loader->load('normalizers.yml');
         $loader->load('controllers.yml');
         $loader->load('fetchers.yml');
@@ -25,6 +26,7 @@ class PcmtProductExtension extends Extension
         $loader->load('jobs.yml');
         $loader->load('forms.yml');
         $loader->load('providers.yml');
+        $loader->load('event_subscribers.yml');
     }
 
     public function getAlias(): string

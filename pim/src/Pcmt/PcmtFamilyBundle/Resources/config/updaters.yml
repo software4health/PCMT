@@ -1,0 +1,14 @@
+services:
+
+    pim_catalog.updater.family:
+        class: 'Pcmt\PcmtFamilyBundle\Updater\PcmtFamilyUpdater'
+        arguments:
+            - '@pim_catalog.repository.product'
+            - '@event_dispatcher'
+            - '@logger'
+            - '@pim_catalog.repository.family'
+            - '@pim_catalog.repository.attribute'
+            - '@pim_catalog.repository.channel'
+            - '@pim_catalog.factory.attribute_requirement'
+            - '@pim_catalog.repository.attribute_requirement'
+            - '@pim_structure.updater.translatable'

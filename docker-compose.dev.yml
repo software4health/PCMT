@@ -5,7 +5,7 @@
 ######################################################################
 
 version: "3.0"
-services: 
+services:
   fpm:
     volumes:
       - 'pim:/srv/pim'
@@ -19,13 +19,10 @@ services:
     # we use depends_on so that the pim volume is initialized by one container
     # with a complete /srv/pim.  Otherwise there isn't a gurantee how this
     # volume will be initialized.
-    depends_on: 
+    depends_on:
       - httpd
-    environment: # comments below left intentionally - xdebug testing
+    environment:
       - PHP_XDEBUG_ENABLED=1
-     # - PHP_XDEBUG_REMOTE_HOST=172.18.0.1
-     # - PHP_XDEBUG_REMOTE_HOST=172.20.0.1  #tcpdump shows tcp activity on this host and port.
-     # - PHP_XDEBUG_REMOTE_HOST=10.222.17.199  #tcpdump shows no tcp activity on this host:port
       - PHP_XDEBUG_REMOTE_PORT=9000
 
   elasticsearch:
