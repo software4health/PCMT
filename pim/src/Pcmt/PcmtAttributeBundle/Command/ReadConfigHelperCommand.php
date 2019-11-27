@@ -12,6 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ReadConfigHelperCommand extends ContainerAwareCommand
 {
+    /** @var string */
     protected static $defaultName = 'pcmt:measures';
 
     public function configure(): void

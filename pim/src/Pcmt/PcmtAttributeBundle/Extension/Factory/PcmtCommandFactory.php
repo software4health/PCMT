@@ -9,7 +9,7 @@ use Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Component
 
 class PcmtCommandFactory
 {
-    public function command(string $attributeClass)
+    public function command(string $attributeClass): object
     {
         switch ($attributeClass) {
             case ConcatenatedAttribute::class:

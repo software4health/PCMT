@@ -20,6 +20,9 @@ class PcmtBundleExtension extends Extension
         $loader->load('services.yml');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getAlias()
     {
         return 'pcmtservice';

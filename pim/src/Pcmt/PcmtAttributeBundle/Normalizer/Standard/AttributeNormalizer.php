@@ -19,7 +19,7 @@ class AttributeNormalizer extends BaseAttributeNormalizer
     /** @var NormalizerInterface */
     private $dateTimeNormalizer;
 
-    /** @var array */
+    /** @var mixed[] */
     private $properties = [];
 
     /**

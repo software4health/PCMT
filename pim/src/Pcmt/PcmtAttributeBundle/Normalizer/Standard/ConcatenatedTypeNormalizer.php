@@ -9,6 +9,9 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ConcatenatedTypeNormalizer implements NormalizerInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function normalize($cncAttribute, $format = null, array $context = []): array
     {
         if (!empty($context)) {
@@ -38,6 +41,9 @@ class ConcatenatedTypeNormalizer implements NormalizerInterface
         return $output;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsNormalization($data, $format = null): bool
     {
         return $data instanceof AttributeInterface;

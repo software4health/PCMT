@@ -43,9 +43,10 @@ class ProductAttributeChangeService
     }
 
     /**
-     * @param string $attribute
+     * @param array|object|string|int|null $value
+     * @param array|object|string|int|null $previousValue
      */
-    private function createChange($attribute, $value, $previousValue): void
+    private function createChange(string $attribute, $value, $previousValue): void
     {
         $value = $value ?? null;
         $previousValue = $previousValue ?? null;

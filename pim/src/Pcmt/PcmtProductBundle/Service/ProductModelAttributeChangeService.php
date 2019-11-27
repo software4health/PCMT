@@ -52,9 +52,10 @@ class ProductModelAttributeChangeService
     }
 
     /**
-     * @param string $attribute
+     * @param array|object|string|int|null $value
+     * @param array|object|string|int|null $previousValue
      */
-    private function createChange($attribute, $value, $previousValue): void
+    private function createChange(string $attribute, $value, $previousValue): void
     {
         if ($value === $previousValue) {
             return;

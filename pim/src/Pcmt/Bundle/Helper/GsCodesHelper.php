@@ -6,7 +6,7 @@ namespace Pcmt\Bundle\Helper;
 
 final class GsCodesHelper
 {
-    public static function getGsCodes()
+    public static function getGsCodes(): array
     {
         return [
             'AdditionalTradeItemClassificationCodeListCode',

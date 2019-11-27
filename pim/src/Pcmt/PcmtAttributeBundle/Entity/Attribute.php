@@ -9,21 +9,21 @@ use Pcmt\PcmtTranslationBundle\Entity\AttributeTranslation;
 
 class Attribute extends BaseAttribute
 {
-    public function getDescription()
+    public function getDescription(): ?string
     {
         $translated = $this->getTranslation() ? $this->getTranslation()->getDescription() : null;
 
         return '' !== $translated && null !== $translated ? $translated : '['.$this->getCode().']';
     }
 
-    public function setDescription($description)
+    public function setDescription(string $description): self
     {
         $this->getTranslation()->setDescription($description);
 
         return $this;
     }
 
-    public function getTranslationFQCN()
+    public function getTranslationFQCN(): string
     {
         return AttributeTranslation::class;
     }

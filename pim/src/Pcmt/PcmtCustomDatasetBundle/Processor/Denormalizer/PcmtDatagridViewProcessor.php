@@ -111,12 +111,12 @@ class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcess
     /**
      * Validates the processed entity.
      */
-    protected function validate($entity): ConstraintViolationListInterface
+    protected function validate(object $entity): ConstraintViolationListInterface
     {
         return $this->validator->validate($entity);
     }
 
-    protected function saveProcessedItemInStepExecutionContext(string $itemIdentifier, $processedItem): void
+    protected function saveProcessedItemInStepExecutionContext(string $itemIdentifier, object $processedItem): void
     {
         $executionContext = $this->stepExecution->getExecutionContext();
         $processedItemsBatch = $executionContext->get('processed_items_batch') ?? [];
@@ -125,11 +125,7 @@ class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcess
         $executionContext->put('processed_items_batch', $processedItemsBatch);
     }
     /**
-     * Get the identifier of a processed item
-     *
-     * @param DatagridViewRepository $repository
-     *
-     * @throws MissingIdentifierException if the processed item doesn't contain the identifier properties
+     * {@inheritdoc}
      */
     protected function getItemIdentifier($repository, array $item): string
     {

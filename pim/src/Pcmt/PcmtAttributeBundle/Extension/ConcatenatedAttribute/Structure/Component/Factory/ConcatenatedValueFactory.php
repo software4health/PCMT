@@ -32,6 +32,9 @@ class ConcatenatedValueFactory extends AbstractValueFactory
         $this->valueFactory = $valueFactory;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function prepareData(AttributeInterface $attribute, $data, bool $ignoreUnknownData): ?string
     {
         /*

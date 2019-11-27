@@ -32,6 +32,9 @@ class ConcatenatedAttributesUpdater implements ObjectUpdaterInterface
         $this->rawValuesStorageFormatNormalizer = $rawValuesStorageFormatNormalizer;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function update($object, array $data, array $options = []): void
     {
         $this->validateData($object, $data);
@@ -73,7 +76,7 @@ class ConcatenatedAttributesUpdater implements ObjectUpdaterInterface
         $this->computeRawValues($object);
     }
 
-    private function computeRawValues($object): void
+    private function computeRawValues(object $object): void
     {
         $values = $this->getValues($object);
         $rawValues = $this->rawValuesStorageFormatNormalizer->normalize($values, 'storage');
@@ -93,7 +96,7 @@ class ConcatenatedAttributesUpdater implements ObjectUpdaterInterface
         return $entity->getValues();
     }
 
-    private function validateData($object, array $data): void
+    private function validateData(object $object, array $data): void
     {
         if (!array_key_exists('concatenatedAttribute', $data) ||
             (!$data['concatenatedAttribute'] instanceof AttributeInterface ||

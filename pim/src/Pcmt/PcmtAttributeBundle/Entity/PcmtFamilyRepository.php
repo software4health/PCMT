@@ -10,7 +10,7 @@ use Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Component
 
 class PcmtFamilyRepository extends FamilyRepository
 {
-    public function getConcatenatedAttributes(FamilyInterface $familyId)
+    public function getConcatenatedAttributes(FamilyInterface $familyId): ?array
     {
         $qb = $this->createQueryBuilder('f');
         $qb->select('a.id, a.code, a.properties')

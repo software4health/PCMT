@@ -10,9 +10,10 @@ use Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Component
 
 class ConcatenatedAttributeCommand extends AbstractUpdateCommand
 {
+    /** @var mixed[] */
     private $concatenatedAttributes = [];
 
-    protected function updatePropertyValue(string $field, $value): void
+    protected function updatePropertyValue(string $field, string $value): void
     {
         switch ($field) {
             case mb_strpos($field, 'separator'):
@@ -49,7 +50,7 @@ class ConcatenatedAttributeCommand extends AbstractUpdateCommand
         $this->attribute = $attribute;
     }
 
-    protected function updateConcatenatedAttributes($value): void
+    protected function updateConcatenatedAttributes(string $value): void
     {
         $this->concatenatedAttributes[] = $value;
         $serializedAttributes = implode(',', $this->concatenatedAttributes);

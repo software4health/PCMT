@@ -8,7 +8,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Comparator\ComparatorInterface;
 
 class ConcatenatedComparator implements ComparatorInterface
 {
-    /** @var array */
+    /** @var mixed[] */
     protected $types = [];
 
     public function __construct(array $types)
@@ -16,11 +16,17 @@ class ConcatenatedComparator implements ComparatorInterface
         $this->types = $types;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supports($data): bool
     {
         return in_array($data, $this->types);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function compare($data, $originals): ?array
     {
         $default = [

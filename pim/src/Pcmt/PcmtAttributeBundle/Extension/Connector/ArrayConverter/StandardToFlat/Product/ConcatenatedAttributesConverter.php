@@ -15,6 +15,9 @@ class ConcatenatedAttributesConverter extends AbstractValueConverter implements 
         'attribute2' => ['string', 'array'],
     ];
 
+    /**
+     * {@inheritdoc}
+     */
     public function convert($attributeCode, $data): array
     {
         $convertedItem = [];

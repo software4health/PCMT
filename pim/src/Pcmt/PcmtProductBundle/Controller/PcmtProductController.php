@@ -54,6 +54,9 @@ class PcmtProductController extends ProductController
         ));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function postAction(Request $request, $id): Response
     {
         if (!$request->isXmlHttpRequest()) {

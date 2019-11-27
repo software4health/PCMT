@@ -17,6 +17,7 @@ class PcmtCreateAllAttributesCommand extends ContainerAwareCommand
     /**
      * run inside terminal in fpm docker: bin/console $defaultName
      */
+    /** @var string */
     protected static $defaultName = 'pcmt:generate-ref-data-attr-all';
 
     public function configure(): void
