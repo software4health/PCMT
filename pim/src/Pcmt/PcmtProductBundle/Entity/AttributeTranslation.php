@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pcmt\PcmtTranslationBundle\Entity;
+namespace Pcmt\PcmtProductBundle\Entity;
 
 use Akeneo\Pim\Structure\Component\Model\AttributeTranslation as BaseAttributeTranslation;
 

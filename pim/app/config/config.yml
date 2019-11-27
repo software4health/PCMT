@@ -134,4 +134,4 @@ akeneo_storage_utils:
             override: Pcmt\PcmtAttributeBundle\Entity\Attribute
         -
             original: Akeneo\Pim\Structure\Component\Model\AttributeTranslation
-            override: Pcmt\PcmtTranslationBundle\Entity\AttributeTranslation
+            override: Pcmt\PcmtProductBundle\Entity\AttributeTranslation

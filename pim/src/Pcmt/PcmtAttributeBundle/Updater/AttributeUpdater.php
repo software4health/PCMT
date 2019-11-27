@@ -15,7 +15,7 @@ use Akeneo\Tool\Component\StorageUtils\Exception\UnknownPropertyException;
 use Doctrine\Common\Util\ClassUtils;
 use Pcmt\PcmtAttributeBundle\Entity\ConcatenatedAttribute;
 use Pcmt\PcmtAttributeBundle\Extension\PcmtAttributeManager;
-use Pcmt\PcmtTranslationBundle\Updater\TranslatableUpdater;
+use Pcmt\PcmtProductBundle\Updater\TranslatableUpdater;
 
 /**
  * @override: Handle localizable attribute description when updating an attribute

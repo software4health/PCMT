@@ -31,5 +31,6 @@ services:
             - [setProductModelFromDraftCreator, ['@pcmt.service.product_model_from_draft_creator']]
             - [setProductModelAttributeChangeService, ['@pcmt.service.product_model_attribute_change']]
 
-
+parameters:
+    pim_catalog.normalizer.standard.translation.class: Pcmt\PcmtProductBundle\Normalizer\Standard\TranslationNormalizer
 
