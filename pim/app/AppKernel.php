@@ -88,7 +88,6 @@ class AppKernel extends Kernel
             new Pcmt\PcmtCustomDatasetBundle\PcmtCustomDatasetBundle(),
             new Pcmt\PcmtAttributeBundle\PcmtAttributeBundle(),
             new Pcmt\PcmtProductBundle\PcmtProductBundle(),
-            new Pcmt\PcmtTranslationBundle\PcmtTranslationBundle(),
             new Pcmt\Bundle\PcmtBundle(),
             new Pcmt\PcmtConnectorBundle\PcmtConnectorBundle(),
             new Pcmt\PcmtDashboardBundle\PcmtDashboardBundle(),

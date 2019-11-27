@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pcmt\PcmtTranslationBundle\Updater;
+namespace Pcmt\PcmtProductBundle\Updater;
 
 use Akeneo\Tool\Component\Localization\Model\AbstractTranslation;
 use Akeneo\Tool\Component\Localization\Model\TranslatableInterface;
@@ -42,18 +42,18 @@ class TranslatableUpdater extends BaseTranslatableUpdater
     public function updateDescription(TranslatableInterface $object, array $data): void
     {
         // Add @DND
-    foreach ($data as $localeCode => $description) { // update localizable attribute description fields
-      $object->setLocale($localeCode);
-        $translation = $object->getTranslation();
+        foreach ($data as $localeCode => $description) { // update localizable attribute description fields
+            $object->setLocale($localeCode);
+            $translation = $object->getTranslation();
 
-        if (null === $description || '' === $description) {
-            $translation->setDescription(null);
-        } else {
-            $translation->setDescription($description);
+            if (null === $description || '' === $description) {
+                $translation->setDescription(null);
+            } else {
+                $translation->setDescription($description);
+            }
+
+            $this->checkTranslationValues($object);
         }
-
-        $this->checkTranslationValues($object);
-    }
         // / Add @DND
     }
 

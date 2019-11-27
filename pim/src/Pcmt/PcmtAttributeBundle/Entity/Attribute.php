@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Pcmt\PcmtAttributeBundle\Entity;
 
 use Akeneo\Pim\Structure\Component\Model\Attribute as BaseAttribute;
-use Pcmt\PcmtTranslationBundle\Entity\AttributeTranslation;
+use Pcmt\PcmtProductBundle\Entity\AttributeTranslation;
 
 class Attribute extends BaseAttribute
 {

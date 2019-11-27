@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pcmt\PcmtTranslationBundle\Normalizer\Standard;
+namespace Pcmt\PcmtProductBundle\Normalizer\Standard;
 
 use Akeneo\Pim\Enrichment\Component\Product\Normalizer\Standard\TranslationNormalizer as BaseTranslationNormalizer;
 
@@ -42,8 +42,7 @@ class TranslationNormalizer extends BaseTranslationNormalizer
             }
 
             if (empty($context['locales']) || in_array($translation->getLocale(), $context['locales'])) {
-                $translations[$translation->getLocale()] = '' === $translation->{$method}(
-                ) ? null : $translation->{$method}();
+                $translations[$translation->getLocale()] = '' === $translation->{$method}() ? null : $translation->{$method}();
             }
         }
 

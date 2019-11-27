@@ -1,2 +1,0 @@
-parameters:
-  pim_catalog.entity.attribute_translation.class: Pcmt\PcmtTranslationBundle\Entity\AttributeTranslation

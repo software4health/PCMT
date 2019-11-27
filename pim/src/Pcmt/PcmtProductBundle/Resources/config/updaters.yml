@@ -8,3 +8,6 @@ services:
 
     pcmt_catalog.draft.manager:
         class: Pcmt\PcmtProductBundle\Manager\DraftManager
+
+    pim_structure.updater.translatable:
+        class: 'Pcmt\PcmtProductBundle\Updater\TranslatableUpdater'

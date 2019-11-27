@@ -13,7 +13,7 @@ use Akeneo\Tool\Component\StorageUtils\Exception\UnknownPropertyException;
 use Pcmt\PcmtAttributeBundle\Entity\Attribute;
 use Pcmt\PcmtAttributeBundle\Extension\PcmtAttributeManager;
 use Pcmt\PcmtAttributeBundle\Updater\AttributeUpdater;
-use Pcmt\PcmtTranslationBundle\Updater\TranslatableUpdater;
+use Pcmt\PcmtProductBundle\Updater\TranslatableUpdater;
 use PHPUnit\Framework\MockObject\MockObject as Mock;
 use PHPUnit\Framework\TestCase;
 

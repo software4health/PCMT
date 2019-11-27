@@ -27,6 +27,7 @@ class PcmtProductExtension extends Extension
         $loader->load('forms.yml');
         $loader->load('providers.yml');
         $loader->load('event_subscribers.yml');
+        $loader->load('entities.yml');
     }
 
     public function getAlias(): string
