@@ -2,30 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Pcmt\PcmtProductBundle\Tests\Service;
+namespace Pcmt\PcmtProductBundle\Tests\Service\AttributeChange;
 
-use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
-use Pcmt\PcmtProductBundle\Service\ProductAttributeChangeService;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
+use Pcmt\PcmtProductBundle\Service\AttributeChange\ProductModelAttributeChangeService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Serializer;
 
-class ProductAttributeChangeServiceTest extends TestCase
+class ProductModelAttributeChangeServiceTest extends TestCase
 {
-    /** @var MockObject|ProductInterface */
-    private $productNew;
+    /** @var MockObject|ProductModel */
+    private $productModelNew;
 
-    /** @var MockObject|ProductInterface */
-    private $productExisting;
+    /** @var MockObject|ProductModel */
+    private $productModelExisting;
 
     /** @var MockObject|Serializer */
     private $versioningSerializer;
 
     protected function setUp(): void
     {
-        $this->productNew = $this->createMock(Product::class);
-        $this->productExisting = $this->createMock(Product::class);
+        $this->productModelNew = $this->createMock(ProductModel::class);
+        $this->productModelExisting = $this->createMock(ProductModel::class);
         $this->versioningSerializer = $this->createMock(Serializer::class);
         parent::setUp();
     }
@@ -33,8 +32,8 @@ class ProductAttributeChangeServiceTest extends TestCase
     public function testGetEmpty(): void
     {
         $this->versioningSerializer->method('normalize')->willReturn([]);
-        $service = new ProductAttributeChangeService($this->versioningSerializer);
-        $changes = $service->get($this->productNew, null);
+        $service = new ProductModelAttributeChangeService($this->versioningSerializer);
+        $changes = $service->get($this->productModelNew, null);
         $this->assertEmpty($changes);
     }
 
@@ -42,8 +41,8 @@ class ProductAttributeChangeServiceTest extends TestCase
     {
         $this->versioningSerializer->method('normalize')
             ->will($this->onConsecutiveCalls(['attribute1' => 'value1']));
-        $service = new ProductAttributeChangeService($this->versioningSerializer);
-        $changes = $service->get($this->productNew, null);
+        $service = new ProductModelAttributeChangeService($this->versioningSerializer);
+        $changes = $service->get($this->productModelNew, null);
         $this->assertNotEmpty($changes);
         $this->assertCount(1, $changes);
     }
@@ -55,8 +54,9 @@ class ProductAttributeChangeServiceTest extends TestCase
                 ['attribute1' => 'value1'],
                 ['attribute1' => 'value1']
             ));
-        $service = new ProductAttributeChangeService($this->versioningSerializer);
-        $changes = $service->get($this->productNew, $this->productExisting);
+
+        $service = new ProductModelAttributeChangeService($this->versioningSerializer);
+        $changes = $service->get($this->productModelNew, $this->productModelExisting);
         $this->assertEmpty($changes);
     }
 
@@ -71,8 +71,8 @@ class ProductAttributeChangeServiceTest extends TestCase
                 ['attribute1' => 'value3']
             ));
 
-        $service = new ProductAttributeChangeService($this->versioningSerializer);
-        $changes = $service->get($this->productNew, $this->productExisting);
+        $service = new ProductModelAttributeChangeService($this->versioningSerializer);
+        $changes = $service->get($this->productModelNew, $this->productModelExisting);
         $this->assertNotEmpty($changes);
         $this->assertCount(2, $changes);
     }

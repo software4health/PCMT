@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Normalizer;
 
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
-use Pcmt\PcmtProductBundle\Entity\DraftInterface;
 use Pcmt\PcmtProductBundle\Entity\ExistingProductDraft;
 use Pcmt\PcmtProductBundle\Entity\NewProductDraft;
 use Pcmt\PcmtProductBundle\Entity\ProductDraftInterface;
-use Pcmt\PcmtProductBundle\Service\ProductAttributeChangeService;
+use Pcmt\PcmtProductBundle\Service\AttributeChange\ProductAttributeChangeService;
 use Pcmt\PcmtProductBundle\Service\ProductFromDraftCreator;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -40,25 +40,26 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
         /** @var ProductModelInterface $draft */
         $data = parent::normalize($draft, $format, $context);
 
-        $productLabel = 'no label';
         $newProduct = $this->productFromDraftCreator->getProductToCompare($draft);
-        /** @var DraftInterface $draft */
-        switch (get_class($draft)) {
-            case NewProductDraft::class:
-                $productLabel = $newProduct->getIdentifier();
-                break;
-            case ExistingProductDraft::class:
-                $product = $draft->getProduct();
-                $productLabel = $product ? $product->getIdentifier() : 'no product id';
-                break;
-        }
-        $data['label'] = $productLabel;
+        $data['label'] = $this->getLabel($draft, $newProduct);
 
         $changes = $this->productAttributeChangeService->get($newProduct, $draft->getProduct());
         $serializer = new Serializer([$this->attributeChangeNormalizer]);
         $data['changes'] = $serializer->normalize($changes);
 
         return $data;
+    }
+
+    private function getLabel(ProductDraftInterface $draft, ProductInterface $newProduct): string
+    {
+        switch (get_class($draft)) {
+            case NewProductDraft::class:
+                return $newProduct->getIdentifier();
+            case ExistingProductDraft::class:
+                return $draft->getProduct()->getIdentifier();
+        }
+
+        return '--';
     }
 
     /**
