@@ -84,13 +84,11 @@ class AppKernel extends Kernel
     public function getPcmtBundles(): array
     {
         return [
-            new Pcmt\PcmtPermissionBundle\PcmtPermissionBundle(),
             new Pcmt\PcmtCustomDatasetBundle\PcmtCustomDatasetBundle(),
             new Pcmt\PcmtAttributeBundle\PcmtAttributeBundle(),
             new Pcmt\PcmtProductBundle\PcmtProductBundle(),
             new Pcmt\Bundle\PcmtBundle(),
             new Pcmt\PcmtConnectorBundle\PcmtConnectorBundle(),
-            new Pcmt\PcmtDashboardBundle\PcmtDashboardBundle(),
             new Pcmt\PcmtFamilyBundle\PcmtFamilyBundle(),
         ];
     }
