@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pcmt\PcmtFamilyBundle\Connector\Job\JobParameters\ConstraintCollectionProvider;
+namespace Pcmt\PcmtProductBundle\Connector\Job\JobParameters\ConstraintCollectionProvider;
 
 use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters\ConstraintCollectionProviderInterface;

@@ -1,5 +1,5 @@
 parameters:
-    pcmt_catalog.job.job_parameters.constraint_collection_provider.compute_family_products_concatenated_attributes_values.class: Pcmt\PcmtFamilyBundle\Connector\Job\JobParameters\ConstraintCollectionProvider\ComputeConcatenatedAttributeValuesOfProducts
+    pcmt_catalog.job.job_parameters.constraint_collection_provider.compute_family_products_concatenated_attributes_values.class: Pcmt\PcmtProductBundle\Connector\Job\JobParameters\ConstraintCollectionProvider\ComputeConcatenatedAttributeValuesOfProducts
 
 services:
     pcmt_catalog.job.job_parameters.constraint_collection_provider.compute_family_products_concatenated_attributes_values:
