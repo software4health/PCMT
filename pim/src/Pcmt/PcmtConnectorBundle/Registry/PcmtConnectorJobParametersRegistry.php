@@ -19,7 +19,7 @@ final class PcmtConnectorJobParametersRegistry
         'connector'             => 'Pcmt Connector',
         'job'                   => 'reference_data_import_xml',
         'code'                  => 'reference_data_import_xml',
-        'type'                  => 'import',
+        'type'                  => 'import_hidden',
         'config'                => '{"dirPath": "%s"}',
         'job_execution_handler' => 'pcmt:handler:import_reference_data',
     ];
