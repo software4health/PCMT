@@ -1,7 +1,0 @@
-pcmt.permission:
-  drafts: Product drafts
-  drafts.label:
-    list: View Product Draft list
-    approve: Approve Product Draft
-    reject: Reject Product Draft
-    edit: Edit Product Draft
