@@ -35,7 +35,8 @@ class DraftNormalizer implements NormalizerInterface
         $data['createdAt'] = $draft->getCreatedAtFormatted();
         $author = $draft->getAuthor();
         $data['author'] = $author ?
-            $author->getFirstName() . ' ' . $author->getLastName() : 'no author';
+            $author->getFirstName() . ' ' . $author->getLastName() :
+            'no author';
         $draftStatus = new DraftStatus($draft->getStatus());
         $data['status'] = $this->statusNormalizer->normalize($draftStatus);
         $data['type'] = ucfirst($draft->getType());

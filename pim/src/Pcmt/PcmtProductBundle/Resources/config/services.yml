@@ -38,10 +38,12 @@ services:
             - '@pim_enrich.filter.product_model_attribute_filter'
 
     pcmt.service.product_model_attribute_change:
-        class: Pcmt\PcmtProductBundle\Service\ProductModelAttributeChangeService
+        class: Pcmt\PcmtProductBundle\Service\AttributeChange\ProductModelAttributeChangeService
+        arguments:
+            - '@pim_versioning.serializer'
         autowire: true
     pcmt.service.product_attribute_change:
-        class: Pcmt\PcmtProductBundle\Service\ProductAttributeChangeService
+        class: Pcmt\PcmtProductBundle\Service\AttributeChange\ProductAttributeChangeService
         arguments:
             - '@pim_versioning.serializer'
         autowire: true
