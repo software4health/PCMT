@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pcmt\PcmtFamilyBundle\EventSubscriber;
+namespace Pcmt\PcmtProductBundle\EventSubscriber;
 
 use Akeneo\Pim\Enrichment\Bundle\Doctrine\ORM\Query\FindAttributesForFamily;
 use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
@@ -10,7 +10,7 @@ use Akeneo\Tool\Bundle\BatchBundle\Job\JobInstanceRepository;
 use Akeneo\Tool\Bundle\BatchBundle\Launcher\JobLauncherInterface;
 use Akeneo\Tool\Component\StorageUtils\StorageEvents;
 use Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
-use Pcmt\PcmtFamilyBundle\Query\FindConcatenatedAttributesForFamily;
+use Pcmt\PcmtProductBundle\Query\FindConcatenatedAttributesForFamily;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;

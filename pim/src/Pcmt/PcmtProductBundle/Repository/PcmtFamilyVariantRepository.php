@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pcmt\PcmtFamilyBundle\Repository;
+namespace Pcmt\PcmtProductBundle\Repository;
 
 use Akeneo\Pim\Structure\Bundle\Doctrine\ORM\Repository\FamilyVariantRepository;
 use Akeneo\Pim\Structure\Component\Model\FamilyVariantInterface;

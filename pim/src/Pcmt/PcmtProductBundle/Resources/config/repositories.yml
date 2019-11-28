@@ -1,7 +1,7 @@
 services:
 
     pcmt_catalog.repository.family_variant:
-        class: Pcmt\PcmtFamilyBundle\Repository\PcmtFamilyVariantRepository
+        class: Pcmt\PcmtProductBundle\Repository\PcmtFamilyVariantRepository
         factory: 'doctrine.orm.entity_manager:getRepository'
         arguments: ['%pim_catalog.entity.family_variant.class%']
         tags:

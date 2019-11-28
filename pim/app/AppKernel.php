@@ -89,7 +89,6 @@ class AppKernel extends Kernel
             new Pcmt\PcmtProductBundle\PcmtProductBundle(),
             new Pcmt\Bundle\PcmtBundle(),
             new Pcmt\PcmtConnectorBundle\PcmtConnectorBundle(),
-            new Pcmt\PcmtFamilyBundle\PcmtFamilyBundle(),
         ];
     }
 

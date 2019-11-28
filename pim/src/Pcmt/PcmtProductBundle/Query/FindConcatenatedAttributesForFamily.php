@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pcmt\PcmtFamilyBundle\Query;
+namespace Pcmt\PcmtProductBundle\Query;
 
 use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Doctrine\ORM\EntityManagerInterface;
