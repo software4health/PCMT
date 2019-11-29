@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Pcmt\Bundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Pcmt\PcmtAttributeBundle\Entity\Attribute;
-use Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
-use Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Component\Value\ConcatenatedAttributeValue;
+use Pcmt\PcmtProductBundle\Entity\Attribute;
+use Pcmt\PcmtProductBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
+use Pcmt\PcmtProductBundle\Extension\ConcatenatedAttribute\Structure\Component\Value\ConcatenatedAttributeValue;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

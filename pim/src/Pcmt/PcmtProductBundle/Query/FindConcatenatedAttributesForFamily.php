@@ -6,7 +6,7 @@ namespace Pcmt\PcmtProductBundle\Query;
 
 use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
+use Pcmt\PcmtProductBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
 
 class FindConcatenatedAttributesForFamily
 {

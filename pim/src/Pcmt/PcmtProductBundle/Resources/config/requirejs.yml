@@ -20,6 +20,20 @@ config:
         ### fetchers ###
         pcmt/draft-fetcher: pcmtproduct/js/draft/fetcher/draft_fetcher
 
+        dnd/attribute-edit-form/descriptions/translation: pcmtproduct/js/attribute/form/descriptions/translation
+        dnd/template/form/properties/translation: pcmtproduct/templates/form/properties/translation.html
+        dnd/controller/attribute/create: pcmtproduct/js/controller/attribute/create
+
+        pim/attribute-form-properties/concat-attribute-create: pcmtproduct/js/attribute/form/properties/concat-attribute
+        pim/template/form/properties/concat-attribute: pcmtproduct/templates/form/properties/concat-attribute.html
+
+        #concat attribute select dropdown - module
+        pcmt/attribute-edit-form-properties/concat-attribute-select: pcmtproduct/js/attribute/form/properties/concat-attribute-select-attribute
+
+        #concat attribute display value field
+        pcmt/concatenated: pcmtproduct/js/attribute/field/concat-attribute-text-field
+
+
     config:
         pim/controller-registry:
             controllers:
@@ -29,11 +43,36 @@ config:
                     module: pcmt/product/drafts/edit
                     config:
                         entity: draft
+                pim_enrich_attribute_create:
+                    module: dnd/controller/attribute/create
+            defaultController:
+                module: pim/controller/template
+
         pim/fetcher-registry:
             fetchers:
+                default: pim/base-fetcher
+                concat-attribute:
+                    module: pim/attribute-fetcher
+                    options:
+                        identifier_type: pim_catalog_identifier
+                        urls:
+                            list: pim_enrich_attribute_rest_index
+                            get: pim_enrich_attribute_rest_get
                 draft:
                     module: pcmt/draft-fetcher
                     options:
                         urls:
                             get: pcmt_product_drafts_api
+        pcmt/template/form/poperties/concat-attribute:
+            fieldName: concatenated
+
+        pim/form/common/attributes/create-button:
+            attribute_icons:
+                pcmt_catalog_concatenated: file
+
+        pim/attribute-edit-form/type-specific-form-registry:  #configuration for concatenated attribute type create/edit form
+            formNames:
+                pcmt_catalog_concatenated:
+                    create: pcmt-attribute-form-concatenated
+                    edit: pcmt-attribute-form-concatenated
 

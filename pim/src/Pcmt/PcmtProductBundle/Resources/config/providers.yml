@@ -19,3 +19,8 @@ services:
                 - 'pcmt_e2open_export'
         tags:
             - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
+
+    pim_enrich.provider.field.concatenated:
+        class: 'Pcmt\PcmtProductBundle\Provider\Field\ConcatenatedAttributeFieldProvider'
+        tags:
+            - { name: pim_enrich.provider.field, priority: 100 }
