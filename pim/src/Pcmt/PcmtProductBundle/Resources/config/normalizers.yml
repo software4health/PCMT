@@ -31,6 +31,26 @@ services:
             - [setProductModelFromDraftCreator, ['@pcmt.service.product_model_from_draft_creator']]
             - [setProductModelAttributeChangeService, ['@pcmt.service.product_model_attribute_change']]
 
+    ### Concatenated fields for attribute
+    pcmt_catalog.normalizer.standard.concatenated_attribute:
+        class: 'Pcmt\PcmtProductBundle\Normalizer\Standard\ConcatenatedTypeNormalizer'
+        tags:
+            - { name: pim_standard_format_serializer.normalizer, priority: 90 }
+
+    ### Attribute
+    pim_catalog.normalizer.standard.attribute:
+        class: 'Pcmt\PcmtProductBundle\Normalizer\Standard\AttributeNormalizer'
+        arguments:
+            - '@pcmt_catalog.normalizer.standard.concatenated_attribute'
+            - '@pim_catalog.normalizer.standard.translation'
+            - '@pim_catalog.normalizer.standard.datetime'
+            - ['auto_option_sorting']
+        tags:
+            - { name: pim_standard_format_serializer.normalizer, priority: 90 }
+
 parameters:
     pim_catalog.normalizer.standard.translation.class: Pcmt\PcmtProductBundle\Normalizer\Standard\TranslationNormalizer
+
+
+
 

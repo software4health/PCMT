@@ -14,9 +14,13 @@ class PcmtProductExtension extends Extension
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('array_converters.yml');
+        $loader->load('attribute_types.yml');
+        $loader->load('comparators.yml');
         $loader->load('controllers.yml');
         $loader->load('event_subscribers.yml');
         $loader->load('entities.yml');
+        $loader->load('factories.yml');
         $loader->load('fetchers.yml');
         $loader->load('forms.yml');
         $loader->load('jobs.yml');
@@ -25,6 +29,7 @@ class PcmtProductExtension extends Extension
         $loader->load('normalizers.yml');
         $loader->load('providers.yml');
         $loader->load('queries.yml');
+        $loader->load('renderers.yml');
         $loader->load('repositories.yml');
         $loader->load('savers.yml');
         $loader->load('services.yml');

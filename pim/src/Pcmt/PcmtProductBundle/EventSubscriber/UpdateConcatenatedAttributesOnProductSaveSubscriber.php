@@ -9,7 +9,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\StorageEvents;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
-use Pcmt\PcmtAttributeBundle\Extension\ConcatenatedAttribute\Structure\Component\Value\ConcatenatedAttributeValue;
+use Pcmt\PcmtProductBundle\Extension\ConcatenatedAttribute\Structure\Component\Value\ConcatenatedAttributeValue;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 

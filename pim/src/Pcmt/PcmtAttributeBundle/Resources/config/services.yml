@@ -1,5 +1,0 @@
-services:
-
-    pcmt_create_attribute_manager:
-        class: 'Pcmt\PcmtAttributeBundle\Extension\PcmtAttributeManager'
-        autowire: true

@@ -131,7 +131,7 @@ akeneo_storage_utils:
     mapping_overrides:
         -
             original: Akeneo\Pim\Structure\Component\Model\Attribute
-            override: Pcmt\PcmtAttributeBundle\Entity\Attribute
+            override: Pcmt\PcmtProductBundle\Entity\Attribute
         -
             original: Akeneo\Pim\Structure\Component\Model\AttributeTranslation
             override: Pcmt\PcmtProductBundle\Entity\AttributeTranslation
