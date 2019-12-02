@@ -59,7 +59,7 @@ class ProductFromDraftCreator
         $this->productAttributeFilter = $productAttributeFilter;
     }
 
-    public function getProductToCompare(ProductDraftInterface $draft): ProductInterface
+    public function getProductToCompare(ProductDraftInterface $draft): ?ProductInterface
     {
         switch (get_class($draft)) {
             case NewProductDraft::class:
@@ -81,9 +81,12 @@ class ProductFromDraftCreator
         }
     }
 
-    private function createExistingProductForComparing(ExistingProductDraft $draft): ProductInterface
+    private function createExistingProductForComparing(ExistingProductDraft $draft): ?ProductInterface
     {
         $product = $draft->getProduct();
+        if (!$product) {
+            return null;
+        }
         $newProduct = clone $product;
 
         // cloning values, otherwise the original values would also be overwritten

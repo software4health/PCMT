@@ -1,3 +1,0 @@
-Pcmt\Bundle\Entity\PlatformTypeCode:
-    type: entity
-    repositoryClass: Pcmt\Bundle\Entity\Repository\GS1CodesRepository

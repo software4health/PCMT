@@ -52,3 +52,15 @@ services:
     pcmt_create_attribute_manager:
         class: 'Pcmt\PcmtProductBundle\Extension\PcmtAttributeManager'
         autowire: true
+
+    #util command for the one below (PcmtCreateAllAttributesCommand)
+    Pcmt\Bundle\Command\PcmtCreateAttributeForRefDataCommand:
+        autowire: true
+        tags:
+            - { name: 'console.command', command: 'pcmt:generate-ref-data-attr' }
+
+    #util command - generate default reference data simple select attributes
+    Pcmt\Bundle\Command\PcmtCreateAllAttributesCommand:
+        autowire: true
+        tags:
+            - { name: 'console.command', command: 'pcmt:generate-ref-data-attr-all' }

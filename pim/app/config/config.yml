@@ -60,61 +60,61 @@ swiftmailer:
 akeneo_pim_structure:
     reference_data:
         AdditionalTradeItemClassificationCodeListCode:
-            class: Pcmt\Bundle\Entity\AdditionalTradeItemClassificationCodeListCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\AdditionalTradeItemClassificationCodeListCode
             type: simple
         AdditionalTradeItemIdentificationTypeCode:
-            class: Pcmt\Bundle\Entity\AdditionalTradeItemIdentificationTypeCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\AdditionalTradeItemIdentificationTypeCode
             type: simple
         ColourCodeListCode:
-            class: Pcmt\Bundle\Entity\ColourCodeListCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\ColourCodeListCode
             type: simple
         CountryCode:
-            class: Pcmt\Bundle\Entity\CountryCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\CountryCode
             type: simple
         DataCarrierTypeCode:
-            class: Pcmt\Bundle\Entity\DataCarrierTypeCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\DataCarrierTypeCode
             type: simple
         RouteAdministration:
-            class: Pcmt\Bundle\Entity\RouteAdministration
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\RouteAdministration
             type: simple
         GDSNMeasurementUnitCode:
-            class: Pcmt\Bundle\Entity\GDSNMeasurementUnitCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\GDSNMeasurementUnitCode
             type: simple
         Gs1TradeItemIdentificationKeyCode:
-            class: Pcmt\Bundle\Entity\Gs1TradeItemIdentificationKeyCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\Gs1TradeItemIdentificationKeyCode
             type: simple
         ImportClassificationTypeCode:
-            class: Pcmt\Bundle\Entity\ImportClassificationTypeCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\ImportClassificationTypeCode
             type: simple
         LanguageCode:
-            class: Pcmt\Bundle\Entity\LanguageCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\LanguageCode
             type: simple
         NonfoodIngredientOfConcernCode:
-            class: Pcmt\Bundle\Entity\NonfoodIngredientOfConcernCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\NonfoodIngredientOfConcernCode
             type: simple
         PackageTypeCode:
-            class: Pcmt\Bundle\Entity\PackageTypeCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\PackageTypeCode
             type: simple
         PlatformTypeCode:
-            class: Pcmt\Bundle\Entity\PlatformTypeCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\PlatformTypeCode
             type: simple
         ReferencedFileTypeCode:
-            class: Pcmt\Bundle\Entity\ReferencedFileTypeCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\ReferencedFileTypeCode
             type: simple
         RegulationTypeCode:
-            class: Pcmt\Bundle\Entity\RegulationTypeCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\RegulationTypeCode
             type: simple
         ShippingContainerTypeCode:
-            class: Pcmt\Bundle\Entity\ShippingContainerTypeCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\ShippingContainerTypeCode
             type: simple
         SizeCodeListCode:
-            class: Pcmt\Bundle\Entity\SizeCodeListCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\SizeCodeListCode
             type: simple
         TemperatureQualifierCode:
-            class: Pcmt\Bundle\Entity\TemperatureQualifierCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\TemperatureQualifierCode
             type: simple
         TradeItemUnitDescriptorCode:
-            class: Pcmt\Bundle\Entity\TradeItemUnitDescriptorCode
+            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\TradeItemUnitDescriptorCode
             type: simple
 
 parameters:
