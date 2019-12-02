@@ -41,7 +41,7 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
         $data = parent::normalize($draft, $format, $context);
 
         $newProduct = $this->productFromDraftCreator->getProductToCompare($draft);
-        $data['label'] = $this->getLabel($draft, $newProduct);
+        $data['label'] = $newProduct ? $this->getLabel($draft, $newProduct) : 'no label';
 
         $changes = $this->productAttributeChangeService->get($newProduct, $draft->getProduct());
         $serializer = new Serializer([$this->attributeChangeNormalizer]);

@@ -4,65 +4,65 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtConnectorBundle\Services\Factory\ReferenceData;
 
-use Pcmt\Bundle\Entity\AdditionalTradeItemClassificationCodeListCode;
-use Pcmt\Bundle\Entity\AdditionalTradeItemIdentificationTypeCode;
-use Pcmt\Bundle\Entity\ColourCodeListCode;
-use Pcmt\Bundle\Entity\CountryCode;
-use Pcmt\Bundle\Entity\DataCarrierTypeCode;
-use Pcmt\Bundle\Entity\GDSNMeasurementUnitCode;
-use Pcmt\Bundle\Entity\Gs1TradeItemIdentificationKeyCode;
-use Pcmt\Bundle\Entity\ImportClassificationTypeCode;
-use Pcmt\Bundle\Entity\NonfoodIngredientOfConcernCode;
-use Pcmt\Bundle\Entity\PackageTypeCode;
-use Pcmt\Bundle\Entity\PlatformTypeCode;
-use Pcmt\Bundle\Entity\ReferencedFileTypeCode;
-use Pcmt\Bundle\Entity\RegulationTypeCode;
-use Pcmt\Bundle\Entity\ShippingContainerTypeCode;
-use Pcmt\Bundle\Entity\SizeCodeListCode;
-use Pcmt\Bundle\Entity\TemperatureQualifierCode;
-use Pcmt\Bundle\Entity\TradeItemUnitDescriptorCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\AdditionalTradeItemClassificationCodeListCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\AdditionalTradeItemIdentificationTypeCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\ColourCodeListCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\CountryCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\DataCarrierTypeCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\GDSNMeasurementUnitCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\Gs1TradeItemIdentificationKeyCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\ImportClassificationTypeCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\NonfoodIngredientOfConcernCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\PackageTypeCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\PlatformTypeCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\ReferencedFileTypeCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\RegulationTypeCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\ShippingContainerTypeCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\SizeCodeListCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\TemperatureQualifierCode;
+use Pcmt\PcmtProductBundle\Entity\ReferenceData\TradeItemUnitDescriptorCode;
 
 class ReferenceDataFactory
 {
     public function getReferenceDataClass(string $className): ?string
     {
         switch ($className) {
-                case 'AdditionalTradeItemClassificationCodeListCode':
+            case 'AdditionalTradeItemClassificationCodeListCode':
                 return AdditionalTradeItemClassificationCodeListCode::class;
-                case 'AdditionalTradeItemIdentificationTypeCode':
+            case 'AdditionalTradeItemIdentificationTypeCode':
                 return AdditionalTradeItemIdentificationTypeCode::class;
-                case 'ColourCodeListCode':
+            case 'ColourCodeListCode':
                 return ColourCodeListCode::class;
-                case 'CountryCode':
+            case 'CountryCode':
                 return CountryCode::class;
-                case 'DataCarrierTypeCode':
+            case 'DataCarrierTypeCode':
                 return DataCarrierTypeCode::class;
-                case 'GS1TradeItemIdentificationKeyTypeCode':
+            case 'GS1TradeItemIdentificationKeyTypeCode':
                 return Gs1TradeItemIdentificationKeyCode::class;
-                case 'ImportClassificationTypeCode':
+            case 'ImportClassificationTypeCode':
                 return ImportClassificationTypeCode::class;
-                case 'MeasurementUnitCode_GDSN':
+            case 'MeasurementUnitCode_GDSN':
                 return GDSNMeasurementUnitCode::class;
-                case 'NonfoodIngredientOfConcernCode':
+            case 'NonfoodIngredientOfConcernCode':
                 return NonfoodIngredientOfConcernCode::class;
-                case 'PackageTypeCode':
+            case 'PackageTypeCode':
                 return PackageTypeCode::class;
-                case 'PlatformTypeCode':
+            case 'PlatformTypeCode':
                 return PlatformTypeCode::class;
-                case 'ReferencedFileTypeCode':
+            case 'ReferencedFileTypeCode':
                 return ReferencedFileTypeCode::class;
-                case 'ShippingContainerTypeCode':
+            case 'ShippingContainerTypeCode':
                 return ShippingContainerTypeCode::class;
-                case 'SizeCodeListCode':
+            case 'SizeCodeListCode':
                 return SizeCodeListCode::class;
-                case 'TemperatureQualifierCode':
+            case 'TemperatureQualifierCode':
                 return TemperatureQualifierCode::class;
-                case 'TradeItemUnitDescriptorCode':
+            case 'TradeItemUnitDescriptorCode':
                 return TradeItemUnitDescriptorCode::class;
-                case 'RegulationTypeCode':
+            case 'RegulationTypeCode':
                 return RegulationTypeCode::class;
-                default:
+            default:
                 return null;
-            }
+        }
     }
 }

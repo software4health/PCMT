@@ -13,6 +13,9 @@ class PcmtProductExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
+        //load and merge configuration
+        $configuration = $this->getConfiguration($configs, $container); //instantiate /DependencyInjection/Configuration class
+        $this->processConfiguration($configuration, $configs);
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('array_converters.yml');
         $loader->load('attribute_types.yml');
