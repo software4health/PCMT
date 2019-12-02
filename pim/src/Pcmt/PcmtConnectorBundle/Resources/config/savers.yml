@@ -1,7 +1,0 @@
-services:
-
-  pcmt_connector.save.reference_data:
-    class: Pcmt\PcmtConnectorBundle\Saver\ReferenceDataBulkSaver
-    arguments:
-      - '@doctrine.orm.entity_manager'
-      - '@event_dispatcher'

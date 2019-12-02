@@ -26,18 +26,22 @@ class PcmtProductExtension extends Extension
         $loader->load('factories.yml');
         $loader->load('fetchers.yml');
         $loader->load('forms.yml');
+        $loader->load('handlers.yml');
         $loader->load('jobs.yml');
         $loader->load('job_defaults.yml');
         $loader->load('job_constraints.yml');
         $loader->load('normalizers.yml');
+        $loader->load('processors.yml');
         $loader->load('providers.yml');
         $loader->load('queries.yml');
+        $loader->load('readers.yml');
         $loader->load('renderers.yml');
         $loader->load('repositories.yml');
         $loader->load('savers.yml');
         $loader->load('services.yml');
         $loader->load('steps.yml');
         $loader->load('updaters.yml');
+        $loader->load('utils.yml');
         $loader->load('widget.yml');
         $loader->load('writers.yml');
     }

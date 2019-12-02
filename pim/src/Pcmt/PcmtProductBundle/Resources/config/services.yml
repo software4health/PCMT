@@ -1,7 +1,9 @@
 services:
+
     pcmt.manager.draft_facade:
         class: Pcmt\PcmtProductBundle\Manager\DraftFacade
         autowire: true
+
     pcmt.service.product_draft_approver:
         class: Pcmt\PcmtProductBundle\Service\ProductDraftApprover
         autowire: true
@@ -9,6 +11,7 @@ services:
             - [setValidator, ['@pim_catalog.validator.product']]
             - [setSaver, ['@pim_catalog.saver.product']]
             - [setCreator, ['@pcmt.service.product_from_draft_creator']]
+
     pcmt.service.product_model_draft_approver:
         class: Pcmt\PcmtProductBundle\Service\ProductModelDraftApprover
         autowire: true
@@ -16,6 +19,7 @@ services:
             - [setValidator, ['@pim_catalog.validator.product']]
             - [setSaver, ['@pim_catalog.saver.product_model']]
             - [setCreator, ['@pcmt.service.product_model_from_draft_creator']]
+
     pcmt.service.product_from_draft_creator:
         class: Pcmt\PcmtProductBundle\Service\ProductFromDraftCreator
         arguments:
@@ -26,6 +30,7 @@ services:
             - '@pim_catalog.comparator.filter.product'
             - '@pim_catalog.updater.product'
             - '@pim_enrich.filter.product_attribute_filter'
+
     pcmt.service.product_model_from_draft_creator:
         class: Pcmt\PcmtProductBundle\Service\ProductModelFromDraftCreator
         arguments:
@@ -64,3 +69,13 @@ services:
         autowire: true
         tags:
             - { name: 'console.command', command: 'pcmt:generate-ref-data-attr-all' }
+
+    Pcmt\PcmtProductBundle\Command\Creator\PcmtJobCreator:
+        autowire: true
+        tags:
+            - { name: 'console.command', command: 'pcmt:job-creator' }
+
+    Pcmt\PcmtProductBundle\Command\InitializeReferenceDataImport:
+        autowire: true
+        tags:
+            - { name: 'console.command', command: 'pcmt:reference_data:create' }

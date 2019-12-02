@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pcmt\PcmtProductBundle\Command;
 
-use Pcmt\PcmtConnectorBundle\Util\Adapter\FileGetContentsWrapper;
+use Pcmt\PcmtProductBundle\Util\Adapter\FileGetContentsWrapper;
 use Sabre\Xml\Service;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;

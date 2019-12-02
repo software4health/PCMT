@@ -1,4 +1,5 @@
 parameters:
+
     pcmt_catalog.tasklet.compute_family_products_concatenated_attributes_values.class: Pcmt\PcmtProductBundle\Connector\Job\ComputeConcatenatedAttributeValuesOfProductsTasklet
 
     pcmt_catalog.compute_family_products_concatenated_attributes_values.tasklet_name: 'compute_concatenated_attributes_values'
@@ -6,8 +7,10 @@ parameters:
     pcmt_catalog.compute_family_products_concatenated_attributes_values.job_type: 'compute_concatenated_attributes_values'
     pcmt_catalog.compute_family_products_concatenated_attributes_values.connector_name: 'compute_concatenated_attributes_values'
 
+    pcmt_connector.name: 'Pcmt Connector'
 
 services:
+
     pcmt_connector.job.pcmt_e2open_export:
         class: '%pim_connector.job.simple_job.class%'
         arguments:
@@ -56,9 +59,32 @@ services:
                 - '@pcmt_catalog.step.compute_family_products_concatenated_attributes_values'
         public: false
         tags:
-            -
-                name: akeneo_batch.job
+            -   name: akeneo_batch.job
                 connector: '%pcmt_catalog.compute_family_products_concatenated_attributes_values.connector_name%'
                 type: '%pcmt_catalog.compute_family_products_concatenated_attributes_values.job_type%'
+            -   name: akeneo_batch.job.not_visible
+
+    pcmt_connector.job.reference_data_download_xmls:
+        class: '%pim_connector.job.simple_job.class%'
+        arguments:
+            - 'reference_data_download_xmls'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
             -
-                name: akeneo_batch.job.not_visible
+                - '@pcmt_xml_connector.step.xml_reference_data_download'
+        tags:
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: 'download' }
+
+
+    pcmt_connector.job.reference_data_import_xmls:
+        class: '%pim_connector.job.simple_job.class%'
+        arguments:
+            - 'reference_data_import_xml'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            -
+                - '@pcmt_xml_connector.step.xml_reference_data_import'
+
+        tags:
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.import_type%' }
+
