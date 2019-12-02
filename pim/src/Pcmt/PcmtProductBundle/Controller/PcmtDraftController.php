@@ -7,6 +7,7 @@ namespace Pcmt\PcmtProductBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Pcmt\PcmtProductBundle\Entity\AbstractDraft;
+use Pcmt\PcmtProductBundle\Entity\AbstractProductDraft;
 use Pcmt\PcmtProductBundle\Exception\DraftViolationException;
 use Pcmt\PcmtProductBundle\Normalizer\ProductDraftNormalizer;
 use Pcmt\PcmtProductBundle\Normalizer\ProductModelDraftNormalizer;
@@ -163,6 +164,43 @@ class PcmtDraftController
                 );
             }
 
+            return new JsonResponse(['values' => $normalizedViolations], 400);
+        }
+
+        return new JsonResponse();
+    }
+
+    /**
+     * @AclAncestor("pcmt_permission_drafts_approve")
+     */
+    public function approveBulkDraft(Request $request): JsonResponse
+    {
+        $draftRepository = $this->entityManager->getRepository(AbstractDraft::class);
+        $chosenDrafts = json_decode($request->getContent(), true)['chosenDrafts'];
+
+        $normalizedViolations = [];
+        foreach ($chosenDrafts as $draftId) {
+            $draft = $draftRepository->find($draftId);
+            try {
+                $this->draftFacade->approveDraft($draft);
+            } catch (DraftViolationException $e) {
+                $context = [];
+                if ($e->getProduct()) {
+                    $context['product'] = $e->getProduct();
+                }
+                if ($e->getProductModel()) {
+                    $context['productModel'] = $e->getProductModel();
+                }
+                foreach ($e->getViolations() as $violation) {
+                    $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
+                        $violation,
+                        'internal_api',
+                        $context
+                    );
+                }
+            }
+        }
+        if ($normalizedViolations) {
             return new JsonResponse(['values' => $normalizedViolations], 400);
         }
 
