@@ -1,6 +1,6 @@
 .idea
 pim/vendor
 web/
-pim/src/Pcmt/PcmtConnectorBundle/Resources/config/reference_data/
+pim/src/Pcmt/PcmtProductBundle/Resources/config/reference_data/
 pim/src/Pcmt/Bundle/Command/PcmtHelperCommand
 pim/phpunit.xml

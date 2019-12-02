@@ -1,5 +1,0 @@
-services:
-
-  pcmt_connector.factory.reference_data:
-    class: Pcmt\PcmtConnectorBundle\Services\Factory\ReferenceData\ReferenceDataFactory
-    autowire: true

@@ -1,6 +1,0 @@
-services:
-
-  pcmt_connector.write.reference_data:
-    class: Pcmt\PcmtConnectorBundle\Writer\ReferenceDataWriter
-    arguments:
-      - '@pcmt_connector.save.reference_data'

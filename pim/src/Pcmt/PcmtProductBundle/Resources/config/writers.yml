@@ -1,4 +1,5 @@
 services:
+
     pcmt_connector.writer.file.e2open:
         class: 'Pcmt\PcmtProductBundle\Connector\Job\Writer\E2OpenWriter'
         arguments:
@@ -10,3 +11,8 @@ services:
             - '@akeneo.pim.enrichment.connector.write.file.flat.generate_headers_from_family_codes'
             - '@akeneo.pim.enrichment.connector.write.file.flat.generate_headers_from_attribute_codes'
             - ['pim_catalog_file', 'pim_catalog_image']
+
+    pcmt_connector.write.reference_data:
+        class: Pcmt\PcmtProductBundle\Writer\ReferenceDataWriter
+        arguments:
+            - '@pcmt_connector.save.reference_data'

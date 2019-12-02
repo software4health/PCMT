@@ -33,6 +33,8 @@ config:
         #concat attribute display value field
         pcmt/concatenated: pcmtproduct/js/attribute/field/concat-attribute-text-field
 
+        pcmt_connector_button: pcmtproduct/js/common/button
+
     config:
         pim/controller-registry:
             controllers:
