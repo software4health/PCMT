@@ -23,12 +23,15 @@ define(
                 "click .draft-reject": "rejectDraftClicked",
                 "click .draft-approve": "approveDraftClicked",
                 "click .draft-edit": "editDraftClicked",
+                "click .draft-checkbox": "checkboxDraftClicked",
+                "click .draft-bulk-approve": "approveBulkDraftClicked",
             },
             configure: function () {
                 this.loadParams();
                 const model = this.getFormData();
                 model.chosenStatus = {};
                 model.drafts = [];
+                model.chosenDrafts = [];
                 model.params = {};
                 model.loading = true;
                 this.setData(model);
@@ -101,6 +104,62 @@ define(
                     console.log('rejecting failed.');
                 });
             },
+            checkboxDraftClicked: function (ev) {
+                const model = this.getFormData();
+                let draftId = ev.currentTarget.dataset.draftId;
+                if (model.chosenDrafts.includes(draftId)) {
+                    _.each( model.chosenDrafts, function(draft, index) {
+                        if (draft === draftId) {
+                            model.chosenDrafts.splice(index, 1);
+                            return true;
+                        }
+                    });
+                } else {
+                    model.chosenDrafts.push(draftId);
+                }
+                if (model.chosenDrafts.length > 0) {
+                    $('.draft-checkbox-bodyCell').removeClass('AknGrid-bodyCell--actions');
+                    $('.draft-bulk-approve-div').show();
+                } else {
+                    $('.draft-checkbox-bodyCell').addClass('AknGrid-bodyCell--actions');
+                    $('.draft-bulk-approve-div').hide();
+                }
+                $('.draft-bulk-count').text(model.chosenDrafts.length);
+            },
+            resetChosenDrafts: function (model) {
+                model.chosenDrafts = [];
+                $('.draft-bulk-approve-div').hide();
+            },
+            approveBulkDraftClicked: function (ev) {
+                const model = this.getFormData();
+                Dialog.confirm(
+                    'Are you sure you want to approve ' + model.chosenDrafts.length + ' draft(s)?',
+                    'Draft approval',
+                    function () {
+                        const model = this.getFormData();
+                        return this.approveBulkDraft(model.chosenDrafts);
+                    }.bind(this),
+                    '',
+                    'ok',
+                    'Approve'
+                );
+            },
+            approveBulkDraft: function (chosenDrafts) {
+                $.ajax({
+                    url: Routing.generate('pcmt_product_drafts_approve_bulk'),
+                    data: JSON.stringify({chosenDrafts: chosenDrafts}),
+                    type: 'PUT'
+                }).done((function () {
+                    this.loadDrafts();
+                }).bind(this)).fail((function (jqXHR) {
+                    let messages = _.map(jqXHR.responseJSON.values, function(value) {
+                        return value.attribute + ': ' + value.message;
+                    });
+                    Dialog.alert(messages.join('\n'), 'Problem with approving draft', '');
+                    console.log('bulk approve failed.');
+                    this.loadDrafts();
+                }).bind(this));
+            },
             statusChoiceChanged: function (ev) {
                 this.changeStatusChoice(ev.currentTarget.dataset.value);
             },
@@ -123,6 +182,7 @@ define(
             template: _.template(template),
             loadDrafts: function () {
                 const model = this.getFormData();
+                this.resetChosenDrafts(model);
                 model.loading = true;
                 this.setData(model);
                 $.get(Routing.generate('pcmt_product_drafts_api', {status: model.chosenStatus.id}))
