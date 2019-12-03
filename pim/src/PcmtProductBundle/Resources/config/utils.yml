@@ -1,0 +1,4 @@
+services:
+
+  PcmtProductBundle\Util\Adapter\FileGetContentsWrapper:
+    autowire: true

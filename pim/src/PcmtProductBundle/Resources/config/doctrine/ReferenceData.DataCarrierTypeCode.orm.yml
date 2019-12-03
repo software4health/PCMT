@@ -1,0 +1,3 @@
+PcmtProductBundle\Entity\ReferenceData\DataCarrierTypeCode:
+    type: entity
+    repositoryClass: PcmtProductBundle\Repository\GS1CodesRepository

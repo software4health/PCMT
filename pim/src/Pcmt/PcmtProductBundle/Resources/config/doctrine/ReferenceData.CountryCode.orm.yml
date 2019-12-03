@@ -1,3 +1,0 @@
-Pcmt\PcmtProductBundle\Entity\ReferenceData\CountryCode:
-    type: entity
-    repositoryClass: Pcmt\PcmtProductBundle\Repository\GS1CodesRepository

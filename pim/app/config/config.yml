@@ -60,61 +60,61 @@ swiftmailer:
 akeneo_pim_structure:
     reference_data:
         AdditionalTradeItemClassificationCodeListCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\AdditionalTradeItemClassificationCodeListCode
+            class: PcmtProductBundle\Entity\ReferenceData\AdditionalTradeItemClassificationCodeListCode
             type: simple
         AdditionalTradeItemIdentificationTypeCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\AdditionalTradeItemIdentificationTypeCode
+            class: PcmtProductBundle\Entity\ReferenceData\AdditionalTradeItemIdentificationTypeCode
             type: simple
         ColourCodeListCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\ColourCodeListCode
+            class: PcmtProductBundle\Entity\ReferenceData\ColourCodeListCode
             type: simple
         CountryCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\CountryCode
+            class: PcmtProductBundle\Entity\ReferenceData\CountryCode
             type: simple
         DataCarrierTypeCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\DataCarrierTypeCode
+            class: PcmtProductBundle\Entity\ReferenceData\DataCarrierTypeCode
             type: simple
         RouteAdministration:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\RouteAdministration
+            class: PcmtProductBundle\Entity\ReferenceData\RouteAdministration
             type: simple
         GDSNMeasurementUnitCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\GDSNMeasurementUnitCode
+            class: PcmtProductBundle\Entity\ReferenceData\GDSNMeasurementUnitCode
             type: simple
         Gs1TradeItemIdentificationKeyCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\Gs1TradeItemIdentificationKeyCode
+            class: PcmtProductBundle\Entity\ReferenceData\Gs1TradeItemIdentificationKeyCode
             type: simple
         ImportClassificationTypeCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\ImportClassificationTypeCode
+            class: PcmtProductBundle\Entity\ReferenceData\ImportClassificationTypeCode
             type: simple
         LanguageCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\LanguageCode
+            class: PcmtProductBundle\Entity\ReferenceData\LanguageCode
             type: simple
         NonfoodIngredientOfConcernCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\NonfoodIngredientOfConcernCode
+            class: PcmtProductBundle\Entity\ReferenceData\NonfoodIngredientOfConcernCode
             type: simple
         PackageTypeCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\PackageTypeCode
+            class: PcmtProductBundle\Entity\ReferenceData\PackageTypeCode
             type: simple
         PlatformTypeCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\PlatformTypeCode
+            class: PcmtProductBundle\Entity\ReferenceData\PlatformTypeCode
             type: simple
         ReferencedFileTypeCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\ReferencedFileTypeCode
+            class: PcmtProductBundle\Entity\ReferenceData\ReferencedFileTypeCode
             type: simple
         RegulationTypeCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\RegulationTypeCode
+            class: PcmtProductBundle\Entity\ReferenceData\RegulationTypeCode
             type: simple
         ShippingContainerTypeCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\ShippingContainerTypeCode
+            class: PcmtProductBundle\Entity\ReferenceData\ShippingContainerTypeCode
             type: simple
         SizeCodeListCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\SizeCodeListCode
+            class: PcmtProductBundle\Entity\ReferenceData\SizeCodeListCode
             type: simple
         TemperatureQualifierCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\TemperatureQualifierCode
+            class: PcmtProductBundle\Entity\ReferenceData\TemperatureQualifierCode
             type: simple
         TradeItemUnitDescriptorCode:
-            class: Pcmt\PcmtProductBundle\Entity\ReferenceData\TradeItemUnitDescriptorCode
+            class: PcmtProductBundle\Entity\ReferenceData\TradeItemUnitDescriptorCode
             type: simple
 
 parameters:
@@ -131,7 +131,7 @@ akeneo_storage_utils:
     mapping_overrides:
         -
             original: Akeneo\Pim\Structure\Component\Model\Attribute
-            override: Pcmt\PcmtProductBundle\Entity\Attribute
+            override: PcmtProductBundle\Entity\Attribute
         -
             original: Akeneo\Pim\Structure\Component\Model\AttributeTranslation
-            override: Pcmt\PcmtProductBundle\Entity\AttributeTranslation
+            override: PcmtProductBundle\Entity\AttributeTranslation

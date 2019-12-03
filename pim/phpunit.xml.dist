@@ -12,7 +12,7 @@
         stopOnFailure               = "false">
     <testsuites>
         <testsuite name="Unit tests">
-            <directory>./src/Pcmt/*/Tests</directory>
+            <directory>./src/*/Tests</directory>
         </testsuite>
     </testsuites>
 
@@ -20,7 +20,7 @@
         <whitelist>
             <directory suffix=".php">./src/</directory>
             <exclude>
-                <directory>./src/Pcmt/*/Resources</directory>
+                <directory>./src/*/Resources</directory>
             </exclude>
         </whitelist>
     </filter>

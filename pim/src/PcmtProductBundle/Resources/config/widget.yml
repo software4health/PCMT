@@ -1,0 +1,7 @@
+services:
+    pim_dashboard.widget.product_drafts_overview:
+        class: PcmtProductBundle\Widget\DraftsWidget
+        arguments:
+          - '@pcmt_catalog.draft.fetcher'
+        tags:
+          - { name: pim_dashboard.widget, position: 40 }
