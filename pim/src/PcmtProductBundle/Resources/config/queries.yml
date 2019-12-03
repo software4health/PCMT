@@ -1,0 +1,4 @@
+services:
+    pcmt_catalog.family.query.find_concatenated_attributes_for_family:
+        class: PcmtProductBundle\Query\FindConcatenatedAttributesForFamily
+        autowire: true

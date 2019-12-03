@@ -1,0 +1,26 @@
+services:
+    pcmt_connector.job.job_parameters.default_values_provider.pcmt_xlsx_product_export:
+        class: 'PcmtProductBundle\Connector\Job\JobParameters\DefaultValueProvider\PcmtProductE2openExport'
+        arguments:
+            - '@akeneo_pim_enrichment.job.job_parameters.default_values_provider.simple_xlsx_export'
+            - '@pim_catalog.repository.channel'
+            - '@pim_catalog.repository.locale'
+            -
+                - 'pcmt_e2open_export'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.default_values_provider }
+
+
+    pcmt_connector.job.job_parameters.constraint_collection_provider.pcmt_xlsx_product_export:
+        class: 'Akeneo\Pim\Enrichment\Component\Product\Connector\Job\JobParameters\ConstraintCollectionProvider\ProductXlsxExport'
+        arguments:
+            - '@akeneo_pim_enrichment.job.job_parameters.constraint_collection_provider.simple_xlsx_export'
+            -
+                - 'pcmt_e2open_export'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
+
+    pim_enrich.provider.field.concatenated:
+        class: 'PcmtProductBundle\Provider\Field\ConcatenatedAttributeFieldProvider'
+        tags:
+            - { name: pim_enrich.provider.field, priority: 100 }
