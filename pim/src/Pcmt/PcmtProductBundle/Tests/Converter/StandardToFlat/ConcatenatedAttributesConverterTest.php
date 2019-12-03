@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Pcmt\PcmtProductBundle\Tests\Converter;
+namespace Pcmt\PcmtProductBundle\Tests\Converter\StandardToFlat;
 
 use Akeneo\Pim\Enrichment\Component\Product\Connector\ArrayConverter\FlatToStandard\AttributeColumnsResolver;
+use Pcmt\PcmtProductBundle\ArrayConverter\StandardToFlat\Product\ConcatenatedAttributesConverter;
 use Pcmt\PcmtProductBundle\Entity\Attribute;
 use Pcmt\PcmtProductBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
-use Pcmt\PcmtProductBundle\Extension\Connector\ArrayConverter\StandardToFlat\Product\ConcatenatedAttributesConverter;
 use PHPUnit\Framework\MockObject\MockObject as Mock;
 use PHPUnit\Framework\TestCase;
 
@@ -18,6 +18,9 @@ class ConcatenatedAttributesConverterTest extends TestCase
 
     /** @var mixed[] */
     private $supportedAttributeTypes = [];
+
+    /** @var string */
+    private $code = 'concatenated_test';
 
     protected function setUp(): void
     {
@@ -30,7 +33,7 @@ class ConcatenatedAttributesConverterTest extends TestCase
     {
         $attribute = new Attribute();
         $attribute->setType(PcmtAtributeTypes::CONCATENATED_FIELDS);
-        $attribute->setCode('concatenated_test');
+        $attribute->setCode($this->code);
         $concatenatedAttributesConverter = $this->getConcatenatedAttributesConverterInstance();
 
         $this->assertTrue($concatenatedAttributesConverter->supportsAttribute($attribute));
@@ -45,7 +48,7 @@ class ConcatenatedAttributesConverterTest extends TestCase
     {
         $attribute = new Attribute();
         $attribute->setType(PcmtAtributeTypes::CONCATENATED_FIELDS);
-        $attribute->setCode('concatenated_test');
+        $attribute->setCode($this->code);
         $concatenatedAttributesConverter = $this->getConcatenatedAttributesConverterInstance();
 
         $this->expectException(\InvalidArgumentException::class);
@@ -56,20 +59,12 @@ class ConcatenatedAttributesConverterTest extends TestCase
     {
         return [
             [
-                [
-                    'attribute1' => '100 EUR',
-                    'separator'  => ':',
-                    'attribute2' => '0.250KG',
-                ],
-                ['concatenated_test' => '100 EUR:0.250KG'],
+                [['data' => '100 EUR:0.250KG']],
+                [$this->code => '100 EUR:0.250KG'],
             ],
             [
-                [
-                    'attribute1' => ['200 PSI', '|', '100 kG/m2'],
-                    'separator'  => '%%',
-                    'attribute2' => '80 USD',
-                ],
-                ['concatenated_test' => '200 PSI|100 kG/m2%%80 USD'],
+                [['data' => '200 PSI|100 kG/m2%%80 USD']],
+                [$this->code => '200 PSI|100 kG/m2%%80 USD'],
             ],
         ];
     }
@@ -78,14 +73,7 @@ class ConcatenatedAttributesConverterTest extends TestCase
     {
         return [
             [
-                [
-                    'invalidKey' => '200 EUR',
-                    'separator'  => '$$',
-                    'attribute1' => '0.250KG',
-                ],
-            ],
-            [
-                'invalidValueType',
+                'data',
             ],
         ];
     }
