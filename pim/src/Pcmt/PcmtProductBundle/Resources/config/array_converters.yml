@@ -34,10 +34,19 @@ services:
                 - 'auto_option_sorting'
                 - 'is_read_only'
 
-    pim_connector.array_converter.flat_to_standard.concatenated_attribute:
-        class: 'Pcmt\PcmtProductBundle\Extension\Connector\ArrayConverter\StandardToFlat\Product\ConcatenatedAttributesConverter'
+    pim_connector.array_converter.standard_to_flat.concatenated_attribute:
+        class: 'Pcmt\PcmtProductBundle\ArrayConverter\StandardToFlat\Product\ConcatenatedAttributesConverter'
         arguments:
             - '@pim_connector.array_converter.flat_to_standard.product.attribute_columns_resolver'
             - ['pcmt_catalog_concatenated']
         tags:
             - { name: 'pim_connector.array_converter.standard_to_flat.product.value_converter' }
+
+
+    pim_connector.array_converter.flat_to_standard.concatenated_attribute:
+        class: 'Pcmt\PcmtProductBundle\ArrayConverter\FlatToStandard\Product\ConcatenatedAttributesConverter'
+        parent: pim_connector.array_converter.flat_to_standard.product.value_converter.abstract
+        arguments:
+            - ['pcmt_catalog_concatenated']
+        tags:
+            - { name: 'pim_connector.array_converter.flat_to_standard.product.value_converter' }
