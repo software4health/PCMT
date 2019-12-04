@@ -5,17 +5,13 @@ define(
         'jquery',
         'backbone',
         'pim/base-fetcher',
-        'routing',
-        'oro/mediator',
-        'pim/cache-invalidator'
+        'routing'
     ],
     function (
         $,
         Backbone,
         BaseFetcher,
-        Routing,
-        mediator,
-        CacheInvalidator
+        Routing
     ) {
         return BaseFetcher.extend({
             /**

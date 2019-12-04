@@ -20,6 +20,8 @@ services:
         calls:
             - [setProductFromDraftCreator, ['@pcmt.service.product_from_draft_creator']]
             - [setProductAttributeChangeService, ['@pcmt.service.product_attribute_change']]
+        arguments:
+            $productNormalizer: '@pcmt_product.normalizer.product'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 110 }
     pcmt_product.draft.product_model_normalizer:
@@ -30,6 +32,35 @@ services:
         calls:
             - [setProductModelFromDraftCreator, ['@pcmt.service.product_model_from_draft_creator']]
             - [setProductModelAttributeChangeService, ['@pcmt.service.product_model_attribute_change']]
+    pcmt_product.normalizer.product:
+        class: Akeneo\Pim\Enrichment\Component\Product\Normalizer\InternalApi\ProductNormalizer
+        arguments:
+            - '@pim_standard_format_serializer'
+            - '@pim_enrich.normalizer.version'
+            - '@pim_versioning.manager.version'
+            - '@pim_enrich.normalizer.image'
+            - '@pim_catalog.repository.locale'
+            - '@pim_structure_version.provider.structure_version.product'
+            - '@pcmt.provider.form.draft'
+            - '@pim_catalog.localization.localizer.converter'
+            - '@pim_enrich.converter.standard_to_enrich.product_value'
+            - '@pim_catalog.object_manager.product'
+            - '@pim_catalog.manager.completeness'
+            - '@pim_catalog.repository.channel'
+            - '@pim_catalog.filter.chained'
+            - '@pim_enrich.normalizer.completeness_collection'
+            - '@pim_user.context.user'
+            - '@pim_catalog.completeness.calculator'
+            - '@pim_catalog.values_filler.product'
+            - '@pim_catalog.family_variant.provider.entity_with_family_variant_attributes'
+            - '@pim_enrich.normalizer.variant_navigation'
+            - '@pim_enrich.doctrine.query.ascendant_categories'
+            - '@pim_enrich.normalizer.incomplete_values'
+            - '@pim_catalog.association.missing_association_adder'
+            - '@pim_catalog.normalizer.standard.product.parent_associations'
+            - '@pim_catalog.context.catalog'
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 110 }
 
     ### Concatenated fields for attribute
     pcmt_catalog.normalizer.standard.concatenated_attribute:

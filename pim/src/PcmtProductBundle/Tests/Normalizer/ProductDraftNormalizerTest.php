@@ -20,6 +20,7 @@ use PcmtProductBundle\Service\Draft\ProductFromDraftCreator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ProductDraftNormalizerTest extends TestCase
 {
@@ -37,6 +38,9 @@ class ProductDraftNormalizerTest extends TestCase
 
     /** @var AttributeChangeNormalizer */
     private $attributeChangeNormalizer;
+
+    /** @var NormalizerInterface|MockObject */
+    private $productNormalizer;
 
     /** @var ProductFromDraftCreator|MockObject */
     private $creator;
@@ -58,6 +62,7 @@ class ProductDraftNormalizerTest extends TestCase
         $this->creator->method('getProductToCompare')->willReturn($this->productNew);
 
         $this->productAttributeChangeService = $this->createMock(ProductAttributeChangeService::class);
+        $this->productNormalizer = $this->createMock(NormalizerInterface::class);
 
         parent::setUp();
     }
@@ -66,7 +71,8 @@ class ProductDraftNormalizerTest extends TestCase
     {
         $this->productDraftNormalizer = new ProductDraftNormalizer(
             $this->draftStatusNormalizer,
-            $this->attributeChangeNormalizer
+            $this->attributeChangeNormalizer,
+            $this->productNormalizer
         );
         $this->productDraftNormalizer->setProductFromDraftCreator($this->creator);
         $this->productDraftNormalizer->setProductAttributeChangeService($this->productAttributeChangeService);
@@ -97,7 +103,8 @@ class ProductDraftNormalizerTest extends TestCase
 
         $this->productDraftNormalizer = new ProductDraftNormalizer(
             $this->draftStatusNormalizer,
-            $this->attributeChangeNormalizer
+            $this->attributeChangeNormalizer,
+            $this->productNormalizer
         );
         $this->productDraftNormalizer->setProductFromDraftCreator($this->creator);
         $this->productDraftNormalizer->setProductAttributeChangeService($this->productAttributeChangeService);
@@ -119,7 +126,8 @@ class ProductDraftNormalizerTest extends TestCase
 
         $this->productDraftNormalizer = new ProductDraftNormalizer(
             $this->draftStatusNormalizer,
-            $this->attributeChangeNormalizer
+            $this->attributeChangeNormalizer,
+            $this->productNormalizer
         );
         $this->productDraftNormalizer->setProductFromDraftCreator($this->creator);
         $this->productDraftNormalizer->setProductAttributeChangeService($this->productAttributeChangeService);
@@ -131,5 +139,41 @@ class ProductDraftNormalizerTest extends TestCase
 
         $this->assertNotEmpty($array['changes']);
         $this->assertCount(1, $array['changes']);
+    }
+
+    public function testNormalizeWhenContextIsEmptyThenShouldNotReturnProduct(): void
+    {
+        $this->productDraftNormalizer = new ProductDraftNormalizer(
+            $this->draftStatusNormalizer,
+            $this->attributeChangeNormalizer,
+            $this->productNormalizer
+        );
+
+        $this->productDraftNormalizer->setProductFromDraftCreator($this->creator);
+        $this->productDraftNormalizer->setProductAttributeChangeService($this->productAttributeChangeService);
+
+        $draft = $this->createMock(ExistingProductDraft::class);
+
+        $array = $this->productDraftNormalizer->normalize($draft);
+
+        $this->assertArrayNotHasKey('product', $array);
+    }
+
+    public function testNormalizeWhenContextHasProductIncludedThenShouldReturnNormalizedProduct(): void
+    {
+        $this->productDraftNormalizer = new ProductDraftNormalizer(
+            $this->draftStatusNormalizer,
+            $this->attributeChangeNormalizer,
+            $this->productNormalizer
+        );
+
+        $this->productDraftNormalizer->setProductFromDraftCreator($this->creator);
+        $this->productDraftNormalizer->setProductAttributeChangeService($this->productAttributeChangeService);
+
+        $draft = $this->createMock(ExistingProductDraft::class);
+
+        $array = $this->productDraftNormalizer->normalize($draft, null, ['include_product' => true]);
+
+        $this->assertArrayHasKey('product', $array);
     }
 }
