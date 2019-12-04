@@ -6,7 +6,7 @@ namespace PcmtProductBundle\Normalizer;
 
 use PcmtProductBundle\Entity\AbstractDraft;
 use PcmtProductBundle\Entity\DraftStatus;
-use PcmtProductBundle\Service\DraftStatusTranslatorService;
+use PcmtProductBundle\Service\Draft\DraftStatusTranslatorService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 

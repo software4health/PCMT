@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PcmtProductBundle\Service;
+namespace PcmtProductBundle\Service\Draft;
 
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Carbon\Carbon;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PcmtProductBundle\Tests\Service;
+namespace PcmtProductBundle\Tests\Service\Draft;
 
-use PcmtProductBundle\Service\DraftStatusListService;
+use PcmtProductBundle\Service\Draft\DraftStatusListService;
 use PHPUnit\Framework\TestCase;
 
 /**

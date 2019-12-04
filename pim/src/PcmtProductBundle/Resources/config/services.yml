@@ -5,7 +5,7 @@ services:
         autowire: true
 
     pcmt.service.product_draft_approver:
-        class: PcmtProductBundle\Service\ProductDraftApprover
+        class: PcmtProductBundle\Service\Draft\ProductDraftApprover
         autowire: true
         calls:
             - [setValidator, ['@pim_catalog.validator.product']]
@@ -13,7 +13,7 @@ services:
             - [setCreator, ['@pcmt.service.product_from_draft_creator']]
 
     pcmt.service.product_model_draft_approver:
-        class: PcmtProductBundle\Service\ProductModelDraftApprover
+        class: PcmtProductBundle\Service\Draft\ProductModelDraftApprover
         autowire: true
         calls:
             - [setValidator, ['@pim_catalog.validator.product']]
@@ -21,7 +21,7 @@ services:
             - [setCreator, ['@pcmt.service.product_model_from_draft_creator']]
 
     pcmt.service.product_from_draft_creator:
-        class: PcmtProductBundle\Service\ProductFromDraftCreator
+        class: PcmtProductBundle\Service\Draft\ProductFromDraftCreator
         arguments:
             - '@pim_catalog.builder.product'
             - '@pim_enrich.converter.enrich_to_standard.product_value'
@@ -32,7 +32,7 @@ services:
             - '@pim_enrich.filter.product_attribute_filter'
 
     pcmt.service.product_model_from_draft_creator:
-        class: PcmtProductBundle\Service\ProductModelFromDraftCreator
+        class: PcmtProductBundle\Service\Draft\ProductModelFromDraftCreator
         arguments:
             - '@pim_catalog.factory.product_model'
             - '@pim_enrich.converter.enrich_to_standard.product_value'
