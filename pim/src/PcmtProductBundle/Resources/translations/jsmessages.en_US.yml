@@ -17,6 +17,10 @@ pcmt_product:
         new_value: New
         collapse: Collapse
         show_more: Show more
+    drafts_editing:
+        new_product_draft: New product draft
+        button:
+            save_draft: Save draft
     widget:
         drafts_overview:
             product: Product

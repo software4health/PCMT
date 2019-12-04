@@ -24,3 +24,6 @@ services:
         class: 'PcmtProductBundle\Provider\Field\ConcatenatedAttributeFieldProvider'
         tags:
             - { name: pim_enrich.provider.field, priority: 100 }
+
+    pcmt.provider.form.draft:
+        class: 'PcmtProductBundle\Provider\Form\DraftFormProvider'

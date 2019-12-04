@@ -7,7 +7,6 @@ namespace PcmtProductBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use PcmtProductBundle\Entity\AbstractDraft;
-use PcmtProductBundle\Entity\AbstractProductDraft;
 use PcmtProductBundle\Exception\DraftViolationException;
 use PcmtProductBundle\Normalizer\ProductDraftNormalizer;
 use PcmtProductBundle\Normalizer\ProductModelDraftNormalizer;
@@ -81,18 +80,17 @@ class PcmtDraftController
         return new JsonResponse($data);
     }
 
-    public function getDraft(int $id): Response
+    /**
+     * @AclAncestor("pcmt_permission_drafts_list")
+     */
+    public function getDraft(AbstractDraft $draft): Response
     {
-        $draftRepository = $this->entityManager->getRepository(AbstractProductDraft::class);
-
-        $draft = $draftRepository->find($id);
-
         if (!$draft) {
             throw new NotFoundHttpException('The draft does not exist');
         }
 
-        $serializer = new Serializer([$this->draftNormalizer]);
-        $data = $serializer->normalize($draft);
+        $serializer = new Serializer([$this->productDraftNormalizer, $this->productModelDraftNormalizer]);
+        $data = $serializer->normalize($draft, null, ['include_product' => true]);
 
         return new JsonResponse($data);
     }
