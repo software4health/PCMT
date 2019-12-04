@@ -50,3 +50,11 @@ services:
             - ['pcmt_catalog_concatenated']
         tags:
             - { name: 'pim_connector.array_converter.flat_to_standard.product.value_converter' }
+
+    pim_connector.array_converter.flat_to_standard.product.value_converter.metric:
+        class: 'PcmtProductBundle\ArrayConverter\FlatToStandard\Product\MetricConverter'
+        parent: pim_connector.array_converter.flat_to_standard.product.value_converter.abstract
+        arguments:
+            - ['pim_catalog_metric']
+        tags:
+            - { name: 'pim_connector.array_converter.flat_to_standard.product.value_converter' }
