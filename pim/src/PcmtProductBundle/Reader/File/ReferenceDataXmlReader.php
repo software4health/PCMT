@@ -7,7 +7,7 @@ namespace PcmtProductBundle\Reader\File;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Connector\ArrayConverter\ArrayConverterInterface;
 use Akeneo\Tool\Component\Connector\Reader\File\FileReaderInterface;
-use PcmtProductBundle\Services\Factory\ReferenceData\ReferenceDataFactory;
+use PcmtProductBundle\Service\ReferenceData\ReferenceDataFactory;
 use PcmtProductBundle\Util\Adapter\FileGetContentsWrapper;
 use Sabre\Xml\Service;
 

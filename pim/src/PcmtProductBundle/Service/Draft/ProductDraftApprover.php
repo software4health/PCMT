@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace PcmtProductBundle\Service;
+namespace PcmtProductBundle\Service\Draft;
 
+use Akeneo\Pim\Enrichment\Bundle\Doctrine\Common\Saver\ProductSaver;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtProductBundle\Entity\DraftInterface;
 use PcmtProductBundle\Exception\DraftViolationException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ProductModelDraftApprover extends DraftApprover
+class ProductDraftApprover extends DraftApprover
 {
-    /** @var ProductModelFromDraftCreator */
+    /** @var ProductFromDraftCreator */
     protected $creator;
 
     /** @var SaverInterface */
@@ -20,30 +21,30 @@ class ProductModelDraftApprover extends DraftApprover
     /** @var ValidatorInterface */
     private $validator;
 
-    public function setCreator(ProductModelFromDraftCreator $creator): void
+    public function setCreator(ProductFromDraftCreator $creator): void
     {
         $this->creator = $creator;
     }
 
-    public function setSaver(SaverInterface $saver): void
+    public function setSaver(ProductSaver $saver): void
     {
         $this->saver = $saver;
     }
 
-    public function setValidator(ValidatorInterface $productModelValidator): void
+    public function setValidator(ValidatorInterface $validator): void
     {
-        $this->validator = $productModelValidator;
+        $this->validator = $validator;
     }
 
     public function approve(DraftInterface $draft): void
     {
-        $productModel = $this->creator->getProductModelToSave($draft);
+        $product = $this->creator->getProductToSave($draft);
 
-        $violations = $this->validator->validate($productModel);
+        $violations = $this->validator->validate($product);
         if (0 === $violations->count()) {
-            $this->saver->save($productModel);
+            $this->saver->save($product);
         } else {
-            throw new DraftViolationException($violations, $productModel);
+            throw new DraftViolationException($violations, $product);
         }
 
         $this->updateDraftEntity($draft);

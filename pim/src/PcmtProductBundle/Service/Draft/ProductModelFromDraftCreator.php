@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PcmtProductBundle\Service;
+namespace PcmtProductBundle\Service\Draft;
 
 use Akeneo\Pim\Enrichment\Component\Product\Comparator\Filter\FilterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;

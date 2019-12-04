@@ -9,7 +9,7 @@ use PcmtProductBundle\Entity\ExistingProductModelDraft;
 use PcmtProductBundle\Entity\NewProductModelDraft;
 use PcmtProductBundle\Entity\ProductModelDraftInterface;
 use PcmtProductBundle\Service\AttributeChange\ProductModelAttributeChangeService;
-use PcmtProductBundle\Service\ProductModelFromDraftCreator;
+use PcmtProductBundle\Service\Draft\ProductModelFromDraftCreator;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 

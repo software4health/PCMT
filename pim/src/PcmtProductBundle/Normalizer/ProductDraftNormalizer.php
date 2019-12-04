@@ -10,7 +10,7 @@ use PcmtProductBundle\Entity\ExistingProductDraft;
 use PcmtProductBundle\Entity\NewProductDraft;
 use PcmtProductBundle\Entity\ProductDraftInterface;
 use PcmtProductBundle\Service\AttributeChange\ProductAttributeChangeService;
-use PcmtProductBundle\Service\ProductFromDraftCreator;
+use PcmtProductBundle\Service\Draft\ProductFromDraftCreator;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 

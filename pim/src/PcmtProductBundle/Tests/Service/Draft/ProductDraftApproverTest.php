@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PcmtProductBundle\Tests\Service;
+namespace PcmtProductBundle\Tests\Service\Draft;
 
 use Akeneo\Pim\Enrichment\Bundle\Doctrine\Common\Saver\ProductSaver;
 use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
@@ -11,8 +11,8 @@ use Akeneo\UserManagement\Component\Model\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtProductBundle\Entity\AbstractDraft;
 use PcmtProductBundle\Entity\NewProductDraft;
-use PcmtProductBundle\Service\ProductDraftApprover;
-use PcmtProductBundle\Service\ProductFromDraftCreator;
+use PcmtProductBundle\Service\Draft\ProductDraftApprover;
+use PcmtProductBundle\Service\Draft\ProductFromDraftCreator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

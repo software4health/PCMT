@@ -16,5 +16,5 @@ services:
             - { name: pim_catalog.factory.value }
 
     pcmt_connector.factory.reference_data:
-        class: PcmtProductBundle\Services\Factory\ReferenceData\ReferenceDataFactory
+        class: PcmtProductBundle\Service\ReferenceData\ReferenceDataFactory
         autowire: true

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PcmtProductBundle\Services\Factory\ReferenceData;
+namespace PcmtProductBundle\Service\ReferenceData;
 
 use PcmtProductBundle\Entity\ReferenceData\AdditionalTradeItemClassificationCodeListCode;
 use PcmtProductBundle\Entity\ReferenceData\AdditionalTradeItemIdentificationTypeCode;

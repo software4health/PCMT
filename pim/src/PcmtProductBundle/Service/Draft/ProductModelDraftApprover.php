@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace PcmtProductBundle\Service;
+namespace PcmtProductBundle\Service\Draft;
 
-use Akeneo\Pim\Enrichment\Bundle\Doctrine\Common\Saver\ProductSaver;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtProductBundle\Entity\DraftInterface;
 use PcmtProductBundle\Exception\DraftViolationException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ProductDraftApprover extends DraftApprover
+class ProductModelDraftApprover extends DraftApprover
 {
-    /** @var ProductFromDraftCreator */
+    /** @var ProductModelFromDraftCreator */
     protected $creator;
 
     /** @var SaverInterface */
@@ -21,30 +20,30 @@ class ProductDraftApprover extends DraftApprover
     /** @var ValidatorInterface */
     private $validator;
 
-    public function setCreator(ProductFromDraftCreator $creator): void
+    public function setCreator(ProductModelFromDraftCreator $creator): void
     {
         $this->creator = $creator;
     }
 
-    public function setSaver(ProductSaver $saver): void
+    public function setSaver(SaverInterface $saver): void
     {
         $this->saver = $saver;
     }
 
-    public function setValidator(ValidatorInterface $validator): void
+    public function setValidator(ValidatorInterface $productModelValidator): void
     {
-        $this->validator = $validator;
+        $this->validator = $productModelValidator;
     }
 
     public function approve(DraftInterface $draft): void
     {
-        $product = $this->creator->getProductToSave($draft);
+        $productModel = $this->creator->getProductModelToSave($draft);
 
-        $violations = $this->validator->validate($product);
+        $violations = $this->validator->validate($productModel);
         if (0 === $violations->count()) {
-            $this->saver->save($product);
+            $this->saver->save($productModel);
         } else {
-            throw new DraftViolationException($violations, $product);
+            throw new DraftViolationException($violations, $productModel);
         }
 
         $this->updateDraftEntity($draft);

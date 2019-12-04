@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PcmtProductBundle\Tests\Service;
+namespace PcmtProductBundle\Tests\Service\Draft;
 
 use PcmtProductBundle\Entity\AbstractDraft;
-use PcmtProductBundle\Service\DraftStatusTranslatorService;
+use PcmtProductBundle\Service\Draft\DraftStatusTranslatorService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\TranslatorInterface;
 
