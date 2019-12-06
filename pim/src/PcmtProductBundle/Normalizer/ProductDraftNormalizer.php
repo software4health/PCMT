@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PcmtProductBundle\Normalizer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use PcmtProductBundle\Entity\ExistingProductDraft;
 use PcmtProductBundle\Entity\NewProductDraft;
 use PcmtProductBundle\Entity\ProductDraftInterface;
@@ -53,7 +52,7 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
      */
     public function normalize($draft, $format = null, array $context = []): array
     {
-        /** @var ProductModelInterface $draft */
+        /** @var ProductDraftInterface $draft */
         $data = parent::normalize($draft, $format, $context);
 
         $newProduct = $this->productFromDraftCreator->getProductToCompare($draft);
