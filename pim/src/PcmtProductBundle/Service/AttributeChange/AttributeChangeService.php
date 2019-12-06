@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PcmtProductBundle\Service\AttributeChange;
 
+use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use PcmtProductBundle\Entity\AttributeChange;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -15,9 +16,13 @@ class AttributeChangeService
     /** @var SerializerInterface */
     protected $versioningSerializer;
 
-    public function __construct(SerializerInterface $versioningSerializer)
+    /** @var AttributeRepositoryInterface */
+    protected $attributeRepository;
+
+    public function __construct(SerializerInterface $versioningSerializer, AttributeRepositoryInterface $attributeRepository)
     {
         $this->versioningSerializer = $versioningSerializer;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -31,6 +36,10 @@ class AttributeChangeService
 
         if ($value === $previousValue) {
             return;
+        }
+        $attributeInstance = $this->attributeRepository->findOneByIdentifier($attribute);
+        if (null !== $attributeInstance) {
+            $attribute = $attributeInstance->getLabel();
         }
         $this->changes[] = new AttributeChange($attribute, (string) $previousValue, (string) $value);
     }

@@ -46,12 +46,14 @@ services:
         class: PcmtProductBundle\Service\AttributeChange\ProductModelAttributeChangeService
         arguments:
             - '@pim_versioning.serializer'
+            - '@pim_catalog.repository.attribute'
         autowire: true
 
     pcmt.service.product_attribute_change:
         class: PcmtProductBundle\Service\AttributeChange\ProductAttributeChangeService
         arguments:
             - '@pim_versioning.serializer'
+            - '@pim_catalog.repository.attribute'
         autowire: true
 
     pcmt_create_attribute_manager:
