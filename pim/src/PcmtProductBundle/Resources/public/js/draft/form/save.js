@@ -7,7 +7,7 @@ define(
         'oro/translator',
         'pim/form/common/save',
         'oro/messenger',
-        'pim/saver/product',
+        'pcmt/product-draft-saver',
         'pim/field-manager',
         'pim/i18n',
         'pim/user-context'
@@ -18,7 +18,7 @@ define(
         __,
         BaseSave,
         messenger,
-        ProductSaver,
+        ProductDraftSaver,
         FieldManager,
         i18n,
         UserContext
@@ -39,10 +39,10 @@ define(
              * {@inheritdoc}
              */
             save: function (options) {
-                var product = $.extend(true, {}, this.getFormData());
-                var productId = product.meta.id;
+                var draft = $.extend(true, {}, this.getFormData());
+                var draftId = draft.id;
 
-                delete product.meta;
+                delete draft.product.meta;
 
                 var notReadyFields = FieldManager.getNotReadyFields();
 
@@ -68,8 +68,8 @@ define(
                 this.showLoadingMask();
                 this.getRoot().trigger('pim_enrich:form:entity:pre_save');
 
-                return ProductSaver
-                    .save(productId, product)
+                return ProductDraftSaver
+                    .save(draftId, draft)
                     .then(function (data) {
                         this.postSave();
 

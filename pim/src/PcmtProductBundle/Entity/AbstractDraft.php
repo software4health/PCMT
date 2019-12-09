@@ -109,4 +109,9 @@ abstract class AbstractDraft implements DraftInterface
     {
         return $this->productData;
     }
+
+    public function setProductData(array $productData): void
+    {
+        $this->productData = $productData;
+    }
 }
