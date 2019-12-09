@@ -60,6 +60,13 @@ services:
         class: 'PcmtProductBundle\Extension\PcmtAttributeManager'
         autowire: true
 
+    pcmt_draft_saver_factory:
+        class: 'PcmtProductBundle\Service\Draft\DraftSaverFactory'
+        arguments:
+            - '@pcmt_product.save.productDraft'
+            - '@pcmt_product.save.productModelDraft'
+        autowire: true
+
     #util command for the one below (PcmtCreateAllAttributesCommand)
     PcmtProductBundle\Command\PcmtCreateAttributeForRefDataCommand:
         autowire: true

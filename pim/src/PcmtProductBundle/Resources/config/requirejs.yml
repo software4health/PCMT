@@ -49,6 +49,9 @@ config:
         ### fetchers ###
         pcmt/draft-fetcher: pcmtproduct/js/draft/fetcher/draft_fetcher
 
+        ### savers ###
+        pcmt/product-draft-saver: pcmtproduct/js/draft/saver/product-draft-saver
+
         dnd/attribute-edit-form/descriptions/translation: pcmtproduct/js/attribute/form/descriptions/translation
         dnd/template/form/properties/translation: pcmtproduct/templates/form/properties/translation.html
         dnd/controller/attribute/create: pcmtproduct/js/controller/attribute/create
@@ -93,6 +96,10 @@ config:
                     options:
                         urls:
                             get: pcmt_product_drafts_api
+
+        pcmt/product-draft-saver:
+            url: pcmt_product_draft_update_api
+
         pcmt/template/form/poperties/concat-attribute:
             fieldName: concatenated
 

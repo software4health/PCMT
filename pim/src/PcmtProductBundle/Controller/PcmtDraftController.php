@@ -96,6 +96,24 @@ class PcmtDraftController
     }
 
     /**
+     * @AclAncestor("pcmt_permission_drafts_edit")
+     */
+    public function updateDraft(AbstractDraft $draft, Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['product'])) {
+            throw new BadRequestHttpException('There is no product values');
+        }
+
+        $draft->setProductData($data['product']);
+
+        $this->draftFacade->updateDraft($draft);
+
+        return new JsonResponse();
+    }
+
+    /**
      * @AclAncestor("pcmt_permission_drafts_list")
      */
     public function getListParams(): JsonResponse

@@ -57,6 +57,7 @@ pcmt_product.entity.draft:
 
 pim_title:
     pcmt_product_drafts_index: 'Drafts page'
+    pcmt_product_drafts_edit: 'Editing draft'
 
 # Job labels
 batch_jobs:

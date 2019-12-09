@@ -21,14 +21,19 @@ class DraftFacade
     /** @var ProductModelDraftApprover */
     private $productModelDraftApprover;
 
+    /** @var DraftSaverFactory */
+    private $draftSaverFactory;
+
     public function __construct(
         ProductDraftApprover $productDraftApprover,
         ProductModelDraftApprover $productModelDraftApprover,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        DraftSaverFactory $draftSaverFactory
     ) {
         $this->entityManager = $entityManager;
         $this->productDraftApprover = $productDraftApprover;
         $this->productModelDraftApprover = $productModelDraftApprover;
+        $this->draftSaverFactory = $draftSaverFactory;
     }
 
     public function approveDraft(DraftInterface $draft): void
@@ -48,5 +53,12 @@ class DraftFacade
         $draft->setStatus(AbstractDraft::STATUS_REJECTED);
         $this->entityManager->persist($draft);
         $this->entityManager->flush();
+    }
+
+    public function updateDraft(DraftInterface $draft): void
+    {
+        $this->draftSaverFactory
+            ->create($draft)
+            ->save($draft);
     }
 }

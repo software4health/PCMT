@@ -12,6 +12,12 @@ pcmt_product_draft_api:
     requirements:
         id: \d+
     methods: [GET]
+pcmt_product_draft_update_api:
+    path: /rest/drafts/{id}/
+    defaults: { _controller: pcmt_product.controller.rest.draft:updateDraft }
+    requirements:
+        id: \d+
+    methods: [POST]
 pcmt_product_drafts_params:
     path: /rest/drafts/params/
     defaults: { _controller: pcmt_product.controller.rest.draft:getListParams }
