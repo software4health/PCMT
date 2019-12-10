@@ -20,6 +20,7 @@ use PcmtCoreBundle\Service\Draft\ProductModelFromDraftCreator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ProductModelDraftNormalizerTest extends TestCase
 {
@@ -37,6 +38,9 @@ class ProductModelDraftNormalizerTest extends TestCase
 
     /** @var AttributeChangeNormalizer */
     private $attributeChangeNormalizer;
+
+    /** @var NormalizerInterface|MockObject */
+    private $productModelNormalizer;
 
     /** @var ProductModelFromDraftCreator|MockObject */
     private $creator;
@@ -58,6 +62,7 @@ class ProductModelDraftNormalizerTest extends TestCase
         $this->creator->method('getProductModelToCompare')->willReturn($this->productModelNew);
 
         $this->attributeChangeService = $this->createMock(ProductModelAttributeChangeService::class);
+        $this->productModelNormalizer = $this->createMock(NormalizerInterface::class);
 
         parent::setUp();
     }
@@ -66,7 +71,8 @@ class ProductModelDraftNormalizerTest extends TestCase
     {
         $this->productModelDraftNormalizer = new ProductModelDraftNormalizer(
             $this->draftStatusNormalizer,
-            $this->attributeChangeNormalizer
+            $this->attributeChangeNormalizer,
+            $this->productModelNormalizer
         );
         $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
         $this->productModelDraftNormalizer->setProductModelAttributeChangeService($this->attributeChangeService);
@@ -97,7 +103,8 @@ class ProductModelDraftNormalizerTest extends TestCase
 
         $this->productModelDraftNormalizer = new ProductModelDraftNormalizer(
             $this->draftStatusNormalizer,
-            $this->attributeChangeNormalizer
+            $this->attributeChangeNormalizer,
+            $this->productModelNormalizer
         );
         $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
         $this->productModelDraftNormalizer->setProductModelAttributeChangeService($this->attributeChangeService);
@@ -119,7 +126,8 @@ class ProductModelDraftNormalizerTest extends TestCase
 
         $this->productModelDraftNormalizer = new ProductModelDraftNormalizer(
             $this->draftStatusNormalizer,
-            $this->attributeChangeNormalizer
+            $this->attributeChangeNormalizer,
+            $this->productModelNormalizer
         );
         $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
         $this->productModelDraftNormalizer->setProductModelAttributeChangeService($this->attributeChangeService);
@@ -131,5 +139,39 @@ class ProductModelDraftNormalizerTest extends TestCase
 
         $this->assertNotEmpty($array['changes']);
         $this->assertCount(1, $array['changes']);
+    }
+
+    public function testNormalizeWhenContextIsEmptyThenShouldNotReturnProduct(): void
+    {
+        $this->productModelDraftNormalizer = new ProductModelDraftNormalizer(
+            $this->draftStatusNormalizer,
+            $this->attributeChangeNormalizer,
+            $this->productModelNormalizer
+        );
+        $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
+        $this->productModelDraftNormalizer->setProductModelAttributeChangeService($this->attributeChangeService);
+
+        $draft = $this->createMock(ExistingProductModelDraft::class);
+
+        $array = $this->productModelDraftNormalizer->normalize($draft);
+
+        $this->assertArrayNotHasKey('product', $array);
+    }
+
+    public function testNormalizeWhenContextHasProductIncludedThenShouldReturnNormalizedProduct(): void
+    {
+        $this->productModelDraftNormalizer = new ProductModelDraftNormalizer(
+            $this->draftStatusNormalizer,
+            $this->attributeChangeNormalizer,
+            $this->productModelNormalizer
+        );
+        $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
+        $this->productModelDraftNormalizer->setProductModelAttributeChangeService($this->attributeChangeService);
+
+        $draft = $this->createMock(ExistingProductModelDraft::class);
+
+        $array = $this->productModelDraftNormalizer->normalize($draft, null, ['include_product' => true]);
+
+        $this->assertArrayHasKey('product', $array);
     }
 }

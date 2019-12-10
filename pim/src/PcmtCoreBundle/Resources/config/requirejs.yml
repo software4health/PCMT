@@ -12,10 +12,12 @@ config:
         pcmt/product/draft/form/cache-invalidator: pcmtcore/js/draft/form/cache-invalidator
         pcmt/product/draft/form/sequential-edit: pcmtcore/js/draft/form/sequential-edit
         pcmt/product/draft/form/product-label: pcmtcore/js/draft/form/product-label
+        pcmt/product/draft/form/product-model-label: pcmtcore/js/draft/form/product-model-label
         pcmt/product/draft/form/product-completeness: pcmtcore/js/draft/form/product-completeness
         pcmt/product/draft/form/total-missing-required-attributes: pcmtcore/js/draft/form/total-missing-required-attributes
         pcmt/product/draft/form/history: pcmtcore/js/draft/form/history
         pcmt/product/draft/form/comments: pcmtcore/js/draft/form/comments
+        pcmt/product/draft/form/complete-variant-product: pcmtcore/js/draft/form/complete-variant-product
         pcmt/product/draft/form/associations: pcmtcore/js/draft/form/associations
         pcmt/product/draft/form/categories: pcmtcore/js/draft/form/categories
         pcmt/product/draft/form/completeness: pcmtcore/js/draft/form/completeness

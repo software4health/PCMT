@@ -7,6 +7,7 @@ namespace PcmtCoreBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use PcmtCoreBundle\Entity\AbstractDraft;
+use PcmtCoreBundle\Entity\ProductModelDraftInterface;
 use PcmtCoreBundle\Exception\DraftViolationException;
 use PcmtCoreBundle\Normalizer\ProductDraftNormalizer;
 use PcmtCoreBundle\Normalizer\ProductModelDraftNormalizer;
@@ -104,6 +105,10 @@ class PcmtDraftController
 
         if (!isset($data['product'])) {
             throw new BadRequestHttpException('There is no product values');
+        }
+
+        if ($draft instanceof ProductModelDraftInterface && isset($data['product']['family'])) {
+            unset($data['product']['family']);
         }
 
         $draft->setProductData($data['product']);

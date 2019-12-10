@@ -70,8 +70,6 @@ define(
 
                     this.initCategoryCount();
                     this.renderCategorySwitcher();
-
-                    console.log('test');
                 }.bind(this));
 
                 return this;
