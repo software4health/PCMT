@@ -21,6 +21,19 @@ class ProductModelDraftNormalizer extends DraftNormalizer implements NormalizerI
     /** @var ProductModelAttributeChangeService */
     protected $productModelAttributeChangeService;
 
+    /** @var NormalizerInterface */
+    protected $productModelNormalizer;
+
+    public function __construct(
+        DraftStatusNormalizer $statusNormalizer,
+        AttributeChangeNormalizer $attributeChangeNormalizer,
+        NormalizerInterface $productModelNormalizer
+    ) {
+        parent::__construct($statusNormalizer, $attributeChangeNormalizer);
+
+        $this->productModelNormalizer = $productModelNormalizer;
+    }
+
     public function setProductModelFromDraftCreator(ProductModelFromDraftCreator $productModelFromDraftCreator): void
     {
         $this->productModelFromDraftCreator = $productModelFromDraftCreator;
@@ -45,6 +58,10 @@ class ProductModelDraftNormalizer extends DraftNormalizer implements NormalizerI
         $changes = $this->productModelAttributeChangeService->get($newProductModel, $draft->getProductModel());
         $serializer = new Serializer([$this->attributeChangeNormalizer]);
         $data['changes'] = $serializer->normalize($changes);
+
+        if ($context['include_product'] ?? false) {
+            $data['product'] = $this->productModelNormalizer->normalize($newProductModel, 'internal_api');
+        }
 
         return $data;
     }

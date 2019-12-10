@@ -27,3 +27,6 @@ services:
 
     pcmt.provider.form.draft:
         class: 'PcmtCoreBundle\Provider\Form\DraftFormProvider'
+
+    pcmt.provider.form.product-model-draft:
+        class: 'PcmtCoreBundle\Provider\Form\ProductModelDraftFormProvider'
