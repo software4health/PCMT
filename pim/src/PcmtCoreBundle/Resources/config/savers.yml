@@ -1,0 +1,19 @@
+services:
+
+    pcmt_core.save.productDraft:
+        class: PcmtCoreBundle\Saver\ProductDraftSaver
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
+
+    pcmt_core.save.productModelDraft:
+        class: PcmtCoreBundle\Saver\ProductModelDraftSaver
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
+
+    pcmt_connector.save.reference_data:
+        class: PcmtCoreBundle\Saver\ReferenceDataBulkSaver
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'

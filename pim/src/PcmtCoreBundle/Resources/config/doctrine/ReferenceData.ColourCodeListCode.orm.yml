@@ -1,0 +1,3 @@
+PcmtCoreBundle\Entity\ReferenceData\ColourCodeListCode:
+    type: entity
+    repositoryClass: PcmtCoreBundle\Repository\GS1CodesRepository

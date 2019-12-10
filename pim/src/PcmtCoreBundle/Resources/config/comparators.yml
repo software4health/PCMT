@@ -1,0 +1,13 @@
+parameters:
+
+    pcmt_catalog.comparator.attribute.concatenated.class: PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\Comparator\ConcatenatedComparator
+
+services:
+
+    pcmt_catalog.comparator.attribute.concatenated:
+        class: '%pcmt_catalog.comparator.attribute.concatenated.class%'
+        arguments:
+            -
+                - 'pcmt_catalog_concatenated'
+        tags:
+            - { name: pim_catalog.attribute.comparator }

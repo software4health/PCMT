@@ -1,0 +1,5 @@
+PcmtCoreBundle\Entity\ExistingProductModelDraft:
+    type: entity
+    repositoryClass: PcmtCoreBundle\Entity\ProductDraftORMRepository
+
+

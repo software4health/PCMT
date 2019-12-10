@@ -1,3 +1,0 @@
-PcmtProductBundle\Entity\ReferenceData\GDSNMeasurementUnitCode:
-    type: entity
-    repositoryClass: PcmtProductBundle\Repository\GS1CodesRepository
