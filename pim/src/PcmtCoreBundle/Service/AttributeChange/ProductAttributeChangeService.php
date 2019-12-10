@@ -23,6 +23,7 @@ class ProductAttributeChangeService extends AttributeChangeService
 
         foreach ($newValues as $attribute => $newValue) {
             $previousValue = $previousValues[$attribute] ?? null;
+            $attribute = (string) $attribute;
             $this->createChange($attribute, $newValue, $previousValue);
         }
 
