@@ -73,5 +73,5 @@ pim_customentity:
     prefix: /reference-data
     resource: "@PimCustomEntityBundle/Resources/config/routing.yml"
 
-pcmt_product:
-    resource: "@PcmtProductBundle/Resources/config/routing.yml"
+pcmt_core:
+    resource: "@PcmtCoreBundle/Resources/config/routing.yml"

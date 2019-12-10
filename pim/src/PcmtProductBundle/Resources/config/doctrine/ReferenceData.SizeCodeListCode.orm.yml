@@ -1,3 +1,0 @@
-PcmtProductBundle\Entity\ReferenceData\SizeCodeListCode:
-    type: entity
-    repositoryClass: PcmtProductBundle\Repository\GS1CodesRepository

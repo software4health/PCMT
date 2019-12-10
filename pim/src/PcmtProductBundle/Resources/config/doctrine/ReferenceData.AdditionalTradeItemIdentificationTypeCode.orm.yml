@@ -1,3 +1,0 @@
-PcmtProductBundle\Entity\ReferenceData\AdditionalTradeItemIdentificationTypeCode:
-    type: entity
-    repositoryClass: PcmtProductBundle\Repository\GS1CodesRepository

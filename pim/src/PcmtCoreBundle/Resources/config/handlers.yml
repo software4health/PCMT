@@ -1,0 +1,11 @@
+services:
+
+    PcmtCoreBundle\Command\Handler\PcmtReferenceDataDownloadHandler:
+        autowire: true
+        tags:
+            - { name: 'console.command', command: 'pcmt:handler:download_reference_data' }
+
+    PcmtCoreBundle\Command\Handler\PcmtReferenceDataImportHandler:
+        autowire: true
+        tags:
+            - { name: 'console.command', command: 'pcmt:handler:import_reference_data' }

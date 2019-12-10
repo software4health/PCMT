@@ -85,7 +85,7 @@ class AppKernel extends Kernel
     {
         return [
             new PcmtCustomDatasetBundle\PcmtCustomDatasetBundle(),
-            new PcmtProductBundle\PcmtProductBundle(),
+            new PcmtCoreBundle\PcmtCoreBundle(),
         ];
     }
 

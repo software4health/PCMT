@@ -1,3 +1,0 @@
-PcmtProductBundle\Entity\ReferenceData\PackageTypeCode:
-    type: entity
-    repositoryClass: PcmtProductBundle\Repository\GS1CodesRepository

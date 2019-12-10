@@ -1,3 +1,0 @@
-custom_entities:
-  gs1code:
-    entity_class: PcmtProductBundle\Entity\ReferenceData\GS1Codes\GS1Code

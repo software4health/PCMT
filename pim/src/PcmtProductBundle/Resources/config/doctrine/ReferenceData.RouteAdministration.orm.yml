@@ -1,3 +1,0 @@
-PcmtProductBundle\Entity\ReferenceData\RouteAdministration:
-    type: entity
-    repositoryClass: PcmtProductBundle\Repository\GS1CodesRepository

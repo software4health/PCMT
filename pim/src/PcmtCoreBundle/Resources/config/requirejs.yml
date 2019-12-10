@@ -1,0 +1,115 @@
+config:
+    paths:
+        dnd/product-edit-form/attributes/description: pcmtcore/js/product/form/attributes/description
+
+        ### Dashboard widget
+        pcmt/product/widget/draft-products-widget: pcmtcore/js/draft/draft-products-widget
+        pcmt/product/draft/list: pcmtcore/js/draft/draft_list
+
+        ### form ###
+        pcmt/product/draft/form/save: pcmtcore/js/draft/form/save
+        pcmt/product/draft/form/variant-navigation: pcmtcore/js/draft/form/variant-navigation
+        pcmt/product/draft/form/cache-invalidator: pcmtcore/js/draft/form/cache-invalidator
+        pcmt/product/draft/form/sequential-edit: pcmtcore/js/draft/form/sequential-edit
+        pcmt/product/draft/form/product-label: pcmtcore/js/draft/form/product-label
+        pcmt/product/draft/form/product-completeness: pcmtcore/js/draft/form/product-completeness
+        pcmt/product/draft/form/total-missing-required-attributes: pcmtcore/js/draft/form/total-missing-required-attributes
+        pcmt/product/draft/form/history: pcmtcore/js/draft/form/history
+        pcmt/product/draft/form/comments: pcmtcore/js/draft/form/comments
+        pcmt/product/draft/form/associations: pcmtcore/js/draft/form/associations
+        pcmt/product/draft/form/categories: pcmtcore/js/draft/form/categories
+        pcmt/product/draft/form/completeness: pcmtcore/js/draft/form/completeness
+        pcmt/product/draft/form/attribute-filter-at-this-level: pcmtcore/js/draft/form/attribute-filter-at-this-level
+        pcmt/product/draft/form/attributes/completeness: pcmtcore/js/draft/form/attributes/completeness
+        pcmt/product/draft/form/attributes/variant-axes: pcmtcore/js/draft/form/attributes/variant-axes
+        pcmt/product/draft/form/attributes/read-only-parent-attributes: pcmtcore/js/draft/form/attributes/read-only-parent-attributes
+        pcmt/product/draft/form/attributes/attribute-group-selector: pcmtcore/js/draft/form/attributes/attribute-group-selector
+        pcmt/product/draft/form/meta/updated: pcmtcore/js/draft/form/meta/updated
+        pcmt/product/draft/form/meta/created: pcmtcore/js/draft/form/meta/created
+        pcmt/product/draft/form/meta/family: pcmtcore/js/draft/form/meta/family
+        pcmt/product/draft/form/meta/family-variant: pcmtcore/js/draft/form/meta/family-variant
+        pcmt/product/draft/form/meta/change-family: pcmtcore/js/draft/form/meta/change-family
+
+        ### common ###
+        pcmt/draft/common/breadcrumbs: pcmtcore/js/draft/common/breadcrumbs
+        pcmt/draft/common/attributes: pcmtcore/js/draft/common/attributes
+        pcmt/draft/common/main-image: pcmtcore/js/draft/common/main-image
+        pcmt/draft/common/updated: pcmtcore/js/draft/common/updated
+        pcmt/draft/common/created: pcmtcore/js/draft/common/created
+
+        ### templates ###
+        pcmt/product/template/widget/draft-products-widget: pcmtcore/templates/draft/draft-products-widget.html
+        pcmt/product/template/widget/view-all-btn: pcmtcore/templates/draft/view-all-btn.html
+        pcmt/product/template/draft-list: pcmtcore/templates/draft/draft-list.html
+
+        ### controllers ###
+        pcmt/product/drafts/index: pcmtcore/js/controller/drafts_index
+        pcmt/product/drafts/edit: pcmtcore/js/controller/drafts_edit
+
+        ### fetchers ###
+        pcmt/draft-fetcher: pcmtcore/js/draft/fetcher/draft_fetcher
+
+        ### savers ###
+        pcmt/product-draft-saver: pcmtcore/js/draft/saver/product-draft-saver
+
+        dnd/attribute-edit-form/descriptions/translation: pcmtcore/js/attribute/form/descriptions/translation
+        dnd/template/form/properties/translation: pcmtcore/templates/form/properties/translation.html
+        dnd/controller/attribute/create: pcmtcore/js/controller/attribute/create
+
+        pim/attribute-form-properties/concat-attribute-create: pcmtcore/js/attribute/form/properties/concat-attribute
+        pim/template/form/properties/concat-attribute: pcmtcore/templates/form/properties/concat-attribute.html
+
+        #concat attribute select dropdown - module
+        pcmt/attribute-edit-form-properties/concat-attribute-select: pcmtcore/js/attribute/form/properties/concat-attribute-select-attribute
+
+        #concat attribute display value field
+        pcmt/concatenated: pcmtcore/js/attribute/field/concat-attribute-text-field
+
+        pcmt_connector_button: pcmtcore/js/common/button
+
+    config:
+        pim/controller-registry:
+            controllers:
+                pcmt_core_drafts_index:
+                    module: pcmt/product/drafts/index
+                pcmt_core_drafts_edit:
+                    module: pcmt/product/drafts/edit
+                    config:
+                        entity: draft
+                pim_enrich_attribute_create:
+                    module: dnd/controller/attribute/create
+            defaultController:
+                module: pim/controller/template
+
+        pim/fetcher-registry:
+            fetchers:
+                default: pim/base-fetcher
+                concat-attribute:
+                    module: pim/attribute-fetcher
+                    options:
+                        identifier_type: pim_catalog_identifier
+                        urls:
+                            list: pim_enrich_attribute_rest_index
+                            get: pim_enrich_attribute_rest_get
+                draft:
+                    module: pcmt/draft-fetcher
+                    options:
+                        urls:
+                            get: pcmt_core_drafts_api
+
+        pcmt/product-draft-saver:
+            url: pcmt_core_draft_update_api
+
+        pcmt/template/form/poperties/concat-attribute:
+            fieldName: concatenated
+
+        pim/form/common/attributes/create-button:
+            attribute_icons:
+                pcmt_catalog_concatenated: file
+
+        pim/attribute-edit-form/type-specific-form-registry:  #configuration for concatenated attribute type create/edit form
+            formNames:
+                pcmt_catalog_concatenated:
+                    create: pcmt-attribute-form-concatenated
+                    edit: pcmt-attribute-form-concatenated
+

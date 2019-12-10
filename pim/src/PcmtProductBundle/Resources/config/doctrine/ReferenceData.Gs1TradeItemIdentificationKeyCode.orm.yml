@@ -1,3 +1,0 @@
-PcmtProductBundle\Entity\ReferenceData\Gs1TradeItemIdentificationKeyCode:
-    type: entity
-    repositoryClass: PcmtProductBundle\Repository\GS1CodesRepository

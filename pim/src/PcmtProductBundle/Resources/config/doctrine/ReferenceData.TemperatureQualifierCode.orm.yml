@@ -1,3 +1,0 @@
-PcmtProductBundle\Entity\ReferenceData\TemperatureQualifierCode:
-    type: entity
-    repositoryClass: PcmtProductBundle\Repository\GS1CodesRepository
