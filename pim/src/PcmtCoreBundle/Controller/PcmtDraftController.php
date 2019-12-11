@@ -11,6 +11,7 @@ use PcmtCoreBundle\Entity\ProductModelDraftInterface;
 use PcmtCoreBundle\Exception\DraftViolationException;
 use PcmtCoreBundle\Normalizer\ProductDraftNormalizer;
 use PcmtCoreBundle\Normalizer\ProductModelDraftNormalizer;
+use PcmtCoreBundle\Service\Builder\PaginatedResponseBuilder;
 use PcmtCoreBundle\Service\Draft\DraftFacade;
 use PcmtCoreBundle\Service\Draft\DraftStatusListService;
 use PcmtCoreBundle\Service\Draft\DraftStatusTranslatorService;
@@ -45,22 +46,23 @@ class PcmtDraftController
     /** @var NormalizerInterface */
     protected $constraintViolationNormalizer;
 
+    /** @var PaginatedResponseBuilder */
+    protected $responseBuilder;
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        ProductDraftNormalizer $productDraftNormalizer,
-        ProductModelDraftNormalizer $productModelDraftNormalizer,
         DraftStatusTranslatorService $draftStatusTranslatorService,
         DraftStatusListService $draftStatusListService,
         DraftFacade $draftFacade,
-        NormalizerInterface $constraintViolationNormalizer
+        NormalizerInterface $constraintViolationNormalizer,
+        PaginatedResponseBuilder $responseBuilder
     ) {
         $this->entityManager = $entityManager;
-        $this->productDraftNormalizer = $productDraftNormalizer;
-        $this->productModelDraftNormalizer = $productModelDraftNormalizer;
         $this->draftStatusTranslatorService = $draftStatusTranslatorService;
         $this->draftStatusListService = $draftStatusListService;
         $this->draftFacade = $draftFacade;
         $this->constraintViolationNormalizer = $constraintViolationNormalizer;
+        $this->responseBuilder = $responseBuilder;
     }
 
     /**
@@ -71,14 +73,19 @@ class PcmtDraftController
         $criteria = [
             'status' => $request->query->get('status') ?? AbstractDraft::STATUS_NEW,
         ];
+
         $draftRepository = $this->entityManager->getRepository(AbstractDraft::class);
 
-        $drafts = $draftRepository->findBy($criteria);
+        $page = $request->query->get('page') ?? PaginatedResponseBuilder::FIRST_PAGE;
+        $drafts = $draftRepository->findBy(
+            $criteria,
+            null,
+            PaginatedResponseBuilder::PER_PAGE,
+            ($page * PaginatedResponseBuilder::PER_PAGE) - PaginatedResponseBuilder::PER_PAGE
+        );
+        $total = $draftRepository->count($criteria);
 
-        $serializer = new Serializer([$this->productDraftNormalizer, $this->productModelDraftNormalizer]);
-        $data = $serializer->normalize($drafts);
-
-        return new JsonResponse($data);
+        return $this->responseBuilder->buildPaginatedResponse($drafts, $total, (int) $page);
     }
 
     /**

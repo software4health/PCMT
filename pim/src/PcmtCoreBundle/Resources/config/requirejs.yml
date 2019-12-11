@@ -6,6 +6,9 @@ config:
         pcmt/product/widget/draft-products-widget: pcmtcore/js/draft/draft-products-widget
         pcmt/product/draft/list: pcmtcore/js/draft/draft_list
 
+        ### pagination ###
+        pcmt/product/draft/draft-pagination: pcmtcore/js/draft/draft-pagination
+
         ### form ###
         pcmt/product/form/attributes/read-only-all-attributes: pcmtcore/js/product/form/attributes/read-only-all-attributes
 
@@ -48,6 +51,7 @@ config:
         pcmt/product/template/widget/draft-products-widget: pcmtcore/templates/draft/draft-products-widget.html
         pcmt/product/template/widget/view-all-btn: pcmtcore/templates/draft/view-all-btn.html
         pcmt/product/template/draft-list: pcmtcore/templates/draft/draft-list.html
+        pcmt/product/template/draft-pagination: pcmtcore/templates/draft/draft-pagination.html
 
         ### controllers ###
         pcmt/product/drafts/index: pcmtcore/js/controller/drafts_index

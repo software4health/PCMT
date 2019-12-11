@@ -1,0 +1,9 @@
+<div class="AknGridToolbar-center">
+    <div class="AknButtonList AknButtonList--right">
+        <% _.each(handles, function (handle) { %>
+            <a class="AknActionButton AknGridToolbar-actionButton <% if(handle.className) { %> <%- handle.className %> <% } %> href="#">
+            <span class="js-page-change" data-page="<%- handle.pageNo %>"><%- handle.pageNo %></span>
+            </a>
+        <% });%>
+    </div>
+</div>
