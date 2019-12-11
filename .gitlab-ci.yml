@@ -308,6 +308,7 @@ env-ethiopia-beta (WIPE DB):
     - .env-ethiopia-beta_script-deploy
   variables:
     PCMT_PROFILE: dev
+    PCMT_VER: 1.0.0-beta2
 
 env-ethiopia-beta (KEEP DB):
   extends:
