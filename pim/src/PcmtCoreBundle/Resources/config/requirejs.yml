@@ -22,6 +22,7 @@ config:
         pcmt/product/draft/form/categories: pcmtcore/js/draft/form/categories
         pcmt/product/draft/form/completeness: pcmtcore/js/draft/form/completeness
         pcmt/product/draft/form/attribute-filter-at-this-level: pcmtcore/js/draft/form/attribute-filter-at-this-level
+        pcmt/product/draft/form/attribute-filter-missing-required: pcmtcore/js/draft/form/attribute-filter-missing-required
         pcmt/product/draft/form/attributes/completeness: pcmtcore/js/draft/form/attributes/completeness
         pcmt/product/draft/form/attributes/variant-axes: pcmtcore/js/draft/form/attributes/variant-axes
         pcmt/product/draft/form/attributes/read-only-parent-attributes: pcmtcore/js/draft/form/attributes/read-only-parent-attributes
