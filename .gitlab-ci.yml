@@ -279,3 +279,47 @@ env-rwanda-beta-destroy:
   environment:
     name: rwanda-beta
     action: stop
+
+############### Ethiopia Beta Environment ###############
+
+.env-ethiopia-beta:
+  extends:
+    - .pim_only_changes
+  stage: deploy
+  only:
+    - master@pcmt/pcmt
+  when: manual
+  environment:
+    name: ethiopia-beta
+    url: http://ethiopia-beta.pcmt.villagereach.org
+    on_stop: env-ethiopia-beta-destroy
+
+.env-ethiopia-beta_script-deploy:
+  script:
+    - ./bin/ci-deploy.sh ethiopia-beta
+    
+.env-ethiopia-beta_script-destroy:
+  script: 
+    - ./deploy/terraform/run-docker.sh ethiopia-beta destroy -auto-approve
+
+env-ethiopia-beta (WIPE DB):
+  extends:
+    - .env-ethiopia-beta
+    - .env-ethiopia-beta_script-deploy
+  variables:
+    PCMT_PROFILE: dev
+
+env-ethiopia-beta (KEEP DB):
+  extends:
+    - .env-ethiopia-beta
+    - .env-ethiopia-beta_script-deploy
+  variables:
+    PCMT_PROFILE: production
+
+env-ethiopia-beta-destroy:
+  extends:
+    - .env-ethiopia-beta
+    - .env-ethiopia-beta_script-destroy
+  environment:
+    name: ethiopia-beta
+    action: stop
