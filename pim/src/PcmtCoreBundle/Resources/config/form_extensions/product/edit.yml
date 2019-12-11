@@ -7,8 +7,14 @@ extensions:
         config:
             redirect: pcmt_core_drafts_edit
 
-    pcmt-product-edit-form-attribute-description:
+    pim-product-edit-form-attribute-description:
         module: dnd/product-edit-form/attributes/description
+        parent: pim-product-edit-form-attributes
+        targetZone: self
+        position: 100
+
+    pim-product-edit-form-attribute-read-only-all-attributes:
+        module: pcmt/product/form/attributes/read-only-all-attributes
         parent: pim-product-edit-form-attributes
         targetZone: self
         position: 100
