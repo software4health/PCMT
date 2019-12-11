@@ -7,6 +7,8 @@ config:
         pcmt/product/draft/list: pcmtcore/js/draft/draft_list
 
         ### form ###
+        pcmt/product/form/attributes/read-only-all-attributes: pcmtcore/js/product/form/attributes/read-only-all-attributes
+
         pcmt/product/draft/form/save: pcmtcore/js/draft/form/save
         pcmt/product/draft/form/variant-navigation: pcmtcore/js/draft/form/variant-navigation
         pcmt/product/draft/form/cache-invalidator: pcmtcore/js/draft/form/cache-invalidator
