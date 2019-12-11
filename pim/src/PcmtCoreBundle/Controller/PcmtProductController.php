@@ -10,6 +10,8 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtCoreBundle\Entity\AbstractDraft;
 use PcmtCoreBundle\Entity\ExistingProductDraft;
 use PcmtCoreBundle\Entity\NewProductDraft;
+use PcmtCoreBundle\Normalizer\ProductDraftNormalizer;
+use PcmtCoreBundle\Normalizer\ProductModelDraftNormalizer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -17,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Serializer\Serializer;
 
 class PcmtProductController extends ProductController
 {
@@ -25,6 +28,12 @@ class PcmtProductController extends ProductController
 
     /** @var SaverInterface */
     protected $draftSaver;
+
+    /** @var ProductDraftNormalizer */
+    protected $productDraftNormalizer;
+
+    /** @var ProductModelDraftNormalizer */
+    protected $productModelDraftNormalizer;
 
     public function createAction(Request $request): Response
     {
@@ -47,7 +56,9 @@ class PcmtProductController extends ProductController
 
         $this->draftSaver->save($draft);
 
-        return new JsonResponse($this->normalizer->normalize(
+        $serializer = new Serializer([$this->productDraftNormalizer, $this->productModelDraftNormalizer]);
+
+        return new JsonResponse($serializer->normalize(
             $draft,
             'internal_api',
             $this->getNormalizationContext()
@@ -92,8 +103,10 @@ class PcmtProductController extends ProductController
 
         $this->draftSaver->save($draft);
 
-        return new JsonResponse($this->normalizer->normalize(
-            $product,
+        $serializer = new Serializer([$this->productDraftNormalizer, $this->productModelDraftNormalizer]);
+
+        return new JsonResponse($serializer->normalize(
+            $draft,
             'internal_api',
             $this->getNormalizationContext()
         ));
@@ -107,5 +120,15 @@ class PcmtProductController extends ProductController
     public function setEventDispatcher(EventDispatcherInterface $eventDispatcher): void
     {
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    public function setProductDraftNormalizer(ProductDraftNormalizer $productDraftNormalizer): void
+    {
+        $this->productDraftNormalizer = $productDraftNormalizer;
+    }
+
+    public function setProductModelDraftNormalizer(ProductModelDraftNormalizer $productModelDraftNormalizer): void
+    {
+        $this->productModelDraftNormalizer = $productModelDraftNormalizer;
     }
 }

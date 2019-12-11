@@ -21,6 +21,9 @@ pcmt_core:
         new_product_draft: New product draft
         button:
             save_draft: Save draft
+    editing:
+        button:
+            edit_as_draft: Edit as draft
     widget:
         drafts_overview:
             product: Product

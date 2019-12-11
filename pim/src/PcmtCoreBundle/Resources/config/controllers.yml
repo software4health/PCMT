@@ -32,6 +32,8 @@ services:
         calls:
             - [setEventDispatcher, ['@event_dispatcher']]
             - [setDraftSaver, ['@pcmt_core.save.productDraft']]
+            - [setProductDraftNormalizer, ['@pcmt_core.draft.product_normalizer']]
+            - [setProductModelDraftNormalizer, ['@pcmt_core.draft.product_model_normalizer']]
 
     ### overrides product model controller
     pim_enrich.controller.rest.product_model:

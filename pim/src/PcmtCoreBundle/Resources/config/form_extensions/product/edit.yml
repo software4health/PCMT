@@ -1,6 +1,14 @@
 extensions:
-  pim-product-edit-form-attribute-description:
-    module: dnd/product-edit-form/attributes/description
-    parent: pim-product-edit-form-attributes
-    targetZone: self
-    position: 100
+    pim-product-edit-form-save:
+        module: pcmt/product/edit/form/save
+        parent: pim-product-edit-form
+        targetZone: buttons
+        position: 0
+        config:
+            redirect: pcmt_core_drafts_edit
+
+    pcmt-product-edit-form-attribute-description:
+        module: dnd/product-edit-form/attributes/description
+        parent: pim-product-edit-form-attributes
+        targetZone: self
+        position: 100
