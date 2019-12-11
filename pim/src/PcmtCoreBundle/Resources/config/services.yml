@@ -1,5 +1,12 @@
 services:
 
+    pcmt.service.builder.paginated_response.draft:
+        class: PcmtCoreBundle\Service\Builder\PaginatedResponseBuilder
+        arguments:
+            -
+                - '@pcmt_core.draft.product_normalizer'
+                - '@pcmt_core.draft.product_model_normalizer'
+
     pcmt.manager.draft_facade:
         class: PcmtCoreBundle\Manager\DraftFacade
         autowire: true

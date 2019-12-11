@@ -36,7 +36,13 @@ define(
                 model.loading = true;
                 this.setData(model);
                 this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_update', this.render);
+                this.listenTo(this.getRoot(), 'pcmt:form:entity:update_pagination', this.onUpdatePagination);
             },
+
+            onUpdatePagination: function(ev){
+                this.loadDrafts();
+            },
+
             changesExpand: function (ev) {
                 let id = ev.currentTarget.dataset.draftId;
                 let divFullId = '#draft-changes-full-' + id;
@@ -169,6 +175,7 @@ define(
                 if (newChosenStatusId === model.chosenStatus.id) {
                     return;
                 }
+
                 let status = _.find(model.params.statuses, function (s) {
                     return s.id === newChosenStatusId;
                 });
@@ -177,20 +184,26 @@ define(
                 }
                 model.chosenStatus = status;
                 this.setData(model);
-                this.loadDrafts();
+                this.loadDrafts(true);
             },
             template: _.template(template),
-            loadDrafts: function () {
+
+            loadDrafts: function (reset = false) {
                 const model = this.getFormData();
+                if(reset == true) {
+                   model.draftsData.params.currentPage = 1;
+                }
                 this.resetChosenDrafts(model);
                 model.loading = true;
                 this.setData(model);
-                $.get(Routing.generate('pcmt_core_drafts_api', {status: model.chosenStatus.id}))
+                $.get(Routing.generate('pcmt_core_drafts_api', { status: model.chosenStatus.id, page: model.draftsData.params.currentPage }))
                     .done(_.bind(function (resp) {
                         const model = this.getFormData();
-                        model.drafts = resp;
+                        model.drafts = resp.objects;
+                        model.draftsData.params = resp.params;
                         model.loading = false;
                         this.setData(model);
+                        this.getRoot().trigger('pcmt:drafts:listReloaded');
                     }, this))
                     .fail(function () {
                         const model = this.getFormData();

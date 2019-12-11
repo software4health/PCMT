@@ -26,3 +26,9 @@ extensions:
         config:
             tab: pim-menu-activity
             item: pcmt-product-drafts-list-sub-element
+
+    pcmt-product-drafts-index-pagination:
+        module: pcmt/product/draft/draft-pagination
+        parent: pcmt-product-drafts-index
+        targetZone: content
+        position: 100
