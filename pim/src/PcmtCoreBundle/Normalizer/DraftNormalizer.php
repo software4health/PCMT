@@ -40,6 +40,11 @@ class DraftNormalizer implements NormalizerInterface
         $draftStatus = new DraftStatus($draft->getStatus());
         $data['status'] = $this->statusNormalizer->normalize($draftStatus);
         $data['type'] = ucfirst($draft->getType());
+        $data['meta'] = [
+            'id'                => $draft->getId(),
+            'model_type'        => 'draft',
+            'structure_version' => null,
+        ];
 
         return $data;
     }

@@ -115,7 +115,10 @@ class PcmtDraftController
 
         $this->draftFacade->updateDraft($draft);
 
-        return new JsonResponse();
+        $serializer = new Serializer([$this->productDraftNormalizer, $this->productModelDraftNormalizer]);
+        $data = $serializer->normalize($draft, null, ['include_product' => true]);
+
+        return new JsonResponse($data);
     }
 
     /**
