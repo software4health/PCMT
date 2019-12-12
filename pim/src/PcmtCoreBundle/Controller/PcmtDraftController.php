@@ -9,9 +9,7 @@ use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use PcmtCoreBundle\Entity\AbstractDraft;
 use PcmtCoreBundle\Entity\ProductModelDraftInterface;
 use PcmtCoreBundle\Exception\DraftViolationException;
-use PcmtCoreBundle\Normalizer\ProductDraftNormalizer;
-use PcmtCoreBundle\Normalizer\ProductModelDraftNormalizer;
-use PcmtCoreBundle\Service\Builder\PaginatedResponseBuilder;
+use PcmtCoreBundle\Service\Builder\ResponseBuilder;
 use PcmtCoreBundle\Service\Draft\DraftFacade;
 use PcmtCoreBundle\Service\Draft\DraftStatusListService;
 use PcmtCoreBundle\Service\Draft\DraftStatusTranslatorService;
@@ -21,18 +19,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 
 class PcmtDraftController
 {
     /** @var EntityManagerInterface */
     private $entityManager;
-
-    /** @var ProductDraftNormalizer */
-    private $productDraftNormalizer;
-
-    /** @var ProductModelDraftNormalizer */
-    private $productModelDraftNormalizer;
 
     /** @var DraftStatusTranslatorService */
     private $draftStatusTranslatorService;
@@ -46,7 +37,7 @@ class PcmtDraftController
     /** @var NormalizerInterface */
     protected $constraintViolationNormalizer;
 
-    /** @var PaginatedResponseBuilder */
+    /** @var ResponseBuilder */
     protected $responseBuilder;
 
     public function __construct(
@@ -55,7 +46,7 @@ class PcmtDraftController
         DraftStatusListService $draftStatusListService,
         DraftFacade $draftFacade,
         NormalizerInterface $constraintViolationNormalizer,
-        PaginatedResponseBuilder $responseBuilder
+        ResponseBuilder $responseBuilder
     ) {
         $this->entityManager = $entityManager;
         $this->draftStatusTranslatorService = $draftStatusTranslatorService;
@@ -76,12 +67,12 @@ class PcmtDraftController
 
         $draftRepository = $this->entityManager->getRepository(AbstractDraft::class);
 
-        $page = $request->query->get('page') ?? PaginatedResponseBuilder::FIRST_PAGE;
+        $page = $request->query->get('page') ?? ResponseBuilder::FIRST_PAGE;
         $drafts = $draftRepository->findBy(
             $criteria,
             null,
-            PaginatedResponseBuilder::PER_PAGE,
-            ($page * PaginatedResponseBuilder::PER_PAGE) - PaginatedResponseBuilder::PER_PAGE
+            ResponseBuilder::PER_PAGE,
+            ($page * ResponseBuilder::PER_PAGE) - ResponseBuilder::PER_PAGE
         );
         $total = $draftRepository->count($criteria);
 
@@ -97,10 +88,10 @@ class PcmtDraftController
             throw new NotFoundHttpException('The draft does not exist');
         }
 
-        $serializer = new Serializer([$this->productDraftNormalizer, $this->productModelDraftNormalizer]);
-        $data = $serializer->normalize($draft, null, ['include_product' => true]);
-
-        return new JsonResponse($data);
+        return $this->responseBuilder
+            ->setData($draft)
+            ->setContext(['include_product' => true])
+            ->build();
     }
 
     /**
@@ -122,10 +113,10 @@ class PcmtDraftController
 
         $this->draftFacade->updateDraft($draft);
 
-        $serializer = new Serializer([$this->productDraftNormalizer, $this->productModelDraftNormalizer]);
-        $data = $serializer->normalize($draft, null, ['include_product' => true]);
-
-        return new JsonResponse($data);
+        return $this->responseBuilder
+            ->setData($draft)
+            ->setContext(['include_product' => true])
+            ->build();
     }
 
     /**

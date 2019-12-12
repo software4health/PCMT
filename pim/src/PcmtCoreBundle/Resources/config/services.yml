@@ -1,7 +1,7 @@
 services:
 
     pcmt.service.builder.paginated_response.draft:
-        class: PcmtCoreBundle\Service\Builder\PaginatedResponseBuilder
+        class: PcmtCoreBundle\Service\Builder\ResponseBuilder
         arguments:
             -
                 - '@pcmt_core.draft.product_normalizer'
