@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Serializer;
 class PaginatedResponseBuilder
 {
     public const FIRST_PAGE = 1;
-    public const PER_PAGE = 2;
+    public const PER_PAGE = 25;
 
     /** @var NormalizerInterface[] */
     protected $normalizers = [];
