@@ -24,17 +24,17 @@ extensions:
         targetZone: main-image
 
     pcmt-product-model-drafts-edit-form-variant-navigation:
-        module: pcmt/product/draft/form/variant-navigation
+        module: pcmt/draft/form/variant-navigation
         parent: pcmt-product-model-drafts-edit
         targetZone: navigation
 
     pcmt-product-model-drafts-edit-form-cache-invalidator:
-        module: pcmt/product/draft/form/cache-invalidator
+        module: pcmt/draft/form/cache-invalidator
         parent: pcmt-product-model-drafts-edit
         position: 1000
 
     pcmt-product-model-drafts-edit-form-sequential-edit:
-        module: pcmt/product/draft/form/sequential-edit
+        module: pcmt/draft/form/sequential-edit
         parent: pcmt-product-model-drafts-edit
         targetZone: bottom-panel
         aclResourceId: pim_enrich_product_model_edit_attributes
@@ -72,7 +72,7 @@ extensions:
         position: 100
 
     pcmt-product-model-drafts-edit-form-model-label:
-        module: pcmt/product/draft/form/product-model-label
+        module: pcmt/draft/form/product-model-label
         parent: pcmt-product-model-drafts-edit
         targetZone: title
         position: 100
@@ -84,7 +84,7 @@ extensions:
         position: 120
 
     pcmt-product-model-drafts-edit-form-save:
-        module: pcmt/product/draft/form/save
+        module: pcmt/draft/form/save
         parent: pcmt-product-model-drafts-edit
         targetZone: buttons
         aclResourceId: pim_enrich_product_model_edit_attributes
@@ -99,19 +99,19 @@ extensions:
             entity: pim_enrich.entity.product.label
 
     pcmt-product-model-drafts-edit-form-family:
-        module: pcmt/product/draft/form/meta/family
+        module: pcmt/draft/form/meta/family
         parent: pcmt-product-model-drafts-edit-form-meta
         targetZone: meta
         position: 70
 
     pcmt-product-model-drafts-edit-form-family-variant:
-        module: pcmt/product/draft/form/meta/family-variant
+        module: pcmt/draft/form/meta/family-variant
         parent: pcmt-product-model-drafts-edit-form-meta
         targetZone: meta
         position: 80
 
     pcmt-product-model-drafts-edit-form-created:
-        module: pcmt/product/draft/form/meta/created
+        module: pcmt/draft/form/meta/created
         parent: pcmt-product-model-drafts-edit-form-meta
         targetZone: meta
         position: 90
@@ -120,7 +120,7 @@ extensions:
             labelBy: pim_common.by
 
     pcmt-product-model-drafts-edit-form-updated:
-        module: pcmt/product/draft/form/meta/updated
+        module: pcmt/draft/form/meta/updated
         parent: pcmt-product-model-drafts-edit-form-meta
         targetZone: meta
         position: 100
@@ -141,7 +141,7 @@ extensions:
             deletionFailed: pim_enrich.entity.attribute.flash.delete.fail
 
     pcmt-product-model-drafts-edit-form-categories:
-        module: pcmt/product/draft/form/categories
+        module: pcmt/draft/form/categories
         parent: pcmt-product-model-drafts-edit-form-column-tabs
         targetZone: container
         aclResourceId: pim_enrich_product_model_categories_view
@@ -152,7 +152,7 @@ extensions:
             itemCategoryTreeRoute: pim_enrich_product_model_category_rest_list
 
     pcmt-product-model-drafts-edit-form-associations:
-        module: pcmt/product/draft/form/associations
+        module: pcmt/draft/form/associations
         parent: pcmt-product-model-drafts-edit-form-column-tabs
         targetZone: container
         aclResourceId: pim_enrich_associations_view
@@ -163,7 +163,7 @@ extensions:
             datagridName: 'association-product-model-grid'
 
     pcmt-product-model-drafts-edit-form-attribute-group-selector:
-        module: pcmt/product/draft/form/attributes/attribute-group-selector
+        module: pcmt/draft/form/attributes/attribute-group-selector
         parent: pcmt-product-model-drafts-edit-form-attributes
         targetZone: other-actions
         position: 100
@@ -185,7 +185,7 @@ extensions:
             context: base_product
 
     pcmt-product-model-drafts-edit-form-complete-variant-product:
-        module: pcmt/product/draft/form/complete-variant-product
+        module: pcmt/draft/form/complete-variant-product
         parent: pcmt-product-model-drafts-edit
         targetZone: meta
         position: 120
@@ -193,7 +193,7 @@ extensions:
             context: base_product
 
     pcmt-product-model-drafts-edit-form-total-missing-required-attributes:
-        module: pcmt/product/draft/form/total-missing-required-attributes
+        module: pcmt/draft/form/total-missing-required-attributes
         parent: pcmt-product-model-drafts-edit
         targetZone: meta
         position: 140
@@ -205,13 +205,13 @@ extensions:
         position: 100
 
     pcmt-product-model-drafts-edit-form-read-only-parent-attributes:
-        module: pcmt/product/draft/form/attributes/read-only-parent-attributes
+        module: pcmt/draft/form/attributes/read-only-parent-attributes
         parent: pcmt-product-model-drafts-edit-form-attributes
         targetZone: self
         position: 100
 
     pcmt-product-model-drafts-edit-form-read-only-variant-axes:
-        module: pcmt/product/draft/form/attributes/variant-axes
+        module: pcmt/draft/form/attributes/variant-axes
         parent: pcmt-product-model-drafts-edit-form-attributes
         targetZone: self
         position: 110
@@ -229,7 +229,7 @@ extensions:
         position: 90
 
     pcmt-product-model-drafts-edit-form-history:
-        module: pcmt/product/draft/form/history
+        module: pcmt/draft/form/history
         parent: pcmt-product-model-drafts-edit-form-column-tabs
         targetZone: container
         aclResourceId: pim_enrich_product_model_history
@@ -238,7 +238,7 @@ extensions:
             tabCode: pim-product-edit-form-history
 
     pcmt-product-model-drafts-edit-form-completeness-filter:
-        module: pcmt/product/draft/form/attributes/completeness
+        module: pcmt/draft/form/attributes/completeness
         parent: pcmt-product-model-drafts-edit-form-attributes
         targetZone: self
         position: 100
@@ -260,7 +260,7 @@ extensions:
         position: 110
 
     pcmt-product-model-drafts-edit-form-attribute-filter-at-this-level-filter:
-        module: pcmt/product/draft/form/attribute-filter-at-this-level
+        module: pcmt/draft/form/attribute-filter-at-this-level
         parent: pcmt-product-model-drafts-edit-form-attribute-filter
         targetZone: self
         position: 120

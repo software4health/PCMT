@@ -1,6 +1,7 @@
 extensions:
     pcmt-product-drafts-index:
         module: pim/common/simple-view
+        targetZone: self
         config:
             template: pim/template/common/default-template
 
@@ -12,10 +13,24 @@ extensions:
             userAccount: pim_menu.user.user_account
             logout: pim_menu.user.logout
 
-    pcmt-product-drafts-index-content:
-        module: pcmt/product/draft/list
+    pcmt-product-drafts-index-title:
+        module: pcmt/draft/common/title
+        parent: pcmt-product-drafts-index
+        targetZone: title
+        config:
+            title: pcmt_core.drafts_list.page_title.index
+
+    pcmt-product-drafts-index-grid-container:
+        module: pim/common/simple-view
         parent: pcmt-product-drafts-index
         targetZone: content
+        config:
+            template: pim/template/form/index/index
+
+    pcmt-product-drafts-index-content:
+        module: pcmt/draft/list
+        parent: pcmt-product-drafts-index-grid-container
+        position: 1000
         config:
             template: pcmt/product/template/draft-list
 
@@ -28,7 +43,11 @@ extensions:
             item: pcmt-product-drafts-list-sub-element
 
     pcmt-product-drafts-index-pagination:
-        module: pcmt/product/draft/draft-pagination
-        parent: pcmt-product-drafts-index
-        targetZone: content
-        position: 100
+        module: pcmt/draft/draft-pagination
+        parent: pcmt-product-drafts-index-grid-container
+        targetZone: toolbar
+
+    pcmt-product-drafts-index-filters:
+        module: pcmt/draft/filters
+        parent: pcmt-product-drafts-index-grid-container
+        targetZone: filters

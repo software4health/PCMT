@@ -4,44 +4,45 @@ config:
 
         ### Dashboard widget
         pcmt/product/widget/draft-products-widget: pcmtcore/js/draft/draft-products-widget
-        pcmt/product/draft/list: pcmtcore/js/draft/draft_list
-
-        ### pagination ###
-        pcmt/product/draft/draft-pagination: pcmtcore/js/draft/draft-pagination
 
         ### form ###
         pcmt/product/form/attributes/read-only-all-attributes: pcmtcore/js/product/form/attributes/read-only-all-attributes
 
-        pcmt/product/draft/form/save: pcmtcore/js/draft/form/save
-        pcmt/product/draft/form/variant-navigation: pcmtcore/js/draft/form/variant-navigation
-        pcmt/product/draft/form/cache-invalidator: pcmtcore/js/draft/form/cache-invalidator
-        pcmt/product/draft/form/sequential-edit: pcmtcore/js/draft/form/sequential-edit
-        pcmt/product/draft/form/product-label: pcmtcore/js/draft/form/product-label
-        pcmt/product/draft/form/product-model-label: pcmtcore/js/draft/form/product-model-label
-        pcmt/product/draft/form/product-completeness: pcmtcore/js/draft/form/product-completeness
-        pcmt/product/draft/form/total-missing-required-attributes: pcmtcore/js/draft/form/total-missing-required-attributes
-        pcmt/product/draft/form/history: pcmtcore/js/draft/form/history
-        pcmt/product/draft/form/comments: pcmtcore/js/draft/form/comments
-        pcmt/product/draft/form/complete-variant-product: pcmtcore/js/draft/form/complete-variant-product
-        pcmt/product/draft/form/associations: pcmtcore/js/draft/form/associations
-        pcmt/product/draft/form/categories: pcmtcore/js/draft/form/categories
-        pcmt/product/draft/form/completeness: pcmtcore/js/draft/form/completeness
-        pcmt/product/draft/form/attribute-filter-at-this-level: pcmtcore/js/draft/form/attribute-filter-at-this-level
-        pcmt/product/draft/form/attribute-filter-missing-required: pcmtcore/js/draft/form/attribute-filter-missing-required
-        pcmt/product/draft/form/attributes/completeness: pcmtcore/js/draft/form/attributes/completeness
-        pcmt/product/draft/form/attributes/variant-axes: pcmtcore/js/draft/form/attributes/variant-axes
-        pcmt/product/draft/form/attributes/read-only-parent-attributes: pcmtcore/js/draft/form/attributes/read-only-parent-attributes
-        pcmt/product/draft/form/attributes/attribute-group-selector: pcmtcore/js/draft/form/attributes/attribute-group-selector
-        pcmt/product/draft/form/meta/updated: pcmtcore/js/draft/form/meta/updated
-        pcmt/product/draft/form/meta/created: pcmtcore/js/draft/form/meta/created
-        pcmt/product/draft/form/meta/family: pcmtcore/js/draft/form/meta/family
-        pcmt/product/draft/form/meta/family-variant: pcmtcore/js/draft/form/meta/family-variant
-        pcmt/product/draft/form/meta/change-family: pcmtcore/js/draft/form/meta/change-family
+        ### Drafts ###
+        pcmt/draft/list: pcmtcore/js/draft/draft_list
+        pcmt/draft/draft-pagination: pcmtcore/js/draft/draft-pagination
+        pcmt/draft/filters: pcmtcore/js/draft/filters
+        pcmt/draft/form/save: pcmtcore/js/draft/form/save
+        pcmt/draft/form/variant-navigation: pcmtcore/js/draft/form/variant-navigation
+        pcmt/draft/form/cache-invalidator: pcmtcore/js/draft/form/cache-invalidator
+        pcmt/draft/form/sequential-edit: pcmtcore/js/draft/form/sequential-edit
+        pcmt/draft/form/product-label: pcmtcore/js/draft/form/product-label
+        pcmt/draft/form/product-model-label: pcmtcore/js/draft/form/product-model-label
+        pcmt/draft/form/product-completeness: pcmtcore/js/draft/form/product-completeness
+        pcmt/draft/form/total-missing-required-attributes: pcmtcore/js/draft/form/total-missing-required-attributes
+        pcmt/draft/form/history: pcmtcore/js/draft/form/history
+        pcmt/draft/form/comments: pcmtcore/js/draft/form/comments
+        pcmt/draft/form/complete-variant-product: pcmtcore/js/draft/form/complete-variant-product
+        pcmt/draft/form/associations: pcmtcore/js/draft/form/associations
+        pcmt/draft/form/categories: pcmtcore/js/draft/form/categories
+        pcmt/draft/form/completeness: pcmtcore/js/draft/form/completeness
+        pcmt/draft/form/attribute-filter-at-this-level: pcmtcore/js/draft/form/attribute-filter-at-this-level
+        pcmt/draft/form/attribute-filter-missing-required: pcmtcore/js/draft/form/attribute-filter-missing-required
+        pcmt/draft/form/attributes/completeness: pcmtcore/js/draft/form/attributes/completeness
+        pcmt/draft/form/attributes/variant-axes: pcmtcore/js/draft/form/attributes/variant-axes
+        pcmt/draft/form/attributes/read-only-parent-attributes: pcmtcore/js/draft/form/attributes/read-only-parent-attributes
+        pcmt/draft/form/attributes/attribute-group-selector: pcmtcore/js/draft/form/attributes/attribute-group-selector
+        pcmt/draft/form/meta/updated: pcmtcore/js/draft/form/meta/updated
+        pcmt/draft/form/meta/created: pcmtcore/js/draft/form/meta/created
+        pcmt/draft/form/meta/family: pcmtcore/js/draft/form/meta/family
+        pcmt/draft/form/meta/family-variant: pcmtcore/js/draft/form/meta/family-variant
+        pcmt/draft/form/meta/change-family: pcmtcore/js/draft/form/meta/change-family
 
         pcmt/product/edit/form/save: pcmtcore/js/product/form/save
 
         ### common ###
         pcmt/draft/common/breadcrumbs: pcmtcore/js/draft/common/breadcrumbs
+        pcmt/draft/common/title: pcmtcore/js/draft/common/title
         pcmt/draft/common/attributes: pcmtcore/js/draft/common/attributes
         pcmt/draft/common/main-image: pcmtcore/js/draft/common/main-image
         pcmt/draft/common/updated: pcmtcore/js/draft/common/updated
@@ -52,6 +53,7 @@ config:
         pcmt/product/template/widget/view-all-btn: pcmtcore/templates/draft/view-all-btn.html
         pcmt/product/template/draft-list: pcmtcore/templates/draft/draft-list.html
         pcmt/product/template/draft-pagination: pcmtcore/templates/draft/draft-pagination.html
+        pcmt/product/template/filters: pcmtcore/templates/draft/filters.html
 
         ### controllers ###
         pcmt/product/drafts/index: pcmtcore/js/controller/drafts_index
