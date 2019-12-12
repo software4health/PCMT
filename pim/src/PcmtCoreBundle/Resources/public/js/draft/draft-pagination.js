@@ -16,57 +16,83 @@ define(
         return BaseForm.extend({
             template: _.template(template),
             events: {
-                 "click a": "onChangePage"
+                "click a": "onChangePage"
             },
 
-            configure: function() {
-                 this.listenTo(this.getRoot(), 'pcmt:drafts:listReloaded', this.render);
+            configure: function () {
+                this.listenTo(this.getRoot(), 'pcmt:drafts:listReloaded', this.render);
             },
 
-            getPaginationHandles: function(model) {
+            getPaginationHandles: function (model) {
 
-                 if(null == model){
+                if (null == model) {
                     return;
-                 }
+                }
 
-                 let handles = []
+                let handles = [];
 
-                 const _count = model.total
-                 const _firstPage = model.firstPage;
-                 const _currentPage = model.currentPage;
-                 const _lastPage = model.lastPage;
+                const _firstPage = model.firstPage;
+                const _currentPage = model.currentPage;
+                const _lastPage = model.lastPage;
 
-                 if(_lastPage == 0){
+                if (_lastPage === 0) {
                     return [];
-                 }
+                }
 
-                 for (let i = _firstPage; i <= _lastPage; ++i){
-                    handles.push(
-                        {
+                // how many pages from current should we see in pagination
+                const diff = (_currentPage === _firstPage || _currentPage === _lastPage) ? 2 : 1;
+
+                for (let i = _firstPage; i <= _lastPage; ++i) {
+                    if (i === _firstPage || i === _lastPage) {
+                        handles.push({
                             pageNo: i,
-                            className: _currentPage == i ? 'active AknActionButton--highlight' : undefined
-                        }
-                    )
-                 }
+                            className: _currentPage === i ? 'active AknActionButton--highlight' : undefined
+                        });
+                        continue;
+                    }
+                    if (i < _currentPage - diff) {
+                        handles.push({
+                            pageNo: '...',
+                            className: 'AknActionButton--unclickable'
+                        });
+                        i = _currentPage - diff - 1;
+                        continue;
+                    }
+                    if (i <= _currentPage + diff) {
+                        handles.push({
+                            pageNo: i,
+                            className: _currentPage === i ? 'active AknActionButton--highlight' : undefined
+                        });
+                        continue;
+                    }
+                    if (i > _currentPage + diff) {
+                        handles.push({
+                            pageNo: '...',
+                            className: 'AknActionButton--unclickable'
+                        });
 
-                 this.handles = handles;
-                 return handles;
+                        i = _lastPage - 1;
+                        continue;
+                    }
+                }
+
+                return handles;
             },
 
-            render: function(){
+            render: function () {
 
-                 let model = this.getFormData();
-                 this.$el.empty();
-                 if (!model.draftsData.params.lastPage) {
-                     return;
-                 }
-                 let handles = this.getPaginationHandles(model.draftsData.params);
-                 this.$el.html(this.template({
+                let model = this.getFormData();
+                this.$el.empty();
+                if (!model.draftsData.params.lastPage) {
+                    return;
+                }
+                let handles = this.getPaginationHandles(model.draftsData.params);
+                this.$el.html(this.template({
                     handles: handles,
-                 }));
+                }));
             },
 
-            onChangePage: function(e){
+            onChangePage: function (e) {
                 const model = this.getFormData();
                 let a = $(e.currentTarget);
                 let $span = a.find('.js-page-change');
