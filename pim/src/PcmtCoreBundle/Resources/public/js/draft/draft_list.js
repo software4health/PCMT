@@ -19,7 +19,6 @@ define(
             events: {
                 "click .draft-changes-shortcut": "changesExpand",
                 "click .draft-changes-full": "changesCollapse",
-                "click .draft-status-choice": "statusChoiceChanged",
                 "click .draft-reject": "rejectDraftClicked",
                 "click .draft-approve": "approveDraftClicked",
                 "click .draft-edit": "editDraftClicked",
@@ -27,20 +26,24 @@ define(
                 "click .draft-bulk-approve": "approveBulkDraftClicked",
             },
             configure: function () {
-                this.loadParams();
                 const model = this.getFormData();
-                model.chosenStatus = {};
                 model.drafts = [];
                 model.chosenDrafts = [];
                 model.params = {};
+                model.draftsData = {params: {currentPage: 1}};
                 model.loading = true;
                 this.setData(model);
                 this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_update', this.render);
                 this.listenTo(this.getRoot(), 'pcmt:form:entity:update_pagination', this.onUpdatePagination);
+                this.listenTo(this.getRoot(), 'pcmt:drafts:status_choice:changed', this.onUpdateStatusChoice);
             },
 
-            onUpdatePagination: function(ev){
+            onUpdatePagination: function (ev) {
                 this.loadDrafts();
+            },
+
+            onUpdateStatusChoice: function (ev) {
+                this.loadDrafts(true);
             },
 
             changesExpand: function (ev) {
@@ -82,7 +85,7 @@ define(
                 }).done((function () {
                     this.loadDrafts();
                 }).bind(this)).fail(function (jqXHR) {
-                    let messages = _.map(jqXHR.responseJSON.values, function(value) {
+                    let messages = _.map(jqXHR.responseJSON.values, function (value) {
                         return value.attribute + ': ' + value.message;
                     });
                     Dialog.alert(messages.join('\n'), 'Problem with approving draft', '');
@@ -114,7 +117,7 @@ define(
                 const model = this.getFormData();
                 let draftId = ev.currentTarget.dataset.draftId;
                 if (model.chosenDrafts.includes(draftId)) {
-                    _.each( model.chosenDrafts, function(draft, index) {
+                    _.each(model.chosenDrafts, function (draft, index) {
                         if (draft === draftId) {
                             model.chosenDrafts.splice(index, 1);
                             return true;
@@ -158,7 +161,7 @@ define(
                 }).done((function () {
                     this.loadDrafts();
                 }).bind(this)).fail((function (jqXHR) {
-                    let messages = _.map(jqXHR.responseJSON.values, function(value) {
+                    let messages = _.map(jqXHR.responseJSON.values, function (value) {
                         return value.attribute + ': ' + value.message;
                     });
                     Dialog.alert(messages.join('\n'), 'Problem with approving draft', '');
@@ -166,37 +169,24 @@ define(
                     this.loadDrafts();
                 }).bind(this));
             },
-            statusChoiceChanged: function (ev) {
-                this.changeStatusChoice(ev.currentTarget.dataset.value);
-            },
-            changeStatusChoice: function (newChosenStatusId) {
-                newChosenStatusId = parseInt(newChosenStatusId);
-                const model = this.getFormData();
-                if (newChosenStatusId === model.chosenStatus.id) {
-                    return;
-                }
 
-                let status = _.find(model.params.statuses, function (s) {
-                    return s.id === newChosenStatusId;
-                });
-                if (!status) {
-                    return;
-                }
-                model.chosenStatus = status;
-                this.setData(model);
-                this.loadDrafts(true);
-            },
             template: _.template(template),
 
             loadDrafts: function (reset = false) {
                 const model = this.getFormData();
-                if(reset == true) {
-                   model.draftsData.params.currentPage = 1;
+                if (!model.chosenStatus) {
+                    return;
+                }
+                if (reset) {
+                    model.draftsData.params.currentPage = 1;
                 }
                 this.resetChosenDrafts(model);
                 model.loading = true;
                 this.setData(model);
-                $.get(Routing.generate('pcmt_core_drafts_api', { status: model.chosenStatus.id, page: model.draftsData.params.currentPage }))
+                $.get(Routing.generate('pcmt_core_drafts_api', {
+                    status: model.chosenStatus.id,
+                    page: model.draftsData.params.currentPage
+                }))
                     .done(_.bind(function (resp) {
                         const model = this.getFormData();
                         model.drafts = resp.objects;
@@ -205,27 +195,18 @@ define(
                         this.setData(model);
                         this.getRoot().trigger('pcmt:drafts:listReloaded');
                     }, this))
-                    .fail(function () {
+                    .fail(_.bind(function () {
                         const model = this.getFormData();
                         model.loading = false;
                         this.setData(model);
                         console.log('failed');
-                    });
-            },
-            loadParams: function () {
-                $.get(Routing.generate('pcmt_core_drafts_params'))
-                    .done(_.bind(function (resp) {
-                        const model = this.getFormData();
-                        model.params = resp;
-                        this.setData(model);
-                        this.changeStatusChoice(1);
-                    }, this))
-                    .fail(function () {
-                        console.log('Loading params failed');
-                    });
+                    }, this));
             },
             render: function () {
                 const model = this.getFormData();
+                if (!model.chosenStatus) {
+                    return;
+                }
                 this.$el.html(this.template({
                     ...model,
                     _: _,

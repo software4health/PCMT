@@ -8,11 +8,9 @@ define(
         'underscore',
         'oro/translator',
         'routing',
-        'pcmt/product/template/draft-pagination',
-        'pim/security-context',
-        'pim/router'
+        'pcmt/product/template/draft-pagination'
     ],
-    function (BaseForm, Backbone, $, _, __, Routing, template, SecurityContext, Router) {
+    function (BaseForm, Backbone, $, _, __, Routing, template) {
         return BaseForm.extend({
             template: _.template(template),
             events: {
@@ -44,33 +42,20 @@ define(
 
                 for (let i = _firstPage; i <= _lastPage; ++i) {
                     if (i === _firstPage || i === _lastPage) {
-                        handles.push({
-                            pageNo: i,
-                            className: _currentPage === i ? 'active AknActionButton--highlight' : undefined
-                        });
+                        this.addHandle(handles, i, i, _currentPage === i);
                         continue;
                     }
                     if (i < _currentPage - diff) {
-                        handles.push({
-                            pageNo: '...',
-                            className: 'AknActionButton--unclickable'
-                        });
+                        this.addHandle(handles, null, '...');
                         i = _currentPage - diff - 1;
                         continue;
                     }
                     if (i <= _currentPage + diff) {
-                        handles.push({
-                            pageNo: i,
-                            className: _currentPage === i ? 'active AknActionButton--highlight' : undefined
-                        });
+                        this.addHandle(handles, i, i, _currentPage === i);
                         continue;
                     }
                     if (i > _currentPage + diff) {
-                        handles.push({
-                            pageNo: '...',
-                            className: 'AknActionButton--unclickable'
-                        });
-
+                        this.addHandle(handles, null, '...');
                         i = _lastPage - 1;
                         continue;
                     }
@@ -79,15 +64,31 @@ define(
                 return handles;
             },
 
-            render: function () {
+            addHandle: function (handles, pageNo, pageText, isCurrent = false) {
+                let className = null;
+                if (isCurrent) {
+                    className = 'active AknActionButton--highlight';
+                }
+                if (!pageNo) {
+                    className = 'AknActionButton--unclickable';
+                }
+                return handles.push({
+                    pageNo: pageNo,
+                    pageText: pageText,
+                    className: className
+                });
+            },
 
+            render: function () {
                 let model = this.getFormData();
                 this.$el.empty();
-                if (!model.draftsData.params.lastPage) {
+                if (model.draftsData.params.lastPage <= 1) {
                     return;
                 }
+
                 let handles = this.getPaginationHandles(model.draftsData.params);
-                this.$el.html(this.template({
+                this.$el.addClass('AknGridToolbar-center');
+                this.$el.append(this.template({
                     handles: handles,
                 }));
             },
@@ -97,6 +98,10 @@ define(
                 let a = $(e.currentTarget);
                 let $span = a.find('.js-page-change');
                 const page = $span.data('page');
+                if (!page) {
+                    return;
+                }
+
                 model.draftsData.params.currentPage = page;
                 this.setData(model);
                 this.render();

@@ -17,6 +17,8 @@ pcmt_core:
         new_value: New
         collapse: Collapse
         show_more: Show more
+        page_title:
+            index: "]-Inf, 1]{{ count }} draft|]1, Inf[{{ count }} drafts"
     drafts_editing:
         new_product_draft: New product draft
         button:

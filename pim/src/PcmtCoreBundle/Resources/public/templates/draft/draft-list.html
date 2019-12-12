@@ -1,5 +1,3 @@
-<h1><%- __('pcmt_core.drafts_list.title') %></h1>
-
 <% if (loading) { %>
 
 <div class="AknLoadingMask">
@@ -14,188 +12,167 @@
 
 <% } else {%>
 
-<div>
-    <% if (!_.isEmpty(params)) { %>
-    <div class="AknFilterChoice-header">
-        <div class="AknFilterChoice-title"></div>
-        <div class="AknDropdown operator">
-            <div class="AknActionButton AknActionButton--withoutBorder" data-toggle="dropdown">
-                <%- __('pcmt_core.drafts_list.status') %>: <span class="AknActionButton-highlight"><%- chosenStatus.name %></span>
-                <span class="AknActionButton-caret"></span>
-            </div>
-            <div class="AknDropdown-menu">
-                <div class="AknDropdown-menuTitle"><%- __('pcmt_core.drafts_list.status') %></div>
-                <% _.each(params.statuses, function (status) { %>
-                <div class="AknDropdown-menuLink draft-status-choice"
-                     id="draft_status_choice_<%- status.id %>"
-                     data-value="<%- status.id %>">
-                    <span class="label"><%- status.name %></span>
-                </div>
-                <% }) %>
+<div class="AknGridContainer">
 
-            </div>
-        </div>
-    </div>
-    <% } %>
-</div>
+    <table class="AknGrid AknGrid--unclickable">
+        <% if (!_.isEmpty(drafts)) { %>
 
+        <thead>
+        <tr>
+            <th class="AknGrid-headerCell">
+            </th>
+            <th class="AknGrid-headerCell">
+                <%- __('pcmt_core.drafts_list.product') %>
+            </th>
+            <th class="AknGrid-headerCell">
+                <%- __('pcmt_core.drafts_list.author') %>
+            </th>
+            <th class="AknGrid-headerCell">
+                <%- __('pcmt_core.drafts_list.changes') %>
+            </th>
+            <th class="AknGrid-headerCell">
+                <%- __('pcmt_core.drafts_list.date') %>
+            </th>
+            <th class="AknGrid-headerCell">
+                <%- __('pcmt_core.drafts_list.status') %>
+            </th>
+            <th class="AknGrid-headerCell">
+                <%- __('pcmt_core.drafts_list.action') %>
+            </th>
+        </tr>
+        </thead>
 
-<table class="AknGrid AknGrid--unclickable">
-    <% if (!_.isEmpty(drafts)) { %>
+        <tbody>
+        <% _.each(drafts, function (draft) { %>
+        <tr class="AknGrid-bodyRow">
+            <td style="width: 65px;"
+                class="AknGrid-bodyCell AknGrid-bodyCell--actions input-cell draft-checkbox-bodyCell">
+                <% if (draft.status.id === 1) { %>
+                <label>
+                    <input class="draft-checkbox" tabindex="-1" type="checkbox" data-draft-id="<%- draft.id %>">
+                </label>
+                <% } %>
+            </td>
+            <td class="AknGrid-bodyCell">
+                <%- draft.type %><br>
+                <%- draft.label %>
+            </td>
+            <td class="AknGrid-bodyCell"><%- draft.author %></td>
+            <td class="AknGrid-bodyCell">
+                <div id="draft-changes-shortcut-<%- draft.id %>"
+                     class="draft-changes-shortcut"
+                     data-draft-id="<%- draft.id %>"
+                     style="cursor:pointer">
 
-    <thead>
-    <tr>
-        <th class="AknGrid-headerCell">
-        </th>
-        <th class="AknGrid-headerCell">
-            <%- __('pcmt_core.drafts_list.product') %>
-        </th>
-        <th class="AknGrid-headerCell">
-            <%- __('pcmt_core.drafts_list.author') %>
-        </th>
-        <th class="AknGrid-headerCell">
-            <%- __('pcmt_core.drafts_list.changes') %>
-        </th>
-        <th class="AknGrid-headerCell">
-            <%- __('pcmt_core.drafts_list.date') %>
-        </th>
-        <th class="AknGrid-headerCell">
-            <%- __('pcmt_core.drafts_list.status') %>
-        </th>
-        <th class="AknGrid-headerCell">
-            <%- __('pcmt_core.drafts_list.action') %>
-        </th>
-    </tr>
-    </thead>
+                    <div class="AknButtonList AknButtonList--right" style="float:right;">
+                        <button class="AknActionButton">
+                            <%- __('pcmt_core.drafts_list.show_more') %>
+                            <span class="AknActionButton-caret AknCaret"></span>
+                        </button>
+                    </div>
 
-    <tbody>
-    <% _.each(drafts, function (draft) { %>
-    <tr class="AknGrid-bodyRow">
-        <td style="width: 65px;" class="AknGrid-bodyCell AknGrid-bodyCell--actions input-cell draft-checkbox-bodyCell">
-            <% if (draft.status.id === 1) { %>
-            <label>
-                <input class="draft-checkbox" tabindex="-1" type="checkbox" data-draft-id="<%- draft.id %>">
-            </label>
-            <% } %>
-        </td>
-        <td class="AknGrid-bodyCell">
-            <%- draft.type %><br>
-            <%- draft.label %>
-        </td>
-        <td class="AknGrid-bodyCell"><%- draft.author %></td>
-        <td class="AknGrid-bodyCell">
-            <div id="draft-changes-shortcut-<%- draft.id %>"
-                 class="draft-changes-shortcut"
-                 data-draft-id="<%- draft.id %>"
-                 style="cursor:pointer">
-
-                <div class="AknButtonList AknButtonList--right" style="float:right;">
-                    <button class="AknActionButton">
-                        <%- __('pcmt_core.drafts_list.show_more') %>
-                        <span class="AknActionButton-caret AknCaret"></span>
-                    </button>
-                </div>
-
-                <% firstChange = _.first(draft.changes) %>
-                <% if (firstChange) { %>
-                <div style="margin-bottom:10px;">
-                    <b><%- firstChange.attribute %></b><br>
-                    <span class="AknDiff--remove">
+                    <% firstChange = _.first(draft.changes) %>
+                    <% if (firstChange) { %>
+                    <div style="margin-bottom:10px;">
+                        <b><%- firstChange.attribute %></b><br>
+                        <span class="AknDiff--remove">
                         <%- __('pcmt_core.drafts_list.previous_value') %>:
                     </span>
-                    <%- firstChange.previousValue %><br>
-                    <span class="AknDiff--add">
+                        <%- firstChange.previousValue %><br>
+                        <span class="AknDiff--add">
                         <%- __('pcmt_core.drafts_list.new_value') %>:
                     </span>
-                    <%- firstChange.newValue %>
+                        <%- firstChange.newValue %>
+                    </div>
+                    <% } %>
                 </div>
-                <% } %>
-            </div>
-            <div id="draft-changes-full-<%- draft.id %>"
-                 class="draft-changes-full"
-                 data-draft-id="<%- draft.id %>"
-                 style="cursor:pointer; display:none">
+                <div id="draft-changes-full-<%- draft.id %>"
+                     class="draft-changes-full"
+                     data-draft-id="<%- draft.id %>"
+                     style="cursor:pointer; display:none">
 
-                <div class="AknButtonList AknButtonList--right" style="float:right;">
-                    <button class="AknActionButton" data-toggle="dropdown">
-                        <%- __('pcmt_core.drafts_list.collapse') %>
-                        <span class="AknActionButton-caret AknCaret"></span>
-                    </button>
-                </div>
+                    <div class="AknButtonList AknButtonList--right" style="float:right;">
+                        <button class="AknActionButton" data-toggle="dropdown">
+                            <%- __('pcmt_core.drafts_list.collapse') %>
+                            <span class="AknActionButton-caret AknCaret"></span>
+                        </button>
+                    </div>
 
-                <% _.each(draft.changes, function (change) { %>
-                <div style="margin-bottom:10px;">
-                    <b><%- change.attribute %></b><br>
-                    <span class="AknDiff--remove">
+                    <% _.each(draft.changes, function (change) { %>
+                    <div style="margin-bottom:10px;">
+                        <b><%- change.attribute %></b><br>
+                        <span class="AknDiff--remove">
                         <%- __('pcmt_core.drafts_list.previous_value') %>:
                     </span>
-                    <%- change.previousValue %><br>
-                    <span class="AknDiff--add">
+                        <%- change.previousValue %><br>
+                        <span class="AknDiff--add">
                     <%- __('pcmt_core.drafts_list.new_value') %>:
                     </span>
-                    <%- change.newValue %>
+                        <%- change.newValue %>
+                    </div>
+                    <% }); %>
+
                 </div>
-                <% }); %>
-
-            </div>
-        </td>
-        <td class="AknGrid-bodyCell"><%- draft.createdAt %></td>
-        <td class="AknGrid-bodyCell">
-            <div class="AknBadge <%- draft.status.class %>">
-                <%- draft.status.name %>
-            </div>
-        </td>
-        <td class="AknGrid-bodyCell AknGrid-bodyCell--actions action-cell">
-            <% if (draft.status.id === 1) { %>
-            <div class="AknButtonList AknButtonList--right AknButtonList--expanded">
-                <% if (editPermission) { %>
-                <a href="javascript:void(0);"
-                   class="AknIconButton AknIconButton--small AknIconButton--edit AknButtonList-item draft-edit"
-                   title="Edit draft" data-draft-id="<%- draft.id %>">
-                    Edit draft
-                </a>
+            </td>
+            <td class="AknGrid-bodyCell"><%- draft.createdAt %></td>
+            <td class="AknGrid-bodyCell">
+                <div class="AknBadge <%- draft.status.class %>">
+                    <%- draft.status.name %>
+                </div>
+            </td>
+            <td class="AknGrid-bodyCell AknGrid-bodyCell--actions action-cell">
+                <% if (draft.status.id === 1) { %>
+                <div class="AknButtonList AknButtonList--right AknButtonList--expanded">
+                    <% if (editPermission) { %>
+                    <a href="javascript:void(0);"
+                       class="AknIconButton AknIconButton--small AknIconButton--edit AknButtonList-item draft-edit"
+                       title="Edit draft" data-draft-id="<%- draft.id %>">
+                        Edit draft
+                    </a>
+                    <% } %>
+                    <% if (approvePermission) { %>
+                    <a href="javascript:void(0);"
+                       class="AknIconButton AknIconButton--small AknIconButton--play AknButtonList-item draft-approve"
+                       title="Approve draft" data-draft-id="<%- draft.id %>">
+                        Approve draft
+                    </a>
+                    <% } %>
+                    <% if (rejectPermission) { %>
+                    <a href="javascript:void(0);"
+                       class="AknIconButton AknIconButton--small AknIconButton--trash AknButtonList-item draft-reject"
+                       title="Reject draft" data-draft-id="<%- draft.id %>">
+                        Reject draft
+                    </a>
+                    <% } %>
+                </div>
                 <% } %>
-                <% if (approvePermission) { %>
-                <a href="javascript:void(0);"
-                   class="AknIconButton AknIconButton--small AknIconButton--play AknButtonList-item draft-approve"
-                   title="Approve draft" data-draft-id="<%- draft.id %>">
-                    Approve draft
-                </a>
-                <% } %>
-                <% if (rejectPermission) { %>
-                <a href="javascript:void(0);"
-                   class="AknIconButton AknIconButton--small AknIconButton--trash AknButtonList-item draft-reject"
-                   title="Reject draft" data-draft-id="<%- draft.id %>">
-                    Reject draft
-                </a>
-                <% } %>
-            </div>
-            <% } %>
-        </td>
-    </tr>
-    <% }); %>
-    </tbody>
-    <% } else {%>
-    <tr>
-        <td class="AknGrid-bodyCell AknGrid-bodyCell--full">
-            <div class="AknMessageBox AknMessageBox--centered">
-                <%- __('pcmt_core.drafts_list.empty') %>
-            </div>
-        </td>
-    </tr>
-    <% } %>
+            </td>
+        </tr>
+        <% }); %>
+        </tbody>
+        <% } else {%>
+        <tr>
+            <td class="AknGrid-bodyCell AknGrid-bodyCell--full">
+                <div class="AknMessageBox AknMessageBox--centered">
+                    <%- __('pcmt_core.drafts_list.empty') %>
+                </div>
+            </td>
+        </tr>
+        <% } %>
 
-</table>
+    </table>
 
-<div style="display: none;" class="AknDefault-bottomPanel AknMassActions mass-actions draft-bulk-approve-div">
-    <div class="AknButtonList-item AknMassActions-counter"><span class="draft-bulk-count">0</span> selected results</div>
-    <div data-drop-zone="actions-panel">
-        <div class="AknButtonList mass-actions-panel">
-            <a href="javascript:void(0);"
-               class="AknButton AknButton--action AknButtonList-item draft-bulk-approve"
-               title="Bulk actions">
-                Bulk approve
-            </a>
+    <div style="display: none;" class="AknDefault-bottomPanel AknMassActions mass-actions draft-bulk-approve-div">
+        <div class="AknButtonList-item AknMassActions-counter"><span class="draft-bulk-count">0</span> selected results
+        </div>
+        <div data-drop-zone="actions-panel">
+            <div class="AknButtonList mass-actions-panel">
+                <a href="javascript:void(0);"
+                   class="AknButton AknButton--action AknButtonList-item draft-bulk-approve"
+                   title="Bulk actions">
+                    Bulk approve
+                </a>
+            </div>
         </div>
     </div>
 </div>
