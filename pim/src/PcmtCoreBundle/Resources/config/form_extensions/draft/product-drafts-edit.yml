@@ -174,12 +174,6 @@ extensions:
             tabTitle: pim_enrich.entity.attribute.plural_label
             deletionFailed: pim_enrich.entity.attribute.flash.delete.fail
 
-    pcmt-product-drafts-edit-form-completeness:
-        module: pcmt/draft/form/completeness
-        parent: pcmt-product-drafts-edit-form-column-tabs
-        targetZone: container
-        position: 100
-
     pcmt-product-drafts-edit-form-categories:
         module: pcmt/draft/form/categories
         parent: pcmt-product-drafts-edit-form-column-tabs
@@ -280,20 +274,6 @@ extensions:
         parent: pcmt-product-drafts-edit-form-attributes
         targetZone: self
         position: 90
-
-    pcmt-product-drafts-edit-form-comments:
-        module: pcmt/draft/form/comments
-        parent: pcmt-product-drafts-edit-form-column-tabs
-        targetZone: container
-        aclResourceId: pim_enrich_product_comment
-        position: 140
-
-    pcmt-product-drafts-edit-form-history:
-        module: pcmt/draft/form/history
-        parent: pcmt-product-drafts-edit-form-column-tabs
-        targetZone: container
-        aclResourceId: pim_enrich_product_history
-        position: 150
 
     pcmt-product-drafts-edit-form-copy-scope-switcher:
         module: pim/product-edit-form/scope-switcher
