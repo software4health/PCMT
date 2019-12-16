@@ -39,6 +39,7 @@ config:
         pcmt/draft/form/meta/change-family: pcmtcore/js/draft/form/meta/change-family
 
         pcmt/product/edit/form/save: pcmtcore/js/product/form/save
+        pcmt/product/form/categories: pcmtcore/js/product/form/categories
 
         ### common ###
         pcmt/draft/common/breadcrumbs: pcmtcore/js/draft/common/breadcrumbs
