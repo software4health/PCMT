@@ -71,6 +71,14 @@ batch_jobs:
         label: Pcmt e2open export
         export.label: Pcmt e2open export
 
+    default_steps:
+        hash_first_cell: Hash first cell
+
+    pcmt_mst_supplier_export:
+        validation.label: Validation
+        label: Pcmt mst supplier export
+        export.label: Pcmt mst supplier export
+
 pim_enrich.entity.attribute:
     property:
         concat_attribute_member_select:

@@ -23,6 +23,18 @@ services:
         tags:
             - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.export_type%' }
 
+    pcmt_connector.job.pcmt_mst_supplier_export:
+        class: '%pim_connector.job.simple_job.class%'
+        arguments:
+            - 'pcmt_mst_supplier_export'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            -
+                - '@pcmt_connector.step.pcmt_mst_supplier.export'
+                - '@pcmt_connector.step.hash_first_cell'
+        tags:
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.export_type%' }
+
     pcmt_catalog.tasklet.compute_family_products_concatenated_attributes_values:
         class: '%pcmt_catalog.tasklet.compute_family_products_concatenated_attributes_values.class%'
         arguments:

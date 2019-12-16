@@ -8,6 +8,9 @@ pcmt_core:
         status_approved: Approved
         status_rejected: Rejected
 
+job_execution.summary:
+    read_cross: read cross
+
 pim_measure:
     families:
         GDSN_Unit_Of_Measure: GDSN_Unit_Of_Measure

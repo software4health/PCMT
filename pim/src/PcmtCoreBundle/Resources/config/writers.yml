@@ -12,6 +12,10 @@ services:
             - '@akeneo.pim.enrichment.connector.write.file.flat.generate_headers_from_attribute_codes'
             - ['pim_catalog_file', 'pim_catalog_image']
 
+    pcmt_connector.writer.file.mst_supplier:
+        class: 'PcmtCoreBundle\Connector\Job\Writer\MstSupplierExportWriter'
+        parent: 'pim_connector.writer.file.xlsx_product'
+
     pcmt_connector.write.reference_data:
         class: PcmtCoreBundle\Writer\ReferenceDataWriter
         arguments:
