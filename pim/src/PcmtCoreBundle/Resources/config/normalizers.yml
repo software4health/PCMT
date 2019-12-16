@@ -21,7 +21,7 @@ services:
             - [setProductFromDraftCreator, ['@pcmt.service.product_from_draft_creator']]
             - [setProductAttributeChangeService, ['@pcmt.service.product_attribute_change']]
         arguments:
-            $productNormalizer: '@pcmt_core.normalizer.product'
+            $productNormalizer: '@pcmt_core.normalizer.product.draft_edit'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 110 }
     pcmt_core.draft.product_model_normalizer:
@@ -35,8 +35,9 @@ services:
         arguments:
             $productModelNormalizer: '@pcmt_product.normalizer.product_model'
 
-    pcmt_core.normalizer.product:
-        class: Akeneo\Pim\Enrichment\Component\Product\Normalizer\InternalApi\ProductNormalizer
+    # overrides Akeneo original ProductNormalizer
+    pim_enrich.normalizer.product:
+        class: PcmtCoreBundle\Normalizer\PcmtProductNormalizer
         arguments:
             - '@pim_standard_format_serializer'
             - '@pim_enrich.normalizer.version'
@@ -44,7 +45,7 @@ services:
             - '@pim_enrich.normalizer.image'
             - '@pim_catalog.repository.locale'
             - '@pim_structure_version.provider.structure_version.product'
-            - '@pcmt.provider.form.draft'
+            - '@pim_enrich.provider.form.chained'
             - '@pim_catalog.localization.localizer.converter'
             - '@pim_enrich.converter.standard_to_enrich.product_value'
             - '@pim_catalog.object_manager.product'
@@ -62,6 +63,17 @@ services:
             - '@pim_catalog.association.missing_association_adder'
             - '@pim_catalog.normalizer.standard.product.parent_associations'
             - '@pim_catalog.context.catalog'
+            - '@doctrine.orm.entity_manager'
+        calls:
+            - [setEntityManager, ['@doctrine.orm.entity_manager']]
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 100 }
+
+    pcmt_core.normalizer.product.draft_edit:
+        class: PcmtCoreBundle\Normalizer\PcmtProductNormalizer
+        parent: pim_enrich.normalizer.product
+        arguments:
+            $formProvider: '@pcmt.provider.form.draft'
 
     pcmt_product.normalizer.product_model:
         class: Akeneo\Pim\Enrichment\Component\Product\Normalizer\InternalApi\ProductModelNormalizer

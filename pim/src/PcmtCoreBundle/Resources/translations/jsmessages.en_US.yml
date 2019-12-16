@@ -25,7 +25,8 @@ pcmt_core:
             save_draft: Save draft
     editing:
         button:
-            edit_as_draft: Edit as draft
+            edit_as_a_draft: Edit as a draft
+            edit_existing_draft: Edit existing draft
     widget:
         drafts_overview:
             product: Product

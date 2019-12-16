@@ -68,6 +68,22 @@ class PcmtProductController extends ProductController
     /**
      * {@inheritdoc}
      */
+    public function getAction($id)
+    {
+        $product = $this->findProductOr404($id);
+
+        $normalizedProduct = $this->normalizer->normalize(
+            $product,
+            'internal_api',
+            $this->getNormalizationContext() + ['include_draft_id' => true]
+        );
+
+        return new JsonResponse($normalizedProduct);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function postAction(Request $request, $id): Response
     {
         if (!$request->isXmlHttpRequest()) {

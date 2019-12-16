@@ -28,13 +28,45 @@ define(
         return BaseSave.extend({
             updateSuccessMessage: __('pim_enrich.entity.product.flash.update.success'),
             updateFailureMessage: __('pim_enrich.entity.product.flash.update.fail'),
-            label: __('pcmt_core.editing.button.edit_as_draft'),
+            editAsADraftLabel: __('pcmt_core.editing.button.edit_as_a_draft'),
+            editExistingDraftLabel: __('pcmt_core.editing.button.edit_existing_draft'),
 
             configure: function () {
                 this.listenTo(this.getRoot(), 'pim_enrich:form:change-family:after', this.save);
                 this.listenTo(this.getRoot(), 'pim_enrich:form:update-association', this.save);
 
-                return BaseSave.prototype.configure.apply(this, arguments);
+                this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_update', this.changeSaveButton);
+            },
+
+            changeSaveButton: function (product) {
+                const draftId = product.draftId;
+
+                if (draftId) {
+                    this.trigger('save-buttons:register-button', {
+                        className: 'save',
+                        priority: 200,
+                        label: this.editExistingDraftLabel,
+                        events: {
+                            'click .save': this.navigateToDraft.bind(this)
+                        }
+                    });
+                } else {
+                    this.trigger('save-buttons:register-button', {
+                        className: 'save',
+                        priority: 200,
+                        label: this.editAsADraftLabel,
+                        events: {
+                            'click .save': this.save.bind(this)
+                        }
+                    });
+                }
+            },
+
+            navigateToDraft: function (options) {
+                Router.redirectToRoute(
+                    this.config.redirect,
+                    {id: this.getFormData().draftId}
+                );
             },
 
             /**
@@ -45,6 +77,7 @@ define(
                 var productId = product.meta.id;
 
                 delete product.meta;
+                delete product.draftId;
 
                 var notReadyFields = FieldManager.getNotReadyFields();
 
