@@ -28,7 +28,6 @@ class PcmtCoreExtension extends Extension
         $loader->load('forms.yml');
         $loader->load('handlers.yml');
         $loader->load('jobs.yml');
-        $loader->load('job_defaults.yml');
         $loader->load('job_constraints.yml');
         $loader->load('normalizers.yml');
         $loader->load('processors.yml');

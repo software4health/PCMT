@@ -2,3 +2,10 @@ services:
     pcmt_connector.reader.xml.reference_data_gs1:
         class: PcmtCoreBundle\Reader\File\GS1ReferenceDataXmlReader
         autowire: true
+
+    pcmt_connector.reader.database.mst_supplier_export:
+        class: 'PcmtCoreBundle\Connector\Job\Reader\MstSupplierExportReader'
+        arguments:
+            - '@pim_catalog.query.product_query_builder_factory'
+            - '@pim_catalog.repository.channel'
+            - '@pim_catalog.converter.metric'

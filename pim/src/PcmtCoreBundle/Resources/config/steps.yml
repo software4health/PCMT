@@ -11,6 +11,17 @@ services:
             - '@pcmt_connector.writer.file.e2open'
             - '%pim_job_product_batch_size%'
 
+    pcmt_connector.step.pcmt_mst_supplier.export:
+        class: 'PcmtCoreBundle\Connector\Job\Step\MstSupplierExportStep'
+        arguments:
+            - 'export'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@pcmt_connector.reader.database.mst_supplier_export'
+            - '@pim_connector.processor.normalization.product'
+            - '@pcmt_connector.writer.file.mst_supplier'
+            - '%pim_job_product_batch_size%'
+
     pcmt_connector.step.hash_first_cell:
         class: 'PcmtCoreBundle\Connector\Job\Step\HashFirstCellStep'
         arguments:
