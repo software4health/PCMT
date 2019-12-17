@@ -4,24 +4,8 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Connector\Job\Writer;
 
-use Akeneo\Pim\Enrichment\Component\Product\Connector\Writer\File\Xlsx\ProductWriter;
-
-class MstSupplierExportWriter extends ProductWriter implements CrossJoinExportWriterInterface
+class MstSupplierExportWriter extends E2OpenWriter implements CrossJoinExportWriterInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getPath(array $placeholders = []): string
-    {
-        $jobExecution = $this->stepExecution->getJobExecution();
-        $placeholders = array_merge(
-            $placeholders,
-            ['%datetime%' => $jobExecution->getStartTime()->format($this->datetimeFormat)]
-        );
-
-        return parent::getPath($placeholders);
-    }
-
     public function writeCross(array $items, array $crossItems): void
     {
         $result = [];
