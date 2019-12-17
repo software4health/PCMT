@@ -21,4 +21,20 @@ class E2OpenWriter extends ProductWriter
 
         return parent::getPath($placeholders);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function write(array $items): void
+    {
+        $result = [];
+        foreach ($items as $item) {
+            $result[] = [
+                'identifier' => $item['identifier'],
+                'values'     => $item['values'],
+            ];
+        }
+
+        parent::write($result);
+    }
 }
