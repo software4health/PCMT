@@ -60,7 +60,7 @@ services:
             - '@akeneo_elasticsearch.client.product_and_product_model'
         calls:
             - [setUserContextProtected, ['@pim_user.context.user']]
-            - [setNormalizerProtected, ['@pim_internal_api_serializer']]
+            - [setProductModelDraftNormalizer, ['@pcmt_core.draft.product_model_normalizer']]
             - [setDraftSaver, ['@pcmt_core.save.productModelDraft']]
             - [setObjectFilterProtected, ['@pim_catalog.filter.chained']]
             - [setProductModelRepositoryProtected, ['@pim_catalog.repository.product_model']]
