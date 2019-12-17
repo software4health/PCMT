@@ -90,3 +90,19 @@ The full URL of the license should always be visible.
 
 ---
 Copyright (c) 2019, VillageReach.  Licensed CC BY-SA 4.0:  https://creativecommons.org/licenses/by-sa/4.0/
+
+## Setting Copyrights in PhpStorm
+
+1. Go to Settings
+1. Go to Editor > Copyright > Copyright profiles
+1. Add one with a suggested name "PCMT" and text:
+    ```
+    Copyright (c) $today.year, VillageReach
+    Licensed under the Non-Profit Open Software License version 3.0.
+    SPDX-License-Identifier: NPOSL-3.0
+    ```
+1. Go to Editor > Copyright
+1. Add profile "PCMT" to scope "Project files"
+1. Go to Editor > Copyright > Formatting and set "Use default settings" in all used file types
+1. To test, try creating php, js or html file in the project folder.
+ 

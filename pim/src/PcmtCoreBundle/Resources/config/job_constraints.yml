@@ -1,3 +1,9 @@
+######################################################################
+# Copyright (c) 2019, VillageReach
+# Licensed under the Non-Profit Open Software License version 3.0.
+# SPDX-License-Identifier: NPOSL-3.0
+######################################################################
+
 parameters:
     pcmt_catalog.job.job_parameters.constraint_collection_provider.compute_family_products_concatenated_attributes_values.class: PcmtCoreBundle\Connector\Job\JobParameters\ConstraintCollectionProvider\ComputeConcatenatedAttributeValuesOfProducts
 

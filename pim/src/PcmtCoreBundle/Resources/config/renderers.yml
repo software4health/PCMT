@@ -1,3 +1,9 @@
+######################################################################
+# Copyright (c) 2019, VillageReach
+# Licensed under the Non-Profit Open Software License version 3.0.
+# SPDX-License-Identifier: NPOSL-3.0
+######################################################################
+
 services:
   pim_pdf_generator.renderer.product_pdf:
     class: '%pim_pdf_generator.renderer.product_pdf.class%'
