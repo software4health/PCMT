@@ -203,8 +203,10 @@ define(
                     }, this))
                     .fail(_.bind(function () {
                         const model = this.getFormData();
+                        model.drafts = [];
                         model.loading = false;
                         this.setData(model);
+                        this.getRoot().trigger('pcmt:drafts:listReloaded');
                         console.log('failed');
                     }, this));
             },

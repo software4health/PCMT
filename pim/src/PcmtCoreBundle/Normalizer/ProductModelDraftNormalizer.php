@@ -75,9 +75,9 @@ class ProductModelDraftNormalizer extends DraftNormalizer implements NormalizerI
     {
         switch (get_class($draft)) {
             case NewProductModelDraft::class:
-                return $newProductModel->getCode();
+                return $newProductModel->getCode() ?? '-';
             case ExistingProductModelDraft::class:
-                return $draft->getProductModel()->getCode();
+                return $draft->getProductModel()->getCode() ?? '-';
         }
 
         return '--';
