@@ -5,8 +5,14 @@
 ######################################################################
 
 extensions:
-  pim-product-model-edit-form-attribute-description:
-    module: dnd/product-edit-form/attributes/description
-    parent: pim-product-model-edit-form-attributes
-    targetZone: self
-    position: 100
+    pim-product-model-edit-form-attribute-description:
+        module: dnd/product-edit-form/attributes/description
+        parent: pim-product-model-edit-form-attributes
+        targetZone: self
+        position: 100
+
+    pim-product-model-edit-form-attribute-read-only-all-attributes:
+        module: pcmt/product/form/attributes/read-only-all-attributes
+        parent: pim-product-model-edit-form-attributes
+        targetZone: self
+        position: 100
