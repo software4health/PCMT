@@ -25,14 +25,30 @@ class HashFirstCellStep extends AbstractStep
     protected function doExecute(StepExecution $stepExecution): void
     {
         $this->setStepExecution($stepExecution);
-        $cell = 'A1';
         $reader = new XlsxReader();
-        $spreadsheet = $reader->load($this->getPath());
+        if (false === $this->hashFirstCell($this->getPath(), $reader)) {
+            $index = 1;
+            while ($this->hashFirstCell(str_replace('.xlsx', '_' . $index . '.xlsx', $this->getPath()), $reader)) {
+                $index++;
+            }
+        }
+    }
+
+    private function hashFirstCell(string $path, XlsxReader $reader): bool
+    {
+        if (!file_exists($path)) {
+            return false;
+        }
+        $cell = 'A1';
+        $spreadsheet = $reader->load($path);
         $worksheet = $spreadsheet->getActiveSheet();
         $value = $worksheet->getCell($cell)->getFormattedValue();
         $worksheet->setCellValue($cell, '#' . $value);
         $writer = new XlsxWriter($spreadsheet);
-        $writer->save($this->getPath());
+        $writer->save($path);
+        $this->stepExecution->incrementSummaryInfo('hashed_files');
+
+        return true;
     }
 
     private function getPath(): string

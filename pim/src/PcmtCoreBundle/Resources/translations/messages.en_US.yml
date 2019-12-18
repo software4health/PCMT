@@ -10,6 +10,7 @@ pcmt_core:
 
 job_execution.summary:
     read_cross: read cross
+    hashed_files: hashed files
 
 pim_measure:
     families:
