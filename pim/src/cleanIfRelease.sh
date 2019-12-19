@@ -6,7 +6,7 @@
 ######################################################################
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-rmOnRelease="$DIR/PcmtCoreBundle/Resources/public/less/index.less"
+rmOnRelease="$DIR/PcmtPreReleaseBundle/**/*"
 
 semVer=${1:-"-"}
 echo Semver is $semVer
@@ -21,5 +21,5 @@ fi
 
 if [ "true" == "$isRelease" ]; then
     echo ... removing $rmOnRelease
-    rm -rv $rmOnRelease
+    rm -rv ${rmOnRelease}
 fi
