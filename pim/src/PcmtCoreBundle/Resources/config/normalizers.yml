@@ -8,18 +8,22 @@ services:
     pcmt_catalog.draft_new.property_normalizer:
         class: PcmtCoreBundle\Normalizer\NewDraftPropertyNormalizer
         autowire: true
+
     pcmt_catalog.draft_pending.property_normalizer:
         class: PcmtCoreBundle\Normalizer\PendingDraftPropertyNormalizer
+
     pcmt_core.draft.status.normalizer:
         class: PcmtCoreBundle\Normalizer\DraftStatusNormalizer
         autowire: true
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 80 }
+
     pcmt_core.draft.attribute_change.normalizer:
         class: PcmtCoreBundle\Normalizer\AttributeChangeNormalizer
         autowire: true
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 120 }
+
     pcmt_core.draft.product_normalizer:
         class: PcmtCoreBundle\Normalizer\ProductDraftNormalizer
         autowire: true
@@ -27,82 +31,38 @@ services:
             - [setProductFromDraftCreator, ['@pcmt.service.product_from_draft_creator']]
             - [setProductAttributeChangeService, ['@pcmt.service.product_attribute_change']]
         arguments:
-            $productNormalizer: '@pcmt_core.normalizer.product.draft_edit'
+            $productNormalizer: '@pcmt_core.normalizer.product'
+            $formProvider: '@pcmt.provider.form.draft'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 110 }
+
     pcmt_core.draft.product_model_normalizer:
         class: PcmtCoreBundle\Normalizer\ProductModelDraftNormalizer
         autowire: true
-        tags:
-            - { name: pim_internal_api_serializer.normalizer, priority: 110 }
         calls:
             - [setProductModelFromDraftCreator, ['@pcmt.service.product_model_from_draft_creator']]
             - [setProductModelAttributeChangeService, ['@pcmt.service.product_model_attribute_change']]
         arguments:
-            $productModelNormalizer: '@pcmt_product.normalizer.product_model'
+            $productModelNormalizer: '@pcmt_core.normalizer.product_model'
+            $formProvider: '@pcmt.provider.form.product-model-draft'
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 110 }
 
-    # overrides Akeneo original ProductNormalizer
-    pim_enrich.normalizer.product:
+    pcmt_core.normalizer.product:
         class: PcmtCoreBundle\Normalizer\PcmtProductNormalizer
-        arguments:
-            - '@pim_standard_format_serializer'
-            - '@pim_enrich.normalizer.version'
-            - '@pim_versioning.manager.version'
-            - '@pim_enrich.normalizer.image'
-            - '@pim_catalog.repository.locale'
-            - '@pim_structure_version.provider.structure_version.product'
-            - '@pim_enrich.provider.form.chained'
-            - '@pim_catalog.localization.localizer.converter'
-            - '@pim_enrich.converter.standard_to_enrich.product_value'
-            - '@pim_catalog.object_manager.product'
-            - '@pim_catalog.manager.completeness'
-            - '@pim_catalog.repository.channel'
-            - '@pim_catalog.filter.chained'
-            - '@pim_enrich.normalizer.completeness_collection'
-            - '@pim_user.context.user'
-            - '@pim_catalog.completeness.calculator'
-            - '@pim_catalog.values_filler.product'
-            - '@pim_catalog.family_variant.provider.entity_with_family_variant_attributes'
-            - '@pim_enrich.normalizer.variant_navigation'
-            - '@pim_enrich.doctrine.query.ascendant_categories'
-            - '@pim_enrich.normalizer.incomplete_values'
-            - '@pim_catalog.association.missing_association_adder'
-            - '@pim_catalog.normalizer.standard.product.parent_associations'
-            - '@pim_catalog.context.catalog'
-            - '@doctrine.orm.entity_manager'
+        parent: pim_enrich.normalizer.product
         calls:
             - [setEntityManager, ['@doctrine.orm.entity_manager']]
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 100 }
 
-    pcmt_core.normalizer.product.draft_edit:
-        class: PcmtCoreBundle\Normalizer\PcmtProductNormalizer
-        parent: pim_enrich.normalizer.product
-        arguments:
-            $formProvider: '@pcmt.provider.form.draft'
-
-    pcmt_product.normalizer.product_model:
-        class: Akeneo\Pim\Enrichment\Component\Product\Normalizer\InternalApi\ProductModelNormalizer
-        arguments:
-            - '@pim_standard_format_serializer'
-            - '@pim_enrich.normalizer.version'
-            - '@pim_versioning.manager.version'
-            - '@pim_enrich.normalizer.image'
-            - '@pim_catalog.localization.localizer.converter'
-            - '@pim_enrich.converter.standard_to_enrich.product_value'
-            - '@pcmt.provider.form.product-model-draft'
-            - '@pim_catalog.repository.locale'
-            - '@pim_catalog.values_filler.entity_with_family_variant'
-            - '@pim_catalog.family_variant.provider.entity_with_family_variant_attributes'
-            - '@pim_enrich.normalizer.variant_navigation'
-            - '@pim_catalog.doctrine.query.find_variant_product_completeness'
-            - '@pim_catalog.product_models.image_as_label'
-            - '@pim_enrich.doctrine.query.ascendant_categories'
-            - '@pim_enrich.normalizer.incomplete_values'
-            - '@pim_user.context.user'
-            - '@pim_catalog.association.missing_association_adder'
-            - '@pim_catalog.normalizer.standard.product.parent_associations'
-            - '@pim_catalog.context.catalog'
+    pcmt_core.normalizer.product_model:
+        class: PcmtCoreBundle\Normalizer\PcmtProductModelNormalizer
+        parent: pim_enrich.normalizer.product_model
+        calls:
+            - [setEntityManager, ['@doctrine.orm.entity_manager']]
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 100 }
 
     ### Concatenated fields for attribute
     pcmt_catalog.normalizer.standard.concatenated_attribute:

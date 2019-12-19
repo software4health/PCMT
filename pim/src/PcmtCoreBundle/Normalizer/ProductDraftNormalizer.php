@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PcmtCoreBundle\Normalizer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use PcmtCoreBundle\Entity\ExistingProductDraft;
 use PcmtCoreBundle\Entity\NewProductDraft;
 use PcmtCoreBundle\Entity\ProductDraftInterface;
@@ -32,11 +33,13 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
     public function __construct(
         DraftStatusNormalizer $statusNormalizer,
         AttributeChangeNormalizer $attributeChangeNormalizer,
+        FormProviderInterface $formProvider,
         NormalizerInterface $productNormalizer
     ) {
         parent::__construct(
             $statusNormalizer,
-            $attributeChangeNormalizer
+            $attributeChangeNormalizer,
+            $formProvider
         );
 
         $this->productNormalizer = $productNormalizer;
@@ -69,6 +72,7 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
 
         if ($context['include_product'] ?? false) {
             $data['product'] = $this->productNormalizer->normalize($newProduct, 'internal_api');
+            $data['product']['meta']['form'] = $this->formProvider->getForm($draft);
         }
 
         return $data;

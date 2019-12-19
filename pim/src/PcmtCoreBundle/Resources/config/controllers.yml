@@ -38,8 +38,7 @@ services:
         calls:
             - [setEventDispatcher, ['@event_dispatcher']]
             - [setDraftSaver, ['@pcmt_core.save.productDraft']]
-            - [setProductDraftNormalizer, ['@pcmt_core.draft.product_normalizer']]
-            - [setProductModelDraftNormalizer, ['@pcmt_core.draft.product_model_normalizer']]
+            - [setResponseBuilder, ['@pcmt.service.builder.response_builder']]
 
     ### overrides product model controller
     pim_enrich.controller.rest.product_model:
@@ -66,7 +65,7 @@ services:
             - '@akeneo_elasticsearch.client.product_and_product_model'
         calls:
             - [setUserContextProtected, ['@pim_user.context.user']]
-            - [setProductModelDraftNormalizer, ['@pcmt_core.draft.product_model_normalizer']]
             - [setDraftSaver, ['@pcmt_core.save.productModelDraft']]
             - [setObjectFilterProtected, ['@pim_catalog.filter.chained']]
             - [setProductModelRepositoryProtected, ['@pim_catalog.repository.product_model']]
+            - [setResponseBuilder, ['@pcmt.service.builder.response_builder']]

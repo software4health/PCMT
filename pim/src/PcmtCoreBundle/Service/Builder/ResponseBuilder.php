@@ -33,6 +33,9 @@ class ResponseBuilder
     /** @var mixed[] */
     protected $context = [];
 
+    /** @var ?string */
+    protected $format = null;
+
     /** @var NormalizerInterface[] */
     protected $normalizers = [];
 
@@ -81,6 +84,13 @@ class ResponseBuilder
         return $this;
     }
 
+    public function setFormat(?string $format): self
+    {
+        $this->format = $format;
+
+        return $this;
+    }
+
     public function build(): JsonResponse
     {
         if ($this->isPaginated) {
@@ -99,7 +109,7 @@ class ResponseBuilder
 
         $serializer = new Serializer($this->normalizers);
 
-        return new JsonResponse($serializer->normalize($response, null, $this->context));
+        return new JsonResponse($serializer->normalize($response, $this->format, $this->context));
     }
 
     public function buildPaginatedResponse(array $result, int $total, ?int $page): JsonResponse
