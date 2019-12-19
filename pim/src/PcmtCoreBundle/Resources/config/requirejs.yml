@@ -47,6 +47,8 @@ config:
         pcmt/product/edit/form/save: pcmtcore/js/product/form/save
         pcmt/product/form/categories: pcmtcore/js/product/form/categories
 
+        pcmt/product-model/edit/form/save: pcmtcore/js/product-model/form/save
+
         ### common ###
         pcmt/draft/common/breadcrumbs: pcmtcore/js/draft/common/breadcrumbs
         pcmt/draft/common/title: pcmtcore/js/draft/common/title

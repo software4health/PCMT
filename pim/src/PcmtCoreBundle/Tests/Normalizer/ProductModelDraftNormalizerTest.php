@@ -11,6 +11,7 @@ namespace PcmtCoreBundle\Tests\Normalizer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
+use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use Akeneo\UserManagement\Component\Model\User;
 use PcmtCoreBundle\Entity\AbstractDraft;
 use PcmtCoreBundle\Entity\AttributeChange;
@@ -53,6 +54,9 @@ class ProductModelDraftNormalizerTest extends TestCase
     /** @var ProductModelAttributeChangeService */
     private $attributeChangeService;
 
+    /** @var FormProviderInterface */
+    private $formProvider;
+
     protected function setUp(): void
     {
         $this->productModelNew = $this->createMock(ProductModel::class);
@@ -69,6 +73,8 @@ class ProductModelDraftNormalizerTest extends TestCase
         $this->attributeChangeService = $this->createMock(ProductModelAttributeChangeService::class);
         $this->productModelNormalizer = $this->createMock(NormalizerInterface::class);
 
+        $this->formProvider = $this->createMock(FormProviderInterface::class);
+
         parent::setUp();
     }
 
@@ -77,6 +83,7 @@ class ProductModelDraftNormalizerTest extends TestCase
         $this->productModelDraftNormalizer = new ProductModelDraftNormalizer(
             $this->draftStatusNormalizer,
             $this->attributeChangeNormalizer,
+            $this->formProvider,
             $this->productModelNormalizer
         );
         $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
@@ -109,6 +116,7 @@ class ProductModelDraftNormalizerTest extends TestCase
         $this->productModelDraftNormalizer = new ProductModelDraftNormalizer(
             $this->draftStatusNormalizer,
             $this->attributeChangeNormalizer,
+            $this->formProvider,
             $this->productModelNormalizer
         );
         $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
@@ -132,6 +140,7 @@ class ProductModelDraftNormalizerTest extends TestCase
         $this->productModelDraftNormalizer = new ProductModelDraftNormalizer(
             $this->draftStatusNormalizer,
             $this->attributeChangeNormalizer,
+            $this->formProvider,
             $this->productModelNormalizer
         );
         $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
@@ -151,6 +160,7 @@ class ProductModelDraftNormalizerTest extends TestCase
         $this->productModelDraftNormalizer = new ProductModelDraftNormalizer(
             $this->draftStatusNormalizer,
             $this->attributeChangeNormalizer,
+            $this->formProvider,
             $this->productModelNormalizer
         );
         $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
@@ -165,9 +175,13 @@ class ProductModelDraftNormalizerTest extends TestCase
 
     public function testNormalizeWhenContextHasProductIncludedThenShouldReturnNormalizedProduct(): void
     {
+        $formName = 'form-xxx';
+        $this->formProvider->method('getForm')->willReturn($formName);
+
         $this->productModelDraftNormalizer = new ProductModelDraftNormalizer(
             $this->draftStatusNormalizer,
             $this->attributeChangeNormalizer,
+            $this->formProvider,
             $this->productModelNormalizer
         );
         $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
@@ -178,5 +192,6 @@ class ProductModelDraftNormalizerTest extends TestCase
         $array = $this->productModelDraftNormalizer->normalize($draft, null, ['include_product' => true]);
 
         $this->assertArrayHasKey('product', $array);
+        $this->assertSame($formName, $array['product']['meta']['form']);
     }
 }

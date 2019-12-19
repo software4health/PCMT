@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Normalizer;
 
+use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use PcmtCoreBundle\Entity\DraftInterface;
 use PcmtCoreBundle\Entity\DraftStatus;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -21,12 +22,17 @@ class DraftNormalizer implements NormalizerInterface
     /** @var AttributeChangeNormalizer */
     protected $attributeChangeNormalizer;
 
+    /** @var FormProviderInterface */
+    protected $formProvider;
+
     public function __construct(
         DraftStatusNormalizer $statusNormalizer,
-        AttributeChangeNormalizer $attributeChangeNormalizer
+        AttributeChangeNormalizer $attributeChangeNormalizer,
+        FormProviderInterface $formProvider
     ) {
         $this->statusNormalizer = $statusNormalizer;
         $this->attributeChangeNormalizer = $attributeChangeNormalizer;
+        $this->formProvider = $formProvider;
     }
 
     /**

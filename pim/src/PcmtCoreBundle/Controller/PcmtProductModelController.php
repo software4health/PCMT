@@ -18,21 +18,17 @@ use Akeneo\UserManagement\Bundle\Context\UserContext;
 use PcmtCoreBundle\Entity\AbstractDraft;
 use PcmtCoreBundle\Entity\ExistingProductModelDraft;
 use PcmtCoreBundle\Entity\NewProductModelDraft;
+use PcmtCoreBundle\Service\Builder\ResponseBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 
 class PcmtProductModelController extends ProductModelController
 {
     /** @var UserContext */
     protected $userContextProtected;
-
-    /** @var NormalizerInterface */
-    protected $productModelDraftNormalizer;
 
     /** @var ObjectFilterInterface */
     protected $objectFilterProtected;
@@ -43,14 +39,17 @@ class PcmtProductModelController extends ProductModelController
     /** @var SaverInterface */
     protected $draftSaver;
 
+    /** @var ResponseBuilder */
+    private $responseBuilder;
+
+    public function setResponseBuilder(ResponseBuilder $responseBuilder): void
+    {
+        $this->responseBuilder = $responseBuilder;
+    }
+
     public function setUserContextProtected(UserContext $userContextProtected): void
     {
         $this->userContextProtected = $userContextProtected;
-    }
-
-    public function setProductModelDraftNormalizer(NormalizerInterface $normalizer): void
-    {
-        $this->productModelDraftNormalizer = $normalizer;
     }
 
     public function setDraftSaver(SaverInterface $draftSaver): void
@@ -92,13 +91,10 @@ class PcmtProductModelController extends ProductModelController
 
         $this->draftSaver->save($draft);
 
-        $serializer = new Serializer([$this->productModelDraftNormalizer]);
-
-        return new JsonResponse($serializer->normalize(
-            $draft,
-            'internal_api',
-            $this->getNormalizationContext()
-        ));
+        return $this->responseBuilder->setData($draft)
+            ->setFormat('internal_api')
+            ->setContext($this->getNormalizationContext())
+            ->build();
     }
 
     /**
@@ -141,13 +137,20 @@ class PcmtProductModelController extends ProductModelController
 
         $this->draftSaver->save($draft);
 
-        $serializer = new Serializer([$this->productModelDraftNormalizer]);
+        return $this->responseBuilder->setData($draft)
+            ->setFormat('internal_api')
+            ->setContext($this->getNormalizationContext())
+            ->build();
+    }
 
-        return new JsonResponse($serializer->normalize(
-            $draft,
-            'internal_api',
-            $this->getNormalizationContext()
-        ));
+    public function getAction(int $id): JsonResponse
+    {
+        $productModel = $this->findProductModelOr404($id);
+
+        return $this->responseBuilder->setData($productModel)
+            ->setFormat('internal_api')
+            ->setContext($this->getNormalizationContext() + ['include_draft_id' => true])
+            ->build();
     }
 
     private function getNormalizationContext(): array
