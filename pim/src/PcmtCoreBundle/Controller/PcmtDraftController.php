@@ -105,13 +105,15 @@ class PcmtDraftController
     public function updateDraft(AbstractDraft $draft, Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
-
         if (!isset($data['product'])) {
             throw new BadRequestHttpException('There is no product values');
         }
 
         if ($draft instanceof ProductModelDraftInterface && isset($data['product']['family'])) {
             unset($data['product']['family']);
+        }
+        if (isset($data['categories'])) {
+            $data['product']['categories'] = $data['categories'];
         }
 
         $draft->setProductData($data['product']);
