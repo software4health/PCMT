@@ -13,29 +13,3 @@ extensions:
         aclResourceId: pim_catalog_product_edit
         config: #arbitrary config - it can be done in initialize function in module code
             title: pcmt.menu.item.reference_data.supplier
-
-    # overridden route - redirection to drafts
-    pim-product-create-modal:
-        module: pim/form/common/creation/modal
-        config:
-            labels:
-                title: pim_common.create
-                subTitle: pim_enrich.entity.product.plural_label
-            picture: illustrations/Product.svg
-            successMessage: pim_enrich.entity.product.flash.create.success
-            editRoute: pcmt_core_drafts_index
-            postUrl: pim_enrich_product_rest_create
-
-    # overridden route - redirection to drafts
-    pim-product-model-create-modal:
-        module: pim/form/common/creation/modal
-        config:
-            labels:
-                title: pim_enrich.entity.product_model.module.create.title
-                subTitle: pim_enrich.entity.product.plural_label
-                content: pim_enrich.entity.product_model.module.create.content
-            picture: illustrations/Product-model.svg
-            successMessage: pim_enrich.entity.product_model.flash.create.success
-            editRoute: pcmt_core_drafts_index
-            postUrl: pim_enrich_product_model_rest_create
-            excludedProperties: [ family ]
