@@ -13,6 +13,20 @@ extensions:
         config:
             redirect: pcmt_core_drafts_edit
 
+    pcmt-product-edit-form-save:
+        module: pcmt/product/edit/form/save
+        parent: pcmt-product-edit-form-no-draft
+        targetZone: draft
+        position: 0
+        config:
+            redirect: pcmt_core_drafts_edit
+
+    pcmt-product-edit-form-save-buttons:
+        module: pim/form/common/save-buttons
+        parent: pcmt-product-edit-form-no-draft
+        targetZone: draft
+        position: 120
+
     pim-product-edit-form-attribute-description:
         module: dnd/product-edit-form/attributes/description
         parent: pim-product-edit-form-attributes
@@ -34,3 +48,31 @@ extensions:
         config:
             itemCategoryListRoute: pim_enrich_product_listcategories
             itemCategoryTreeRoute: pim_enrich_product_category_rest_list
+
+    pcmt-product-edit-form-no-draft:
+        module: pcmt/product/form/no-draft
+        parent: pim-product-edit-form-column-tabs
+        targetZone: container
+        position: 140
+        config:
+            label: pcmt_core.products_editing.current_draft
+            noDraft:
+                title: pcmt_core.products_editing.noDraft.title
+                description: pcmt_core.products_editing.noDraft.description
+
+    pim-product-edit-form-column-tabs-navigation:
+        module: pcmt/product/form/common/column-tabs-navigation
+        parent: pim-product-edit-form-left-column
+        targetZone: navigation
+        position: 10
+        config:
+            productNavigationTitle: pim_menu.navigation.product
+            productDraftNavigationTitle: pim_menu.navigation.product_draft
+            redirect: pcmt_core_drafts_edit
+            noDraftTab: 'pcmt-product-edit-form-no-draft'
+
+    pim-product-edit-form-column-tabs:
+        module: pcmt/product/form/common/column-tabs
+        parent: pim-product-edit-form
+        targetZone: content
+        position: 100
