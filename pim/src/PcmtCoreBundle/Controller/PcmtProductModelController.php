@@ -11,9 +11,18 @@ namespace PcmtCoreBundle\Controller;
 
 use Akeneo\Pim\Enrichment\Bundle\Controller\InternalApi\ProductModelController;
 use Akeneo\Pim\Enrichment\Bundle\Filter\ObjectFilterInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Comparator\Filter\EntityWithValuesFilter;
+use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Localization\Localizer\AttributeConverterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
+use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductModelRepositoryInterface;
+use Akeneo\Pim\Structure\Component\Repository\FamilyVariantRepositoryInterface;
+use Akeneo\Tool\Bundle\ElasticsearchBundle\Client;
+use Akeneo\Tool\Component\StorageUtils\Factory\SimpleFactoryInterface;
+use Akeneo\Tool\Component\StorageUtils\Remover\RemoverInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
+use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
 use PcmtCoreBundle\Entity\AbstractDraft;
 use PcmtCoreBundle\Entity\ExistingProductModelDraft;
@@ -24,17 +33,26 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * Code copied from Product Model Controller:
+ *
+ * @author    Julien Sanchez <julien@akeneo.com>
+ * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
 class PcmtProductModelController extends ProductModelController
 {
     /** @var UserContext */
-    protected $userContextProtected;
+    private $userContext;
 
     /** @var ObjectFilterInterface */
-    protected $objectFilterProtected;
+    private $objectFilter;
 
     /** @var ProductModelRepositoryInterface */
-    protected $productModelRepositoryProtected;
+    private $productModelRepository;
 
     /** @var SaverInterface */
     protected $draftSaver;
@@ -42,29 +60,78 @@ class PcmtProductModelController extends ProductModelController
     /** @var ResponseBuilder */
     private $responseBuilder;
 
+    /** @var SimpleFactoryInterface */
+    private $productModelFactory;
+
+    /** @var ObjectUpdaterInterface */
+    private $productModelUpdater;
+
+    /** @var ValidatorInterface */
+    private $validator;
+
+    /** @var NormalizerInterface */
+    private $violationNormalizer;
+
+    public function __construct(
+        ProductModelRepositoryInterface $productModelRepository,
+        NormalizerInterface $normalizer,
+        UserContext $userContext,
+        ObjectFilterInterface $objectFilter,
+        AttributeConverterInterface $localizedConverter,
+        EntityWithValuesFilter $emptyValuesFilter,
+        ConverterInterface $productValueConverter,
+        ObjectUpdaterInterface $productModelUpdater,
+        RemoverInterface $productModelRemover,
+        ValidatorInterface $validator,
+        SaverInterface $productModelSaver,
+        NormalizerInterface $constraintViolationNormalizer,
+        NormalizerInterface $entityWithFamilyVariantNormalizer,
+        SimpleFactoryInterface $productModelFactory,
+        NormalizerInterface $violationNormalizer,
+        FamilyVariantRepositoryInterface $familyVariantRepository,
+        AttributeFilterInterface $productModelAttributeFilter,
+        ?Client $productModelClient = null,
+        ?Client $productAndProductModelClient = null
+    ) {
+        $this->productModelRepository = $productModelRepository;
+        $this->userContext = $userContext;
+        $this->objectFilter = $objectFilter;
+        $this->productModelUpdater = $productModelUpdater;
+        $this->validator = $validator;
+        $this->productModelFactory = $productModelFactory;
+        $this->violationNormalizer = $violationNormalizer;
+
+        parent::__construct(
+            $productModelRepository,
+            $normalizer,
+            $userContext,
+            $objectFilter,
+            $localizedConverter,
+            $emptyValuesFilter,
+            $productValueConverter,
+            $productModelUpdater,
+            $productModelRemover,
+            $validator,
+            $productModelSaver,
+            $constraintViolationNormalizer,
+            $entityWithFamilyVariantNormalizer,
+            $productModelFactory,
+            $violationNormalizer,
+            $familyVariantRepository,
+            $productModelAttributeFilter,
+            $productModelClient,
+            $productAndProductModelClient
+        );
+    }
+
     public function setResponseBuilder(ResponseBuilder $responseBuilder): void
     {
         $this->responseBuilder = $responseBuilder;
     }
 
-    public function setUserContextProtected(UserContext $userContextProtected): void
-    {
-        $this->userContextProtected = $userContextProtected;
-    }
-
     public function setDraftSaver(SaverInterface $draftSaver): void
     {
         $this->draftSaver = $draftSaver;
-    }
-
-    public function setObjectFilterProtected(ObjectFilterInterface $objectFilterProtected): void
-    {
-        $this->objectFilterProtected = $objectFilterProtected;
-    }
-
-    public function setProductModelRepositoryProtected(ProductModelRepositoryInterface $productModelRepositoryProtected): void
-    {
-        $this->productModelRepositoryProtected = $productModelRepositoryProtected;
     }
 
     /**
@@ -78,13 +145,32 @@ class PcmtProductModelController extends ProductModelController
 
         $data = json_decode($request->getContent(), true);
 
+        /* following code is copied from parent controller for validation */
+        $productModel = $this->productModelFactory->create();
+        $this->productModelUpdater->update($productModel, $data);
+
+        $violations = $this->validator->validate($productModel);
+
+        if (count($violations) > 0) {
+            $normalizedViolations = [];
+            foreach ($violations as $violation) {
+                $normalizedViolations[] = $this->violationNormalizer->normalize(
+                    $violation,
+                    'internal_api',
+                    ['product_model' => $productModel]
+                );
+            }
+
+            return new JsonResponse(['values' => $normalizedViolations], 400);
+        }
+
         /**
          * at this stage we create NewDraft, populate it with data
          * (which we will later use to create Product Model itself) and prevent Product Model from being created.
          **/
         $draft = new NewProductModelDraft(
             $data,
-            $this->userContextProtected->getUser(),
+            $this->userContext->getUser(),
             new \DateTime(),
             AbstractDraft::STATUS_NEW
         );
@@ -107,8 +193,8 @@ class PcmtProductModelController extends ProductModelController
         }
 
         /** @var ProductModel $productModel */
-        $productModel = $this->productModelRepositoryProtected->find($id);
-        $productModel = $this->objectFilterProtected->filterObject($productModel, 'pim.internal_api.product.view') ?
+        $productModel = $this->productModelRepository->find($id);
+        $productModel = $this->objectFilter->filterObject($productModel, 'pim.internal_api.product.view') ?
             null :
             $productModel;
 
@@ -130,7 +216,7 @@ class PcmtProductModelController extends ProductModelController
         $draft = new ExistingProductModelDraft(
             $productModel,
             $data,
-            $this->userContextProtected->getUser(),
+            $this->userContext->getUser(),
             new \DateTime(),
             AbstractDraft::STATUS_NEW
         );
@@ -155,7 +241,7 @@ class PcmtProductModelController extends ProductModelController
 
     private function getNormalizationContext(): array
     {
-        return $this->userContextProtected->toArray() + [
+        return $this->userContext->toArray() + [
             'filter_types' => [],
         ];
     }
