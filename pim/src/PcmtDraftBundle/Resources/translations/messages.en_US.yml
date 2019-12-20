@@ -1,0 +1,9 @@
+pim_dashboard:
+    widget:
+        drafts_overview:
+            title: Draft products overview
+pcmt_core:
+    draft:
+        status_new: New
+        status_approved: Approved
+        status_rejected: Rejected

@@ -25,11 +25,9 @@ class PcmtCoreExtension extends Extension
         $loader->load('array_converters.yml');
         $loader->load('attribute_types.yml');
         $loader->load('comparators.yml');
-        $loader->load('controllers.yml');
         $loader->load('event_subscribers.yml');
         $loader->load('entities.yml');
         $loader->load('factories.yml');
-        $loader->load('fetchers.yml');
         $loader->load('forms.yml');
         $loader->load('handlers.yml');
         $loader->load('jobs.yml');
@@ -46,7 +44,6 @@ class PcmtCoreExtension extends Extension
         $loader->load('steps.yml');
         $loader->load('updaters.yml');
         $loader->load('utils.yml');
-        $loader->load('widget.yml');
         $loader->load('writers.yml');
     }
 

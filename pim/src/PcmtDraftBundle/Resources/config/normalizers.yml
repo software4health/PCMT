@@ -1,0 +1,65 @@
+######################################################################
+# Copyright (c) 2019, VillageReach
+# Licensed under the Non-Profit Open Software License version 3.0.
+# SPDX-License-Identifier: NPOSL-3.0
+######################################################################
+
+services:
+    pcmt_catalog.draft_new.property_normalizer:
+        class: PcmtDraftBundle\Normalizer\NewDraftPropertyNormalizer
+        autowire: true
+
+    pcmt_catalog.draft_pending.property_normalizer:
+        class: PcmtDraftBundle\Normalizer\PendingDraftPropertyNormalizer
+
+    pcmt_core.draft.status.normalizer:
+        class: PcmtDraftBundle\Normalizer\DraftStatusNormalizer
+        autowire: true
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 80 }
+
+    pcmt_core.draft.attribute_change.normalizer:
+        class: PcmtDraftBundle\Normalizer\AttributeChangeNormalizer
+        autowire: true
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 120 }
+
+    pcmt_draft.draft.product_normalizer:
+        class: PcmtDraftBundle\Normalizer\ProductDraftNormalizer
+        autowire: true
+        calls:
+            - [setProductFromDraftCreator, ['@pcmt.service.product_from_draft_creator']]
+            - [setProductAttributeChangeService, ['@pcmt.service.product_attribute_change']]
+        arguments:
+            $productNormalizer: '@pcmt_core.normalizer.product'
+            $formProvider: '@pcmt.provider.form.draft'
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 110 }
+
+    pcmt_core.draft.product_model_normalizer:
+        class: PcmtDraftBundle\Normalizer\ProductModelDraftNormalizer
+        autowire: true
+        calls:
+            - [setProductModelFromDraftCreator, ['@pcmt.service.product_model_from_draft_creator']]
+            - [setProductModelAttributeChangeService, ['@pcmt.service.product_model_attribute_change']]
+        arguments:
+            $productModelNormalizer: '@pcmt_core.normalizer.product_model'
+            $formProvider: '@pcmt.provider.form.product-model-draft'
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 110 }
+
+    pcmt_core.normalizer.product:
+        class: PcmtDraftBundle\Normalizer\PcmtProductNormalizer
+        parent: pim_enrich.normalizer.product
+        calls:
+            - [setEntityManager, ['@doctrine.orm.entity_manager']]
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 100 }
+
+    pcmt_core.normalizer.product_model:
+        class: PcmtDraftBundle\Normalizer\PcmtProductModelNormalizer
+        parent: pim_enrich.normalizer.product_model
+        calls:
+            - [setEntityManager, ['@doctrine.orm.entity_manager']]
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 100 }

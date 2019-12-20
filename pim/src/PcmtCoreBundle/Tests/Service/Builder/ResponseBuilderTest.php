@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Tests\Service\Builder;
 
-use PcmtCoreBundle\Entity\DraftInterface;
+use PcmtCoreBundle\Entity\Attribute;
 use PcmtCoreBundle\Service\Builder\ResponseBuilder;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -73,7 +73,7 @@ class ResponseBuilderTest extends TestCase
         $responseBuilder = $this->getResponseBuilderInstance();
 
         $normalizer = $this->createMock(NormalizerInterface::class);
-        $draft = $this->createMock(DraftInterface::class);
+        $draft = $this->createMock(Attribute::class);
         $normalizerResult = [
             'id' => 1234,
         ];
@@ -100,7 +100,7 @@ class ResponseBuilderTest extends TestCase
         $responseBuilder = $this->getResponseBuilderInstance();
 
         $normalizer = $this->createMock(NormalizerInterface::class);
-        $draft = $this->createMock(DraftInterface::class);
+        $draft = $this->createMock(Attribute::class);
         $normalizerResult = [
             'id'      => 1234,
             'product' => [
@@ -131,8 +131,8 @@ class ResponseBuilderTest extends TestCase
         $responseBuilder = $this->getResponseBuilderInstance();
 
         $normalizer = $this->createMock(NormalizerInterface::class);
-        $draft1 = $this->createMock(DraftInterface::class);
-        $draft2 = $this->createMock(DraftInterface::class);
+        $draft1 = $this->createMock(Attribute::class);
+        $draft2 = $this->createMock(Attribute::class);
         $normalizerResult = [
             ['id' => 1234],
             ['id' => 1235],

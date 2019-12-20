@@ -12,9 +12,6 @@ services:
             - '@pim_catalog.updater.entity_with_values'
             - '@pim_storage_serializer'
 
-    pcmt_catalog.draft.manager:
-        class: PcmtCoreBundle\Manager\DraftManager
-
     pim_structure.updater.translatable:
         class: 'PcmtCoreBundle\Updater\TranslatableUpdater'
 

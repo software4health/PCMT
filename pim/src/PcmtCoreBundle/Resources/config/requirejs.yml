@@ -8,77 +8,6 @@ config:
     paths:
         dnd/product-edit-form/attributes/description: pcmtcore/js/product/form/attributes/description
 
-        ### Dashboard widget
-        pcmt/product/widget/draft-products-widget: pcmtcore/js/draft/draft-products-widget
-
-        ### form ###
-        pcmt/product/form/attributes/read-only-all-attributes: pcmtcore/js/product/form/attributes/read-only-all-attributes
-
-        ### Drafts ###
-        pcmt/draft/list: pcmtcore/js/draft/draft_list
-        pcmt/draft/draft-pagination: pcmtcore/js/draft/draft-pagination
-        pcmt/draft/filters: pcmtcore/js/draft/filters
-        pcmt/draft/form/save: pcmtcore/js/draft/form/save
-        pcmt/draft/form/variant-navigation: pcmtcore/js/draft/form/variant-navigation
-        pcmt/draft/form/cache-invalidator: pcmtcore/js/draft/form/cache-invalidator
-        pcmt/draft/form/sequential-edit: pcmtcore/js/draft/form/sequential-edit
-        pcmt/draft/form/product-label: pcmtcore/js/draft/form/product-label
-        pcmt/draft/form/product-model-label: pcmtcore/js/draft/form/product-model-label
-        pcmt/draft/form/product-completeness: pcmtcore/js/draft/form/product-completeness
-        pcmt/draft/form/total-missing-required-attributes: pcmtcore/js/draft/form/total-missing-required-attributes
-        pcmt/draft/form/history: pcmtcore/js/draft/form/history
-        pcmt/draft/form/comments: pcmtcore/js/draft/form/comments
-        pcmt/draft/form/complete-variant-product: pcmtcore/js/draft/form/complete-variant-product
-        pcmt/draft/form/associations: pcmtcore/js/draft/form/associations
-        pcmt/draft/form/categories: pcmtcore/js/draft/form/categories
-        pcmt/draft/form/completeness: pcmtcore/js/draft/form/completeness
-        pcmt/draft/form/attribute-filter-at-this-level: pcmtcore/js/draft/form/attribute-filter-at-this-level
-        pcmt/draft/form/attribute-filter-missing-required: pcmtcore/js/draft/form/attribute-filter-missing-required
-        pcmt/draft/form/attributes/completeness: pcmtcore/js/draft/form/attributes/completeness
-        pcmt/draft/form/attributes/variant-axes: pcmtcore/js/draft/form/attributes/variant-axes
-        pcmt/draft/form/attributes/read-only-parent-attributes: pcmtcore/js/draft/form/attributes/read-only-parent-attributes
-        pcmt/draft/form/attributes/attribute-group-selector: pcmtcore/js/draft/form/attributes/attribute-group-selector
-        pcmt/draft/form/meta/updated: pcmtcore/js/draft/form/meta/updated
-        pcmt/draft/form/meta/created: pcmtcore/js/draft/form/meta/created
-        pcmt/draft/form/meta/family: pcmtcore/js/draft/form/meta/family
-        pcmt/draft/form/meta/family-variant: pcmtcore/js/draft/form/meta/family-variant
-        pcmt/draft/form/meta/change-family: pcmtcore/js/draft/form/meta/change-family
-
-        pcmt/product/edit/form/save: pcmtcore/js/product/form/save
-        pcmt/product/form/categories: pcmtcore/js/product/form/categories
-        pcmt/product/form/common/column-tabs: pcmtcore/js/product/form/common/column-tabs
-        pcmt/product/form/common/column-tabs-navigation: pcmtcore/js/product/form/common/column-tabs-navigation
-        pcmt/product/form/no-draft: pcmtcore/js/product/form/no-draft
-
-        pcmt/product-model/edit/form/save: pcmtcore/js/product-model/form/save
-
-        ### common ###
-        pcmt/draft/common/breadcrumbs: pcmtcore/js/draft/common/breadcrumbs
-        pcmt/draft/common/title: pcmtcore/js/draft/common/title
-        pcmt/draft/common/attributes: pcmtcore/js/draft/common/attributes
-        pcmt/draft/common/main-image: pcmtcore/js/draft/common/main-image
-        pcmt/draft/common/updated: pcmtcore/js/draft/common/updated
-        pcmt/draft/common/created: pcmtcore/js/draft/common/created
-
-        ### templates ###
-        pcmt/product/template/widget/draft-products-widget: pcmtcore/templates/draft/draft-products-widget.html
-        pcmt/product/template/widget/view-all-btn: pcmtcore/templates/draft/view-all-btn.html
-        pcmt/product/template/draft-list: pcmtcore/templates/draft/draft-list.html
-        pcmt/product/template/draft-pagination: pcmtcore/templates/draft/draft-pagination.html
-        pcmt/product/template/filters: pcmtcore/templates/draft/filters.html
-        pcmt/product/template/form/no-draft: pcmtcore/templates/product/form/no-draft.html
-        pcmt/product/template/form/column-tabs-navigation: pcmtcore/templates/product/form/column-tabs-navigation.html
-
-        ### controllers ###
-        pcmt/product/drafts/index: pcmtcore/js/controller/drafts_index
-        pcmt/product/drafts/edit: pcmtcore/js/controller/drafts_edit
-
-        ### fetchers ###
-        pcmt/draft-fetcher: pcmtcore/js/draft/fetcher/draft_fetcher
-
-        ### savers ###
-        pcmt/product-draft-saver: pcmtcore/js/draft/saver/product-draft-saver
-
         dnd/attribute-edit-form/descriptions/translation: pcmtcore/js/attribute/form/descriptions/translation
         dnd/template/form/properties/translation: pcmtcore/templates/form/properties/translation.html
         dnd/controller/attribute/create: pcmtcore/js/controller/attribute/create
@@ -97,12 +26,6 @@ config:
     config:
         pim/controller-registry:
             controllers:
-                pcmt_core_drafts_index:
-                    module: pcmt/product/drafts/index
-                pcmt_core_drafts_edit:
-                    module: pcmt/product/drafts/edit
-                    config:
-                        entity: draft
                 pim_enrich_attribute_create:
                     module: dnd/controller/attribute/create
             defaultController:
@@ -118,14 +41,6 @@ config:
                         urls:
                             list: pim_enrich_attribute_rest_index
                             get: pim_enrich_attribute_rest_get
-                draft:
-                    module: pcmt/draft-fetcher
-                    options:
-                        urls:
-                            get: pcmt_core_drafts_api
-
-        pcmt/product-draft-saver:
-            url: pcmt_core_draft_update_api
 
         pcmt/template/form/poperties/concat-attribute:
             fieldName: concatenated

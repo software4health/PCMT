@@ -33,12 +33,6 @@ services:
         tags:
             - { name: pim_enrich.provider.field, priority: 100 }
 
-    pcmt.provider.form.draft:
-        class: 'PcmtCoreBundle\Provider\Form\DraftFormProvider'
-
-    pcmt.provider.form.product-model-draft:
-        class: 'PcmtCoreBundle\Provider\Form\ProductModelDraftFormProvider'
-
     pcmt_catalog.job.job_parameters.default_values_provider.compute_family_products_concatenated_attributes_values:
         class: '%akeneo_batch.job.job_parameters.empty_values_provider.class%'
         arguments:

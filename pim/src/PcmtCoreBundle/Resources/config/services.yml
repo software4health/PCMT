@@ -10,76 +10,13 @@ services:
         class: PcmtCoreBundle\Service\Builder\ResponseBuilder
         arguments:
             -
-                - '@pcmt_core.draft.product_normalizer'
+                - '@pcmt_draft.draft.product_normalizer'
                 - '@pcmt_core.draft.product_model_normalizer'
                 - '@pcmt_core.normalizer.product'
                 - '@pcmt_core.normalizer.product_model'
 
-    pcmt.manager.draft_facade:
-        class: PcmtCoreBundle\Manager\DraftFacade
-        autowire: true
-
-    pcmt.service.product_draft_approver:
-        class: PcmtCoreBundle\Service\Draft\ProductDraftApprover
-        autowire: true
-        calls:
-            - [setValidator, ['@pim_catalog.validator.product']]
-            - [setSaver, ['@pim_catalog.saver.product']]
-            - [setCreator, ['@pcmt.service.product_from_draft_creator']]
-
-    pcmt.service.product_model_draft_approver:
-        class: PcmtCoreBundle\Service\Draft\ProductModelDraftApprover
-        autowire: true
-        calls:
-            - [setValidator, ['@pim_catalog.validator.product']]
-            - [setSaver, ['@pim_catalog.saver.product_model']]
-            - [setCreator, ['@pcmt.service.product_model_from_draft_creator']]
-
-    pcmt.service.product_from_draft_creator:
-        class: PcmtCoreBundle\Service\Draft\ProductFromDraftCreator
-        arguments:
-            - '@pim_catalog.builder.product'
-            - '@pim_enrich.converter.enrich_to_standard.product_value'
-            - '@pim_catalog.localization.localizer.converter'
-            - '@pim_user.context.user'
-            - '@pim_catalog.comparator.filter.product'
-            - '@pim_catalog.updater.product'
-            - '@pim_enrich.filter.product_attribute_filter'
-
-    pcmt.service.product_model_from_draft_creator:
-        class: PcmtCoreBundle\Service\Draft\ProductModelFromDraftCreator
-        arguments:
-            - '@pim_catalog.factory.product_model'
-            - '@pim_enrich.converter.enrich_to_standard.product_value'
-            - '@pim_catalog.localization.localizer.converter'
-            - '@pim_user.context.user'
-            - '@pim_catalog.comparator.filter.product_model'
-            - '@pim_catalog.updater.product_model'
-            - '@pim_enrich.filter.product_model_attribute_filter'
-
-    pcmt.service.product_model_attribute_change:
-        class: PcmtCoreBundle\Service\AttributeChange\ProductModelAttributeChangeService
-        arguments:
-            - '@pim_versioning.serializer'
-            - '@pim_catalog.repository.attribute'
-        autowire: true
-
-    pcmt.service.product_attribute_change:
-        class: PcmtCoreBundle\Service\AttributeChange\ProductAttributeChangeService
-        arguments:
-            - '@pim_versioning.serializer'
-            - '@pim_catalog.repository.attribute'
-        autowire: true
-
     pcmt_create_attribute_manager:
         class: 'PcmtCoreBundle\Extension\PcmtAttributeManager'
-        autowire: true
-
-    pcmt_draft_saver_factory:
-        class: 'PcmtCoreBundle\Service\Draft\DraftSaverFactory'
-        arguments:
-            - '@pcmt_core.save.productDraft'
-            - '@pcmt_core.save.productModelDraft'
         autowire: true
 
     #util command for the one below (PcmtCreateAllAttributesCommand)
