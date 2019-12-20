@@ -21,7 +21,7 @@ if [ $PCMT_PIM_VOL != "$(docker volume ls -qf name=${PCMT_PIM_VOL})" ]; then
     pcmt_profile='dev'
 fi
 
-PCMT_PROFILE=$pcmt_profile source $DIR/../ddev.sh up -d
+PCMT_PROFILE=$pcmt_profile $DIR/quick-up.sh $DIR/../ddev.sh up -d
 source $DIR/wait-http.sh "http://localhost"
 
 # install new assets

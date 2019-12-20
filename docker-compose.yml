@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
-version: '3'
+version: '3.5'
 services:
   fpm:
     image: '${PCMT_REG}/pcmt:${PCMT_VER:-latest}'
@@ -13,6 +13,8 @@ services:
       - PCMT_PROFILE
     user: 'docker'
     working_dir: '/srv/pim'
+    secrets:
+      - akeneo_parameters
     networks:
       - 'akeneo'
 
@@ -50,6 +52,11 @@ volumes:
     driver: local
   esdata:
     driver: local
+
+secrets:
+  akeneo_parameters:
+    file: '${PCMT_SECRET_CONF:-conf/parameters.yml.dist}'
     
 networks:
   akeneo:
+    

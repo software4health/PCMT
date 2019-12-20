@@ -32,7 +32,6 @@ ADD --chown=docker:docker src/ /srv/pim/src/
 ADD --chown=docker:docker docker/pim/wait.sh /srv/pim/
 ADD --chown=docker:docker docker/pim/start.sh /srv/pim/
 ADD --chown=docker:docker docker/pim/cpFromTmp.sh /srv/pim/
-ADD --chown=docker:docker docker/pim/parameters.yml /srv/pim/app/config/
 
 USER docker
 WORKDIR /srv/pim    

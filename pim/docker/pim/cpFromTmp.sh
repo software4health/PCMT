@@ -12,3 +12,11 @@ if [ -d "/tmp/pcmt" ]; then
 else
     echo /tmp/pcmt not found, ignoring.
 fi
+
+secretPath='/run/secrets/akeneo_parameters'
+if [ -r "$secretPath" ]; then
+    echo Found $secretPath, copying into pim...
+    cp -fv $secretPath /srv/pim/app/config/parameters.yml
+else
+    echo $secretPath not found, ignoring.
+fi

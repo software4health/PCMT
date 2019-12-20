@@ -16,6 +16,10 @@
   get_url: 
     url:  "{{ pcmt_asset_url }}/settings.env"
     dest: /app/
+- name: Get PCMT parameters.yml file
+  get_url: 
+    url:  "{{ pcmt_asset_url }}/conf/parameters.yml.dist"
+    dest: /app/conf/parameters.yml
 - name: Pull and Start PCMT images
   vars:
     pcmt_profile: "{{ lookup('env', 'PCMT_PROFILE') }}"
@@ -23,6 +27,7 @@
   environment:
     PCMT_PROFILE: "{{ pcmt_profile }}"
     PCMT_VER: "{{ pcmt_ver }}"
+    PCMT_SECRET_CONF: "conf/parameters.yml"
   docker_service:
     project_src: /app
     build: no
