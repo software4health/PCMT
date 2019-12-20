@@ -27,6 +27,11 @@ pcmt_core:
         button:
             edit_as_a_draft: Edit as a draft
             edit_existing_draft: Edit existing draft
+    products_editing:
+        noDraft:
+            title: There is no draft in progress for this product yet
+            description: Edit as a draft to start working on changes
+        current_draft: Current draft
     widget:
         drafts_overview:
             product: Product
@@ -384,3 +389,7 @@ pim_measure:
         SHEET: Sheet
         SQUARE YARD: Square Yard
         YARD: Yard
+
+pim_menu:
+    navigation:
+        product_draft: Product Draft Navigation
