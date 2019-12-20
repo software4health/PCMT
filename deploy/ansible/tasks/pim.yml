@@ -1,7 +1,7 @@
 ---
-- name: Create app directory
+- name: Create app and conf directories
   file:
-    path: /app
+    path: /app/conf
     state: directory
     mode: 0744 
 - name: Get PCMT docker-compose file
