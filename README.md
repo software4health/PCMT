@@ -33,11 +33,11 @@ copyrighted and licensed from Akeneo SAS:
 ## Quick Start
 
 1. Clone Repository
-1. `PCMT_PROFILE=dev docker-compose up -d`
+1. `make up`
 1. Browse to `localhost`
 1. Login with `admin` / `admin`.
 
-To stop & cleanup:  `docker-compose down -v`.
+To stop & cleanup:  `make dev-clean`.
 
 ## Development
 
@@ -73,6 +73,25 @@ Example:
 make dev-fpm
 bin/console <command>
 ```
+
+### Configuration
+
+PCMT secrets are primarly configured by setting an environment variable named
+`PCMT_SECRET_CONF` to point to a file that holds the appropriate Akeneo 
+`parameters.yml` file.  An example template file is included in the `conf`
+directory.
+
+Example:
+
+```shell
+cp conf/paramters.yml.dist conf/parameters.yml
+# edit conf/parameters.yml ...
+export PCMT_SECRET_CONF=conf/parameters.yml
+make up
+```
+
+MySQL and ElasticSearch are both configured through their respective docker
+container defaults, for now.
 
 #### Reference Data
 

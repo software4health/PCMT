@@ -11,6 +11,14 @@ all: build
 build:
 	./pim/build-images.sh
 
+.PHONY: up
+up:
+	./bin/quick-up.sh
+
+.PHONY: dev-erd
+dev-erd:
+	./bin/erd.sh
+
 .PHONY: dev-up
 dev-up:
 	bin/dev-up.sh
@@ -21,7 +29,7 @@ dev-stop:
 
 .PHONY: dev-clean
 dev-clean:
-	rm -rf pim/vendor
+	rm -rf pim/vendor build/
 	./ddev.sh down -v
 
 .PHONY: dev-assets
