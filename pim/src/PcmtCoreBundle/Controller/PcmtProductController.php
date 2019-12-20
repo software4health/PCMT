@@ -17,12 +17,20 @@ use PcmtCoreBundle\Entity\ExistingProductDraft;
 use PcmtCoreBundle\Entity\NewProductDraft;
 use PcmtCoreBundle\Service\Builder\ResponseBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
+/**
+ * Code copied from Product Controller:
+ *
+ * @author    Adrien Pétremann <adrien.petremann@akeneo.com>
+ * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
 class PcmtProductController extends ProductController
 {
     /** @var EventDispatcherInterface */
@@ -41,6 +49,37 @@ class PcmtProductController extends ProductController
         }
 
         $data = json_decode($request->getContent(), true);
+
+        /* this part is copied from parent controller, as it is responsible for validation */
+        if (isset($data['parent'])) {
+            $product = $this->variantProductBuilder->createProduct(
+                $data['identifier'] ?? null,
+                $data['family'] ?? null
+            );
+
+            if (isset($data['values'])) {
+                $this->updateProduct($product, $data);
+            }
+        } else {
+            $product = $this->productBuilder->createProduct(
+                $data['identifier'] ?? null,
+                $data['family'] ?? null
+            );
+        }
+
+        $violations = $this->validator->validate($product);
+        if ($violations->count() > 0) {
+            $normalizedViolations = [];
+            foreach ($violations as $violation) {
+                $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
+                    $violation,
+                    'internal_api',
+                    ['product' => $product]
+                );
+            }
+
+            return new JsonResponse(['values' => $normalizedViolations], 400);
+        }
 
         /**
          * at this stage we create NewDraft, populate it with data (which we will later use to create Product itself)
