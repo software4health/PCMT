@@ -16,6 +16,14 @@ services:
             - '@pim_connector.processor.normalization.product'
             - '@pcmt_connector.writer.file.e2open'
             - '%pim_job_product_batch_size%'
+            -
+    pcmt_connector.step.pcmt_e2open.import:
+        class: '%pim_connector.step.tasklet.class%'
+        arguments:
+            - 'pcmt_e2open_import'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@pcmt_connector.tasklet.pcmt_e2open_import'
 
     pcmt_connector.step.pcmt_mst_supplier.export:
         class: 'PcmtCoreBundle\Connector\Job\Step\MstSupplierExportStep'

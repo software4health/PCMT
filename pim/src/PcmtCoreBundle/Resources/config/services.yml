@@ -103,3 +103,7 @@ services:
         autowire: true
         tags:
             - { name: 'console.command', command: 'pcmt:reference_data:create' }
+
+    pcmt_e2Open_mapping:
+        class: PcmtCoreBundle\Connector\Mapping\E2OpenMapping
+        autowire: true

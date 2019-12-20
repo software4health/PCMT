@@ -63,3 +63,11 @@ services:
                 - 'reference_data_import_xml'
         tags:
             - { name: akeneo_batch.job.job_parameters.default_values_provider }
+
+    pcmt_connector.job.job_parameters.default_values_provider.pcmt_e2open_import:
+        class: PcmtCoreBundle\Connector\Job\JobParameters\DefaultValueProvider\E2OpenImport
+        arguments:
+            -
+                - 'pcmt_e2open_import'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.default_values_provider }

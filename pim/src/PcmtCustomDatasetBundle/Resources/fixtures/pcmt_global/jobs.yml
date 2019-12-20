@@ -444,3 +444,12 @@ jobs:
         alias: compute_concatenated_attributes_values
         label: compute_concatenated_attributes_values
         type: compute_concatenated_attributes_values
+
+    #13
+    pcmt_e2open_import:
+        connector: Pcmt Connector
+        alias: pcmt_e2open_import
+        label: pcmt_e2open_import
+        type: import
+        configuration:
+            xmlFilePath: ''

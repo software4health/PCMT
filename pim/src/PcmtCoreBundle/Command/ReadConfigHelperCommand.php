@@ -45,12 +45,8 @@ class ReadConfigHelperCommand extends ContainerAwareCommand
                 if ('{}code' === !$values['name'] || !is_array($values['value'])) {
                     continue;
                 }
-
-//                dump(strtoupper($values['value']['{}name'] . ': ') . $values['value']['{}name']);
             }
         } catch (\Throwable $exception) {
-//            dump($exception);
-            die;
         }
     }
 }
