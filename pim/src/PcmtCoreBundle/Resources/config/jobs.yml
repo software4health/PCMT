@@ -29,6 +29,29 @@ services:
         tags:
             - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.export_type%' }
 
+    pcmt_connector.job.pcmt_e2open_import:
+        class: '%pim_connector.job.simple_job.class%'
+        arguments:
+            - 'pcmt_e2open_import'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            -
+                - '@pcmt_connector.step.pcmt_e2open.import'
+        tags:
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.import_type%' }
+
+    pcmt_connector.tasklet.pcmt_e2open_import:
+        class: PcmtCoreBundle\Connector\Job\E2OpenFromXmlTasklet
+        arguments:
+            - '@pim_catalog.repository.product'
+            - '@pim_catalog.repository.attribute'
+            - '@pim_catalog.repository.family'
+            - '@pim_catalog.updater.product'
+            - '@pim_catalog.saver.product'
+            - '@pim_catalog.builder.product'
+            - '@akeneo_elasticsearch.registry.clients'
+        public: false
+
     pcmt_connector.job.pcmt_mst_supplier_export:
         class: '%pim_connector.job.simple_job.class%'
         arguments:

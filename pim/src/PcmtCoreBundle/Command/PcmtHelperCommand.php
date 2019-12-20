@@ -9,10 +9,8 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Command;
 
-use Doctrine\ORM\EntityManagerInterface;
-use PcmtCoreBundle\Entity\Attribute;
-use PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
-use PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\Value\ConcatenatedAttributeValue;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx as XlsxWriter;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -32,49 +30,28 @@ class PcmtHelperCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $productRepo = $this->getContainer()->get('pim_catalog.repository.product');
-        $attributeRepo = $this->getContainer()->get('pim_catalog.repository.attribute');
-        $familyRepo = $this->getContainer()->get('pim_catalog.repository.family');
-        $concatenatedAttributesUpdater = $this->getContainer()->get(
-            'pcmt_catalog.product.updater.concatenated_attributes_for_product_and_model'
-        );
-        $em = $this->getEntityManager();
+        $path1 = 'src/PcmtCustomDatasetBundle/Resources/fixtures/pcmt_global/import_files/5_families.xlsx';
+        $path2 = 'src/PcmtCustomDatasetBundle/Resources/fixtures/pcmt_global/mapping/E2OpenMapping.xlsx';
+        $xlsReader = new XlsxReader();
+        $readFile = $xlsReader->load($path1);
+        $writeFile = $xlsReader->load($path2);
+        $workSheet = $readFile->getActiveSheet();
+        $saveSheet = $writeFile->getActiveSheet();
+        $xlsWriter = new XlsxWriter($writeFile);
 
-        $product = $productRepo->find(2162);
+        $cellValue = $workSheet->getCellByColumnAndRow(3, 7)
+            ->getValue()
+            ->__toString();
 
-        foreach ($product->getValues() as $attributeValue) {
-            if (ConcatenatedAttributeValue::class === get_class($attributeValue)) {
-                $concatenatedAttribute = $attributeRepo->findOneBy(
-                    [
-                        'code' => $attributeValue->getAttributeCode(),
-                    ]
-                );
-                $memberAttributes = $attributeRepo->findBy(
-                    [
-                        'code' => explode(',', $concatenatedAttribute->getProperty('attributes')),
-                    ]
-                );
-                $concatenatedAttributesUpdater->update(
-                    $product,
-                    [
-                        'concatenatedAttribute' => $concatenatedAttribute,
-                        'memberAttributes'      => $memberAttributes,
-                    ]
-                );
+        $arrayValues = explode(',', $cellValue);
+
+        array_walk(
+            $arrayValues,
+            function ($element, &$key) use ($saveSheet): void {
+                $cell = 'B' . (string) ($key + 2);
+                $saveSheet->setCellValue($cell, $element);
             }
-        }
-
-        $family = $familyRepo->find(4);
-        $cncAttribute = new Attribute();
-        $cncAttribute->setType(PcmtAtributeTypes::CONCATENATED_FIELDS);
-        $family->addAttribute($cncAttribute);
-
-        $unitOfWork = $em->getUnitOfWork();
-        $unitOfWork->computeChangeSets();
-    }
-
-    private function getEntityManager(): EntityManagerInterface
-    {
-        return $this->getContainer()->get('doctrine.orm.default_entity_manager');
+        );
+        $xlsWriter->save($path2);
     }
 }
