@@ -11,6 +11,11 @@ services:
     build:
       context: .
       target: pim
+  node:
+    image: pcmt/node:${PCMT_VER:-latest}
+    build:
+      context: .
+      target: node
   httpd:
     image: pcmt/httpd:${PCMT_VER:-latest}
     build:

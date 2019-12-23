@@ -26,7 +26,9 @@ RUN tar xvzf /home/docker/pim.tar.gz -C /srv/pim --strip-components=1 && \
 FROM akeneo as pim
 ARG PCMT_SEMVER
 LABEL maintainer="josh.zamor@villagereach.org"
+ARG COMPOSER_CACHE_PATH=/home/docker/.composer
 COPY --from=akeneo --chown=docker:docker /srv/pim /srv/pim
+ADD --chown=docker:docker .cache/composer ${COMPOSER_CACHE_PATH}
 ADD --chown=docker:docker composer.* /srv/pim/
 ADD --chown=docker:docker app/ /srv/pim/app/
 ADD --chown=docker:docker src/ /srv/pim/src/
@@ -35,7 +37,8 @@ ADD --chown=docker:docker docker/pim/start.sh /srv/pim/
 ADD --chown=docker:docker docker/pim/cpFromTmp.sh /srv/pim/
 
 USER docker
-WORKDIR /srv/pim
+WORKDIR /srv/pim    
+ENV COMPOSER_CACHE_DIR ${COMPOSER_CACHE_PATH}
 RUN src/cleanIfRelease.sh ${PCMT_SEMVER} && \
     php -d memory_limit=3G /usr/local/bin/composer install && \
     rm -rf var/cache/*
@@ -45,8 +48,12 @@ CMD /srv/pim/start.sh
 FROM pim
 FROM node:10-slim AS node
 USER node
+ARG YARN_CACHE_PATH=/home/node/.yarn-cache
+ADD --chown=node:node .cache/yarn-cache ${YARN_CACHE_PATH}
 COPY --from=pim --chown=node:node /srv/pim /srv/pim
+
 WORKDIR /srv/pim
+ENV YARN_CACHE_FOLDER ${YARN_CACHE_PATH}
 RUN yarn install && \
     yarn run less && \
     yarn run webpack-dev
