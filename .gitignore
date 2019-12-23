@@ -1,6 +1,7 @@
 .idea
 build/
 conf/*.yml
+pim/.cache
 pim/vendor
 web/
 pim/src/PcmtCoreBundle/Resources/config/reference_data/
