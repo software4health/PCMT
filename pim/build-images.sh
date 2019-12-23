@@ -15,8 +15,10 @@ ENV_PATH="$DIR/../.env"
 
 # Load .env file and PCMT_VER, in format for env
 DOT_ENV=$(grep -viE '^(PCMT_VER|#)' $ENV_PATH | xargs) 
+PCMT_SEMVER=$("$DIR/../bin/pcmt-semver.sh")
 PCMT_VER=$("$DIR/../bin/pcmt-ver-sha.sh")
 BUILD_ENV="$DOT_ENV PCMT_VER=$PCMT_VER"
 
 env $BUILD_ENV docker-compose -f "$DIR/docker-compose.yml" build \
-    --build-arg AKENEO_VER=${AKENEO_VER}
+    --build-arg AKENEO_VER=${AKENEO_VER} \
+    --build-arg PCMT_SEMVER=${PCMT_SEMVER}

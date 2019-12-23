@@ -24,6 +24,7 @@ RUN tar xvzf /home/docker/pim.tar.gz -C /srv/pim --strip-components=1 && \
 
 #--- PCMT PIM ---
 FROM akeneo as pim
+ARG PCMT_SEMVER
 LABEL maintainer="josh.zamor@villagereach.org"
 COPY --from=akeneo --chown=docker:docker /srv/pim /srv/pim
 ADD --chown=docker:docker composer.* /srv/pim/
@@ -34,8 +35,9 @@ ADD --chown=docker:docker docker/pim/start.sh /srv/pim/
 ADD --chown=docker:docker docker/pim/cpFromTmp.sh /srv/pim/
 
 USER docker
-WORKDIR /srv/pim    
-RUN php -d memory_limit=3G /usr/local/bin/composer install && \
+WORKDIR /srv/pim
+RUN src/cleanIfRelease.sh ${PCMT_SEMVER} && \
+    php -d memory_limit=3G /usr/local/bin/composer install && \
     rm -rf var/cache/*
 CMD /srv/pim/start.sh
 
