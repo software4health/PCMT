@@ -13,6 +13,20 @@ extensions:
         config:
             redirect: pcmt_core_drafts_edit
 
+    pcmt-product-model-edit-form-save:
+        module: pcmt/product-model/edit/form/save
+        parent: pcmt-product-model-edit-form-no-draft
+        targetZone: draft
+        position: 0
+        config:
+            redirect: pcmt_core_drafts_edit
+
+    pcmt-product-model-edit-form-save-buttons:
+        module: pim/form/common/save-buttons
+        parent: pcmt-product-model-edit-form-no-draft
+        targetZone: draft
+        position: 120
+
     pim-product-model-edit-form-attribute-description:
         module: dnd/product-edit-form/attributes/description
         parent: pim-product-model-edit-form-attributes
@@ -25,6 +39,33 @@ extensions:
         targetZone: self
         position: 100
 
+    pcmt-product-model-edit-form-no-draft:
+        module: pcmt/product/form/no-draft
+        parent: pim-product-model-edit-form-column-tabs
+        targetZone: container
+        position: 140
+        config:
+            label: pcmt_core.products_editing.current_draft
+            noDraft:
+                title: pcmt_core.products_editing.noDraft.title
+                description: pcmt_core.products_editing.noDraft.description
+
+    pim-product-model-edit-form-column-tabs-navigation:
+        module: pcmt/product/form/common/column-tabs-navigation
+        parent: pim-product-model-edit-form-left-column
+        targetZone: navigation
+        position: 10
+        config:
+            productNavigationTitle: pim_menu.navigation.product
+            productDraftNavigationTitle: pim_menu.navigation.product_draft
+            redirect: pcmt_core_drafts_edit
+            noDraftTab: 'pcmt-product-model-edit-form-no-draft'
+
+    pim-product-model-edit-form-column-tabs:
+        module: pcmt/product/form/common/column-tabs
+        parent: pim-product-model-edit-form
+        targetZone: content
+        position: 100
     pim-product-model-edit-form-categories:
         module: pcmt/product/form/categories
         parent: pim-product-model-edit-form-column-tabs
