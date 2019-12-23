@@ -24,3 +24,14 @@ extensions:
         parent: pim-product-model-edit-form-attributes
         targetZone: self
         position: 100
+
+    pim-product-model-edit-form-categories:
+        module: pcmt/product/form/categories
+        parent: pim-product-model-edit-form-column-tabs
+        targetZone: container
+        aclResourceId: pim_enrich_product_model_categories_view
+        position: 100
+        config:
+            tabCode: pim-product-edit-form-categories
+            itemCategoryListRoute: pim_enrich_product_model_listcategories
+            itemCategoryTreeRoute: pim_enrich_product_model_category_rest_list
