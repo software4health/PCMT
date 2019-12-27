@@ -22,7 +22,7 @@ class E2OpenAttributeMapping
     /** @var Attribute */
     private $mappedAttribute;
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -36,6 +36,5 @@ class E2OpenAttributeMapping
     {
         return $this->mappedAttribute;
     }
-
 }
 
