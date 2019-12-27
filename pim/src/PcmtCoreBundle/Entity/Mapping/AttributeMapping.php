@@ -22,8 +22,11 @@ class AttributeMapping
     /** @var string */
     private $type;
 
+    /** @var string */
+    private $name;
+
     /** @var Attribute */
-    private $E2OpenAttribute;
+    private $mappingAttribute;
 
     /** @var Attribute */
     private $mappedAttribute;
@@ -36,7 +39,7 @@ class AttributeMapping
         $this->type = $type;
     }
 
-    public function create(string $type)
+    public static function create(string $type): AttributeMapping
     {
         return new self($type);
     }
@@ -46,9 +49,9 @@ class AttributeMapping
         return $this->id;
     }
 
-    public function getE2OpenAttribute(): Attribute
+    public function getMappingAttribute(): Attribute
     {
-        return $this->E2OpenAttribute;
+        return $this->mappingAttribute;
     }
 
     public function getMappedAttribute(): Attribute
@@ -58,7 +61,8 @@ class AttributeMapping
 
     public function addMapping(Attribute $mappingAttribute, Attribute $mappedAttribute): void
     {
-
+        $this->mappingAttribute = $mappingAttribute;
+        $this->mappedAttribute = $mappedAttribute;
     }
 }
 

@@ -8,6 +8,8 @@ PcmtCoreBundle\Entity\Mapping\AttributeMapping:
       type: integer
       generator:
         strategy: AUTO
+  fields:
+
   OneToOne:
     E2OpenAttribute:
       targetEntity: Attribute
