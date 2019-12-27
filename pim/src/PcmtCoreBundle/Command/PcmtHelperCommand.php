@@ -30,7 +30,7 @@ class PcmtHelperCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $path1 = 'src/PcmtCustomDatasetBundle/Resources/fixtures/pcmt_global/import_files/5_families.xlsx';
+       /* $path1 = 'src/PcmtCustomDatasetBundle/Resources/fixtures/pcmt_global/import_files/5_families.xlsx';
         $path2 = 'src/PcmtCustomDatasetBundle/Resources/fixtures/pcmt_global/mapping/E2OpenMapping.xlsx';
         $xlsReader = new XlsxReader();
         $readFile = $xlsReader->load($path1);
@@ -52,6 +52,8 @@ class PcmtHelperCommand extends ContainerAwareCommand
                 $saveSheet->setCellValue($cell, $element);
             }
         );
-        $xlsWriter->save($path2);
+        $xlsWriter->save($path2);*/
+
+
     }
 }

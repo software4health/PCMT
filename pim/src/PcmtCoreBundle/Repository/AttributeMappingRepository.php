@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Repository;
 
-class E2OpenAttributeMappingRepository
+class AttributeMappingRepository
 {
 
 }

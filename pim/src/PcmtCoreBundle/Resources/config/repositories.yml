@@ -12,3 +12,9 @@ services:
         arguments: ['%pim_catalog.entity.family_variant.class%']
         tags:
             - { name: 'pim_repository' }
+
+    pcmt_catalog.repository.e2open_attribute_mapping:
+        class: PcmtCoreBundle\Repository\AttributeMappingRepository
+        factory: 'doctrine.orm.entity_manager:getRepository'
+        tags:
+            - { name: 'pim_repository' }

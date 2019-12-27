@@ -1,8 +1,8 @@
-PcmtCoreBundle\Entity\Mapping\E2OpenAttributeMapping:
+PcmtCoreBundle\Entity\Mapping\AttributeMapping:
   type: entity
-  table: pcmt_catalog_attribute_E2Open_Pcmt_Mapping
+  table: pcmt_catalog_attribute_mapping
   changeTrackingPolicy: DEFERRED_EXPLICIT
-  repositoryClass: PcmtCoreBundle\Repository\E2OpenAttributeMappingRepository
+  repositoryClass: PcmtCoreBundle\Repository\AttributeMappingRepository
   id:
     id:
       type: integer
