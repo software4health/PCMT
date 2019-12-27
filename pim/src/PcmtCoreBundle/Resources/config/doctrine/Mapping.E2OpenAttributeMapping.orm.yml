@@ -1,0 +1,21 @@
+PcmtCoreBundle\Entity\Mapping\E2OpenAttributeMapping:
+  type: entity
+  table: pcmt_catalog_attribute_E2Open_Pcmt_Mapping
+  changeTrackingPolicy: DEFERRED_EXPLICIT
+  repositoryClass: PcmtCoreBundle\Repository\E2OpenAttributeMappingRepository
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  OneToOne:
+    E2OpenAttribute:
+      targetEntity: Attribute
+      joinColumn:
+        name: e2open_attribute_id
+        referencedColumnName: id
+    mappedAttribute:
+      targetEntity: Attribute
+      joinColumn:
+        name: mapped_attribute_id
+        referencedColumnName: id
