@@ -20,7 +20,7 @@ class AttributeMapping
     private $id;
 
     /** @var string */
-    private $type;
+    private $mappingType;
 
     /** @var string */
     private $name;
@@ -36,7 +36,7 @@ class AttributeMapping
         if(!in_array($type, self::MAPPING_TYPES)){
             throw new \InvalidArgumentException('Wrong mapping type.');
         }
-        $this->type = $type;
+        $this->mappingType = $type;
     }
 
     public static function create(string $type): AttributeMapping

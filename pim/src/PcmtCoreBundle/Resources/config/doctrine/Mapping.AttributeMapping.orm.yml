@@ -9,7 +9,10 @@ PcmtCoreBundle\Entity\Mapping\AttributeMapping:
       generator:
         strategy: AUTO
   fields:
-
+    mappingType:
+      type: string
+    name:
+      type: string
   OneToOne:
     E2OpenAttribute:
       targetEntity: Attribute

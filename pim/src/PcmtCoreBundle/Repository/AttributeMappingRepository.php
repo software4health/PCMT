@@ -9,8 +9,9 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Repository;
 
-class AttributeMappingRepository
+use Doctrine\ORM\EntityRepository;
+
+class AttributeMappingRepository extends EntityRepository
 {
 
 }
-

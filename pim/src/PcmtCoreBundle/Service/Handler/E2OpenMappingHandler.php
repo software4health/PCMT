@@ -34,9 +34,11 @@ class E2OpenMappingHandler
 
     public function __construct(
         EntityManagerInterface $entityManager,
+        AttributeRepositoryInterface $attributeRepository,
         AttributeMappingRepository $attributeMappingRepository
     ) {
         $this->entityManager = $entityManager;
+        $this->attributeRepository = $attributeRepository;
         $this->attributeMappingRepository = $attributeMappingRepository;
         $this->attributeList = E2OpenMapping::getE2OpenAttributeNames();
     }

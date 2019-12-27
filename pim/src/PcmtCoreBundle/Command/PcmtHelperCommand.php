@@ -54,6 +54,8 @@ class PcmtHelperCommand extends ContainerAwareCommand
         );
         $xlsWriter->save($path2);*/
 
-
+        $handler = $this->getContainer()->get('pcmt_e2Open_mapping_handler');
+        dump($handler);
+        die;
     }
 }

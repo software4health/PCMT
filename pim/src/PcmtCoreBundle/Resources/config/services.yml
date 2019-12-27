@@ -44,3 +44,10 @@ services:
     pcmt_e2Open_mapping:
         class: PcmtCoreBundle\Connector\Mapping\E2OpenMapping
         autowire: true
+
+    pcmt_e2Open_mapping_handler:
+        class: PcmtCoreBundle\Service\Handler\E2OpenMappingHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@pim_catalog.repository.attribute'
+            - '@pcmt_catalog.repository.e2open_attribute_mapping'
