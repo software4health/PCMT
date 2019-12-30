@@ -13,14 +13,14 @@ PcmtCoreBundle\Entity\Mapping\AttributeMapping:
       type: string
     name:
       type: string
-  OneToOne:
-    E2OpenAttribute:
-      targetEntity: Attribute
+  oneToOne:
+    mappingAttribute:
+      targetEntity: PcmtCoreBundle\Entity\Attribute
       joinColumn:
-        name: e2open_attribute_id
+        name: mapping_attribute_id
         referencedColumnName: id
     mappedAttribute:
-      targetEntity: Attribute
+      targetEntity: PcmtCoreBundle\Entity\Attribute
       joinColumn:
         name: mapped_attribute_id
         referencedColumnName: id

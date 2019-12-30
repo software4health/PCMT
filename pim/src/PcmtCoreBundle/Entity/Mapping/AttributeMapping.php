@@ -22,7 +22,7 @@ class AttributeMapping
     /** @var string */
     private $mappingType;
 
-    /** @var string */
+    /** @var string|null */
     private $name;
 
     /** @var Attribute */
@@ -31,17 +31,26 @@ class AttributeMapping
     /** @var Attribute */
     private $mappedAttribute;
 
-    private function __construct(string $type)
+    private function __construct(
+        string $type,
+        Attribute $mappingAttribute,
+        Attribute $mappedAttribute
+    )
     {
         if(!in_array($type, self::MAPPING_TYPES)){
             throw new \InvalidArgumentException('Wrong mapping type.');
         }
         $this->mappingType = $type;
+        $this->addMapping($mappingAttribute, $mappedAttribute);
     }
 
-    public static function create(string $type): AttributeMapping
+    public static function create(
+        string $type,
+        Attribute $mappingAttribute,
+        Attribute $mappedAttribute
+    ): AttributeMapping
     {
-        return new self($type);
+        return new self($type, $mappingAttribute, $mappedAttribute);
     }
 
     public function getId(): ?int
@@ -59,10 +68,16 @@ class AttributeMapping
         return $this->mappedAttribute;
     }
 
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
     public function addMapping(Attribute $mappingAttribute, Attribute $mappedAttribute): void
     {
         $this->mappingAttribute = $mappingAttribute;
         $this->mappedAttribute = $mappedAttribute;
+        $this->name = $mappingAttribute->getCode() . '_' . $mappedAttribute->getCode();
     }
 }
 

@@ -30,35 +30,17 @@ class PcmtHelperCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-       /* $path1 = 'src/PcmtCustomDatasetBundle/Resources/fixtures/pcmt_global/import_files/5_families.xlsx';
-        $path2 = 'src/PcmtCustomDatasetBundle/Resources/fixtures/pcmt_global/mapping/E2OpenMapping.xlsx';
-        $xlsReader = new XlsxReader();
-        $readFile = $xlsReader->load($path1);
-        $writeFile = $xlsReader->load($path2);
-        $workSheet = $readFile->getActiveSheet();
-        $saveSheet = $writeFile->getActiveSheet();
-        $xlsWriter = new XlsxWriter($writeFile);
-
-        $cellValue = $workSheet->getCellByColumnAndRow(3, 7)
-            ->getValue()
-            ->__toString();
-
-        $arrayValues = explode(',', $cellValue);
-
-        array_walk(
-            $arrayValues,
-            function ($element, &$key) use ($saveSheet): void {
-                $cell = 'B' . (string) ($key + 2);
-                $saveSheet->setCellValue($cell, $element);
-            }
-        );
-        $xlsWriter->save($path2);*/
-        $mappingAttribute =
-        $mappedAttribute =
+        $attributeRepository = $this->getContainer()->get('pim_catalog.repository.attribute');
+        $mappingAttribute = $attributeRepository->findOneBy([
+            'code' => 'GTIN'
+                                                            ]);
+        $mappedAttribute = $attributeRepository->findOneBy([
+            'code' => 'sku'
+                                                           ]);
         $handler = $this->getContainer()->get('pcmt_e2Open_mapping_handler');
-        dump($handler);
         $handler->createMapping(
-
+            $mappingAttribute,
+            $mappedAttribute
         );
         die;
     }

@@ -61,8 +61,12 @@ class E2OpenMappingHandler
         $mapping = $this->findMapping(
                 $mappingAttribute->getCode(), $mappedAttribute->getCode()
             ) ?? AttributeMapping::create(
-                self::MAPPING_TYPE
+                self::MAPPING_TYPE,
+                $mappingAttribute,
+                $mappedAttribute
             );
+        $this->entityManager->persist($mapping);
+        $this->entityManager->flush();
     }
 
     private function findMapping(string $mappingAttribute, string $mappedAttribute): ?AttributeMapping
@@ -70,7 +74,7 @@ class E2OpenMappingHandler
         return $this->attributeMappingRepository->findOneBy(
             [
                 'name' => $this->composeName($mappingAttribute, $mappedAttribute),
-                'type' => self::MAPPING_TYPE,
+                'mappingType' => self::MAPPING_TYPE,
             ]
         );
     }
@@ -79,10 +83,10 @@ class E2OpenMappingHandler
     {
         $family = $this->familyRepository->findOneBy(
             [
-                'code' => 'GDSN_QUEUE',
+                'code' => 'GS1_GDSN',
             ]
         );
-        return $this->familyRepository->hasAttribute($family->getId(), $attribute->getCode());
+        return $family->hasAttribute($attribute);
     }
 
     private function composeName(string $attribute1, string $attribute2)
