@@ -24,7 +24,6 @@ config:
         pcmt/draft/form/product-model-label: pcmtdraft/js/draft/form/product-model-label
         pcmt/draft/form/product-completeness: pcmtdraft/js/draft/form/product-completeness
         pcmt/draft/form/total-missing-required-attributes: pcmtdraft/js/draft/form/total-missing-required-attributes
-        pcmt/draft/form/history: pcmtdraft/js/draft/form/history
         pcmt/draft/form/comments: pcmtdraft/js/draft/form/comments
         pcmt/draft/form/complete-variant-product: pcmtdraft/js/draft/form/complete-variant-product
         pcmt/draft/form/associations: pcmtdraft/js/draft/form/associations

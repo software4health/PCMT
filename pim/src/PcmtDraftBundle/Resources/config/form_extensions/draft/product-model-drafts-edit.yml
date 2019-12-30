@@ -234,15 +234,6 @@ extensions:
         targetZone: self
         position: 90
 
-    pcmt-product-model-drafts-edit-form-history:
-        module: pcmt/draft/form/history
-        parent: pcmt-product-model-drafts-edit-form-column-tabs
-        targetZone: container
-        aclResourceId: pim_enrich_product_model_history
-        position: 140
-        config:
-            tabCode: pim-product-edit-form-history
-
     pcmt-product-model-drafts-edit-form-completeness-filter:
         module: pcmt/draft/form/attributes/completeness
         parent: pcmt-product-model-drafts-edit-form-attributes
