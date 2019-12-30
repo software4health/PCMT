@@ -46,8 +46,12 @@ config:
         pcmt/product/form/common/column-tabs: pcmtdraft/js/product/form/common/column-tabs
         pcmt/product/form/common/column-tabs-navigation: pcmtdraft/js/product/form/common/column-tabs-navigation
         pcmt/product/form/no-draft: pcmtdraft/js/product/form/no-draft
+        pcmt/product/form/associations: pcmtdraft/js/product/form/associations
 
         pcmt/product-model/edit/form/save: pcmtdraft/js/product-model/form/save
+
+        pim/product-edit-form/associated-product-row/original: pimui/js/product/form/associated-product-row
+        pim/product-edit-form/associated-product-row: pcmtdraft/js/product/form/associated-product-row
 
         ### common ###
         pcmt/draft/common/breadcrumbs: pcmtdraft/js/draft/common/breadcrumbs
