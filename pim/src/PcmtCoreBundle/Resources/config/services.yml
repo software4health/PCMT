@@ -50,4 +50,5 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@pim_catalog.repository.attribute'
+            - '@pim_catalog.repository.family'
             - '@pcmt_catalog.repository.e2open_attribute_mapping'

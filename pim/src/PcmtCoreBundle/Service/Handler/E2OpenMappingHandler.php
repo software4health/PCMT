@@ -9,10 +9,13 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Service\Handler;
 
+use Akeneo\Pim\Enrichment\Component\Product\Exception\InvalidAttributeException;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
+use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtCoreBundle\Connector\Mapping\E2OpenMapping;
 use PcmtCoreBundle\Entity\Mapping\AttributeMapping;
+use PcmtCoreBundle\Exception\Mapping\AttributeNotInFamilyException;
 use PcmtCoreBundle\Repository\AttributeMappingRepository;
 use PcmtCoreBundle\Entity\Attribute;
 
@@ -29,41 +32,62 @@ class E2OpenMappingHandler
     /** @var AttributeRepositoryInterface */
     private $attributeRepository;
 
+    /** @var FamilyRepositoryInterface */
+    private $familyRepository;
+
     /** @var AttributeMappingRepository */
     private $attributeMappingRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         AttributeRepositoryInterface $attributeRepository,
+        FamilyRepositoryInterface $familyRepository,
         AttributeMappingRepository $attributeMappingRepository
     ) {
         $this->entityManager = $entityManager;
         $this->attributeRepository = $attributeRepository;
+        $this->familyRepository = $familyRepository;
         $this->attributeMappingRepository = $attributeMappingRepository;
         $this->attributeList = E2OpenMapping::getE2OpenAttributeNames();
     }
 
     public function createMapping(Attribute $mappingAttribute, Attribute $mappedAttribute): void
     {
-        $mapping = $this->findMapping($mappingAttribute->getCode(), $mappedAttribute->getCode()) ?? AttributeMapping::create(
+        if (!$this->validateAttributeIsE2Open($mappingAttribute)) {
+            throw new AttributeNotInFamilyException(
+                'Attribute ' . $mappingAttribute->getCode() . ' does not belong to family.'
+            );
+        }
+        $mapping = $this->findMapping(
+                $mappingAttribute->getCode(), $mappedAttribute->getCode()
+            ) ?? AttributeMapping::create(
                 self::MAPPING_TYPE
             );
-
     }
 
     private function findMapping(string $mappingAttribute, string $mappedAttribute): ?AttributeMapping
     {
-        return $this->attributeMappingRepository->findBy(
+        return $this->attributeMappingRepository->findOneBy(
             [
                 'name' => $this->composeName($mappingAttribute, $mappedAttribute),
-                'type' => self::MAPPING_TYPE
+                'type' => self::MAPPING_TYPE,
             ]
         );
     }
 
+    private function validateAttributeIsE2Open(Attribute $attribute): bool
+    {
+        $family = $this->familyRepository->findOneBy(
+            [
+                'code' => 'GDSN_QUEUE',
+            ]
+        );
+        return $this->familyRepository->hasAttribute($family->getId(), $attribute->getCode());
+    }
+
     private function composeName(string $attribute1, string $attribute2)
     {
-        return $attribute1.'_'.$attribute2;
+        return $attribute1 . '_' . $attribute2;
     }
 }
 
