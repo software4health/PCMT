@@ -452,4 +452,4 @@ jobs:
         label: pcmt_e2open_import
         type: import
         configuration:
-            xmlFilePath: ''
+            xmlDirPath: ''

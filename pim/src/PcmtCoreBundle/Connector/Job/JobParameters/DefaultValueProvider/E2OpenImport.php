@@ -24,7 +24,7 @@ class E2OpenImport implements DefaultValuesProviderInterface
     public function getDefaultValues(): array
     {
         return [
-            'xmlFilePath' => '',
+            'xmlDirPath' => '',
         ];
     }
 

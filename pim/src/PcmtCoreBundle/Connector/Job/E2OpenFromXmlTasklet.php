@@ -85,34 +85,18 @@ class E2OpenFromXmlTasklet implements TaskletInterface
 
     public function execute(): void
     {
-        $fileGetContentsWrapper = new FileGetContentsWrapper();
-        $filePath = $this->stepExecution->getJobParameters()
-            ->get('xmlFilePath');
+        $dirPath = $this->stepExecution->getJobParameters()
+            ->get('xmlDirPath');
 
-        $xmlInput = $fileGetContentsWrapper->fileGetContents($filePath);
-        $this->xmlReader->elementMap = [
-            '{http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader}StandardBusinessDocumentHeader' => 'Sabre\Xml\Deserializer\enum',
-            '{}tradeItem'                                                                                           => function (
-                Reader $reader
-            ): void {
-                $subTree = $reader->parseInnerTree();
-                array_walk(
-                    $subTree,
-                    function ($element): void {
-                        if ('{}gtin' === $element['name']) {
-                            $this->item = $this->instantiateProduct($element);
-                        }
-                        $this->addToValueMapping($element);
-                    }
-                );
+        $directoryIterator = new \RecursiveDirectoryIterator($dirPath);
+        $recursiveIterator = new \RecursiveIteratorIterator($directoryIterator);
+        $fileIterator = new \RegexIterator($recursiveIterator, '/^.+\.xml$/i', \RecursiveRegexIterator::ALL_MATCHES);
+        $fileIterator->rewind();
 
-                $this->processProduct();
-            },
-        ];
-        try {
-            $this->xmlReader->parse($xmlInput);
-        } catch (\Throwable $exception) {
-            throw $exception;
+        while ($fileIterator->current()) {
+            $currentFile = $fileIterator->key();
+            $this->processFile($currentFile);
+            $fileIterator->next();
         }
     }
 
@@ -150,6 +134,35 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         foreach ($element['value'] as $subElement) {
             $this->addToValueMapping($subElement, $element['name']);
         }
+    }
+
+    private function processFile(string $filePath): void
+    {
+        $fileGetContentsWrapper = new FileGetContentsWrapper();
+        $xmlInput = $fileGetContentsWrapper->fileGetContents($filePath);
+        $xmlHeader = '{http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader}StandardBusinessDocumentHeader';
+        $xmlProductInformationRootNode = '{}tradeItem';
+        $this->xmlReader->elementMap = [
+            $xmlHeader                     => 'Sabre\Xml\Deserializer\enum',
+            $xmlProductInformationRootNode => function (
+                Reader $reader
+            ): void {
+                $subTree = $reader->parseInnerTree();
+                array_walk(
+                    $subTree,
+                    function ($element): void {
+                        if ('{}gtin' === $element['name']) {
+                            $this->item = $this->instantiateProduct($element);
+                        }
+                        $this->addToValueMapping($element);
+                    }
+                );
+
+                $this->processProduct();
+            },
+        ];
+
+        $this->xmlReader->parse($xmlInput);
     }
 
     private function getMapping(string $key): ?string
