@@ -3,7 +3,6 @@
  * Copyright (c) 2019, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
- *
  */
 declare(strict_types=1);
 
@@ -13,8 +12,8 @@ use PcmtCoreBundle\Entity\Attribute;
 
 class AttributeMapping
 {
-    const MAPPING_TYPES = [
-        'E2Open'
+    public const MAPPING_TYPES = [
+        'E2Open',
     ];
     /** @var int */
     private $id;
@@ -35,12 +34,12 @@ class AttributeMapping
         string $type,
         Attribute $mappingAttribute,
         Attribute $mappedAttribute
-    )
-    {
-        if(!in_array($type, self::MAPPING_TYPES)){
+    ) {
+        if (!in_array($type, self::MAPPING_TYPES)) {
             throw new \InvalidArgumentException('Wrong mapping type.');
         }
         $this->mappingType = $type;
+        $this->name = self::composeName($mappingAttribute, $mappedAttribute);
         $this->addMapping($mappingAttribute, $mappedAttribute);
     }
 
@@ -48,8 +47,7 @@ class AttributeMapping
         string $type,
         Attribute $mappingAttribute,
         Attribute $mappedAttribute
-    ): AttributeMapping
-    {
+    ): self {
         return new self($type, $mappingAttribute, $mappedAttribute);
     }
 
@@ -73,11 +71,19 @@ class AttributeMapping
         return $this->name;
     }
 
+    public function getMappingType(): string
+    {
+        return $this->mappingType;
+    }
+
     public function addMapping(Attribute $mappingAttribute, Attribute $mappedAttribute): void
     {
         $this->mappingAttribute = $mappingAttribute;
         $this->mappedAttribute = $mappedAttribute;
-        $this->name = $mappingAttribute->getCode() . '_' . $mappedAttribute->getCode();
+    }
+
+    public static function composeName(Attribute $mappingAttribute, Attribute $mappedAttribute): string
+    {
+        return $mappingAttribute->getCode() . '_' . $mappedAttribute->getCode();
     }
 }
-
