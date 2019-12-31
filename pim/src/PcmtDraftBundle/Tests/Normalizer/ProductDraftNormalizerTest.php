@@ -11,6 +11,7 @@ namespace PcmtDraftBundle\Tests\Normalizer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use Akeneo\UserManagement\Component\Model\User;
 use PcmtDraftBundle\Entity\AbstractDraft;
@@ -57,6 +58,9 @@ class ProductDraftNormalizerTest extends TestCase
     /** @var FormProviderInterface */
     private $formProvider;
 
+    /** @var FamilyInterface|MockObject */
+    private $family;
+
     protected function setUp(): void
     {
         $this->productNew = $this->createMock(Product::class);
@@ -74,6 +78,10 @@ class ProductDraftNormalizerTest extends TestCase
         $this->productNormalizer = $this->createMock(NormalizerInterface::class);
 
         $this->formProvider = $this->createMock(FormProviderInterface::class);
+
+        $this->family = $this->createMock(FamilyInterface::class);
+        $this->productNew->method('getFamily')->willReturn($this->family);
+        $this->productExisting->method('getFamily')->willReturn($this->family);
 
         parent::setUp();
     }

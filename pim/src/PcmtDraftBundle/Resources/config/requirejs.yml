@@ -61,6 +61,7 @@ config:
         pcmt/draft/common/main-image: pcmtdraft/js/draft/common/main-image
         pcmt/draft/common/updated: pcmtdraft/js/draft/common/updated
         pcmt/draft/common/created: pcmtdraft/js/draft/common/created
+        pcmt/draft/common/modal: pcmtdraft/js/draft/common/modal
 
         ### templates ###
         pcmt/product/template/widget/draft-products-widget: pcmtdraft/templates/draft/draft-products-widget.html

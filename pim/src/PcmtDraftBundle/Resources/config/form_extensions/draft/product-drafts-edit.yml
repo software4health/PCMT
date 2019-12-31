@@ -15,7 +15,7 @@ extensions:
         config:
             tab: pim-menu-products
             itemPath: identifier
-            defaultLabel: pcmt_core.drafts_editing.new_product_draft
+            defaultLabel: pcmt_core.drafts_editing.new_product_draft.breadcrumb
 
     pcmt-product-drafts-edit-form-user-navigation:
         module: pim/menu/user-navigation
