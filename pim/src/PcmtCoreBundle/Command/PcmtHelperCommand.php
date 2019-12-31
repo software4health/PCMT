@@ -42,6 +42,5 @@ class PcmtHelperCommand extends ContainerAwareCommand
             $mappingAttribute,
             $mappedAttribute
         );
-        die;
     }
 }
