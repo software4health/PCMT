@@ -8,14 +8,19 @@ PcmtCoreBundle\Entity\Mapping\AttributeMapping:
       type: integer
       generator:
         strategy: AUTO
-  OneToOne:
-    E2OpenAttribute:
-      targetEntity: Attribute
+  fields:
+    mappingType:
+      type: string
+    name:
+      type: string
+  oneToOne:
+    mappingAttribute:
+      targetEntity: PcmtCoreBundle\Entity\Attribute
       joinColumn:
-        name: e2open_attribute_id
+        name: mapping_attribute_id
         referencedColumnName: id
     mappedAttribute:
-      targetEntity: Attribute
+      targetEntity: PcmtCoreBundle\Entity\Attribute
       joinColumn:
         name: mapped_attribute_id
         referencedColumnName: id

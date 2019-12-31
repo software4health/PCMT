@@ -17,8 +17,8 @@ class E2OpenMapping
 
     public static function getE2OpenAttributeNames(): array
     {
-        return array_map(function($name) {
-            if($name != null && $name != '') {
+        return array_map(function ($name) {
+            if (null !== $name && '' !== $name) {
                 return $name;
             }
         }, array_values(self::mapping()));

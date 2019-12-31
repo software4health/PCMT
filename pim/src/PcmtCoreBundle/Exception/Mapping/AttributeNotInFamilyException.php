@@ -6,10 +6,8 @@
  */
 declare(strict_types=1);
 
-namespace PcmtCoreBundle\Repository;
+namespace PcmtCoreBundle\Exception\Mapping;
 
-use Doctrine\ORM\EntityRepository;
-
-class AttributeMappingRepository extends EntityRepository
+class AttributeNotInFamilyException extends \Exception
 {
 }
