@@ -198,7 +198,7 @@ extensions:
         position: 130
         config:
             aclAddAssociations: pim_enrich_associations_edit
-            datagridName: 'association-product-grid'
+            datagridName: 'association-product-draft-grid'
 
     pcmt-product-drafts-edit-form-attribute-group-selector:
         module: pcmt/draft/form/attributes/attribute-group-selector
