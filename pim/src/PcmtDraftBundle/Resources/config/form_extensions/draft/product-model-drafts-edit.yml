@@ -166,7 +166,7 @@ extensions:
         config:
             tabCode: pim-product-edit-form-associations
             aclAddAssociations: pim_enrich_associations_edit
-            datagridName: 'association-product-model-grid'
+            datagridName: 'association-product-model-draft-grid'
 
     pcmt-product-model-drafts-edit-form-attribute-group-selector:
         module: pcmt/draft/form/attributes/attribute-group-selector

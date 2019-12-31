@@ -52,6 +52,7 @@ config:
 
         pim/product-edit-form/associated-product-row/original: pimui/js/product/form/associated-product-row
         pim/product-edit-form/associated-product-row: pcmtdraft/js/product/form/associated-product-row
+        pim/product-edit-form/associated-product-row/draft: pimui/js/product/form/associated-product-row
 
         ### common ###
         pcmt/draft/common/breadcrumbs: pcmtdraft/js/draft/common/breadcrumbs
