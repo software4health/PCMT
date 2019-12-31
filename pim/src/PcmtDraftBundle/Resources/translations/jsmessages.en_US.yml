@@ -20,7 +20,13 @@ pcmt_core:
         page_title:
             index: "]-Inf, 1]{{ count }} draft|]1, Inf[{{ count }} drafts"
     drafts_editing:
-        new_product_draft: New product draft
+        new_product_draft:
+            breadcrumb: New product draft
+            title: Edit draft of a new product
+            success: Draft saved
+        new_product_model_draft:
+            title: Edit draft of a new product model
+            success: Draft saved
         button:
             save_draft: Save draft
     editing:

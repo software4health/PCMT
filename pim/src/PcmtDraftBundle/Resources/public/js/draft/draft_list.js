@@ -17,9 +17,10 @@ define(
         'pcmt/product/template/draft-list',
         'pim/dialog',
         'pim/security-context',
-        'pim/router'
+        'pim/router',
+        'pim/form-builder'
     ],
-    function (BaseForm, Backbone, $, _, __, Routing, template, Dialog, SecurityContext, Router) {
+    function (BaseForm, Backbone, $, _, __, Routing, template, Dialog, SecurityContext, Router, FormBuilder) {
 
         return BaseForm.extend({
             events: {
@@ -80,9 +81,24 @@ define(
                 );
             },
             editDraftClicked: function (ev) {
-                var draftId = ev.currentTarget.dataset.draftId;
+                var draftId = parseInt(ev.currentTarget.dataset.draftId);
+                var draft = _.filter(this.getFormData().drafts, (draft) => {
+                    return draftId === draft.id;
+                })[0];
 
-                Router.navigate('/' + Routing.generate('pcmt_core_drafts_edit', {id: draftId}), true);
+                if ('New product draft' === draft.type) {
+                    return FormBuilder.build('pcmt-product-create-modal').then(modal => {
+                        modal.setData(draft.values);
+                        modal.open();
+                    });
+                } /*else if ('New product model draft' === draft.type) {
+                    return FormBuilder.build('pim-product-model-create-modal').then(modal => {
+                        modal.setData(draft);
+                        modal.open();
+                    });
+                } */else {
+                    Router.navigate('/' + Routing.generate('pcmt_core_drafts_edit', {id: draftId}), true);
+                }
             },
             approveDraft: function (draftId) {
                 $.ajax({

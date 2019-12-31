@@ -70,6 +70,12 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
         $serializer = new Serializer([$this->attributeChangeNormalizer]);
         $data['changes'] = $serializer->normalize($changes);
 
+        $data['values'] = [
+            'draftId'    => $draft->getId(),
+            'identifier' => $newProduct->getIdentifier(),
+            'family'     => $newProduct->getFamily()->getCode(),
+        ];
+
         if ($context['include_product'] ?? false) {
             $data['product'] = $this->productNormalizer->normalize($newProduct, 'internal_api');
             $data['product']['meta']['form'] = $this->formProvider->getForm($draft);

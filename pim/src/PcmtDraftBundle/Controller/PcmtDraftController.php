@@ -13,6 +13,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use PcmtCoreBundle\Service\Builder\ResponseBuilder;
 use PcmtDraftBundle\Entity\AbstractDraft;
+use PcmtDraftBundle\Entity\ExistingProductDraft;
+use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
@@ -105,7 +107,7 @@ class PcmtDraftController
     public function updateDraft(AbstractDraft $draft, Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
-        if (!isset($data['product'])) {
+        if (($draft instanceof ExistingProductDraft || $draft instanceof ExistingProductModelDraft) && !isset($data['product'])) {
             throw new BadRequestHttpException('There is no product values');
         }
 
@@ -116,14 +118,23 @@ class PcmtDraftController
             $data['product']['categories'] = $data['categories'];
         }
 
-        $draft->setProductData($data['product']);
+        if ($draft instanceof ExistingProductDraft || $draft instanceof ExistingProductModelDraft) {
+            $draft->setProductData($data['product']);
+        } else {
+            unset($data['draftId']);
+            $draft->setProductData($data);
+        }
 
         $this->draftFacade->updateDraft($draft);
 
-        return $this->responseBuilder
-            ->setData($draft)
-            ->setContext(['include_product' => true])
-            ->build();
+        $responseBuilder = $this->responseBuilder
+            ->setData($draft);
+
+        if ($draft instanceof ExistingProductDraft || $draft instanceof ExistingProductModelDraft) {
+            $responseBuilder = $responseBuilder->setContext(['include_product' => true]);
+        }
+
+        return $responseBuilder->build();
     }
 
     /**
