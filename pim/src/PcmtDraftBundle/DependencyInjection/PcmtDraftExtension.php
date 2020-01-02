@@ -30,6 +30,7 @@ class PcmtDraftExtension extends Extension
         $loader->load('widget.yml');
         $loader->load('datagrid_listeners.yml');
         $loader->load('pagers.yml');
+        $loader->load('data_sources.yml');
     }
 
     public function getAlias(): string

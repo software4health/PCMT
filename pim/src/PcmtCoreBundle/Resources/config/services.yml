@@ -6,15 +6,6 @@
 
 services:
 
-    pcmt.service.builder.response_builder:
-        class: PcmtCoreBundle\Service\Builder\ResponseBuilder
-        arguments:
-            -
-                - '@pcmt_draft.draft.product_normalizer'
-                - '@pcmt_core.draft.product_model_normalizer'
-                - '@pcmt_core.normalizer.product'
-                - '@pcmt_core.normalizer.product_model'
-
     pcmt_create_attribute_manager:
         class: 'PcmtCoreBundle\Extension\PcmtAttributeManager'
         autowire: true
