@@ -38,9 +38,10 @@ before_script:
   stage: build
   script:
     - bin/ci-build.sh
-    - make dev-test-unit
-    - make dev-test-ecs
     - bin/ci-push.sh
+  artifacts:
+    reports:
+      junit: build/unit-results.xml
 
 pim docker build (on git push):
   extends: 
