@@ -69,15 +69,15 @@ dev-cp-tmp:
 
 .PHONY: dev-test-ecs
 dev-test-ecs:
-	docker-compose -f ./docker-compose.yml -f ./docker-compose.dev.yml run fpm /srv/pim/vendor/bin/ecs check src
+	./ddev.sh run --rm --no-deps fpm /srv/pim/vendor/bin/ecs check src
 
 .PHONY: dev-test-ecs-fix
 dev-test-ecs-fix:
-	docker-compose -f ./docker-compose.yml -f ./docker-compose.dev.yml run fpm /srv/pim/vendor/bin/ecs check src --fix
+	./ddev.sh run --rm --no-deps fpm /srv/pim/vendor/bin/ecs check src --fix
 
 .PHONY: dev-test-unit
 dev-test-unit:
-	docker-compose -f ./docker-compose.yml -f ./docker-compose.dev.yml run fpm /srv/pim/vendor/phpunit/phpunit/phpunit -c /srv/pim/phpunit.xml.dist
+	bin/test.sh
 
 .PHONY: terraform
 terraform:
