@@ -12,13 +12,15 @@ use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtCoreBundle\Connector\Mapping\E2OpenMapping;
 use PcmtCoreBundle\Entity\Attribute;
-use PcmtCoreBundle\Entity\Mapping\AttributeMapping;
+use PcmtCoreBundle\Entity\AttributeMapping;
 use PcmtCoreBundle\Exception\Mapping\AttributeNotInFamilyException;
 use PcmtCoreBundle\Repository\AttributeMappingRepository;
 
 class E2OpenMappingHandler implements AttributeMappingHandlerInterface
 {
-    private const MAPPING_TYPE = 'E2Open';
+    public const MAPPING_TYPE = 'E2Open';
+
+    public const FAMILY_CODE = 'GS1_GDSN';
 
     /** @var EntityManagerInterface */
     private $entityManager;
@@ -53,11 +55,12 @@ class E2OpenMappingHandler implements AttributeMappingHandlerInterface
         $mapping = $this->findMapping(
             $mappingAttribute,
             $mappedAttribute
-        ) ?? AttributeMapping::create(
-            self::MAPPING_TYPE,
-            $mappingAttribute,
-            $mappedAttribute
-        );
+        ) ??
+            new AttributeMapping(
+                self::MAPPING_TYPE,
+                $mappingAttribute,
+                $mappedAttribute
+            );
         $this->entityManager->persist($mapping);
         $this->entityManager->flush();
     }
@@ -67,12 +70,13 @@ class E2OpenMappingHandler implements AttributeMappingHandlerInterface
         return $this->attributeList;
     }
 
-    private function findMapping(Attribute $mappingAttribute, Attribute $mappedAttribute): ?AttributeMapping
+    private function findMapping(Attribute $externalAttribute, Attribute $pcmtAttribute): ?AttributeMapping
     {
         return $this->attributeMappingRepository->findOneBy(
             [
-                'name'        => $this->composeName($mappingAttribute, $mappedAttribute),
-                'mappingType' => self::MAPPING_TYPE,
+                'externalAttribute' => $externalAttribute,
+                'pcmtAttribute'     => $pcmtAttribute,
+                'mappingType'       => self::MAPPING_TYPE,
             ]
         );
     }
@@ -81,15 +85,10 @@ class E2OpenMappingHandler implements AttributeMappingHandlerInterface
     {
         $family = $this->familyRepository->findOneBy(
             [
-                'code' => 'GS1_GDSN',
+                'code' => self::FAMILY_CODE,
             ]
         );
 
         return $family->hasAttribute($attribute);
-    }
-
-    private function composeName(Attribute $attribute1, Attribute $attribute2): string
-    {
-        return AttributeMapping::composeName($attribute1, $attribute2);
     }
 }

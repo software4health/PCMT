@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 parameters:
-    pcmt_catalog.entity.attribute_mapping: PcmtCoreBundle\Entity\Mapping\AttributeMapping
+    pcmt_catalog.entity.attribute_mapping: PcmtCoreBundle\Entity\AttributeMapping
 services:
 
     pcmt_catalog.repository.family_variant:

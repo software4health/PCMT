@@ -1,4 +1,4 @@
-PcmtCoreBundle\Entity\Mapping\AttributeMapping:
+PcmtCoreBundle\Entity\AttributeMapping:
   type: entity
   table: pcmt_catalog_attribute_mapping
   changeTrackingPolicy: DEFERRED_EXPLICIT
@@ -11,16 +11,14 @@ PcmtCoreBundle\Entity\Mapping\AttributeMapping:
   fields:
     mappingType:
       type: string
-    name:
-      type: string
   oneToOne:
-    mappingAttribute:
+    externalAttribute:
       targetEntity: PcmtCoreBundle\Entity\Attribute
       joinColumn:
-        name: mapping_attribute_id
+        name: external_attribute_id
         referencedColumnName: id
-    mappedAttribute:
+    pcmtAttribute:
       targetEntity: PcmtCoreBundle\Entity\Attribute
       joinColumn:
-        name: mapped_attribute_id
+        name: pcmt_attribute_id
         referencedColumnName: id
