@@ -25,9 +25,6 @@ class E2OpenMappingHandler implements AttributeMappingHandlerInterface
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    /** @var Attribute[] */
-    private $attributeList = [];
-
     /** @var FamilyRepositoryInterface */
     private $familyRepository;
 
@@ -63,11 +60,6 @@ class E2OpenMappingHandler implements AttributeMappingHandlerInterface
             );
         $this->entityManager->persist($mapping);
         $this->entityManager->flush();
-    }
-
-    public function getAttributeList(): array
-    {
-        return $this->attributeList;
     }
 
     private function findMapping(Attribute $externalAttribute, Attribute $pcmtAttribute): ?AttributeMapping
