@@ -48,4 +48,28 @@ class AttributeChangeService
         }
         $this->changes[] = new AttributeChange($attribute, (string) $previousValue, (string) $value);
     }
+
+    public function getUniversal(?object $newObject, ?object $previousObject): array
+    {
+        $this->changes = [];
+
+        if (!$newObject) {
+            return $this->changes;
+        }
+
+        $newValues = $this->versioningSerializer->normalize($newObject, 'flat');
+        $previousValues = $previousObject ?
+            $this->versioningSerializer->normalize($previousObject, 'flat') :
+            [];
+
+        $attributes = array_unique(array_merge(array_keys($newValues), array_keys($previousValues)));
+        foreach ($attributes as $attribute) {
+            $newValue = $newValues[$attribute] ?? null;
+            $previousValue = $previousValues[$attribute] ?? null;
+            $attribute = (string) $attribute;
+            $this->createChange($attribute, $newValue, $previousValue);
+        }
+
+        return $this->changes;
+    }
 }
