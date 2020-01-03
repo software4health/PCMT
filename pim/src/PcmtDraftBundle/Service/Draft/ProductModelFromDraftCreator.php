@@ -18,6 +18,7 @@ use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterI
 use Akeneo\Tool\Component\StorageUtils\Factory\SimpleFactoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
+use Doctrine\Common\Collections\ArrayCollection;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\NewProductModelDraft;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
@@ -90,6 +91,7 @@ class ProductModelFromDraftCreator
 
         // cloning values, otherwise the original values would also be overwritten
         $newProductModel->setValues(new WriteValueCollection());
+        $newProductModel->setAssociations(new ArrayCollection());
         foreach ($productModel->getValues() as $value) {
             $newProductModel->addValue($value);
         }

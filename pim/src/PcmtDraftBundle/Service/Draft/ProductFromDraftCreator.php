@@ -18,6 +18,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
+use Doctrine\Common\Collections\ArrayCollection;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\NewProductDraft;
@@ -96,6 +97,7 @@ class ProductFromDraftCreator
 
         // cloning values, otherwise the original values would also be overwritten
         $newProduct->setValues(new WriteValueCollection());
+        $newProduct->setAssociations(new ArrayCollection());
         foreach ($product->getValuesForVariation() as $value) {
             $newProduct->addValue($value);
         }
