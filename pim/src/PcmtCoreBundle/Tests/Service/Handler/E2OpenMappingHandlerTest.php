@@ -46,7 +46,7 @@ class E2OpenMappingHandlerTest extends TestCase
         $e2OpenMappingHandler = $this->getE2OpenMappingHandlerInstance();
         $this->familyRepositoryMock->expects($this->once())
             ->method('findOneBy')
-            ->with(['code' => 'GS1_GDSN'])
+            ->with(['code' => E2OpenMappingHandler::FAMILY_CODE])
             ->willReturn($familyMock);
 
         $familyMock->expects($this->once())
@@ -66,7 +66,7 @@ class E2OpenMappingHandlerTest extends TestCase
         $e2OpenMappingHandler = $this->getE2OpenMappingHandlerInstance();
         $this->familyRepositoryMock->expects($this->once())
             ->method('findOneBy')
-            ->with(['code' => 'GS1_GDSN'])
+            ->with(['code' => E2OpenMappingHandler::FAMILY_CODE])
             ->willReturn($familyMock);
 
         $familyMock->expects($this->once())
