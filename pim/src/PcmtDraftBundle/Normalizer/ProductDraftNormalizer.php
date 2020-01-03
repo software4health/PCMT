@@ -73,7 +73,7 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
         $data['values'] = [
             'draftId'    => $draft->getId(),
             'identifier' => $newProduct->getIdentifier(),
-            'family'     => $newProduct->getFamily()->getCode(),
+            'family'     => $newProduct->getFamily() ? $newProduct->getFamily()->getCode() : '-',
         ];
 
         if ($context['include_product'] ?? false) {
