@@ -66,3 +66,17 @@ services:
         calls:
             - [setDraftSaver, ['@pcmt_core.save.productModelDraft']]
             - [setResponseBuilder, ['@pcmt.service.builder.response_builder']]
+
+    pcmt.draft.controller.product_category:
+        class: 'PcmtDraftBundle\Controller\PcmtProductCategoryController'
+        parent: pim_enrich.controller.rest.product_category
+        calls:
+            - [setEntityManager, ['@doctrine.orm.entity_manager']]
+            - [setCreator, ['@pcmt.service.product_from_draft_creator']]
+
+    pcmt.draft.controller.product_model_category:
+        class: 'PcmtDraftBundle\Controller\PcmtProductModelCategoryController'
+        parent: pim_enrich.controller.rest.product_model_category
+        calls:
+            - [setEntityManager, ['@doctrine.orm.entity_manager']]
+            - [setCreator, ['@pcmt.service.product_model_from_draft_creator']]

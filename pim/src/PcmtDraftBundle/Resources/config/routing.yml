@@ -44,3 +44,18 @@ pcmt_core_drafts_approve:
     requirements:
         id: \d+
     methods: [PUT]
+
+pcmt_draft_product_category_rest_list:
+    path: /rest/draft/product/{id}/categories
+    defaults: { _controller: pcmt.draft.controller.product_category:listAction }
+    requirements:
+        id: '[0-9a-f]+'
+    methods: [GET]
+
+pcmt_draft_product_model_category_rest_list:
+    path: /rest/draft/product_model/{id}/categories
+    defaults: { _controller: pcmt.draft.controller.product_model_category:listAction }
+    requirements:
+        id: '[0-9a-f]+'
+    methods: [GET]
+
