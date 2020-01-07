@@ -55,6 +55,7 @@ pim docker build (manual retry):
 pim_erd:
   extends: .pim_only_changes
   stage: deploy
+  allow_failure: true
   script:
     - bin/ci-erd.sh "http://docker"
   artifacts:
