@@ -98,6 +98,7 @@ class ProductFromDraftCreator
         // cloning values, otherwise the original values would also be overwritten
         $newProduct->setValues(new WriteValueCollection());
         $newProduct->setAssociations(new ArrayCollection());
+        $newProduct->setCategories(new ArrayCollection());
         foreach ($product->getValuesForVariation() as $value) {
             $newProduct->addValue($value);
         }

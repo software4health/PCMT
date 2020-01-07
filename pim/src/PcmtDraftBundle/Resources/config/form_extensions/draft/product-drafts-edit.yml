@@ -188,7 +188,7 @@ extensions:
         position: 120
         config:
             itemCategoryListRoute: pim_enrich_product_listcategories
-            itemCategoryTreeRoute: pim_enrich_product_category_rest_list
+            itemCategoryTreeRoute: pcmt_draft_product_category_rest_list
 
     pcmt-product-drafts-edit-form-associations:
         module: pcmt/draft/form/associations
