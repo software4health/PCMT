@@ -131,7 +131,7 @@ extensions:
         position: 75
 
     pcmt-product-drafts-edit-form-status-switcher:
-        module: pim/product-edit-form/meta/status-switcher
+        module: pcmt/draft/form/meta/status-switcher
         parent: pcmt-product-drafts-edit-form-meta
         targetZone: meta
         aclResourceId: pim_enrich_product_change_state

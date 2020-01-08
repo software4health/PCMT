@@ -40,6 +40,7 @@ config:
         pcmt/draft/form/meta/family: pcmtdraft/js/draft/form/meta/family
         pcmt/draft/form/meta/family-variant: pcmtdraft/js/draft/form/meta/family-variant
         pcmt/draft/form/meta/change-family: pcmtdraft/js/draft/form/meta/change-family
+        pcmt/draft/form/meta/status-switcher: pcmtdraft/js/draft/form/meta/status-switcher
 
         pcmt/product/edit/form/save: pcmtdraft/js/product/form/save
         pcmt/product/form/categories: pcmtdraft/js/product/form/categories

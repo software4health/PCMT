@@ -36,8 +36,8 @@ class AttributeChangeService
      */
     protected function createChange(string $attribute, $value, $previousValue): void
     {
-        $value = $value ?: null;
-        $previousValue = $previousValue ?: null;
+        $value = '' === $value ? null : $value;
+        $previousValue = '' === $previousValue ? null : $previousValue;
 
         if ($value === $previousValue) {
             return;
