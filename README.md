@@ -76,10 +76,15 @@ bin/console <command>
 
 ### Configuration
 
-PCMT secrets are primarly configured by setting an environment variable named
-`PCMT_SECRET_CONF` to point to a file that holds the appropriate Akeneo 
-`parameters.yml` file.  An example template file is included in the `conf`
-directory.
+PCMT secrets and traefik configuration are primarly configured through 
+configuration files found in the `conf/` directory.  Examples can be found there
+with the extension `.dist`.  If you'd like to change these defaults you should
+copy the `.dist` file to a similarly named file in `conf/` without the `.dist`.
+
+For example: `cp conf/parameters.yml.dist conf/parameters.yml`
+
+Then you may point PCMT to the new configuration file by setting an environment
+variable.
 
 Example:
 
@@ -90,8 +95,45 @@ export PCMT_SECRET_CONF=conf/parameters.yml
 make up
 ```
 
+The following environment variables point to their respective configuration
+files:
+
+* `PCMT_SECRET_CONF`: Points to a file with secrets used to configure Akeneo.
+* `PCMT_TRAEFIK_CONF`: Points to a file with traefik static configuration.
+
 MySQL and ElasticSearch are both configured through their respective docker
 container defaults, for now.
+
+#### SSL
+
+The `reverse-proxy` container is responsible for TLS termination using 
+[Traefik][traefik].  This repository includes a default static configuration
+that's configurable via the file referenced in `$PCMT_TRAEFIK_CONF`, and a 
+dynamic configuration that is based on the docker provider, a default 
+configuration is included in [docker-compose.tls.yml](docker-compose.tls.yml).
+
+The default configuration could be used by:
+
+```shell
+PCMT_PROFILE=dev docker-compose -f docker-compose.yml \
+    -f docker-compose.tls.yml \
+    up
+```
+
+It's recommended that:
+- Make a copy of [conf/traefik.toml.dist](conf/traefik.toml.dist) as
+  `conf/traefik.toml` and change:
+    - Set the `email` field to a valid email.
+    - Remove the line `caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"`.
+- Set a publicly available hostname with `PCMT_HOSTNAME` when launching, e.g.
+  `PCMT_HOSTNAME=pcmt.villagereach.org docker-compose -f docker-compose.yml -f docker-compose.tls.yml up`
+  as this will be used to get a certificate with [LetsEncrypt][letsencrypt].
+
+Note that if you re-launch and change `PCMT_HOSTNAME` that you may need to
+remove the existing certs in the docker volume `traefikdata`.
+
+[traefik]: https://docs.traefik.io
+[letsencrypt]: https://letsencrypt.org
 
 #### Reference Data
 
