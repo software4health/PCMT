@@ -1,25 +1,24 @@
 ---
-- name: Create app and conf directories
+- name: Clear app directory
   file:
-    path: /app/conf
+    path: /app/
+    state: absent
+- name: Create app directory
+  file:
+    path: /app/
     state: directory
     mode: 0744 
-- name: Get PCMT docker-compose file
-  get_url: 
-    url:  "{{ pcmt_asset_url }}/docker-compose.yml"
+- name: Get PCMT asset archive
+  get_url:
+    url: "{{ pcmt_asset_url }}"
+    dest: /app/pcmt.tar.gz
+- name: Unarchive pcmt
+  unarchive:
+    src: /app/pcmt.tar.gz
     dest: /app/
-- name: Get PCMT .env file
-  get_url: 
-    url:  "{{ pcmt_asset_url }}/.env"
-    dest: /app/
-- name: Get PCMT settings.env file
-  get_url: 
-    url:  "{{ pcmt_asset_url }}/settings.env"
-    dest: /app/
-- name: Get PCMT parameters.yml file
-  get_url: 
-    url:  "{{ pcmt_asset_url }}/conf/parameters.yml.dist"
-    dest: /app/conf/parameters.yml
+    remote_src: yes
+    extra_opts:
+      - --strip-components=1
 - name: Pull and Start PCMT images
   vars:
     pcmt_profile: "{{ lookup('env', 'PCMT_PROFILE') }}"
@@ -27,11 +26,13 @@
   environment:
     PCMT_PROFILE: "{{ pcmt_profile }}"
     PCMT_VER: "{{ pcmt_ver }}"
-    PCMT_SECRET_CONF: "conf/parameters.yml"
+    PCMT_SECRET_CONF: "./conf/parameters.yml.dist"
+    PCMT_TRAEFIK_CONF: "./conf/traefik.toml.dist"
   docker_service:
     project_src: /app
     build: no
     pull: yes
+    remove_orphans: yes
     restarted: yes
     state: present
 - name: Prune docker system

@@ -22,6 +22,6 @@ fi
 echo "Deploying $PCMT_VER"
     
 COMMIT_SHA=$(git rev-parse HEAD)
-export PCMT_ASSET_URL="https://gitlab.com/pcmt/pcmt/raw/$COMMIT_SHA"
+export PCMT_ASSET_URL="https://gitlab.com/pcmt/pcmt/-/archive/$COMMIT_SHA/pcmt-$COMMIT_SHA.tar.gz"
 
 . $DIR/../deploy/terraform/run-docker.sh $ENV_NAME apply -auto-approve
