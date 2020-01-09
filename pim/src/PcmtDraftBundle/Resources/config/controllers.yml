@@ -11,6 +11,10 @@ services:
         arguments:
             $constraintViolationNormalizer: '@pim_enrich.normalizer.product_violation'
 
+    pcmt_core.controller.product:
+        class: 'PcmtDraftBundle\Controller\PcmtUiProductController'
+        parent: pim_enrich.controller.product
+
     ### overrides product controller
     pim_enrich.controller.rest.product:
         class: PcmtDraftBundle\Controller\PcmtProductController

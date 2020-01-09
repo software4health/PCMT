@@ -86,3 +86,10 @@ extensions:
         config:
             aclAddAssociations: pim_enrich_associations_edit
             datagridName: 'association-product-grid'
+
+    pim-product-edit-form-status-switcher:
+        module: pcmt/product/form/meta/status-switcher-disabled
+        parent: pim-product-edit-form-meta
+        targetZone: meta
+        aclResourceId: pim_enrich_product_change_state
+        position: 80
