@@ -30,9 +30,11 @@ before_script:
 .pim_only_changes:
   only:
     changes:
-      - pim/**/*
+      - 'pim/**/*'
       - '.env'
+      - 'conf/**/*'
       - 'docker-compose.yml'
+      - 'docker-compose.tls.yml'
 
 .pim_docker_build:
   stage: build

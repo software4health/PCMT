@@ -11,6 +11,13 @@ if [ -z "$1" ]; then
     echo IP Argument Missing
     exit 1
 fi
+TARGET_IP=$1
+
+if [ -z "$2" ]; then
+    echo Domain Name Missing
+    exit 1
+fi
+HOSTNAME=$2
 
 if [ -z "$AWS_ACCESS_KEY_ID" ]; then
     echo Environment variable AWS_ACCESS_KEY_ID Missing
@@ -22,7 +29,6 @@ if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
     exit 1
 fi
 
-TARGET_IP=$1
 
 docker run --rm \
     -e AWS_ACCESS_KEY_ID \
@@ -32,7 +38,8 @@ docker run --rm \
     -e PCMT_ASSET_URL \
     -v pcmt-ssh-key:/tmp/.ssh \
     pcmt/ansible ansible-playbook \
+        --limit "$TARGET_IP" \
         -v \
         -i inventory playbook.yml \
         -e ansible_ssh_user=ubuntu \
-        --limit $TARGET_IP
+        -e pcmt_hostname="$HOSTNAME"

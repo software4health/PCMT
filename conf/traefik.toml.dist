@@ -13,9 +13,8 @@
         address = ":443"
 
 [certificatesResolvers.le.acme]
-    email = "pcmt@example.com"
+    email = "pcmt2@villagereach.org"
     storage = "/tmp/certs/acme.json"
-    caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
     [certificatesResolvers.le.acme.httpChallenge]
         entryPoint = "web"
 
