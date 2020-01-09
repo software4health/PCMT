@@ -339,3 +339,65 @@ env-ethiopia-beta-destroy:
   environment:
     name: ethiopia-beta
     action: stop
+
+############### GFPVAN Prod Environment ###############
+
+.env-gfpvan:
+  extends:
+    - .pim_only_changes
+  stage: deploy
+  only:
+    - master@pcmt/pcmt
+  when: manual
+  environment:
+    name: gfpvan
+    url: http://gfpvan.pcmt.villagereach.org
+
+.env-gfpvan_script-deploy:
+  script:
+    - ./bin/ci-deploy.sh gfpvan
+    
+env-gfpvan (WIPE DB):
+  extends:
+    - .env-gfpvan
+    - .env-gfpvan_script-deploy
+  variables:
+    PCMT_PROFILE: dev
+
+env-gfpvan (KEEP DB):
+  extends:
+    - .env-gfpvan
+    - .env-gfpvan_script-deploy
+  variables:
+    PCMT_PROFILE: production
+
+############### GFPVAN UAT Environment ###############
+
+.env-gfpvan-uat:
+  extends:
+    - .pim_only_changes
+  stage: deploy
+  only:
+    - master@pcmt/pcmt
+  when: manual
+  environment:
+    name: gfpvan-uat
+    url: http://gfpvan-uat.pcmt.villagereach.org
+
+.env-gfpvan-uat_script-deploy:
+  script:
+    - ./bin/ci-deploy.sh gfpvan-uat
+    
+env-gfpvan-uat (WIPE DB):
+  extends:
+    - .env-gfpvan-uat
+    - .env-gfpvan-uat_script-deploy
+  variables:
+    PCMT_PROFILE: dev
+
+env-gfpvan-uat (KEEP DB):
+  extends:
+    - .env-gfpvan-uat
+    - .env-gfpvan-uat_script-deploy
+  variables:
+    PCMT_PROFILE: production
