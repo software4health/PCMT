@@ -21,7 +21,7 @@ class AttributeTranslation extends BaseAttributeTranslation
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
