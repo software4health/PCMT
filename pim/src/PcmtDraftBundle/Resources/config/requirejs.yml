@@ -48,6 +48,7 @@ config:
         pcmt/product/form/common/column-tabs-navigation: pcmtdraft/js/product/form/common/column-tabs-navigation
         pcmt/product/form/no-draft: pcmtdraft/js/product/form/no-draft
         pcmt/product/form/associations: pcmtdraft/js/product/form/associations
+        pcmt/product/form/meta/status-switcher-disabled: pcmtdraft/js/product/form/meta/status-switcher-disabled
 
         pcmt/product-model/edit/form/save: pcmtdraft/js/product-model/form/save
 
@@ -72,6 +73,7 @@ config:
         pcmt/product/template/filters: pcmtdraft/templates/draft/filters.html
         pcmt/product/template/form/no-draft: pcmtdraft/templates/product/form/no-draft.html
         pcmt/product/template/form/column-tabs-navigation: pcmtdraft/templates/product/form/column-tabs-navigation.html
+        pcmt/product/template/product/form/status-switcher-disabled: pcmtdraft/templates/product/form/status-switcher-disabled.html
 
         ### controllers ###
         pcmt/product/drafts/index: pcmtdraft/js/controller/drafts_index

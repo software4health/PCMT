@@ -45,6 +45,13 @@ pcmt_core_drafts_approve:
         id: \d+
     methods: [PUT]
 
+pim_enrich_product_toggle_status:
+    path: /{id}/toggle-status
+    defaults: { _controller: pcmt_core.controller.product:toggleStatusAction }
+    requirements:
+        id: '[0-9a-f]+'
+    methods: [POST]
+
 pcmt_draft_product_category_rest_list:
     path: /rest/draft/product/{id}/categories
     defaults: { _controller: pcmt.draft.controller.product_category:listAction }
