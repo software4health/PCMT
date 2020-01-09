@@ -87,7 +87,7 @@ class MstSupplierExportReader extends ProductReader implements CrossJoinExportRe
         $filters[] = [
             'field'    => 'family',
             'value'    => [
-                0 => 'MD_SUPPLIER_MASTER',
+                0 => 'MD_HUB',
             ],
             'operator' => 'IN',
         ];

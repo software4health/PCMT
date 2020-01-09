@@ -34,14 +34,7 @@ services:
             - '@pcmt_connector.reader.database.mst_supplier_export'
             - '@pim_connector.processor.normalization.product'
             - '@pcmt_connector.writer.file.mst_supplier'
-            - '%pim_job_product_batch_size%'
-
-    pcmt_connector.step.hash_first_cell:
-        class: 'PcmtCoreBundle\Connector\Job\Step\HashFirstCellStep'
-        arguments:
-            - 'hash_first_cell'
-            - '@event_dispatcher'
-            - '@akeneo_batch.job_repository'
+            - '1'
 
     pcmt_xml_connector.step.xml_reference_data_download:
         class: PcmtCoreBundle\Step\ImportRefDataFiles

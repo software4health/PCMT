@@ -9,6 +9,8 @@ services:
     pcmt_connector.writer.file.e2open:
         class: 'PcmtCoreBundle\Connector\Job\Writer\E2OpenWriter'
         parent: 'pim_connector.writer.file.xlsx_product'
+        calls:
+          - [setFlatItemBufferFlusher, ["@pcmt_connector.job.writer.file.e2open_flat_item_buffer_flusher"]]
 
     pcmt_connector.writer.file.mst_supplier:
         class: 'PcmtCoreBundle\Connector\Job\Writer\MstSupplierExportWriter'
@@ -18,3 +20,8 @@ services:
         class: PcmtCoreBundle\Writer\ReferenceDataWriter
         arguments:
             - '@pcmt_connector.save.reference_data'
+
+    pcmt_connector.job.writer.file.e2open_flat_item_buffer_flusher:
+        class: 'PcmtCoreBundle\Connector\Job\Writer\File\E2OpenFlatItemBufferFlusher'
+        arguments:
+            - '@pim_connector.writer.file.product.column_sorter'
