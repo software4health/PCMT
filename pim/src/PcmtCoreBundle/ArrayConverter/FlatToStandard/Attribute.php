@@ -43,6 +43,9 @@ class Attribute extends BaseAttribute
      */
     protected function convertFields($field, $booleanFields, $data, $convertedItem): array
     {
+        if ('concatenated' === $field) {
+            return $convertedItem;
+        }
         if (false !== mb_strpos($field, 'description-', 0)) {
             $descriptionTokens = explode('-', $field);
             $descriptionLocale = $descriptionTokens[1];

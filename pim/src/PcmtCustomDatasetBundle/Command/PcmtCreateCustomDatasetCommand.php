@@ -39,8 +39,8 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $bundleDir = __DIR__.'/../';
-        $this->filesFolderPath = $bundleDir.'Resources/fixtures/pcmt_global/import_files/';
+        $bundleDir = __DIR__ . '/../';
+        $this->filesFolderPath = $bundleDir . 'Resources/fixtures/pcmt_global/import_files/2019-11-29/';
         $this->createAttributeGroupsWithoutAttributes($output);
         $importList = $this->getImportList();
         $bar = new ProgressBar($output, count($importList));
@@ -50,7 +50,7 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
             if (0 === strncasecmp($import['fileName'], '/tmp/', 5)) {
                 $currentFilePath = $import['fileName'];
             } else {
-                $currentFilePath = $this->filesFolderPath.$import['fileName'];
+                $currentFilePath = $this->filesFolderPath . $import['fileName'];
             }
             $totalPath = str_replace('/', '\/', $currentFilePath);
             $arguments = [
@@ -60,7 +60,7 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
                 '-v'         => true,
                 '--config'   => sprintf('{"filePath": "%s"}', $totalPath),
             ];
-            $output->writeln("\nnow: ".$import['code'].'...');
+            $output->writeln("\nnow: " . $import['code'] . '...');
             $this->executeCommand($output, $arguments);
             $bar->advance();
         }
@@ -75,7 +75,7 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
     {
         $columnToFilter = 'ColumnToFilter';
         $reader = new XlsxReader();
-        $spreadsheet = $reader->load($this->filesFolderPath.'2_attribute_groups.xlsx');
+        $spreadsheet = $reader->load($this->filesFolderPath . '2_attribute_groups.xlsx');
         $worksheet = $spreadsheet->getActiveSheet();
         $highestColumn = $worksheet->getHighestColumn();
         $highestColumn++;
@@ -89,10 +89,10 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
         }
         $filterSubset = new ReadFilter($columnToFilter);
         $output->writeln('--------------------------------');
-        $output->writeln('Column to filter in 2_attribute_groups.xlsx: '.$columnToFilter);
+        $output->writeln('Column to filter in 2_attribute_groups.xlsx: ' . $columnToFilter);
         $output->writeln('--------------------------------');
         $reader->setReadFilter($filterSubset);
-        $spreadsheet = $reader->load($this->filesFolderPath.'2_attribute_groups.xlsx');
+        $spreadsheet = $reader->load($this->filesFolderPath . '2_attribute_groups.xlsx');
         $writer = new XlsxWriter($spreadsheet);
         $writer->save($this->tmpAttributeGroupsFile);
     }
@@ -152,15 +152,15 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
             ],
             [
                 'code'     => 'pcmt_xlsx_product_import',
-                'fileName' => '8_products.xlsx',
+                'fileName' => '8_1_products_trade_items_rh.xlsx',
             ],
             [
                 'code'     => 'pcmt_xlsx_product_import',
-                'fileName' => '8_products_gs1.xlsx',
+                'fileName' => '8_2_products_trade_items_gdsn_queue.xlsx',
             ],
             [
                 'code'     => 'import_map_suppliers',
-                'fileName' => '9_masterdata_entries.xlsx',
+                'fileName' => '9_masterdata_entries_all.xlsx',
             ],
             [
                 'code'     => 'pcmt_xlsx_datagrid_view_import',
