@@ -31,15 +31,7 @@ class MstSupplierExportReader extends ProductReader implements CrossJoinExportRe
 
     public function setFamilyToCrossRead(string $familyToCrossRead): void
     {
-        $filters = [
-            [
-                'field'    => 'family',
-                'value'    => [
-                    0 => $familyToCrossRead,
-                ],
-                'operator' => 'IN',
-            ],
-        ];
+        $filters = $this->getFiltersWithFamily($familyToCrossRead);
         $this->crossProducts = $this->getProductsCursor($filters, $this->getConfiguredChannel());
     }
 
@@ -71,10 +63,7 @@ class MstSupplierExportReader extends ProductReader implements CrossJoinExportRe
         return $product;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getConfiguredFilters()
+    private function getFiltersWithFamily(string $family): array
     {
         $filters = parent::getConfiguredFilters();
 
@@ -87,11 +76,19 @@ class MstSupplierExportReader extends ProductReader implements CrossJoinExportRe
         $filters[] = [
             'field'    => 'family',
             'value'    => [
-                0 => 'MD_HUB',
+                0 => $family,
             ],
             'operator' => 'IN',
         ];
 
         return $filters;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getConfiguredFilters()
+    {
+        return $this->getFiltersWithFamily('MD_HUB');
     }
 }
