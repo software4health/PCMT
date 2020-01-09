@@ -42,7 +42,7 @@ class MstSupplierExportStep extends ItemStep
      */
     private function getCrossProducts(): array
     {
-        $this->reader->setFamilyToCrossRead('MD_HUB');
+        $this->reader->setFamilyToCrossRead('MD_SUPPLIER_MASTER');
         $itemsToWrite = [];
         while (true) {
             try {
