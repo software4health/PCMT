@@ -10,8 +10,8 @@ namespace PcmtDraftBundle\Controller;
 
 use Akeneo\Pim\Enrichment\Bundle\Controller\InternalApi\MassEditController;
 use Akeneo\Pim\Enrichment\Bundle\MassEditAction\Operation\MassEditOperation;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class PcmtMassEditController extends MassEditController
 {
@@ -21,7 +21,7 @@ class PcmtMassEditController extends MassEditController
     public function launchAction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        if($data['operation'] == 'change_family') {
+        if ('change_family' === $data['operation']) {
             return new JsonResponse(null, 403);
         }
         $data = $this->operationConverter->convert($data);
@@ -31,4 +31,3 @@ class PcmtMassEditController extends MassEditController
         return new JsonResponse();
     }
 }
-
