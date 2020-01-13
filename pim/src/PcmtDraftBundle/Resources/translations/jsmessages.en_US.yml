@@ -27,6 +27,10 @@ pcmt_core:
         new_product_model_draft:
             title: Edit draft of a new product model
             success: Draft saved
+        labels:
+            created_product_draft: You are editing the draft of a product
+            created_product_model_draft: You are editing the draft of a product model
+            updated_draft: This draft was last edited at
         button:
             save_draft: Save draft
     editing:
@@ -38,6 +42,11 @@ pcmt_core:
             title: There is no draft in progress for this product yet
             description: Edit as a draft to start working on changes
         current_draft: Current draft
+        labels:
+            existing_draft: There is a draft IN PROGRESS for this product
+    product_models_editing:
+        labels:
+            existing_draft: There is a draft IN PROGRESS for this product model
     widget:
         drafts_overview:
             product: Product

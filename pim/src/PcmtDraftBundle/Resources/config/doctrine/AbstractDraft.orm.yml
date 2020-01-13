@@ -36,7 +36,9 @@ PcmtDraftBundle\Entity\AbstractDraft:
         productData:
             type: native_json
             nullable: true
-    lifecycleCallbacks: { }
+    lifecycleCallbacks:
+        prePersist: [ updateTimestamps ]
+        preUpdate: [ updateTimestamps ]
     manyToOne:
         product:
             targetEntity: Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface

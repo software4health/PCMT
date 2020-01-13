@@ -93,3 +93,12 @@ extensions:
         targetZone: meta
         aclResourceId: pim_enrich_product_change_state
         position: 80
+
+    pcmt-product-edit-form-label:
+        module: pcmt/product/form/label
+        parent: pim-product-edit-form
+        targetZone: state
+        position: 10
+        config:
+            labels:
+                existingDraft: pcmt_core.products_editing.labels.existing_draft
