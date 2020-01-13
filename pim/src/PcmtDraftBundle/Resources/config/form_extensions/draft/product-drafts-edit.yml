@@ -297,6 +297,16 @@ extensions:
         config:
             context: copy_product
 
+    pcmt-product-drafts-edit-form-label:
+        module: pcmt/draft/form/label
+        parent: pcmt-product-drafts-edit
+        targetZone: state
+        position: 10
+        config:
+            labels:
+                createdDraft: pcmt_core.drafts_editing.labels.created_product_draft
+                updatedDraft: pcmt_core.drafts_editing.labels.updated_draft
+
 attribute_fields:
     akeneo-switch-field:           pim/boolean-field
     akeneo-datepicker-field:       pim/date-field

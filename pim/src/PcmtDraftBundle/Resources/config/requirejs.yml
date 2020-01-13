@@ -29,6 +29,7 @@ config:
         pcmt/draft/form/associations: pcmtdraft/js/draft/form/associations
         pcmt/draft/form/categories: pcmtdraft/js/draft/form/categories
         pcmt/draft/form/completeness: pcmtdraft/js/draft/form/completeness
+        pcmt/draft/form/label: pcmtdraft/js/draft/form/label
         pcmt/draft/form/attribute-filter-at-this-level: pcmtdraft/js/draft/form/attribute-filter-at-this-level
         pcmt/draft/form/attribute-filter-missing-required: pcmtdraft/js/draft/form/attribute-filter-missing-required
         pcmt/draft/form/attributes/completeness: pcmtdraft/js/draft/form/attributes/completeness
@@ -49,6 +50,7 @@ config:
         pcmt/product/form/no-draft: pcmtdraft/js/product/form/no-draft
         pcmt/product/form/associations: pcmtdraft/js/product/form/associations
         pcmt/product/form/meta/status-switcher-disabled: pcmtdraft/js/product/form/meta/status-switcher-disabled
+        pcmt/product/form/label: pcmtdraft/js/product/form/label
 
         pcmt/product-model/edit/form/save: pcmtdraft/js/product-model/form/save
 
@@ -66,6 +68,7 @@ config:
         pcmt/draft/common/modal: pcmtdraft/js/draft/common/modal
 
         ### templates ###
+        pcmt/common/template/form/label: pcmtdraft/templates/common/form/label.html
         pcmt/product/template/widget/draft-products-widget: pcmtdraft/templates/draft/draft-products-widget.html
         pcmt/product/template/widget/view-all-btn: pcmtdraft/templates/draft/view-all-btn.html
         pcmt/product/template/draft-list: pcmtdraft/templates/draft/draft-list.html

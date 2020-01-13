@@ -44,6 +44,7 @@ class DraftNormalizer implements NormalizerInterface
         $data = [];
         $data['id'] = $draft->getId();
         $data['createdAt'] = $draft->getCreatedAtFormatted();
+        $data['updatedAt'] = $draft->getUpdatedAtFormatted();
         $author = $draft->getAuthor();
         $data['author'] = $author ?
             $author->getFirstName() . ' ' . $author->getLastName() :

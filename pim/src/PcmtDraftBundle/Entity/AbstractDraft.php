@@ -80,6 +80,11 @@ abstract class AbstractDraft implements DraftInterface
         return Carbon::parse($this->created)->isoFormat('LLLL');
     }
 
+    public function getUpdatedAtFormatted(): string
+    {
+        return $this->updated ? Carbon::parse($this->updated)->isoFormat('LLLL') : '';
+    }
+
     public function getAuthor(): UserInterface
     {
         return $this->author;
@@ -118,5 +123,28 @@ abstract class AbstractDraft implements DraftInterface
     public function setProductData(array $productData): void
     {
         $this->productData = $productData;
+    }
+
+    public function setCreated(\DateTime $created): void
+    {
+        $this->created = $created;
+    }
+
+    public function setUpdated(\DateTime $updated): void
+    {
+        $this->updated = $updated;
+    }
+
+    public function getCreated(): \DateTime
+    {
+        return $this->created;
+    }
+
+    public function updateTimestamps(): void
+    {
+        $this->setUpdated(new \DateTime('now'));
+        if (null === $this->getCreated()) {
+            $this->setCreated(new \DateTime('now'));
+        }
     }
 }

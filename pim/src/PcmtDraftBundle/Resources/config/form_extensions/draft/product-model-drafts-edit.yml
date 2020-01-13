@@ -261,3 +261,13 @@ extensions:
         parent: pcmt-product-model-drafts-edit-form-attribute-filter
         targetZone: self
         position: 120
+
+    pcmt-product-model-drafts-edit-form-label:
+        module: pcmt/draft/form/label
+        parent: pcmt-product-model-drafts-edit
+        targetZone: state
+        position: 10
+        config:
+            labels:
+                createdDraft: pcmt_core.drafts_editing.labels.created_product_model_draft
+                updatedDraft: pcmt_core.drafts_editing.labels.updated_draft

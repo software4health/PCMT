@@ -88,3 +88,12 @@ extensions:
             tabCode: pim-product-edit-form-associations
             aclAddAssociations: pim_enrich_associations_edit
             datagridName: 'association-product-model-grid'
+
+    pcmt-product-model-edit-form-label:
+        module: pcmt/product/form/label
+        parent: pim-product-model-edit-form
+        targetZone: state
+        position: 10
+        config:
+            labels:
+                existingDraft: pcmt_core.product_models_editing.labels.existing_draft
