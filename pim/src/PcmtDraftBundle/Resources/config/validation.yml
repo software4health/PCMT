@@ -1,0 +1,5 @@
+Akeneo\Pim\Enrichment\Component\Product\Model\Product:
+  properties:
+    family:
+      - NotBlank:
+          message: 'The family must not be blank.'

@@ -131,7 +131,10 @@ class PcmtProductController extends ProductController
             throw new BadRequestHttpException();
         }
 
-        $fields = ['created', 'updated'];
+        $fields = [
+            'created',
+            'updated',
+        ];
         foreach ($fields as $field) {
             if (isset($data[$field])) {
                 unset($data[$field]);
@@ -148,7 +151,9 @@ class PcmtProductController extends ProductController
 
         $this->draftSaver->save($draft);
 
-        return $this->responseBuilder->setData($draft)->setFormat('internal_api')->setContext($this->getNormalizationContext())->build();
+        return $this->responseBuilder->setData($draft)->setFormat('internal_api')->setContext(
+            $this->getNormalizationContext()
+        )->build();
     }
 
     public function setDraftSaver(SaverInterface $draftSaver): void

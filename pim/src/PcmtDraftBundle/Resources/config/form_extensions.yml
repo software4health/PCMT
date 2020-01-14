@@ -7,7 +7,7 @@
 extensions:
     # overridden route - redirection to drafts
     pim-product-create-modal:
-        module: pim/form/common/creation/modal
+        module: pcmt/form/common/creation/modal
         config:
             labels:
                 title: pim_common.create
@@ -19,7 +19,7 @@ extensions:
 
     # overridden route - redirection to drafts
     pim-product-model-create-modal:
-        module: pim/form/common/creation/modal
+        module: pcmt/form/common/creation/modal
         config:
             labels:
                 title: pim_enrich.entity.product_model.module.create.title

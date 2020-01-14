@@ -66,6 +66,11 @@ services:
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 100 }
 
+    pcmt_core.normalizer.product_violation:
+        class: PcmtDraftBundle\Normalizer\ProductViolationNormalizer
+        arguments:
+            - '@pim_catalog.repository.attribute'
+
     pim_catalog.normalizer.standard.product.associations:
         class: '%pim_catalog.normalizer.standard.product.associations.class%'
         tags:

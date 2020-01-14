@@ -57,6 +57,10 @@ config:
         pim/product-edit-form/associated-product-row/original: pimui/js/product/form/associated-product-row
         pim/product-edit-form/associated-product-row: pcmtdraft/js/product/form/associated-product-row
         pim/product-edit-form/associated-product-row/draft: pcmtdraft/js/draft/form/associated-product-row
+        pcmt/product-edit-form/meta/family: pcmtdraft/js/product/form/meta/family
+        pcmt/product/form/meta/change-family-disabled: pcmtdraft/js/product/form/meta/change-family-disabled
+
+        pcmt/mass-edit-form/product/change-family-disabled: pcmtdraft/js/mass-edit/form/product/change-family-disabled
 
         ### common ###
         pcmt/draft/common/breadcrumbs: pcmtdraft/js/draft/common/breadcrumbs
@@ -66,11 +70,14 @@ config:
         pcmt/draft/common/updated: pcmtdraft/js/draft/common/updated
         pcmt/draft/common/created: pcmtdraft/js/draft/common/created
         pcmt/draft/common/modal: pcmtdraft/js/draft/common/modal
+        pcmt/form/common/creation/modal: pcmtdraft/js/draft/form/common/creation/modal
 
         ### templates ###
         pcmt/common/template/form/label: pcmtdraft/templates/common/form/label.html
         pcmt/product/template/widget/draft-products-widget: pcmtdraft/templates/draft/draft-products-widget.html
         pcmt/product/template/widget/view-all-btn: pcmtdraft/templates/draft/view-all-btn.html
+        pcmt/product/template/meta/change-family-disabled: pcmtdraft/templates/product/meta/change-family-modal-disabled.html
+        pcmt/product/template/meta/family: pcmtdraft/templates/product/meta/family.html
         pcmt/product/template/draft-list: pcmtdraft/templates/draft/draft-list.html
         pcmt/product/template/draft-pagination: pcmtdraft/templates/draft/draft-pagination.html
         pcmt/product/template/filters: pcmtdraft/templates/draft/filters.html

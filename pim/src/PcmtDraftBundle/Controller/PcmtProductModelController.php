@@ -206,7 +206,10 @@ class PcmtProductModelController extends ProductModelController
 
         $data = json_decode($request->getContent(), true);
 
-        $fields = ['created', 'updated'];
+        $fields = [
+            'created',
+            'updated',
+        ];
         foreach ($fields as $field) {
             if (isset($data[$field])) {
                 unset($data[$field]);

@@ -49,6 +49,19 @@ extensions:
             itemCategoryListRoute: pim_enrich_product_listcategories
             itemCategoryTreeRoute: pim_enrich_product_category_rest_list
 
+    pim-product-edit-form-family:
+        module: pcmt/product-edit-form/meta/family
+        parent: pim-product-edit-form-meta
+        targetZone: meta
+        position: 70
+
+    pim-product-edit-form-change-family:
+        module: pcmt/product/form/meta/change-family-disabled
+        parent: pim-product-edit-form-family
+        targetZone: buttons
+        aclResourceId: pim_enrich_product_change_family
+        position: 100
+
     pcmt-product-edit-form-no-draft:
         module: pcmt/product/form/no-draft
         parent: pim-product-edit-form-column-tabs
