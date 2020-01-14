@@ -11,6 +11,7 @@ config:
 
         ### form ###
         pcmt/product/form/attributes/read-only-all-attributes: pcmtdraft/js/product/form/attributes/read-only-all-attributes
+        pcmt/product-model/form/add-child/add-child: pcmtdraft/js/product-model/form/add-child/add-child
 
         ### Drafts ###
         pcmt/draft/list: pcmtdraft/js/draft/draft_list
@@ -42,6 +43,7 @@ config:
         pcmt/draft/form/meta/family-variant: pcmtdraft/js/draft/form/meta/family-variant
         pcmt/draft/form/meta/change-family: pcmtdraft/js/draft/form/meta/change-family
         pcmt/draft/form/meta/status-switcher: pcmtdraft/js/draft/form/meta/status-switcher
+        pcmt/draft/form/creation/variant: pcmtdraft/js/draft/form/creation/variant
 
         pcmt/product/edit/form/save: pcmtdraft/js/product/form/save
         pcmt/product/form/categories: pcmtdraft/js/product/form/categories
@@ -51,6 +53,7 @@ config:
         pcmt/product/form/associations: pcmtdraft/js/product/form/associations
         pcmt/product/form/meta/status-switcher-disabled: pcmtdraft/js/product/form/meta/status-switcher-disabled
         pcmt/product/form/label: pcmtdraft/js/product/form/label
+        pcmt/product/form/variant-navigation: pcmtdraft/js/product/form/variant-navigation
 
         pcmt/product-model/edit/form/save: pcmtdraft/js/product-model/form/save
 

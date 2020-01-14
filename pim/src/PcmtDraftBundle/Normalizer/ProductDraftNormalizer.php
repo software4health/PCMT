@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Normalizer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\NewProductDraft;
@@ -29,6 +30,9 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
 
     /** @var NormalizerInterface */
     private $productNormalizer;
+
+    /** @var NormalizerInterface */
+    private $valuesNormalizer;
 
     public function __construct(
         DraftStatusNormalizer $statusNormalizer,
@@ -55,6 +59,11 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
         $this->productAttributeChangeService = $productAttributeChangeService;
     }
 
+    public function setValuesNormalizer(NormalizerInterface $valuesNormalizer): void
+    {
+        $this->valuesNormalizer = $valuesNormalizer;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -74,11 +83,24 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
             'draftId'    => $draft->getId(),
             'identifier' => $newProduct->getIdentifier(),
             'family'     => $newProduct->getFamily() ? $newProduct->getFamily()->getCode() : '-',
+            'parentId'   => $newProduct->getParent() ? $newProduct->getParent()->getId() : null,
+            'parent'     => $newProduct->getParent() ? $newProduct->getParent()->getCode() : null,
         ];
 
         if ($context['include_product'] ?? false) {
             $data['product'] = $this->productNormalizer->normalize($newProduct, 'internal_api');
             $data['product']['meta']['form'] = $this->formProvider->getForm($draft);
+        } else {
+            $values = [];
+
+            $copiedProduct = clone $newProduct;
+            $copiedProduct->setParent(null);
+            foreach ($copiedProduct->getValues() as $value) {
+                /** @var ValueInterface $value */
+                $values[$value->getAttributeCode()][] = $this->valuesNormalizer->normalize($value, 'standard');
+            }
+
+            $data['values']['values'] = $values;
         }
 
         return $data;
