@@ -95,3 +95,7 @@ cron:
 mysql-backup: cron
 	cd deploy/mysql-backup && docker build -t pcmt/mysql-backup .
 
+.PHONY: s3
+s3: cron
+	cd deploy/s3 && docker build -t pcmt/s3 .
+

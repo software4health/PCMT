@@ -4,12 +4,24 @@ services:
         image: pcmt/mysql-backup
         environment:
             CRON_SCHEDULE: '*/2 * * * *'
+            BACKUP_DIR: '/backup'
         secrets:
             - mysql-creds
         volumes:
-            - mysql-backup:/mysql-backup
+            - mysql-backup:/backup
         networks:
             - 'akeneo'
+
+    s3-sync:
+        image: pcmt/s3
+        environment:
+            CRON_SCHEDULE: '1-59/2 * * * *'
+            LOCAL_DIR_TO_SYNC_OUT: '/backup'
+        volumes:
+            - mysql-backup:/backup
+        secrets:
+            - s3-creds
+
 volumes:
     mysql-backup:
         driver: local
@@ -17,4 +29,6 @@ volumes:
 secrets:
     mysql-creds:
         file: "${PCMT_MYSQL_CREDS_CONF:-./conf/mysql-creds.env}"
+    s3-creds:
+        file: "${PCMT_S3_CREDS_CONF:-./conf/aws-s3-creds.env}"
         

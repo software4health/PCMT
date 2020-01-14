@@ -1,6 +1,5 @@
 .idea
 build/
-conf/*.yml
 pim/.cache
 pim/vendor
 web/

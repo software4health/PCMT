@@ -116,6 +116,19 @@ mysql-backup docker build:
     - docker push pcmt/cron:latest
     - docker push pcmt/mysql-backup:latest
 
+ s3 docker build:
+  stage: build
+  only:
+#    refs:
+#      - master@pcmt/pcmt
+    changes:
+      - deploy/s3/**/*
+      - deploy/cron/**/*
+  script:
+    - make s3
+    - docker push pcmt/cron:latest
+    - docker push pcmt/s3:latest
+
 ############### Dev Environment ###############
 
 .env-dev: 

@@ -20,6 +20,9 @@ set +o allexport
 : "${DB_NAME:?DB_NAME not found}"
 : "${DB_USER:?DB_USER not found}"
 : "${DB_PASS:?DB_PASS not found}"
+: "${BACKUP_DIR:=/backup}"
+: "${PCMT_HOSTNAME:=pcmt}"
 
 mysqldump -h $DB_HOST --port="$DB_PORT" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" \
-    | gzip > "/mysql-backup/pcmt-mysql-dump-$(date -u -Iminutes).sql.zip"
+    | gzip \
+    > "$BACKUP_DIR/$PCMT_HOSTNAME-mysql-dump-$(date -u -Iminutes).sql.zip"
