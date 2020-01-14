@@ -76,8 +76,7 @@ ansible docker build:
     changes:
       - deploy/ansible/**/*
   script:
-    - cd deploy/ansible
-    - ./build.sh
+    - make ansible
     - docker push pcmt/ansible:latest
 
 terraform docker build:
@@ -88,9 +87,30 @@ terraform docker build:
     changes:
       - deploy/terraform/**/*
   script:
-    - cd deploy/terraform
-    - ./build.sh
+    - make terraform
     - docker push pcmt/terraform:latest
+
+cron docker build:
+  stage: build
+  only:
+    refs:
+      - master@pcmt/pcmt
+    changes:
+      - deploy/cron/**/*
+  script:
+    - make cron
+    - docker push pcmt/cron:latest
+
+mysql-backup docker build:
+  stage: build
+  only:
+    refs:
+      - master@pcmt/pcmt
+    changes:
+      - deploy/mysql-backup/**/*
+  script:
+    - make mysql-backup
+    - docker push pcmt/mysql-backup:latest
 
 ############### Dev Environment ###############
 

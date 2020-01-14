@@ -1,0 +1,20 @@
+version: "3.5"
+services:
+    mysql-backup:
+        image: pcmt/mysql-backup
+        environment:
+            CRON_SCHEDULE: '*/2 * * * *'
+        secrets:
+            - mysql-creds
+        volumes:
+            - mysql-backup:/mysql-backup
+        networks:
+            - 'akeneo'
+volumes:
+    mysql-backup:
+        driver: local
+
+secrets:
+    mysql-creds:
+        file: "${PCMT_MYSQL_CREDS_CONF:-./conf/mysql-creds.env}"
+        
