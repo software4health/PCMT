@@ -6,7 +6,7 @@
  */
 declare(strict_types=1);
 
-namespace PcmtCoreBundle\Tests\Service\Handler;
+namespace PcmtCoreBundle\Tests\Service\E2Open;
 
 use Akeneo\Pim\Structure\Bundle\Doctrine\ORM\Repository\FamilyRepository;
 use Akeneo\Pim\Structure\Component\Model\Family;
@@ -15,8 +15,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use PcmtCoreBundle\Entity\Attribute;
 use PcmtCoreBundle\Exception\Mapping\AttributeNotInFamilyException;
 use PcmtCoreBundle\Repository\AttributeMappingRepository;
+use PcmtCoreBundle\Service\E2Open\E2OpenMappingHandler;
 use PcmtCoreBundle\Service\Handler\AttributeMappingHandlerInterface;
-use PcmtCoreBundle\Service\Handler\E2OpenMappingHandler;
 use PHPUnit\Framework\MockObject\MockObject as Mock;
 use PHPUnit\Framework\TestCase;
 

@@ -1,12 +1,12 @@
 <?php
 /**
- * Copyright (c) 2019, VillageReach
+ * Copyright (c) 2020, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
  */
 declare(strict_types=1);
 
-namespace PcmtCoreBundle\Service\Handler;
+namespace PcmtCoreBundle\Service\E2Open;
 
 use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,6 +15,7 @@ use PcmtCoreBundle\Entity\Attribute;
 use PcmtCoreBundle\Entity\AttributeMapping;
 use PcmtCoreBundle\Exception\Mapping\AttributeNotInFamilyException;
 use PcmtCoreBundle\Repository\AttributeMappingRepository;
+use PcmtCoreBundle\Service\Handler\AttributeMappingHandlerInterface;
 
 class E2OpenMappingHandler implements AttributeMappingHandlerInterface
 {
