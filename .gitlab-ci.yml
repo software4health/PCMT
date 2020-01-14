@@ -116,7 +116,7 @@ mysql-backup docker build:
     - docker push pcmt/cron:latest
     - docker push pcmt/mysql-backup:latest
 
- s3 docker build:
+s3 docker build:
   stage: build
   only:
     refs:
