@@ -137,13 +137,6 @@ extensions:
         aclResourceId: pim_enrich_product_change_state
         position: 80
 
-    pcmt-product-drafts-edit-form-change-family:
-        module: pcmt/draft/form/meta/change-family
-        parent: pcmt-product-drafts-edit-form-family
-        targetZone: buttons
-        aclResourceId: pim_enrich_product_change_family
-        position: 100
-
     pcmt-product-drafts-edit-form-created:
         module: pcmt/draft/form/meta/created
         parent: pcmt-product-drafts-edit-form-meta
