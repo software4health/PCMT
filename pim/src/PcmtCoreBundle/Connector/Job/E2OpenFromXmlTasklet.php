@@ -11,8 +11,6 @@ namespace PcmtCoreBundle\Connector\Job;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterface;
-use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
-use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use Akeneo\Tool\Bundle\ElasticsearchBundle\Client;
 use Akeneo\Tool\Bundle\ElasticsearchBundle\ClientRegistry;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
@@ -20,7 +18,9 @@ use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use PcmtCoreBundle\Connector\Mapping\E2OpenMapping;
+use PcmtCoreBundle\Service\E2Open\E2OpenAttributesService;
 use PcmtCoreBundle\Util\Adapter\FileGetContentsWrapper;
+use Psr\Log\LoggerInterface;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Service;
 
@@ -41,12 +41,6 @@ class E2OpenFromXmlTasklet implements TaskletInterface
     /** @var ProductRepositoryInterface */
     private $productRepository;
 
-    /** @var AttributeRepositoryInterface */
-    private $attributeRepository;
-
-    /** @var FamilyRepositoryInterface */
-    private $familyRepository;
-
     /** @var ObjectUpdaterInterface */
     private $productUpdater;
 
@@ -59,23 +53,39 @@ class E2OpenFromXmlTasklet implements TaskletInterface
     /** @var ClientRegistry */
     private $elasticClientRegistry;
 
+    /** @var LoggerInterface */
+    private $logger;
+
+    /** @var string[] */
+    private $parentMappingRequired = [
+        '{}gln',
+        '{}partyName',
+        '{}partyAddress',
+        '{}depth',
+        'measurementUnitCode',
+        'languageCode',
+    ];
+
+    /** @var \PcmtCoreBundle\Service\E2Open\E2OpenAttributesService */
+    private $attributesService;
+
     public function __construct(
         ProductRepositoryInterface $productRepository,
-        AttributeRepositoryInterface $attributeRepository,
-        FamilyRepositoryInterface $familyRepository,
         ObjectUpdaterInterface $productUpdater,
         SaverInterface $productSaver,
         ProductBuilderInterface $productBuilder,
-        ClientRegistry $clientRegistry
+        ClientRegistry $clientRegistry,
+        LoggerInterface $logger,
+        E2OpenAttributesService $attributesService
     ) {
         $this->xmlReader = new Service();
         $this->productRepository = $productRepository;
-        $this->attributeRepository = $attributeRepository;
-        $this->familyRepository = $familyRepository;
         $this->productUpdater = $productUpdater;
         $this->productSaver = $productSaver;
         $this->productBuilder = $productBuilder;
         $this->elasticClientRegistry = $clientRegistry;
+        $this->logger = $logger;
+        $this->attributesService = $attributesService;
     }
 
     public function setStepExecution(StepExecution $stepExecution): void
@@ -100,39 +110,47 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         }
     }
 
-    private function addToValueMapping(array $element, string $parent = ''): void
+    private function processNode(array $element, string $parent = ''): void
     {
-        $parentMappingRequired = [
-            '{}gln',
-            '{}partyName',
-            '{}partyAddress',
-            '{}depth',
-            'measurementUnitCode',
-            'languageCode',
-        ];
-
         if (!empty($element['attributes'])) {
+            // there are some additional attributes in node, process them individually
             foreach ($element['attributes'] as $name => $value) {
-                $newElement['name'] = $name;
-                $newElement['value'] = $value;
+                $newElement = [
+                    'name'  => $name,
+                    'value' => $value,
+                ];
+                $this->processNode($newElement, $element['name']);
             }
-            $this->addToValueMapping($newElement, $element['name']);
+            // but don't finish processing here, process also whole node.
         }
 
-        if (!is_array($element['value'])) {
-            switch ($value = $element['name']) {
-                case in_array($value, $parentMappingRequired):
-                    $this->valueMapping[$parent . $element['name']] = E2OpenMapping::mapValue($element['value']);
-                    break;
-                default:
-                    $this->valueMapping[$element['name']] = E2OpenMapping::mapValue($element['value']);
+        if (is_array($element['value'])) {
+            // there are still further nodes
+            foreach ($element['value'] as $subElement) {
+                $this->processNode($subElement, $element['name']);
             }
-
+            // finish processing node in such case
             return;
         }
 
-        foreach ($element['value'] as $subElement) {
-            $this->addToValueMapping($subElement, $element['name']);
+        $name = $element['name'];
+        if (in_array($name, $this->parentMappingRequired)) {
+            $name = $parent . $name;
+        }
+
+        $mappedAttributeCode = E2OpenMapping::findMappingForKey($name);
+        if (!$mappedAttributeCode) {
+            // no mapping defined for this node
+            return;
+        }
+        try {
+            $value = E2OpenMapping::mapValue($element['value']);
+            $this->processProductAttributeValue($mappedAttributeCode, $value, $element['attributes'] ?? []);
+        } catch (\Throwable $exception) {
+            $this->logger->error(
+                'Processing key ' . $element['name'] . ' failed. Key and value will be ignored. ' .
+                'Details: ' . $exception->getMessage()
+            );
         }
     }
 
@@ -148,56 +166,69 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                 Reader $reader
             ): void {
                 $subTree = $reader->parseInnerTree();
+                foreach ($subTree as $element) {
+                    if ('{}gtin' === $element['name']) {
+                        $this->item = $this->instantiateProduct($element);
+                        break;
+                    }
+                }
+                if (!$this->item) {
+                    throw new \Exception('No item has been created.');
+                }
                 array_walk(
                     $subTree,
                     function ($element): void {
-                        if ('{}gtin' === $element['name']) {
-                            $this->item = $this->instantiateProduct($element);
-                        }
-                        $this->addToValueMapping($element);
+                        $this->processNode($element);
                     }
                 );
 
-                $this->processProduct();
+                $this->productSaver->save($this->item);
             },
         ];
 
         $this->xmlReader->parse($xmlInput);
     }
 
-    private function getMapping(string $key): ?string
+    /**
+     * @param string|int $value
+     *
+     * @throws \Exception
+     */
+    private function processProductAttributeValue(string $mappedAttributeCode, $value, ?array $nodeAttributes): void
     {
-        return E2OpenMapping::findMappingForKey($key);
-    }
+        $pcmtAttribute = $this->attributesService->getForCode($mappedAttributeCode);
+        if (!$pcmtAttribute) {
+            throw new \Exception('Attribute not found for ' . $mappedAttributeCode);
+        }
 
-    private function processProduct(): void
-    {
-        foreach ($this->valueMapping as $e2OpenKey => $value) {
-            if (!$mapping = $this->getMapping($e2OpenKey)) {
-                continue;
-            }
-            $pcmtProductFamily = $this->familyRepository->findOneBy(['code' => 'GS1_GDSN']);
-            $pcmtAttribute = $this->attributeRepository->findOneBy(
-                [
-                    'code' => $mapping,
-                ]
-            );
-            if ($pcmtAttribute && $pcmtProductFamily) {
-                if ($pcmtProductFamily->hasAttribute($pcmtAttribute)) {
-                    $valuesToUpdate[$pcmtAttribute->getCode()]['data']['data'] = $value;
-                    $valuesToUpdate[$pcmtAttribute->getCode()]['data']['locale'] = null;
-                    $valuesToUpdate[$pcmtAttribute->getCode()]['data']['scope'] = null;
-                    $this->productUpdater->update(
-                        $this->item,
-                        [
-                            'values' => $valuesToUpdate,
-                        ]
-                    );
+        $unit = null;
+        if (E2OpenAttributesService::MEASURE_UNIT === $pcmtAttribute->getMetricFamily()) {
+            foreach ($nodeAttributes as $name => $v) {
+                if (false !== mb_stripos($name, 'measurementUnitCode')) {
+                    if ($u = $this->attributesService->getMeasureUnitForSymbol($v)) {
+                        $unit = $u;
+                    }
                 }
             }
         }
 
-        $this->productSaver->save($this->item);
+        if ($unit) {
+            // if measurement unit found, this is a special metric field and we need to send array instead of string/int
+            $value = [
+                'unit'   => $unit,
+                'amount' => $value,
+            ];
+        }
+
+        $valuesToUpdate[$pcmtAttribute->getCode()]['data']['data'] = $value;
+        $valuesToUpdate[$pcmtAttribute->getCode()]['data']['locale'] = null;
+        $valuesToUpdate[$pcmtAttribute->getCode()]['data']['scope'] = null;
+        $this->productUpdater->update(
+            $this->item,
+            [
+                'values' => $valuesToUpdate,
+            ]
+        );
     }
 
     private function instantiateProduct(array $element): ProductInterface
@@ -215,7 +246,7 @@ class E2OpenFromXmlTasklet implements TaskletInterface
             ],
             [
                 'match' => [
-                    'family.code' => 'GS1_GDSN',
+                    'family.code' => E2OpenAttributesService::FAMILY_CODE,
                 ],
             ],
         ];
@@ -232,7 +263,7 @@ class E2OpenFromXmlTasklet implements TaskletInterface
     {
         return $this->productBuilder->createProduct(
             $identifier,
-            'GS1_GDSN'
+            E2OpenAttributesService::FAMILY_CODE
         );
     }
 

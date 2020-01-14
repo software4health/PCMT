@@ -37,8 +37,15 @@ services:
         autowire: true
 
     pcmt_e2Open_mapping_handler:
-        class: PcmtCoreBundle\Service\Handler\E2OpenMappingHandler
+        class: PcmtCoreBundle\Service\E2Open\E2OpenMappingHandler
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@pim_catalog.repository.family'
             - '@pcmt_catalog.repository.e2open_attribute_mapping'
+            -
+    pcmt_e2Open_attributes_service:
+        class: PcmtCoreBundle\Service\E2Open\E2OpenAttributesService
+        arguments:
+            - '@pim_catalog.repository.attribute'
+            - '@pim_catalog.repository.family'
+            - '%akeneo_measure.measures_config%'
