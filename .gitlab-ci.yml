@@ -119,8 +119,8 @@ mysql-backup docker build:
  s3 docker build:
   stage: build
   only:
-#    refs:
-#      - master@pcmt/pcmt
+    refs:
+      - master@pcmt/pcmt
     changes:
       - deploy/s3/**/*
       - deploy/cron/**/*
