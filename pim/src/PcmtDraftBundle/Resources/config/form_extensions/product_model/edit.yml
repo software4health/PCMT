@@ -97,3 +97,8 @@ extensions:
         config:
             labels:
                 existingDraft: pcmt_core.product_models_editing.labels.existing_draft
+
+    pim-product-model-edit-form-variant-navigation:
+        module: pcmt/product/form/variant-navigation
+        parent: pim-product-model-edit-form
+        targetZone: navigation

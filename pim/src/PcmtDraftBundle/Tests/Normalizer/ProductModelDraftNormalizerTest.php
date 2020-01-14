@@ -11,6 +11,8 @@ namespace PcmtDraftBundle\Tests\Normalizer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
+use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
+use Akeneo\Pim\Structure\Component\Model\FamilyVariantInterface;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use Akeneo\UserManagement\Component\Model\User;
 use PcmtDraftBundle\Entity\AbstractDraft;
@@ -57,6 +59,12 @@ class ProductModelDraftNormalizerTest extends TestCase
     /** @var FormProviderInterface */
     private $formProvider;
 
+    /** @var FamilyInterface|MockObject */
+    private $family;
+
+    /** @var FamilyVariantInterface|MockObject */
+    private $familyVariant;
+
     protected function setUp(): void
     {
         $this->productModelNew = $this->createMock(ProductModel::class);
@@ -74,6 +82,14 @@ class ProductModelDraftNormalizerTest extends TestCase
         $this->productModelNormalizer = $this->createMock(NormalizerInterface::class);
 
         $this->formProvider = $this->createMock(FormProviderInterface::class);
+
+        $this->family = $this->createMock(FamilyInterface::class);
+        $this->productModelNew->method('getFamily')->willReturn($this->family);
+        $this->productModelExisting->method('getFamily')->willReturn($this->family);
+
+        $this->familyVariant = $this->createMock(FamilyVariantInterface::class);
+        $this->productModelNew->method('getFamilyVariant')->willReturn($this->familyVariant);
+        $this->productModelExisting->method('getFamilyVariant')->willReturn($this->familyVariant);
 
         parent::setUp();
     }

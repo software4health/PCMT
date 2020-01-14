@@ -121,7 +121,7 @@ class PcmtDraftController
         if ($draft instanceof ExistingProductDraft || $draft instanceof ExistingProductModelDraft) {
             $draft->setProductData($data['product']);
         } else {
-            unset($data['draftId']);
+            unset($data['draftId'], $data['parentId']);
             $draft->setProductData($data);
         }
 

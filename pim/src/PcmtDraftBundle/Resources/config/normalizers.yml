@@ -32,6 +32,7 @@ services:
         calls:
             - [setProductFromDraftCreator, ['@pcmt.service.product_from_draft_creator']]
             - [setProductAttributeChangeService, ['@pcmt.service.product_attribute_change']]
+            - [setValuesNormalizer, ['@pim_catalog.normalizer.standard.product.product_value']]
         arguments:
             $productNormalizer: '@pcmt_core.normalizer.product'
             $formProvider: '@pcmt.provider.form.draft'

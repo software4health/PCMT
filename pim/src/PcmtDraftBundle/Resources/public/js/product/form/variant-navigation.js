@@ -1,11 +1,18 @@
 /*
- * Copyright (c) 2019, VillageReach
+ * Copyright (c) 2020, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
  */
 
 'use strict';
 
+/**
+ * Extension to display the variant navigation to browse variant product structure (parents and children)
+ *
+ * @author    Adrien Pétremann <adrien.petremann@akeneo.com>
+ * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
 define(
     [
         'pim/router',
@@ -16,13 +23,6 @@ define(
         BaseForm
     ) {
         return BaseForm.extend({
-            /**
-             * {@inheritdoc}
-             */
-            getFormData: function () {
-                return this.getRoot().model.toJSON().product;
-            },
-
             /**
              * Redirect the user to the given entity edit page
              *

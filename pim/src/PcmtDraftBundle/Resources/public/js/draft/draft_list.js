@@ -18,9 +18,10 @@ define(
         'pim/dialog',
         'pim/security-context',
         'pim/router',
-        'pim/form-builder'
+        'pim/form-builder',
+        'pim/form-modal'
     ],
-    function (BaseForm, Backbone, $, _, __, Routing, template, Dialog, SecurityContext, Router, FormBuilder) {
+    function (BaseForm, Backbone, $, _, __, Routing, template, Dialog, SecurityContext, Router, FormBuilder, FormModal) {
 
         return BaseForm.extend({
             events: {
@@ -87,16 +88,23 @@ define(
                 })[0];
 
                 if ('New product draft' === draft.type) {
-                    return FormBuilder.build('pcmt-product-create-modal').then(modal => {
+                    if (draft.values.parentId) {
+                        return FormBuilder.build('pcmt-product-model-add-child-form').then(modal => {
+                            modal.setData(draft.values);
+                            modal.open().done(() => this.loadDrafts());
+                        });
+                    } else {
+                        return FormBuilder.build('pcmt-product-create-modal').then(modal => {
+                            modal.setData(draft.values);
+                            modal.open().done(() => this.loadDrafts());
+                        });
+                    }
+                } else if ('New product model draft' === draft.type) {
+                    return FormBuilder.build('pcmt-product-model-create-modal').then(modal => {
                         modal.setData(draft.values);
-                        modal.open();
+                        modal.open().done(() => this.loadDrafts());
                     });
-                } /*else if ('New product model draft' === draft.type) {
-                    return FormBuilder.build('pim-product-model-create-modal').then(modal => {
-                        modal.setData(draft);
-                        modal.open();
-                    });
-                } */else {
+                } else {
                     Router.navigate('/' + Routing.generate('pcmt_core_drafts_edit', {id: draftId}), true);
                 }
             },
