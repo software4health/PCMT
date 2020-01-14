@@ -5,7 +5,7 @@ to a given S3 bucket on a schedule as defined by cron.
 
 This images extends the Cron image, and therefore it's configuration options.
 
-# Configuration
+## Configuration
 
 Configuration is done by environment variable:
 
