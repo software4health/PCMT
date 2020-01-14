@@ -4,26 +4,25 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
-image:
-  name: docker/compose:1.24.1
-  entrypoint: ["/bin/sh", "-c"]
-
 stages:
   - build
   - deploy
-
-services:
-  - docker:dind
 
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
 
-before_script:
-  - docker info
-  - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
-  - apk add bash make git curl
-  - bash --version
+default:
+  image:
+    name: docker/compose:1.24.1
+    entrypoint: ["/bin/sh", "-c"]
+  services:
+    - docker:dind
+  before_script:
+    - docker info
+    - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
+    - apk add bash make git curl
+    - bash --version
 
 ############### PIM ###############
 
