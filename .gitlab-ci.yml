@@ -97,6 +97,9 @@ cron docker build:
       - master@pcmt/pcmt
     changes:
       - deploy/cron/**/*
+  except:
+    changes:
+      - deploy/mysql-backup/**/*
   script:
     - make cron
     - docker push pcmt/cron:latest
@@ -108,8 +111,10 @@ mysql-backup docker build:
       - master@pcmt/pcmt
     changes:
       - deploy/mysql-backup/**/*
+      - deploy/cron/**/*
   script:
     - make mysql-backup
+    - docker push pcmt/cron:latest
     - docker push pcmt/mysql-backup:latest
 
 ############### Dev Environment ###############

@@ -92,6 +92,6 @@ cron:
 	cd deploy/cron && docker build -t pcmt/cron .
 
 .PHONY: mysql-backup
-mysql-backup:
+mysql-backup: cron
 	cd deploy/mysql-backup && docker build -t pcmt/mysql-backup .
 
