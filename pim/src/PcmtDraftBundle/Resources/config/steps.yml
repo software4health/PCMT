@@ -1,0 +1,11 @@
+services:
+    pcmt_connector.step.xlsx_product_draft.import:
+        class: '%pim_connector.step.item_step.class%'
+        arguments:
+            - 'import'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@pim_connector.reader.file.xlsx_product'
+            - '@pim_connector.processor.denormalization.product'
+            - '@pim_connector.writer.database.product'
+            - '%pim_job_product_batch_size%'

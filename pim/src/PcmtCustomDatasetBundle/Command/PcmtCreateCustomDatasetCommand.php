@@ -147,19 +147,19 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
                 'fileName' => '6_family_variants.xlsx',
             ],
             [
-                'code'     => 'xlsx_product_model_import',
+                'code'     => 'xlsx_product_model_first_import',
                 'fileName' => '7_product_models.xlsx',
             ],
             [
-                'code'     => 'pcmt_xlsx_product_import',
+                'code'     => 'pcmt_xlsx_product_first_import',
                 'fileName' => '8_1_products_trade_items_rh.xlsx',
             ],
             [
-                'code'     => 'pcmt_xlsx_product_import',
+                'code'     => 'pcmt_xlsx_product_first_import',
                 'fileName' => '8_2_products_trade_items_gdsn_queue.xlsx',
             ],
             [
-                'code'     => 'import_map_suppliers',
+                'code'     => 'import_map_suppliers_first',
                 'fileName' => '9_masterdata_entries_all.xlsx',
             ],
             [

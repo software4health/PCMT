@@ -258,6 +258,70 @@ jobs:
             filePath:      /tmp/datagrid_view.xlsx
             uploadAllowed: true
 
+    #xlsx_imports duplicated in purpose for the draft feature
+    #7
+    xlsx_product_model_first_import:
+        connector: Akeneo XLSX Connector
+        alias: xlsx_product_model_first_import
+        label: XLSX 7_product_models import
+        type: import_hidden
+        configuration:
+            filePath: /tmp/product_model.xlsx
+            uploadAllowed: true
+            enabled: true
+            categoriesColumn: categories
+            familyVariantColumn: family_variant
+            realTimeVersioning: true
+            decimalSeparator: .
+            dateFormat: yyyy-MM-dd
+    #8
+    xlsx_product_first_import:
+        connector: Akeneo XLSX Connector
+        alias:     xlsx_product_first_import
+        label:     XLSX 8_products import
+        type:      import_hidden
+        configuration:
+            filePath:           /tmp/product.xlsx
+            uploadAllowed:      true
+            enabled:            true
+            categoriesColumn:   categories
+            familyColumn:       family
+            groupsColumn:       groups
+            realTimeVersioning: true
+            decimalSeparator: .
+            dateFormat: yyyy-MM-dd
+    #8 PCMT
+    pcmt_xlsx_product_first_import:
+        connector: Pcmt Connector
+        alias:     pcmt_xlsx_product_import
+        label:     PCMT XLSX 8_products import
+        type:      import_hidden
+        configuration:
+            filePath:           /tmp/product.xlsx
+            uploadAllowed:      true
+            enabled:            true
+            categoriesColumn:   categories
+            familyColumn:       family
+            groupsColumn:       groups
+            realTimeVersioning: true
+            decimalSeparator: .
+            dateFormat: yyyy-MM-dd
+    #9
+    import_map_suppliers_first:
+        connector: Akeneo XLSX Connector
+        alias:     xlsx_product_first_import
+        label:     XLSX 9_master_data_elements
+        type:      import_hidden
+        configuration:
+            uploadAllowed:      true
+            enabled:            true
+            categoriesColumn:   categories
+            familyColumn:       family
+            groupsColumn:       groups
+            realTimeVersioning: true
+            decimalSeparator: .
+            dateFormat: yyyy-MM-dd
+
     #xlsx_exports
     #1
     xlsx_category_export:
