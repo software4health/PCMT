@@ -53,7 +53,7 @@ pcmt_core:
             date: Date
             changes: Changes
             author: Author
-            action: Actions
+            status: Status
             empty: No drafts
 
 pcmt_core.entity.draft:

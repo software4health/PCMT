@@ -11,5 +11,5 @@ services:
         class: PcmtDraftBundle\Widget\DraftsFetcher
         arguments:
             - '@doctrine.orm.entity_manager'
-            - '@security.token_storage'
-            - '@oro_security.security_facade'
+            - '@pim_internal_api_serializer'
+
