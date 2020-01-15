@@ -18,6 +18,7 @@ fi
 echo "Running PCMT with profile: $profile"
 
 source cpFromTmp.sh
+source cronRun.sh
 
 ./wait.sh mysql 3306
 ./wait.sh elasticsearch 9200
