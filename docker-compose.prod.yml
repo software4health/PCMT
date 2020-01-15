@@ -1,9 +1,13 @@
 version: "3.5"
 services:
+    fpm:
+        volumes:
+            - 'ftp-get:/srv/pim/src/PcmtCoreBundle/Resources/E2OpenImport/work/'
+    
     mysql-backup:
         image: pcmt/mysql-backup
         environment:
-            CRON_SCHEDULE: '*/2 * * * *'
+            CRON_SCHEDULE: '*/15 * * * *'
             BACKUP_DIR: '/backup'
         secrets:
             - mysql-creds
@@ -15,7 +19,7 @@ services:
     s3-sync:
         image: pcmt/s3
         environment:
-            CRON_SCHEDULE: '1-59/2 * * * *'
+            CRON_SCHEDULE: '1,31 * * * *'
             LOCAL_DIR_TO_SYNC_OUT: '/backup'
         volumes:
             - mysql-backup:/backup
@@ -27,14 +31,17 @@ services:
         environment:
             CRON_SCHEDULE: '*/10 * * * *'
             SFTP_PRIVKEY_FILENAME: '/run/secrets/sftp-privkey'
+            SFTP_LOCAL_DIR: '/srv/pim/src/PcmtCoreBundle/Resources/E2OpenImport/work/'
         volumes:
-            - ftp-get:/downloads
+            - 'ftp-get:/srv/pim/src/PcmtCoreBundle/Resources/E2OpenImport/work/'
         secrets:
             - ftp-get-creds
             - sftp-privkey
             
 volumes:
     mysql-backup:
+        driver: local
+    ftp-get:
         driver: local
 
 secrets:
