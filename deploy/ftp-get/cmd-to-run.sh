@@ -16,7 +16,7 @@ files=$(echo "$files" | sed '/^sftp>/d')
   for file in "$files"; do
     echo get "$file"
     echo !mv "$file" "$SFTP_LOCAL_DIR/$file"
-    echo rename "$file" "$SFTP_REMOTE_ARCHIVE_DIR/$file"
+    #echo rename "$file" "$SFTP_REMOTE_ARCHIVE_DIR/$file"
   done
 ) > /get-files.ftppatch 
 
