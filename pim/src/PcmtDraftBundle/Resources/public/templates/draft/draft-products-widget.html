@@ -12,13 +12,13 @@
             <%- __('pcmt_core.widget.drafts_overview.product') %>
         </th>
         <th class="AknGrid-headerCell">
-            <%- __('pcmt_core.widget.drafts_overview.date') %>
-        </th>
-        <th class="AknGrid-headerCell">
             <%- __('pcmt_core.widget.drafts_overview.author') %>
         </th>
         <th class="AknGrid-headerCell">
-            <%- __('pcmt_core.widget.drafts_overview.action') %>
+            <%- __('pcmt_core.widget.drafts_overview.date') %>
+        </th>
+        <th class="AknGrid-headerCell">
+            <%- __('pcmt_core.widget.drafts_overview.status') %>
         </th>
     </tr>
     </thead>
@@ -26,14 +26,16 @@
     <tbody>
         <% _.each(data, function (draft) { %>
             <tr class="AknGrid-bodyRow">
-                <td class="AknGrid-bodyCell"><%- draft.label %></td>
-                <td class="AknGrid-bodyCell"><%- draft.createdAt %></td>
-                <td class="AknGrid-bodyCell"><%- draft.author %></td>
                 <td class="AknGrid-bodyCell">
-                    <span class="AknButton AknButton--small AknButton review-draft"
-                          data-id="<%-draft.id%>"
-                    >Review
-                    </span>
+                    <%- draft.type %><br>
+                    <%- draft.label %>
+                </td>
+                <td class="AknGrid-bodyCell"><%- draft.author %></td>
+                <td class="AknGrid-bodyCell"><%- draft.createdAt %></td>
+                <td class="AknGrid-bodyCell">
+                    <div class="AknBadge <%- draft.status.class %>">
+                        <%- draft.status.name %>
+                    </div>
                 </td>
             </tr>
         <% }); %>
