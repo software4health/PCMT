@@ -99,3 +99,6 @@ mysql-backup: cron
 s3: cron
 	cd deploy/s3 && docker build -t pcmt/s3 .
 
+.PHONY: ftp-get
+ftp-get: cron
+	cd deploy/ftp-get && docker build -t pcmt/ftp-get .

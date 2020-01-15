@@ -129,6 +129,19 @@ s3 docker build:
     - docker push pcmt/cron:latest
     - docker push pcmt/s3:latest
 
+ftp-get docker build:
+  stage: build
+  only:
+    refs:
+      - master@pcmt/pcmt
+    changes:
+      - deploy/ftp-get/**/*
+      - deploy/cron/**/*
+  script:
+    - make ftp-get
+    - docker push pcmt/cron:latest
+    - docker push pcmt/ftp-get:latest
+
 ############### Dev Environment ###############
 
 .env-dev: 
