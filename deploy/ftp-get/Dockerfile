@@ -5,8 +5,11 @@
 ######################################################################
 
 FROM pcmt/cron
-RUN apk add --update --no-cache bash openssh gettext && \
-    mkdir -p /tmp/ftp-get
+RUN apk add --update --no-cache bash openssh gettext
+RUN addgroup -S docker -g 1000 && \
+    adduser -S docker -G docker -u 1000 -s /bin/bash -H && \
+    mkdir -p /tmp/ftp-get && \
+    chown docker:docker /tmp/ftp-get
 ADD set-env.sh /
 ADD list-files.ftpbatch /
 ADD ftp-cmd.sh /

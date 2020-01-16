@@ -6,6 +6,8 @@
 ######################################################################
 
 . /set-env.sh
+umask 0000
+chown docker:docker $SFTP_LOCAL_DIR
 
 files=$(cat /list-files.ftpbatch | envsubst | /ftp-cmd.sh)
 files=$(echo "$files" | sed '/^sftp>/d')
@@ -15,6 +17,7 @@ files=$(echo "$files" | sed '/^sftp>/d')
   echo -mkdir "$SFTP_REMOTE_ARCHIVE_DIR"
   for file in "$files"; do
     echo get "$file"
+    echo !chown docker:docker "$file"
     echo !mv "$file" "$SFTP_LOCAL_DIR/$file"
     #echo rename "$file" "$SFTP_REMOTE_ARCHIVE_DIR/$file"
   done
