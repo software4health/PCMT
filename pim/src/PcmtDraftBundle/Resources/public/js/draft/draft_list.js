@@ -100,10 +100,17 @@ define(
                         });
                     }
                 } else if ('New product model draft' === draft.type) {
-                    return FormBuilder.build('pcmt-product-model-create-modal').then(modal => {
-                        modal.setData(draft.values);
-                        modal.open().done(() => this.loadDrafts());
-                    });
+                    if (draft.values.parentId) {
+                        return FormBuilder.build('pcmt-product-model-add-child-form').then(modal => {
+                            modal.setData(draft.values);
+                            modal.open().done(() => this.loadDrafts());
+                        });
+                    } else {
+                        return FormBuilder.build('pcmt-product-model-create-modal').then(modal => {
+                            modal.setData(draft.values);
+                            modal.open().done(() => this.loadDrafts());
+                        });
+                    }
                 } else {
                     Router.navigate('/' + Routing.generate('pcmt_core_drafts_edit', {id: draftId}), true);
                 }

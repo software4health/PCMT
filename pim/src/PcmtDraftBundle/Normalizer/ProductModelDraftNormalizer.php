@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Normalizer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\NewProductModelDraft;
@@ -71,11 +72,24 @@ class ProductModelDraftNormalizer extends DraftNormalizer implements NormalizerI
             'code'           => $newProductModel->getCode(),
             'family'         => $newProductModel->getFamily()->getCode(),
             'family_variant' => $newProductModel->getFamilyVariant()->getCode(),
+            'parentId'       => $newProductModel->getParent() ? $newProductModel->getParent()->getId() : null,
+            'parent'         => $newProductModel->getParent() ? $newProductModel->getParent()->getCode() : null,
         ];
 
         if ($context['include_product'] ?? false) {
             $data['product'] = $this->productModelNormalizer->normalize($newProductModel, 'internal_api');
             $data['product']['meta']['form'] = $this->formProvider->getForm($draft);
+        } else {
+            $values = [];
+
+            $copiedProduct = clone $newProductModel;
+            $copiedProduct->setParent(null);
+            foreach ($copiedProduct->getValues() as $value) {
+                /** @var ValueInterface $value */
+                $values[$value->getAttributeCode()][] = $this->valuesNormalizer->normalize($value, 'standard');
+            }
+
+            $data['values']['values'] = $values;
         }
 
         return $data;

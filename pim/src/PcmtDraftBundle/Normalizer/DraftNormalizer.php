@@ -25,6 +25,9 @@ class DraftNormalizer implements NormalizerInterface
     /** @var FormProviderInterface */
     protected $formProvider;
 
+    /** @var NormalizerInterface */
+    protected $valuesNormalizer;
+
     public function __construct(
         DraftStatusNormalizer $statusNormalizer,
         AttributeChangeNormalizer $attributeChangeNormalizer,
@@ -33,6 +36,11 @@ class DraftNormalizer implements NormalizerInterface
         $this->statusNormalizer = $statusNormalizer;
         $this->attributeChangeNormalizer = $attributeChangeNormalizer;
         $this->formProvider = $formProvider;
+    }
+
+    public function setValuesNormalizer(NormalizerInterface $valuesNormalizer): void
+    {
+        $this->valuesNormalizer = $valuesNormalizer;
     }
 
     /**
