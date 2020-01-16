@@ -31,9 +31,6 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
     /** @var NormalizerInterface */
     private $productNormalizer;
 
-    /** @var NormalizerInterface */
-    private $valuesNormalizer;
-
     public function __construct(
         DraftStatusNormalizer $statusNormalizer,
         AttributeChangeNormalizer $attributeChangeNormalizer,
@@ -57,11 +54,6 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
     public function setProductAttributeChangeService(ProductAttributeChangeService $productAttributeChangeService): void
     {
         $this->productAttributeChangeService = $productAttributeChangeService;
-    }
-
-    public function setValuesNormalizer(NormalizerInterface $valuesNormalizer): void
-    {
-        $this->valuesNormalizer = $valuesNormalizer;
     }
 
     /**

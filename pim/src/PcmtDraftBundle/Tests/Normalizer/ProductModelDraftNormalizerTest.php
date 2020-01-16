@@ -11,6 +11,7 @@ namespace PcmtDraftBundle\Tests\Normalizer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
 use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Pim\Structure\Component\Model\FamilyVariantInterface;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
@@ -65,6 +66,9 @@ class ProductModelDraftNormalizerTest extends TestCase
     /** @var FamilyVariantInterface|MockObject */
     private $familyVariant;
 
+    /** @var NormalizerInterface|MockObject */
+    private $valuesNormalizer;
+
     protected function setUp(): void
     {
         $this->productModelNew = $this->createMock(ProductModel::class);
@@ -85,11 +89,16 @@ class ProductModelDraftNormalizerTest extends TestCase
 
         $this->family = $this->createMock(FamilyInterface::class);
         $this->productModelNew->method('getFamily')->willReturn($this->family);
+        $this->productModelNew->method('getValues')->willReturn(new WriteValueCollection());
         $this->productModelExisting->method('getFamily')->willReturn($this->family);
 
         $this->familyVariant = $this->createMock(FamilyVariantInterface::class);
         $this->productModelNew->method('getFamilyVariant')->willReturn($this->familyVariant);
         $this->productModelExisting->method('getFamilyVariant')->willReturn($this->familyVariant);
+
+        $this->valuesNormalizer = $this->createMock(NormalizerInterface::class);
+        $this->valuesNormalizer->method('normalize')->willReturn([]);
+        $this->valuesNormalizer->method('supportsNormalization')->willReturn(true);
 
         parent::setUp();
     }
@@ -104,6 +113,7 @@ class ProductModelDraftNormalizerTest extends TestCase
         );
         $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
         $this->productModelDraftNormalizer->setProductModelAttributeChangeService($this->attributeChangeService);
+        $this->productModelDraftNormalizer->setValuesNormalizer($this->valuesNormalizer);
 
         $draft = $this->createMock(NewProductModelDraft::class);
         $author = new User();
@@ -137,6 +147,7 @@ class ProductModelDraftNormalizerTest extends TestCase
         );
         $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
         $this->productModelDraftNormalizer->setProductModelAttributeChangeService($this->attributeChangeService);
+        $this->productModelDraftNormalizer->setValuesNormalizer($this->valuesNormalizer);
         $draft = $this->createMock(NewProductModelDraft::class);
         $draft->method('getProductModel')->willReturn(null);
 
@@ -161,6 +172,7 @@ class ProductModelDraftNormalizerTest extends TestCase
         );
         $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
         $this->productModelDraftNormalizer->setProductModelAttributeChangeService($this->attributeChangeService);
+        $this->productModelDraftNormalizer->setValuesNormalizer($this->valuesNormalizer);
 
         $draft = $this->createMock(ExistingProductModelDraft::class);
         $draft->method('getProductModel')->willReturn($this->productModelExisting);
@@ -181,6 +193,7 @@ class ProductModelDraftNormalizerTest extends TestCase
         );
         $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
         $this->productModelDraftNormalizer->setProductModelAttributeChangeService($this->attributeChangeService);
+        $this->productModelDraftNormalizer->setValuesNormalizer($this->valuesNormalizer);
 
         $draft = $this->createMock(ExistingProductModelDraft::class);
 
@@ -202,6 +215,7 @@ class ProductModelDraftNormalizerTest extends TestCase
         );
         $this->productModelDraftNormalizer->setProductModelFromDraftCreator($this->creator);
         $this->productModelDraftNormalizer->setProductModelAttributeChangeService($this->attributeChangeService);
+        $this->productModelDraftNormalizer->setValuesNormalizer($this->valuesNormalizer);
 
         $draft = $this->createMock(ExistingProductModelDraft::class);
 

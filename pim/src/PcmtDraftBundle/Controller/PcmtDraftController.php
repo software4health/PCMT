@@ -114,6 +114,11 @@ class PcmtDraftController
         if ($draft instanceof ProductModelDraftInterface && isset($data['product']['family'])) {
             unset($data['product']['family']);
         }
+
+        if ($draft instanceof ProductModelDraftInterface && !empty($data['parentId'])) {
+            unset($data['family']);
+        }
+
         if (isset($data['categories'])) {
             $data['product']['categories'] = $data['categories'];
         }
