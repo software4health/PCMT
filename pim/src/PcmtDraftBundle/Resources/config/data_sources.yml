@@ -1,6 +1,8 @@
 parameters:
     pcmt.datagrid.datasource.associated_product_model.class: PcmtDraftBundle\Datasource\AssociatedProductModelDatasource
     pcmt.datagrid.datasource.associated_product.class: PcmtDraftBundle\Datasource\AssociatedProductDatasource
+    pim_datagrid.datasource.associated_product_model.class: PcmtDraftBundle\Datasource\OriginalAssociatedProductModelDatasource
+    pim_datagrid.datasource.associated_product.class: PcmtDraftBundle\Datasource\OriginalAssociatedProductDatasource
 
 services:
 

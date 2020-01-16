@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 /**
  * New associated product datasource.
- * Overrides the original one so that we can show associated products from draft,
- * not from original product.
+ * Overrides the original one so that we can show associated products for draft,
+ * not for original product.
  *
  * Copyright (c) 2019, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
@@ -14,12 +14,8 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Datasource;
 
-use Akeneo\Pim\Enrichment\Component\Product\Model\AssociationInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithAssociationsInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
-use Oro\Bundle\PimDataGridBundle\Datasource\AssociatedProductModelDatasource as AssociatedProductModelDatasourceOriginal;
-use Oro\Bundle\PimDataGridBundle\Extension\Pager\PagerExtension;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Service\Draft\ProductModelFromDraftCreator;
@@ -31,7 +27,7 @@ use PcmtDraftBundle\Service\Draft\ProductModelFromDraftCreator;
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-class AssociatedProductModelDatasource extends AssociatedProductModelDatasourceOriginal
+class AssociatedProductModelDatasource extends OriginalAssociatedProductModelDatasource
 {
     /** @var ProductModelFromDraftCreator */
     protected $creator;
@@ -67,80 +63,6 @@ class AssociatedProductModelDatasource extends AssociatedProductModelDatasourceO
 
         $sourceProduct = $this->creator->getProductModelToSave($draft);
 
-        $association = $this->getAssociation($sourceProduct, (int) $this->getConfiguration('association_type_id'));
-        if (null === $association) {
-            return [
-                'totalRecords' => 0,
-                'data'         => [],
-            ];
-        }
-
-        $associatedProductsIdentifiers = $this->getAssociatedProductIdentifiers($association);
-        $associatedProductModelsIdentifiers = $this->getAssociatedProductModelIdentifiers($association);
-
-        $limit = (int) $this->getConfiguration(PagerExtension::PER_PAGE_PARAM, false);
-        $locale = $this->getConfiguration('locale_code');
-        $scope = $this->getConfiguration('scope_code');
-        $from = null !== $this->getConfiguration('from', false) ?
-            (int) $this->getConfiguration('from', false) : 0;
-
-        $associatedProductsIdentifiersFromParent = [];
-        $associatedProductModelsIdentifiersFromParent = [];
-        $parentAssociation = $this->getParentAssociation($sourceProduct, $this->getConfiguration('association_type_id'));
-        if (null !== $parentAssociation) {
-            $associatedProductsIdentifiersFromParent = $this->getAssociatedProductIdentifiers($parentAssociation);
-            $associatedProductModelsIdentifiersFromParent = $this->getAssociatedProductModelIdentifiers($parentAssociation);
-        }
-
-        $associatedProducts = $this->getAssociatedProducts(
-            $associatedProductsIdentifiers,
-            $limit,
-            $from,
-            $locale,
-            $scope
-        );
-
-        $productModelLimit = $limit - $associatedProducts->count();
-        $associatedProductModels = [];
-        if ($productModelLimit > 0) {
-            $productModelFrom = $from - count($associatedProductsIdentifiers) + $associatedProducts->count();
-            $associatedProductModels = $this->getAssociatedProductModels(
-                $associatedProductModelsIdentifiers,
-                $productModelLimit,
-                max($productModelFrom, 0),
-                $locale,
-                $scope
-            );
-        }
-
-        $normalizedAssociatedProducts = $this->normalizeProductsAndProductModels(
-            $associatedProducts,
-            $associatedProductsIdentifiersFromParent,
-            $locale,
-            $scope
-        );
-
-        $normalizedAssociatedProductModels = $this->normalizeProductsAndProductModels(
-            $associatedProductModels,
-            $associatedProductModelsIdentifiersFromParent,
-            $locale,
-            $scope
-        );
-
-        $rows = ['totalRecords' => count($associatedProductsIdentifiers) + count($associatedProductModelsIdentifiers)];
-        $rows['data'] = array_merge($normalizedAssociatedProducts, $normalizedAssociatedProductModels);
-
-        return $rows;
-    }
-
-    private function getAssociation(EntityWithAssociationsInterface $sourceProduct, int $associationTypeId): ?AssociationInterface
-    {
-        foreach ($sourceProduct->getAllAssociations() as $association) {
-            if ($association->getAssociationType()->getId() === $associationTypeId) {
-                return $association;
-            }
-        }
-
-        return null;
+        return $this->getResultsForProductModel($sourceProduct);
     }
 }
