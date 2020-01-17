@@ -27,7 +27,7 @@ class DraftViolationException extends UnprocessableEntityHttpException
 
     public function __construct(
         ConstraintViolationListInterface $violations,
-        object $object,
+        ?object $object,
         string $message = 'Validation failed.',
         ?\Throwable $previous = null,
         int $code = 0

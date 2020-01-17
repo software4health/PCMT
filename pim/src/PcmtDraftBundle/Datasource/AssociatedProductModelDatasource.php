@@ -62,6 +62,12 @@ class AssociatedProductModelDatasource extends OriginalAssociatedProductModelDat
         }
 
         $sourceProduct = $this->creator->getProductModelToSave($draft);
+        if (!$sourceProduct) {
+            return [
+                'totalRecords' => 0,
+                'data'         => [],
+            ];
+        }
 
         return $this->getResultsForProductModel($sourceProduct);
     }

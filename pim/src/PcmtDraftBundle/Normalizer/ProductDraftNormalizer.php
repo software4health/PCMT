@@ -65,6 +65,10 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
         $data = parent::normalize($draft, $format, $context);
 
         $newProduct = $this->productFromDraftCreator->getProductToCompare($draft);
+        if (!$newProduct) {
+            // that's a special case when a original product has been removed after creating a draft.
+            return $data;
+        }
         $data['label'] = $newProduct ? $this->getLabel($draft, $newProduct) : 'no label';
 
         $changes = $this->productAttributeChangeService->get($newProduct, $draft->getProduct());

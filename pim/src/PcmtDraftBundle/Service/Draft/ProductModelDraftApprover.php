@@ -12,6 +12,8 @@ namespace PcmtDraftBundle\Service\Draft;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductModelDraftApprover extends DraftApprover
@@ -43,8 +45,22 @@ class ProductModelDraftApprover extends DraftApprover
     public function approve(DraftInterface $draft): void
     {
         $productModel = $this->creator->getProductModelToSave($draft);
+        if (!$productModel) {
+            $violation = new ConstraintViolation(
+                'No corresponding product model found.',
+                'No corresponding product model found.',
+                [],
+                $draft,
+                'productModel',
+                'no'
+            );
 
-        $violations = $this->validator->validate($productModel);
+            $violations = new ConstraintViolationList();
+            $violations->add($violation);
+        } else {
+            $violations = $this->validator->validate($productModel);
+        }
+
         if (0 === $violations->count()) {
             $this->saver->save($productModel);
         } else {

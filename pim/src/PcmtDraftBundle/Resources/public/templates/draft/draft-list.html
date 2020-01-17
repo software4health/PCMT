@@ -129,14 +129,14 @@
             <td class="AknGrid-bodyCell AknGrid-bodyCell--actions action-cell">
                 <% if (draft.status.id === 1) { %>
                 <div class="AknButtonList AknButtonList--right AknButtonList--expanded">
-                    <% if (editPermission) { %>
+                    <% if (editPermission && draft.values) { %>
                     <a href="javascript:void(0);"
                        class="AknIconButton AknIconButton--small AknIconButton--edit AknButtonList-item draft-edit"
                        title="Edit draft" data-draft-id="<%- draft.id %>">
                         Edit draft
                     </a>
                     <% } %>
-                    <% if (approvePermission) { %>
+                    <% if (approvePermission && draft.values) { %>
                     <a href="javascript:void(0);"
                        class="AknIconButton AknIconButton--small AknIconButton--play AknButtonList-item draft-approve"
                        title="Approve draft" data-draft-id="<%- draft.id %>">
