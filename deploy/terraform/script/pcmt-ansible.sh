@@ -29,6 +29,9 @@ if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
     exit 1
 fi
 
+if [ ! -z "$PCMT_SECRETS_VOLUME" ]; then
+    PCMT_SECRETS_VOLUME="-v $PCMT_SECRETS_VOLUME:/tmp/secrets"
+fi
 
 docker run --rm \
     -e AWS_ACCESS_KEY_ID \
@@ -36,6 +39,7 @@ docker run --rm \
     -e PCMT_PROFILE \
     -e PCMT_VER \
     -e PCMT_ASSET_URL \
+    $PCMT_SECRETS_VOLUME \
     -v pcmt-ssh-key:/tmp/.ssh \
     pcmt/ansible ansible-playbook \
         --limit "$TARGET_IP" \

@@ -19,6 +19,11 @@
     remote_src: yes
     extra_opts:
       - --strip-components=1
+- name: Copy secrets in
+  copy:
+    src: /tmp/secrets/
+    dest: /app/conf
+    mode: '0400'
 - name: Pull and Start PCMT images
   vars:
     pcmt_profile: "{{ lookup('env', 'PCMT_PROFILE') }}"
@@ -36,6 +41,7 @@
     files:
       - "docker-compose.yml"
       - "docker-compose.tls.yml"
+      - "docker-compose.prod.yml"
     build: no
     pull: yes
     remove_orphans: yes

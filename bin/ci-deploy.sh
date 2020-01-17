@@ -10,11 +10,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 ENV_NAME=$1
 
-if [ ! -z "$PCMT_SFTP_PRIVKEY_FILENAME" ]; then
-    echo "PCMT secret test env: $PCMT_SFTP_PRIVKEY_FILENAME"
-    cat "$PCMT_SFTP_PRIVKEY_FILENAME"
-fi
-
 if [ -z "$ENV_NAME" ]; then
     echo "ERROR: Environment name not given as first argument"
     exit 1

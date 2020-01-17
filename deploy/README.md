@@ -23,8 +23,8 @@ The following environment variables are available:
 - `PCMR_PROFILE`: Profile as documented in PCMT's `settings.env`.
 - `PCMT_VER`: The version of PCMT to deploy, this version will need to be
   tagged in Docker Hub.
-- `PCMT_ASSET_URL`: The full, public, URL where a commit's SHA may be appended
-  to retrieve the deployment descriptors for the specified version.
+- `PCMT_ASSET_URL`: The full, public, URL where the project's `tar.gz` file
+  is found.
 
 
 ## Quick Start
@@ -49,7 +49,7 @@ __Example__: create/update the `cd-test` env, and clear the database:
 
 ```bash
 export PCMT_VER=0.1.0-snapshot
-export PCMT_ASSET_URL=https://gitlab.com/pcmt/pcmt/raw/<commit-sha>"
+export PCMT_ASSET_URL="https://gitlab.com/pcmt/pcmt/-/archive/v1.0.0-beta2/pcmt-v1.0.0-beta2.tar.gz"
 PCMT_PROFILE=dev ./run-docker.sh cd-test apply -auto-approve
 ```
 

@@ -43,6 +43,7 @@ ssh-add
 
 echo "On environment $TF_ENV, running terraform $TF_CMD"
 cd $TF_ENV
+
 terraform init
 terraform "${@:2}"
 
