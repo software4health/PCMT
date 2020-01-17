@@ -9,10 +9,12 @@ SSH_PRIV_KEY_PATH=${SSH_PRIV_KEY_PATH:-"$HOME/.ssh/id_rsa"}
 HELPER_CONTAINER="pcmt-tf-helper"
 
 function cleanup {
+    prevExit="$?"
     echo "Cleaning up container and volumes..."
     docker rm "$HELPER_CONTAINER"
     docker volume rm pcmt-ssh-key
     docker volume rm secrets
+    exit $prevExit
 }
 trap cleanup EXIT
 
@@ -44,7 +46,7 @@ docker create --name "$HELPER_CONTAINER" \
     busybox
 
 # copy SSH into SSH volume
-docker cp $SSH_PRIV_KEY_PATH "$HELPER_CONTAINER":/tmp/.ssh/id_rsa
+docker cp "$SSH_PRIV_KEY_PATH" "$HELPER_CONTAINER":/tmp/.ssh/id_rsa
 
 # copy deploy secrets into secrets volume
 cpFileFromEnvIntoSecrets "$PCMT_MYSQL_CREDS_CONF" "/conf/mysql-creds.env"
