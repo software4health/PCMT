@@ -54,8 +54,6 @@ cpFileFromEnvIntoSecrets "$PCMT_S3_CREDS_CONF" "/conf/aws-s3-creds.env"
 cpFileFromEnvIntoSecrets "$PCMT_FTP_GET_CREDS_CONF" "/conf/ftp-get-creds.env"
 cpFileFromEnvIntoSecrets "$PCMT_SFTP_PRIVKEY_FILENAME" "/conf/sftp-privkey"
 
-docker rm "$HELPER_CONTAINER"
-
 docker run --rm \
     -e AWS_ACCESS_KEY_ID \
     -e AWS_SECRET_ACCESS_KEY \
