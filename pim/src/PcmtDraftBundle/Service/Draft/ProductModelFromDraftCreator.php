@@ -64,7 +64,7 @@ class ProductModelFromDraftCreator
         $this->productModelFactory = $productModelFactory;
     }
 
-    public function getProductModelToCompare(ProductModelDraftInterface $draft): ProductModelInterface
+    public function getProductModelToCompare(ProductModelDraftInterface $draft): ?ProductModelInterface
     {
         switch (get_class($draft)) {
             case NewProductModelDraft::class:
@@ -74,7 +74,7 @@ class ProductModelFromDraftCreator
         }
     }
 
-    public function getProductModelToSave(ProductModelDraftInterface $draft): ProductModelInterface
+    public function getProductModelToSave(ProductModelDraftInterface $draft): ?ProductModelInterface
     {
         switch (get_class($draft)) {
             case NewProductModelDraft::class:
@@ -84,9 +84,12 @@ class ProductModelFromDraftCreator
         }
     }
 
-    private function createExistingProductModelForComparing(ExistingProductModelDraft $draft): ProductModelInterface
+    private function createExistingProductModelForComparing(ExistingProductModelDraft $draft): ?ProductModelInterface
     {
         $productModel = $draft->getProductModel();
+        if (!$productModel) {
+            return null;
+        }
         $newProductModel = clone $productModel;
 
         // cloning values, otherwise the original values would also be overwritten
@@ -104,9 +107,12 @@ class ProductModelFromDraftCreator
         return $newProductModel;
     }
 
-    private function createForSaveForDraftForExistingProductModel(ExistingProductModelDraft $draft): ProductModelInterface
+    private function createForSaveForDraftForExistingProductModel(ExistingProductModelDraft $draft): ?ProductModelInterface
     {
         $productModel = $draft->getProductModel();
+        if (!$productModel) {
+            return null;
+        }
         $data = $draft->getProductData();
         if (isset($data['values'])) {
             $this->updateProductModel($productModel, $data);

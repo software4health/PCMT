@@ -77,7 +77,7 @@ class ProductFromDraftCreator
         }
     }
 
-    public function getProductToSave(DraftInterface $draft): ProductInterface
+    public function getProductToSave(DraftInterface $draft): ?ProductInterface
     {
         switch (get_class($draft)) {
             case NewProductDraft::class:
@@ -110,9 +110,12 @@ class ProductFromDraftCreator
         return $newProduct;
     }
 
-    private function createForSaveForDraftForExistingProduct(ExistingProductDraft $draft): ProductInterface
+    private function createForSaveForDraftForExistingProduct(ExistingProductDraft $draft): ?ProductInterface
     {
         $product = $draft->getProduct();
+        if (!$product) {
+            return null;
+        }
         $data = $draft->getProductData();
         if (isset($data['values'])) {
             $this->updateProduct($product, $data);
