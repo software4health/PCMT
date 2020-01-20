@@ -37,7 +37,7 @@ services:
             -
                 - '@pcmt_connector.step.pcmt_e2open.import'
         tags:
-            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.import_type%' }
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: 'import_hidden' }
 
     pcmt_connector.tasklet.pcmt_e2open_import:
         class: PcmtCoreBundle\Connector\Job\E2OpenFromXmlTasklet
@@ -125,5 +125,5 @@ services:
                 - '@pcmt_xml_connector.step.xml_reference_data_import'
 
         tags:
-            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.import_type%' }
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: 'import_hidden' }
 
