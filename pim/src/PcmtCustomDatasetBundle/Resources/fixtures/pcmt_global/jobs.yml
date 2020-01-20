@@ -399,7 +399,7 @@ jobs:
                         operator: 'IN CHILDREN'
                         value: ['master']
                 structure:
-                    scope: ecommerce
+                    scope: PRODUCT_CATALOG
                     locales:
                         - en_US
     #8-1
@@ -427,7 +427,7 @@ jobs:
                         context:
                             locales: ['en_US']
                 structure:
-                    scope: ecommerce
+                    scope: PRODUCT_CATALOG
                     locales:
                         - en_US
     #8-2
@@ -458,7 +458,7 @@ jobs:
                         operator: 'IN'
                         value: ['GS1_GDSN']
                 structure:
-                    scope: print
+                    scope: GS1_GDSN
                     locales:
                         - en_US
 
@@ -487,7 +487,7 @@ jobs:
                         operator: 'IN'
                         value: ['MASTER_DATA']
                 structure:
-                    scope: ecommerce
+                    scope: PRODUCT_CATALOG
                     locales:
                         - en_US
 
