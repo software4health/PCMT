@@ -16,7 +16,7 @@ abstract class AbstractUpdateCommand
     /** @var AttributeInterface */
     protected $attribute;
 
-    public function decorate(AttributeInterface $attribute, string $field, array $data): AttributeInterface
+    public function update(AttributeInterface $attribute, string $field, array $data): AttributeInterface
     {
         try {
             $this->validateAttribute($attribute);

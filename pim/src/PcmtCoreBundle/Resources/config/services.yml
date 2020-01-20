@@ -6,10 +6,6 @@
 
 services:
 
-    pcmt_create_attribute_manager:
-        class: 'PcmtCoreBundle\Extension\PcmtAttributeManager'
-        autowire: true
-
     #util command for the one below (PcmtCreateAllAttributesCommand)
     PcmtCoreBundle\Command\PcmtCreateAttributeForRefDataCommand:
         autowire: true
@@ -31,6 +27,10 @@ services:
         autowire: true
         tags:
             - { name: 'console.command', command: 'pcmt:reference_data:create' }
+
+    pcmt_update_attribute.concatenated_fields_values:
+        class: PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\Command\ConcatenatedAttributeCommand
+        autowire: true
 
     pcmt_e2Open_mapping:
         class: PcmtCoreBundle\Connector\Mapping\E2OpenMapping
