@@ -514,6 +514,6 @@ jobs:
         connector: Pcmt Connector
         alias: pcmt_e2open_import
         label: pcmt_e2open_import
-        type: import
+        type: import_hidden
         configuration:
             xmlDirPath: ''
