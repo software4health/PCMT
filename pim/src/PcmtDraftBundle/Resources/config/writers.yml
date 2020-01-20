@@ -1,0 +1,8 @@
+services:
+    pcmt_connector.job.writer.database.product_draft:
+        class: 'PcmtDraftBundle\Connector\Job\Writer\Database\PcmtDraftProductWriter'
+        parent: pim_connector.writer.database.product
+        calls:
+            - [setProductNormalizer, ['@pim_catalog.normalizer.standard.product']]
+            - [setProductDraftSaver, ['@pcmt_core.save.productDraft']]
+            - [setProductBuilder, ['@pim_catalog.builder.product']]
