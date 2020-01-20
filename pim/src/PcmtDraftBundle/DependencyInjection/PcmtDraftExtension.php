@@ -33,6 +33,7 @@ class PcmtDraftExtension extends Extension
         $loader->load('data_sources.yml');
         $loader->load('steps.yml');
         $loader->load('jobs.yml');
+        $loader->load('writers.yml');
     }
 
     public function getAlias(): string
