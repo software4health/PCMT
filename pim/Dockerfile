@@ -56,7 +56,7 @@ ADD --chown=node:node .cache/yarn-cache ${YARN_CACHE_PATH}
 COPY --from=pim --chown=node:node /srv/pim /srv/pim
 
 WORKDIR /srv/pim
-ENV YARN_CACHE_FOLDER ${YARN_CACHE_PATH}
+ENV YARN_CACHE_FOLDER ${YARN_CACHE_PATH}docker
 RUN yarn install && \
     yarn run less && \
     yarn run webpack-dev

@@ -516,4 +516,4 @@ jobs:
         label: pcmt_e2open_import
         type: import_hidden
         configuration:
-            xmlDirPath: ''
+            xmlFilePath: ''
