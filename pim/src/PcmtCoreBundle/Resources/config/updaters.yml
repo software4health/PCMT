@@ -35,7 +35,7 @@ services:
             - '@pim_catalog.repository.locale'
             - '@pim_catalog.registry.attribute_type'
             - '@pim_structure.updater.translatable'
-            - '@pcmt_create_attribute_manager'
+            - '@pcmt_update_attribute.concatenated_fields_values'
             - ['auto_option_sorting', 'is_read_only']
 
     ## field setters

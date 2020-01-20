@@ -16,7 +16,7 @@ use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use Akeneo\Tool\Component\StorageUtils\Exception\UnknownPropertyException;
 use PcmtCoreBundle\Entity\Attribute;
-use PcmtCoreBundle\Extension\PcmtAttributeManager;
+use PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\Command\ConcatenatedAttributeCommand;
 use PcmtCoreBundle\Updater\AttributeUpdater;
 use PcmtCoreBundle\Updater\TranslatableUpdater;
 use PHPUnit\Framework\MockObject\MockObject as Mock;
@@ -42,8 +42,8 @@ class AttributeUpdaterTest extends TestCase
     /** @var Attribute|Mock */
     protected $attribute;
 
-    /** @var PcmtAttributeManager|Mock */
-    protected $attributeManager;
+    /** @var ConcatenatedAttributeCommand|Mock */
+    protected $attributeCommand;
 
     protected function setUp(): void
     {
@@ -52,7 +52,8 @@ class AttributeUpdaterTest extends TestCase
         $this->registryMock = $this->createMock(AttributeTypeRegistry::class);
         $this->translatableUpdaterMock = $this->createMock(TranslatableUpdater::class);
         $this->attribute = $this->createMock(Attribute::class);
-        $this->attributeManager = $this->createMock(PcmtAttributeManager::class);
+        $this->attributeCommand = $this->createMock(ConcatenatedAttributeCommand::class);
+
         $this->propertiesMock = [];
         parent::setUp();
     }
@@ -64,7 +65,7 @@ class AttributeUpdaterTest extends TestCase
             $this->localeRepositoryMock,
             $this->registryMock,
             $this->translatableUpdaterMock,
-            $this->attributeManager,
+            $this->attributeCommand,
             $this->propertiesMock
         );
     }
@@ -85,7 +86,7 @@ class AttributeUpdaterTest extends TestCase
                 $this->localeRepositoryMock,
                 $this->registryMock,
                 $this->translatableUpdaterMock,
-                $this->attributeManager,
+                $this->attributeCommand,
                 $this->propertiesMock, ])
             ->getMock();
         $attributeUpdater->expects($this->atLeastOnce())->method('validateDataType');

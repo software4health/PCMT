@@ -18,7 +18,7 @@ use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use Akeneo\Tool\Component\StorageUtils\Exception\UnknownPropertyException;
 use Doctrine\Common\Util\ClassUtils;
-use PcmtCoreBundle\Extension\PcmtAttributeManager;
+use PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\Command\ConcatenatedAttributeCommand;
 
 /**
  * @override: Handle localizable attribute description when updating an attribute
@@ -36,18 +36,18 @@ class AttributeUpdater extends BaseAttributeUpdater
     /** @var TranslatableUpdater */
     protected $translatableUpdater;
 
-    /** @var PcmtAttributeManager */
-    protected $pcmtAttributesManager;
+    /** @var ConcatenatedAttributeCommand */
+    protected $concatenatedAttributeCommand;
 
     public function __construct(
         AttributeGroupRepositoryInterface $attrGroupRepo,
         LocaleRepositoryInterface $localeRepository,
         AttributeTypeRegistry $registry,
         \Akeneo\Tool\Component\Localization\TranslatableUpdater $translatableUpdater,
-        PcmtAttributeManager $pcmtAttributesManager,
+        ConcatenatedAttributeCommand $concatenatedAttributeCommand,
         array $properties
     ) {
-        $this->pcmtAttributesManager = $pcmtAttributesManager;
+        $this->concatenatedAttributeCommand = $concatenatedAttributeCommand;
         parent::__construct($attrGroupRepo, $localeRepository, $registry, $translatableUpdater, $properties);
     }
 
@@ -176,7 +176,8 @@ class AttributeUpdater extends BaseAttributeUpdater
         $attribute->setProperty('auto_option_sorting', $data);
 
                 break;
-        case 'concatenated':
+      case 'concatenated':
+          $this->concatenatedAttributeCommand->update($attribute, $field, $data);
                 break;
       default:
         $this->setValue($attribute, $field, $data);
