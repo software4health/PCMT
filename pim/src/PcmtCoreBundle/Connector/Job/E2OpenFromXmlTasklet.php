@@ -95,19 +95,9 @@ class E2OpenFromXmlTasklet implements TaskletInterface
 
     public function execute(): void
     {
-        $dirPath = $this->stepExecution->getJobParameters()
-            ->get('xmlDirPath');
-
-        $directoryIterator = new \RecursiveDirectoryIterator($dirPath);
-        $recursiveIterator = new \RecursiveIteratorIterator($directoryIterator);
-        $fileIterator = new \RegexIterator($recursiveIterator, '/^.+\.xml$/i', \RecursiveRegexIterator::ALL_MATCHES);
-        $fileIterator->rewind();
-
-        while ($fileIterator->current()) {
-            $currentFile = $fileIterator->key();
-            $this->processFile($currentFile);
-            $fileIterator->next();
-        }
+        $filePath = $this->stepExecution->getJobParameters()
+            ->get('xmlFilePath');
+        $this->processFile($filePath);
     }
 
     private function processNode(array $element, string $parent = ''): void

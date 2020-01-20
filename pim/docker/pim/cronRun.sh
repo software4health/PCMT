@@ -5,14 +5,9 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
-FILE=/etc/cron.allow
+sudo bash -c 'echo "docker" >> /etc/cron.allow'
+sudo service cron restart
 
-if [ ! -f "$FILE" ]; then
-    sudo touch "$FILE"
-fi
-
-echo "docker" >> /etc/cron.allow
-
-sudo crontab /srv/pim/crontab
-sudo service cron start
+crontab /srv/pim/crontab
+sudo service cron restart
 

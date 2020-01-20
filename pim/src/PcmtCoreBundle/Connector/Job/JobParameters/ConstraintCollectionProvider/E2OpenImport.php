@@ -19,7 +19,7 @@ class E2OpenImport implements ConstraintCollectionProviderInterface
         return new Collection(
             [
                 'fields' => [
-                    'xmlDirPath' => [],
+                    'xmlFilePath' => [],
                 ],
             ]
         );

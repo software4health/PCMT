@@ -18,10 +18,11 @@ fi
 echo "Running PCMT with profile: $profile"
 
 source cpFromTmp.sh
-source cronRun.sh
 
 ./wait.sh mysql 3306
 ./wait.sh elasticsearch 9200
+
+source cronRun.sh
 
 shopt -s nocasematch
 if [ "production" != $profile ]; then
@@ -33,6 +34,7 @@ else
     bin/console --env=prod pim:installer:assets --symlink
 fi
 
+bin/console --env=prod pcmt:reference_data:create
 bin/console --env=prod akeneo:batch:job-queue-consumer-daemon &
 
 sudo php-fpm7.2 -F

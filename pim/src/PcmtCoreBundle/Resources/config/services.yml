@@ -49,3 +49,10 @@ services:
             - '@pim_catalog.repository.attribute'
             - '@pim_catalog.repository.family'
             - '%akeneo_measure.measures_config%'
+
+    PcmtCoreBundle\Command\ProcessE2OpenImport:
+        arguments:
+            - '%e2Open_import_files_directory%'
+            - '@monolog.logger'
+        tags:
+            - { name: 'console.command', command: 'pcmt:e2Open:import_from_files' }
