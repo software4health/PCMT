@@ -18,7 +18,6 @@ printf '%s, ' "${files[@]}"
 
 (
   echo cd "$SFTP_REMOTE_DIR"
-  echo -mkdir "$SFTP_REMOTE_ARCHIVE_DIR"
   for file in "${files[@]}"; do
     echo get "$file"
     echo !chown docker:docker "$file"
