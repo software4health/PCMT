@@ -1,5 +1,9 @@
 <?php
 /**
+ * This handler downloads xml files from external urls.
+ * It may be used to download fresh xmls with reference data.
+ * The xmls used in the system are committed to repository in folder ...
+ *
  * Copyright (c) 2019, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0

@@ -3,7 +3,6 @@ build/
 pim/.cache
 pim/vendor
 web/
-pim/src/PcmtCoreBundle/Resources/config/reference_data/
 pim/src/PcmtCoreBundle/Command/PcmtHelperCommand
 pim/phpunit.xml
 pim/src/PcmtCoreBundle/Resources/E2OpenImport

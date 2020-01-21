@@ -517,3 +517,21 @@ jobs:
         type: import_hidden
         configuration:
             xmlFilePath: ''
+            xmlDirPath: ''
+    #14
+    reference_data_download_xmls:
+        connector: Pcmt Connector
+        alias: reference_data_download_xmls
+        label: reference_data_download_xmls
+        type: data_download
+        configuration:
+            dirPath: 'src/PcmtCoreBundle/Resources/reference_data/gs1Codes/'
+
+    #15
+    reference_data_import_xml:
+        connector: Pcmt Connector
+        alias: reference_data_import_xml
+        label: reference_data_import_xml
+        type: import_hidden
+        configuration:
+            dirPath: 'src/PcmtCoreBundle/Resources/reference_data/gs1Codes/'

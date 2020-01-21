@@ -23,11 +23,6 @@ services:
         tags:
             - { name: 'console.command', command: 'pcmt:job-creator' }
 
-    PcmtCoreBundle\Command\InitializeReferenceDataImport:
-        autowire: true
-        tags:
-            - { name: 'console.command', command: 'pcmt:reference_data:create' }
-
     pcmt_update_attribute.concatenated_fields_values:
         class: PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\Command\ConcatenatedAttributeCommand
         autowire: true

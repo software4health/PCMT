@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Command\Handler;
 
-use PcmtCoreBundle\Registry\PcmtConnectorJobParametersRegistry;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -31,7 +30,7 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
 
     public function __construct()
     {
-        $this->dir = 'src/PcmtCoreBundle/Resources/config/';
+        $this->dir = 'src/PcmtCoreBundle/Resources/reference_data/gs1Codes/';
         $directory = new \RecursiveDirectoryIterator($this->dir);
         $iterator = new \RecursiveIteratorIterator($directory);
         $this->fileIterator = new \RegexIterator($iterator, '/^.+\.xml$/i', \RecursiveRegexIterator::ALL_MATCHES);
@@ -49,7 +48,6 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         try {
-            $this->createJobIfNotExists($output);
             $this->fileIterator->rewind();
             while ($this->fileIterator->current()) {
                 $currentFile = $this->fileIterator->key();
@@ -79,15 +77,5 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
             $output->writeln($exception);
             die;
         }
-    }
-
-    private function createJobIfNotExists(OutputInterface $output): void
-    {
-        $jobCreatror = $this->getApplication()->find('pcmt:job-creator');
-        $arguments = [
-            'jobName' => PcmtConnectorJobParametersRegistry::JOB_REFERENCE_DATA_IMPORT_NAME,
-        ];
-        $input = new ArrayInput($arguments);
-        $jobCreatror->run($input, $output);
     }
 }

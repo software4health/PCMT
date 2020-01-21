@@ -33,7 +33,7 @@ class XmlReferenceDataImport implements DefaultValuesProviderInterface
     {
         return [
             'filePath'      => null,
-            'dirPath'       => 'src/PcmtCoreBundle/Resources/config/reference_data',
+            'dirPath'       => 'src/PcmtCoreBundle/Resources/reference_data/gs1Codes/',
             'uploadAllowed' => [
                 new Type('bool'),
                 new IsTrue(['groups' => 'UploadExecution']),
