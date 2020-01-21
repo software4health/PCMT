@@ -11,7 +11,10 @@ namespace PcmtDraftBundle\Connector\Job\Writer\Database;
 
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Connector\Writer\Database\ProductWriter;
+use Akeneo\Pim\Enrichment\Component\Product\EntityWithFamilyVariant\EntityWithFamilyVariantAttributesProvider;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Normalizer\Standard\ProductNormalizer;
+use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
@@ -33,6 +36,9 @@ class PcmtDraftProductWriter extends ProductWriter
 
     /** @var ProductBuilderInterface */
     protected $productBuilder;
+
+    /** @var EntityWithFamilyVariantAttributesProvider */
+    protected $attributeProvider;
 
     public function setUser(UserInterface $user): void
     {
@@ -59,6 +65,11 @@ class PcmtDraftProductWriter extends ProductWriter
         $this->productBuilder = $productBuilder;
     }
 
+    public function setAttributeProvider(EntityWithFamilyVariantAttributesProvider $attributeProvider): void
+    {
+        $this->attributeProvider = $attributeProvider;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -74,6 +85,11 @@ class PcmtDraftProductWriter extends ProductWriter
             }
             if (null !== $product) {
                 $data = $this->productNormalizer->normalize($item, 'standard');
+
+                if (isset($data['parent'])) {
+                    $data['values'] = $this->filterUnexpectedAttributes($product, $data['values']);
+                }
+
                 $draft = new ExistingProductDraft(
                     $product,
                     $data,
@@ -85,5 +101,20 @@ class PcmtDraftProductWriter extends ProductWriter
             }
             $this->incrementCount($item);
         }
+    }
+
+    private function filterUnexpectedAttributes(ProductInterface $product, array $values): array
+    {
+        $attributes = $this->attributeProvider->getAttributes($product);
+        $levelAttributeCodes = array_map(
+            function (AttributeInterface $attribute) {
+                return $attribute->getCode();
+            },
+            $attributes
+        );
+
+        return array_filter($values, function ($key) use ($levelAttributeCodes) {
+            return in_array($key, $levelAttributeCodes);
+        }, ARRAY_FILTER_USE_KEY);
     }
 }
