@@ -6,3 +6,4 @@ services:
             - [setProductNormalizer, ['@pim_catalog.normalizer.standard.product']]
             - [setProductDraftSaver, ['@pcmt_core.save.productDraft']]
             - [setProductBuilder, ['@pim_catalog.builder.product']]
+            - [setAttributeProvider, ['@pim_catalog.family_variant.provider.entity_with_family_variant_attributes']]
