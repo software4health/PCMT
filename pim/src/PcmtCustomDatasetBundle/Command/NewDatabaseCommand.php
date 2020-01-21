@@ -24,6 +24,8 @@ class NewDatabaseCommand extends DatabaseCommand
         if ('PcmtCustomDatasetBundle:pcmt_global' === $this->getContainer()->getParameter('installer_data')) {
             $this->commandExecutor->runCommand('pcmt:custom-dataset:create');
         }
+        // in following command we use already imported xmls stored in code repository
+        $this->commandExecutor->runCommand('pcmt:handler:import_reference_data');
 
         return $this;
     }

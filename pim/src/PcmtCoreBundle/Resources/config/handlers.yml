@@ -11,6 +11,7 @@ services:
         tags:
             - { name: 'console.command', command: 'pcmt:handler:download_reference_data' }
 
+
     PcmtCoreBundle\Command\Handler\PcmtReferenceDataImportHandler:
         autowire: true
         tags:

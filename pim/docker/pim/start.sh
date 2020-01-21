@@ -27,14 +27,12 @@ source cronRun.sh
 shopt -s nocasematch
 if [ "production" != $profile ]; then
     bin/console --env=prod pim:install --force --symlink --clean
-    bin/console --env=prod pcmt:handler:import_reference_data
 else
     bin/console --env=prod pim:installer:prepare-required-directories
     bin/console --env=prod pim:installer:check-requirements
     bin/console --env=prod pim:installer:assets --symlink
 fi
 
-bin/console --env=prod pcmt:reference_data:create
 bin/console --env=prod akeneo:batch:job-queue-consumer-daemon &
 
 sudo php-fpm7.2 -F

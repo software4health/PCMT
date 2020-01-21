@@ -54,7 +54,6 @@ class ImportRefDataFiles extends AbstractStep
             try {
                 $path = $this->createFileNameForReferenceData($url);
                 $filePath = fopen($path, 'w');
-                sleep(1);
                 $response = $this->guzzleClient->get($url, ['save_to' => $filePath]);
                 $stepExecution->addSummaryInfo('Succesful parse', 'url: ' . $url . ' code: ' .$response->getStatusCode());
                 fclose($filePath);
