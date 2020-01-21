@@ -1,2 +1,2 @@
 cd $SFTP_REMOTE_DIR
-ls *.xml
+ls -1 *_catalogueItemNotification_*.xml
