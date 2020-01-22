@@ -30,4 +30,4 @@ e.g.
 - [ ] Test Plan is updated
 - [ ] Documentation is updated
 
-/label ~type::user-story ~needs-ac
+/label ~"type::user-story" ~needs-ac
