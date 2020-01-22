@@ -25,6 +25,11 @@ The following environment variables are available:
   tagged in Docker Hub.
 - `PCMT_ASSET_URL`: The full, public, URL where the project's `tar.gz` file
   is found.
+- `PCMT_MYSQL_CREDS_CONF`: The path to the mysql credentials file
+- `PCMT_S3_CREDS_CONF`: The path to the AWS S3 credentials file
+- `PCMT_FTP_GET_CREDS_CONF`: The path to the FTP-GET credentials file.
+- `PCMT_SFTP_PRIVKEY_FILENAME`: The path to the private SFTP key file for 
+  FTP-GET
 
 
 ## Quick Start

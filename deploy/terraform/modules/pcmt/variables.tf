@@ -68,3 +68,15 @@ variable "security-group-id" {
   type        = string
   description = "ID of security group to use for instance"
 }
+
+variable "backup-days-till-glacier" {
+  type        = number
+  description = "Days until backups are moved to glacier"
+  default     = 15
+}
+
+variable "backup-days-till-expire" {
+  type        = number
+  description = "Days until backups expire - are deleted"
+  default     = 30
+}
