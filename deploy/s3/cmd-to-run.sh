@@ -25,4 +25,10 @@ if [ ! -r "$LOCAL_DIR_TO_SYNC_OUT" ]; then
     exit 1
 fi
 
+echo Syncing to S3...
 s3cmd sync "$LOCAL_DIR_TO_SYNC_OUT" "$S3_BUCKET"
+
+if [ $? == 0 ]; then
+    echo "Removing local copies..."
+    rm -rfv "$LOCAL_DIR_TO_SYNC_OUT/*"
+fi
