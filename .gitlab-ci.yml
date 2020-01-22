@@ -142,6 +142,17 @@ ftp-get docker build:
     - docker push pcmt/cron:latest
     - docker push pcmt/ftp-get:latest
 
+scalyr docker build:
+  stage: build
+  only:
+    refs:
+      - master@pcmt/pcmt
+    changes:
+      - deploy/scalyr/**/*
+  script:
+    - make scalyr
+    - docker push pcmt/scalyr:latest
+
 ############### Dev Environment ###############
 
 .env-dev: 

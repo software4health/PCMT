@@ -38,6 +38,16 @@ services:
         secrets:
             - ftp-get-creds
             - sftp-privkey
+
+    scalyr:
+        image: pcmt/scalyr
+        environment:
+            - PCMT_HOSTNAME
+        volumes:
+            - '/var/run/docker.sock:/var/scalyr/docker.sock'
+            - '/var/lib/docker/containers:/var/lib/docker/containers'
+        secrets:
+            - scalyr-creds
             
 volumes:
     mysql-backup:
@@ -53,5 +63,7 @@ secrets:
     ftp-get-creds:
         file: "${PCMT_FTP_GET_CREDS_CONF:-./conf/ftp-get-creds.env}"
     sftp-privkey:
-        file: ${PCMT_SFTP_PRIVKEY_FILENAME:-./conf/sftp-privkey}
+        file: "${PCMT_SFTP_PRIVKEY_FILENAME:-./conf/sftp-privkey}"
+    scalyr-creds:
+        file: "${PCMT_SCALYR_CREDS_CONF:-./conf/scalyr-creds.json}"
         
