@@ -7,3 +7,12 @@ services:
             - [setProductDraftSaver, ['@pcmt_core.save.productDraft']]
             - [setProductBuilder, ['@pim_catalog.builder.product']]
             - [setAttributeProvider, ['@pim_catalog.family_variant.provider.entity_with_family_variant_attributes']]
+
+    pcmt_connector.job.writer.database.product_model:
+        class: 'PcmtDraftBundle\Connector\Job\Writer\Database\PcmtDraftProductModelWriter'
+        parent: pim_connector.writer.database.product_model
+        calls:
+            - [setProductModelNormalizer, ['@pim_catalog.normalizer.standard.product_model']]
+            - [setProductModelDraftSaver, ['@pcmt_core.save.productModelDraft']]
+            - [setProductModelFactory, ['@pim_catalog.factory.product_model']]
+            - [setProductModelUpdater, ['@pim_catalog.updater.product_model']]
