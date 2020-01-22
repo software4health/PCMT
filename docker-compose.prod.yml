@@ -21,7 +21,7 @@ services:
         environment:
             CRON_SCHEDULE: '1,31 * * * *'
             LOCAL_DIR_TO_SYNC_OUT: '/backup'
-            S3_BUCKET: "${PCMT_S3_BUCKET:-$PCMT_HOSTNAME}"
+            S3_BUCKET: "${PCMT_S3_BUCKET:-pcmt_backup}"
         volumes:
             - mysql-backup:/backup
         secrets:
