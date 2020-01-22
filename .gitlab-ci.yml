@@ -456,7 +456,8 @@ env-gfpvan-uat (KEEP DB):
 env-gfpvan-uat-destroy:
   extends:
     - .env-gfpvan-uat
-    - .env-gfpvan-uat_script-destroy
+  script: 
+    - ./deploy/terraform/run-docker.sh gfpvan-uat destroy -auto-approve
   environment:
     name: gfpvan-uat
     action: stop
