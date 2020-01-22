@@ -16,3 +16,4 @@ services:
             - [setProductModelDraftSaver, ['@pcmt_core.save.productModelDraft']]
             - [setProductModelFactory, ['@pim_catalog.factory.product_model']]
             - [setProductModelUpdater, ['@pim_catalog.updater.product_model']]
+            - [setAttributeProvider, ['@pim_catalog.family_variant.provider.entity_with_family_variant_attributes']]

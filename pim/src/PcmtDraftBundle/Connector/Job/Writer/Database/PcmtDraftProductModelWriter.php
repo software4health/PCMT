@@ -10,8 +10,12 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Connector\Job\Writer\Database;
 
 use Akeneo\Pim\Enrichment\Component\Product\Connector\Writer\Database\ProductModelWriter;
+use Akeneo\Pim\Enrichment\Component\Product\EntityWithFamilyVariant\EntityWithFamilyVariantAttributesProvider;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Normalizer\Standard\ProductModelNormalizer;
+use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
+use Akeneo\Tool\Component\Batch\Item\FileInvalidItem;
+use Akeneo\Tool\Component\Batch\Item\InvalidItemException;
 use Akeneo\Tool\Component\StorageUtils\Factory\SimpleFactoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
@@ -35,6 +39,9 @@ class PcmtDraftProductModelWriter extends ProductModelWriter
 
     /** @var ObjectUpdaterInterface */
     private $productModelUpdater;
+
+    /** @var EntityWithFamilyVariantAttributesProvider */
+    protected $attributeProvider;
 
     public function setUser(UserInterface $user): void
     {
@@ -61,6 +68,11 @@ class PcmtDraftProductModelWriter extends ProductModelWriter
         $this->productModelUpdater = $productModelUpdater;
     }
 
+    public function setAttributeProvider(EntityWithFamilyVariantAttributesProvider $attributeProvider): void
+    {
+        $this->attributeProvider = $attributeProvider;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -70,45 +82,105 @@ class PcmtDraftProductModelWriter extends ProductModelWriter
         $realTimeVersioning = $jobParameters->get('realTimeVersioning');
         $this->versionManager->setRealTimeVersioning($realTimeVersioning);
         foreach ($items as $productModel) {
-            $newProductModel = null;
-            if ($productModel->getId()) {
-                $newProductModel = $productModel;
-            } else {
-                $data = [
-                    'code'           => $productModel->getCode(),
-                    'family_variant' => $productModel->getFamilyVariant()->getCode(),
-                ];
-                $newProductModel = $this->createProductModel($data);
-                $this->productModelSaver->save($newProductModel);
-                $productModel->setCreated(new \DateTime());
-                $productModel->setUpdated(new \DateTime());
-            }
-            if (null !== $newProductModel) {
-                $data = $this->productModelNormalizer->normalize($productModel, 'standard');
-                $draft = new ExistingProductModelDraft(
-                    $newProductModel,
-                    $data,
-                    $this->user,
-                    new \DateTime(),
-                    AbstractDraft::STATUS_NEW
+            try {
+                $baseProductModel = $this->getProductModelOrCreateIfNotExists($productModel);
+                $data = $this->prepareData($productModel);
+                try {
+                    $this->createDraft($baseProductModel, $data);
+                } catch (\InvalidArgumentException $exception) {
+                    throw $this->skipItemAndReturnException($data, $exception->getMessage(), $exception);
+                }
+                $this->incrementCount($productModel);
+            } catch (InvalidItemException $exception) {
+                $this->stepExecution->addWarning(
+                    $exception->getMessage(),
+                    $exception->getMessageParameters(),
+                    $exception->getItem()
                 );
-                $this->draftSaver->save($draft);
             }
-            $this->incrementCount($productModel);
         }
     }
 
-    private function createProductModel(array $data): object
+    private function getProductModelOrCreateIfNotExists(ProductModelInterface $item): ProductModelInterface
     {
-        $productModel = $this->productModelFactory->create();
-        $this->productModelUpdater->update($productModel, $data);
+        if ($item->getId()) {
+            return $item;
+        }
 
-        return $productModel;
+        return $this->createProductModel($item);
+    }
+
+    private function createProductModel(ProductModelInterface $productModel): ProductModelInterface
+    {
+        $productModel->setCreated(new \DateTime());
+        $productModel->setUpdated(new \DateTime());
+        $data = [
+            'code'           => $productModel->getCode(),
+            'family_variant' => $productModel->getFamilyVariant()->getCode(),
+        ];
+        if (!$productModel->isRoot()) {
+            $p_m_data = $this->productModelNormalizer->normalize($productModel, 'standard');
+            $data['parent'] = $p_m_data['parent'];
+            $data['values']['SOURCE_OF_DATA'] = $p_m_data['values']['SOURCE_OF_DATA'];
+        }
+        $newProductModel = $this->productModelFactory->create();
+        $this->productModelUpdater->update($newProductModel, $data);
+        $this->productModelSaver->save($newProductModel);
+
+        return $newProductModel;
+    }
+
+    private function prepareData(ProductModelInterface $productModel): array
+    {
+        $data = $this->productModelNormalizer->normalize($productModel, 'standard');
+        if (!$productModel->isRoot()) {
+            $data['values'] = $this->filterUnexpectedAttributes($productModel, $data['values']);
+        }
+
+        return $data;
+    }
+
+    private function createDraft(ProductModelInterface $productModel, array $data): void
+    {
+        $draft = new ExistingProductModelDraft(
+            $productModel,
+            $data,
+            $this->user,
+            new \DateTime(),
+            AbstractDraft::STATUS_NEW
+        );
+        $this->draftSaver->save($draft);
     }
 
     protected function incrementCount(ProductModelInterface $productModel): void
     {
         $action = $productModel->getId() ? 'process' : 'create';
         $this->stepExecution->incrementSummaryInfo($action);
+    }
+
+    private function skipItemAndReturnException(array $item, string $message, ?\Throwable $previousException = null): InvalidItemException
+    {
+        if ($this->stepExecution) {
+            $this->stepExecution->incrementSummaryInfo('skip');
+        }
+        $itemPosition = null !== $this->stepExecution ? $this->stepExecution->getSummaryInfo('item_position') : 0;
+        $invalidItem = new FileInvalidItem($item, $itemPosition);
+
+        return new InvalidItemException($message, $invalidItem, [], 0, $previousException);
+    }
+
+    private function filterUnexpectedAttributes(ProductModelInterface $productModel, array $values): array
+    {
+        $attributes = $this->attributeProvider->getAttributes($productModel);
+        $levelAttributeCodes = array_map(
+            function (AttributeInterface $attribute) {
+                return $attribute->getCode();
+            },
+            $attributes
+        );
+
+        return array_filter($values, function ($key) use ($levelAttributeCodes) {
+            return in_array($key, $levelAttributeCodes);
+        }, ARRAY_FILTER_USE_KEY);
     }
 }
