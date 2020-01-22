@@ -11,3 +11,18 @@ services:
                 - '@pim_connector.step.xlsx_product.import_associations'
         tags:
             - { name: akeneo_batch.job, connector: '%pim_connector.connector_name.xlsx%', type: '%pim_connector.job.import_type%' }
+
+    pim_connector.job.xlsx_product_model_import:
+        class: '%pim_connector.job.simple_job.class%'
+        arguments:
+            - '%pim_connector.job_name.xlsx_product_model_import%'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            -
+                - '@pim_connector.step.charset_validator'
+                - '@pcmt_connector.step.xlsx_root_product_model.import'
+                - '@pcmt_connector.step.xlsx_sub_product_model.import'
+                - '@pim_connector.step.xlsx_compute_product_models_descendants.import'
+                - '@pim_connector.step.xlsx_product_model.import_associations'
+        tags:
+            - { name: akeneo_batch.job, connector: '%pim_connector.connector_name.xlsx%', type: '%pim_connector.job.import_type%' }

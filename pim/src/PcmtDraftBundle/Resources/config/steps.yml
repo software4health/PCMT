@@ -11,3 +11,29 @@ services:
             - '%pim_job_product_batch_size%'
         calls:
             - [setUserRepository, ['@pim_user.repository.user']]
+
+    pcmt_connector.step.xlsx_root_product_model.import:
+        class: 'PcmtDraftBundle\Connector\Job\Step\PcmtImportViaDraftStep'
+        arguments:
+            - 'import_root_product_model'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@pim_connector.reader.file.xlsx_product_model'
+            - '@pim_connector.processor.denormalization.root_product_model'
+            - '@pcmt_connector.job.writer.database.product_model'
+            - '%pim_job_product_batch_size%'
+        calls:
+            - [setUserRepository, ['@pim_user.repository.user']]
+
+    pcmt_connector.step.xlsx_sub_product_model.import:
+        class: 'PcmtDraftBundle\Connector\Job\Step\PcmtImportViaDraftStep'
+        arguments:
+            - 'import_sub_product_model'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@pim_connector.reader.file.xlsx_product_model'
+            - '@pim_connector.processor.denormalization.sub_product_model'
+            - '@pcmt_connector.job.writer.database.product_model'
+            - '%pim_job_product_batch_size%'
+        calls:
+            - [setUserRepository, ['@pim_user.repository.user']]
