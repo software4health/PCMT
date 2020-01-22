@@ -222,7 +222,7 @@ jobs:
         connector: Pcmt Connector
         alias:     pcmt_xlsx_product_import
         label:     PCMT XLSX 8_products import
-        type:      import
+        type:      import_hidden
         configuration:
             filePath:           /tmp/product.xlsx
             uploadAllowed:      true
