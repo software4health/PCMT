@@ -1,6 +1,5 @@
 code;label-en_US;parent
 master;"Main catalog";
-Products_and_Trade_Items;"Products and Trade Items";master
 MASTER_DATA;"Master and Mapping Data";master
 GS1_GDSN;"GS1-GDSN Trade Items";
 GDSN;GDSN;GS1_GDSN

@@ -420,7 +420,7 @@ jobs:
                         value: true
                     -   field: categories
                         operator: 'IN'
-                        value: ['Products_and_Trade_Items']
+                        value: ['PRODUCTS_TO_TRADE_ITEMS']
                     -   field: completeness
                         operator: 'ALL'
                         value: 100
