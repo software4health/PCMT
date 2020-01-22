@@ -30,5 +30,5 @@ s3cmd sync "$LOCAL_DIR_TO_SYNC_OUT" "$S3_BUCKET"
 
 if [ $? == 0 ]; then
     echo "Removing local copies..."
-    rm -rfv "$LOCAL_DIR_TO_SYNC_OUT/*"
+    find "$LOCAL_DIR_TO_SYNC_OUT" -type f -print -delete
 fi
