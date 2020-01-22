@@ -433,6 +433,7 @@ env-gfpvan (KEEP DB):
   environment:
     name: gfpvan-uat
     url: http://gfpvan-uat.pcmt.villagereach.org
+    on_stop: env-gfpvan-uat-destroy
 
 .env-gfpvan-uat_script-deploy:
   script:
@@ -451,3 +452,11 @@ env-gfpvan-uat (KEEP DB):
     - .env-gfpvan-uat_script-deploy
   variables:
     PCMT_PROFILE: production
+
+env-gfpvan-uat-destroy:
+  extends:
+    - .env-gfpvan-uat
+    - .env-gfpvan-uat_script-destroy
+  environment:
+    name: gfpvan-uat
+    action: stop
