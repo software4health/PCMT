@@ -91,7 +91,7 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
     /**
      * {@inheritdoc}
      */
-    public function process($item): ProductInterface
+    public function process($item): ?ProductInterface
     {
         $itemHasStatus = isset($item['enabled']);
         if (!isset($item['enabled'])) {
