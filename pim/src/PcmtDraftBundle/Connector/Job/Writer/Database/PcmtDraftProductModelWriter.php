@@ -119,9 +119,15 @@ class PcmtDraftProductModelWriter extends ProductModelWriter
             'family_variant' => $productModel->getFamilyVariant()->getCode(),
         ];
         if (!$productModel->isRoot()) {
-            $p_m_data = $this->productModelNormalizer->normalize($productModel, 'standard');
-            $data['parent'] = $p_m_data['parent'];
-            $data['values']['SOURCE_OF_DATA'] = $p_m_data['values']['SOURCE_OF_DATA'];
+            $productModelData = $this->productModelNormalizer->normalize($productModel, 'standard');
+            $data['parent'] = $productModelData['parent'];
+
+            $attributeSet = $productModel->getFamilyVariant()->getVariantAttributeSet(1);
+            $axesAttributes = $attributeSet->getAxes();
+            foreach ($axesAttributes as $attribute) {
+                $code = $attribute->getCode();
+                $data['values'][$code] = $productModelData['values'][$code];
+            }
         }
         $newProductModel = $this->productModelFactory->create();
         $this->productModelUpdater->update($newProductModel, $data);
