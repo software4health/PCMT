@@ -80,7 +80,7 @@ class PcmtDraftProductWriter extends ProductWriter
         foreach ($items as $item) {
             try {
                 $product = $this->getProductOrCreateIfNotExists($item);
-                $data = $this->prepareData($product);
+                $data = $this->prepareData($item);
 
                 try {
                     $this->createDraft($product, $data);
