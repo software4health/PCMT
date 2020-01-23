@@ -96,7 +96,7 @@ class ProductModelFromDraftCreator
         $newProductModel->setValues(new WriteValueCollection());
         $newProductModel->setAssociations(new ArrayCollection());
         $newProductModel->setCategories(new ArrayCollection());
-        foreach ($productModel->getValues() as $value) {
+        foreach ($productModel->getValuesForVariation() as $value) {
             $newProductModel->addValue($value);
         }
         $data = $draft->getProductData();
