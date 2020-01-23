@@ -17,3 +17,10 @@ services:
                 - 'pcmt_catalog_concatenated'
         tags:
             - { name: pim_catalog.attribute.comparator }
+
+    pim_catalog.comparator.attribute.boolean:
+        class: PcmtCoreBundle\Service\Comparator\PcmtBooleanComparator
+        arguments:
+            - ['pim_catalog_boolean']
+        tags:
+            - { name: pim_catalog.attribute.comparator, priority: -100 }
