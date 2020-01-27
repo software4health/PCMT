@@ -421,6 +421,9 @@ jobs:
                     -   field: categories
                         operator: 'IN'
                         value: ['PRODUCTS_TO_TRADE_ITEMS']
+                    -   field: family
+                        operator: 'IN'
+                        value: ['RH_PRODUCTS_TRADEITEMS_VARIANTS']
                     -   field: completeness
                         operator: 'ALL'
                         value: 100
