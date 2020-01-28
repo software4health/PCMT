@@ -12,12 +12,16 @@ namespace PcmtDraftBundle\Connector\Job\Step;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Batch\Step\ItemStep;
 use Akeneo\UserManagement\Bundle\Doctrine\ORM\Repository\UserRepository;
+use Akeneo\UserManagement\Component\Model\UserInterface;
 use Akeneo\UserManagement\Component\Repository\UserRepositoryInterface;
 
 class PcmtImportViaDraftStep extends ItemStep
 {
     /** @var UserRepository */
     private $userRepository;
+
+    /** @var UserInterface */
+    private $user;
 
     public function setUserRepository(UserRepositoryInterface $userRepository): void
     {
@@ -30,8 +34,21 @@ class PcmtImportViaDraftStep extends ItemStep
     public function doExecute(StepExecution $stepExecution): void
     {
         $jobExecution = $stepExecution->getJobExecution();
-        $user = $this->userRepository->findOneByIdentifier($jobExecution->getUser());
-        $this->writer->setUser($user);
+        $this->user = $this->userRepository->findOneByIdentifier($jobExecution->getUser());
         parent::doExecute($stepExecution);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function write($processedItems)
+    {
+        $user = $this->userRepository->find($this->user->getId());
+        if (!$user) {
+            throw new \Exception('No user found');
+        }
+        $this->writer->setUser($user);
+
+        return parent::write($processedItems);
     }
 }
