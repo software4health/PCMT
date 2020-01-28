@@ -58,7 +58,7 @@ class ProductDraftApprover extends DraftApprover
             $violations = new ConstraintViolationList();
             $violations->add($violation);
         } else {
-            $violations = $this->validator->validate($product);
+            $violations = $this->validator->validate($product, null, ['Default', 'creation']);
         }
 
         if (0 === $violations->count()) {

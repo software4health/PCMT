@@ -67,7 +67,7 @@ class PcmtProductController extends ProductController
             );
         }
 
-        $violations = $this->validator->validate($product);
+        $violations = $this->validator->validate($product, null, ['Default', 'creation']);
         if ($violations->count() > 0) {
             $normalizedViolations = [];
             foreach ($violations as $violation) {
