@@ -9,7 +9,7 @@ services:
         class: PcmtDraftBundle\Controller\PcmtDraftController
         autowire: true
         arguments:
-            $constraintViolationNormalizer: '@pim_enrich.normalizer.product_violation'
+            $constraintViolationNormalizer: '@pcmt_draft.normalizer.product_violation_with_label'
 
     pcmt_core.controller.product:
         class: 'PcmtDraftBundle\Controller\PcmtUiProductController'
