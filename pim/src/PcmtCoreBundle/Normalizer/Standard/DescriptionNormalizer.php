@@ -9,24 +9,15 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Normalizer\Standard;
 
-use Akeneo\Pim\Enrichment\Component\Product\Normalizer\Standard\TranslationNormalizer as BaseTranslationNormalizer;
+use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-/**
- * Class TranslationNormalizer
- *
- * @author                 Benjamin Hil <benjamin.hil@dnd.fr>
- * @copyright              Copyright (c) 2018 Agence Dn'D
- * @license                http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *
- * @see                   http://www.dnd.fr/
- */
-class TranslationNormalizer extends BaseTranslationNormalizer
+class DescriptionNormalizer implements NormalizerInterface
 {
     /**
-     * @param mixed $object  Object to normalize
-     * @param array $context Context options for the normalizer
+     * {@inheritdoc}
      */
-    public function normalizeDescription($object, array $context = []): array
+    public function normalize($object, $format = null, array $context = []): array
     {
         $context = array_merge(
             [
@@ -52,5 +43,13 @@ class TranslationNormalizer extends BaseTranslationNormalizer
         }
 
         return $translations;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsNormalization($data, $format = null): bool
+    {
+        return $data instanceof AttributeInterface;
     }
 }
