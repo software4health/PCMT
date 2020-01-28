@@ -86,7 +86,7 @@ services:
             - [setCreator, ['@pcmt.service.product_model_from_draft_creator']]
 
     pim_enrich.controller.rest.mass_edit:
-        class: PcmtDraftBundle\Controller\PcmtMassEditController
+        class: PcmtDraftBundle\Controller\MassEditController
         arguments:
             - '@oro_datagrid.mass_action.parameters_parser'
             - '@pim_datagrid.adapter.oro_to_pim_grid_filter'

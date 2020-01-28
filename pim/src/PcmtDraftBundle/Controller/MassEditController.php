@@ -8,12 +8,11 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Controller;
 
-use Akeneo\Pim\Enrichment\Bundle\Controller\InternalApi\MassEditController;
-use Akeneo\Pim\Enrichment\Bundle\MassEditAction\Operation\MassEditOperation;
+use Akeneo\Pim\Enrichment\Bundle\Controller\InternalApi\MassEditController as OriginalMassEditController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class PcmtMassEditController extends MassEditController
+class MassEditController extends OriginalMassEditController
 {
     /**
      * {@inheritdoc}
@@ -21,13 +20,10 @@ class PcmtMassEditController extends MassEditController
     public function launchAction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        if ('change_family' === $data['operation']) {
+        if (isset($data['operation']) && 'change_family' === $data['operation']) {
             return new JsonResponse(null, 403);
         }
-        $data = $this->operationConverter->convert($data);
-        $operation = new MassEditOperation($data['jobInstanceCode'], $data['filters'], $data['actions']);
-        $this->operationJobLauncher->launch($operation);
 
-        return new JsonResponse();
+        return parent::launchAction($request);
     }
 }
