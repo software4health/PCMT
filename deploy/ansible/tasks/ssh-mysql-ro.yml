@@ -7,13 +7,13 @@
 - name: Create user for mysql ssh
   user: 
     name: mysql_ssh
-  when: ssh_authorized_key.stat.isreg
+  when: ssh_authorized_key.stat.isreg is defined and ssh_authorized_key.stat.isreg 
 
 - name: Read authorized key into variable
   slurp:
     src: "{{ ssh_authorized_key.stat.path }}"
   register: ssh_auth_key_slurp
-  when: ssh_authorized_key.stat.isreg
+  when: ssh_authorized_key.stat.isreg is defined and ssh_authorized_key.stat.isreg 
 
 - name: Add authorized ssh key to mysql ssh user
   authorized_key:
@@ -21,5 +21,5 @@
     state: present
     exclusive: true
     key: "{{ ssh_auth_key_slurp.content | b64decode }}"
-  when: ssh_authorized_key.stat.isreg
+  when: ssh_authorized_key.stat.isreg is defined and ssh_authorized_key.stat.isreg 
 
