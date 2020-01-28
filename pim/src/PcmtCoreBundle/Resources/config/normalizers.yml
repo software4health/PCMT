@@ -8,25 +8,25 @@ services:
 
 
     ### Concatenated fields for attribute
-    pcmt_catalog.normalizer.standard.concatenated_attribute:
+    pcmt_core.normalizer.standard.concatenated_attribute:
         class: 'PcmtCoreBundle\Normalizer\Standard\ConcatenatedTypeNormalizer'
-        tags:
-            - { name: pim_standard_format_serializer.normalizer, priority: 90 }
+
+    ### Description field for attribute
+    pcmt_core.normalizer.standard.attribute_description:
+        class: 'PcmtCoreBundle\Normalizer\Standard\DescriptionNormalizer'
 
     ### Attribute
     pim_catalog.normalizer.standard.attribute:
         class: 'PcmtCoreBundle\Normalizer\Standard\AttributeNormalizer'
         arguments:
-            - '@pcmt_catalog.normalizer.standard.concatenated_attribute'
             - '@pim_catalog.normalizer.standard.translation'
             - '@pim_catalog.normalizer.standard.datetime'
             - ['auto_option_sorting']
+        calls:
+            - ['setConcatenatedNormalizer', ['@pcmt_core.normalizer.standard.concatenated_attribute']]
+            - ['setDescriptionNormalizer', ['@pcmt_core.normalizer.standard.attribute_description']]
         tags:
             - { name: pim_standard_format_serializer.normalizer, priority: 90 }
-
-parameters:
-    pim_catalog.normalizer.standard.translation.class: PcmtCoreBundle\Normalizer\Standard\TranslationNormalizer
-
 
 
 

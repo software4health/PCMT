@@ -19,10 +19,6 @@ class ConcatenatedTypeNormalizer implements NormalizerInterface
      */
     public function normalize($cncAttribute, $format = null, array $context = []): array
     {
-        if (!empty($context)) {
-            throw new \InvalidArgumentException('Concatenated attributes are out of any scope.');
-        }
-
         $attributes = $cncAttribute->getProperty('attributes');
         $separators = $cncAttribute->getProperty('separators');
 
@@ -36,11 +32,7 @@ class ConcatenatedTypeNormalizer implements NormalizerInterface
         }
 
         if ($separators) {
-            $serialized = explode(',', $separators);
-            for ($i = 1; $i <= count($serialized); $i++) {
-                $prefix = 'separator' . (string) $i;
-                $output[$prefix] = $serialized[$i - 1];
-            }
+            $output['separator1'] = $separators;
         }
 
         return $output;
