@@ -54,6 +54,16 @@ cpFileFromEnvIntoSecrets "$PCMT_S3_CREDS_CONF" "/conf/aws-s3-creds.env"
 cpFileFromEnvIntoSecrets "$PCMT_FTP_GET_CREDS_CONF" "/conf/ftp-get-creds.env"
 cpFileFromEnvIntoSecrets "$PCMT_SFTP_PRIVKEY_FILENAME" "/conf/sftp-privkey"
 cpFileFromEnvIntoSecrets "$PCMT_SCALYR_CREDS_CONF" "/conf/scalyr-creds.json"
+cpFileFromEnvIntoSecrets "$PCMT_MYSQL_INIT_CONF" "/conf/mysql-init.sql.dist"
+cpFileFromEnvIntoSecrets "$PCMT_MYSQL_ROOT_PASSWORD_CONF" \
+    "/conf/mysql-root-password.dist"
+cpFileFromEnvIntoSecrets "$PCMT_MYSQL_USERNAME_CONF" \
+    "/conf/mysql-username.dist"
+cpFileFromEnvIntoSecrets "$PCMT_MYSQL_PASSWORD_CONF" \
+    "/conf/mysql-password.dist"
+cpFileFromEnvIntoSecrets "$PCMT_MYSQL_SSH_AUTHORIZED_KEY_CONF" \
+    "/conf/ssh_authorized_key"
+
 
 docker run --rm \
     -e AWS_ACCESS_KEY_ID \

@@ -24,4 +24,5 @@
   
   tasks:
     - include_tasks: tasks/pim.yml
+    - include_tasks: tasks/ssh-mysql-ro.yml
     

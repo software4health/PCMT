@@ -30,7 +30,20 @@ The following environment variables are available:
 - `PCMT_FTP_GET_CREDS_CONF`: The path to the FTP-GET credentials file.
 - `PCMT_SFTP_PRIVKEY_FILENAME`: The path to the private SFTP key file for 
   FTP-GET
+- `PCMT_MYSQL_INIT_CONF`: The path to a SQL file that will be used to initalize
+  a fresh install of PCMT.  See [Initalizing a fresh instance][mysql-init].
+- `PCMT_MYSQL_ROOT_PASSWORD_CONF`: The path to a file that contains the MySQL
+  root password.
+- `PCMT_MYSQL_USERNAME_CONF`: The path to a file that contains the MySQL
+  username for the Akeneo database.  Must match Akeneo configuration.
+- `PCMT_MYSQL_PASSWORD_CONF`: The path to a file that contains the MySQL
+  password for the Akeneo database that `PCMT_MYSQL_USERNAME_CONF` contains.
+  Must match Akeneo configuration.
+- `PCMT_MYSQL_SSH_AUTHORIZED_KEY_CONF`: (optional) The path to a file that
+  contains the public ssh key that will be authorized to connect to the instance
+  under the user `mysql_ssh`.
 
+[mysql-init]: https://hub.docker.com/_/mysql/
 
 ## Quick Start
 
