@@ -7,12 +7,6 @@ parameters:
     pim_catalog.normalizer.standard.product.associations.class: PcmtDraftBundle\Normalizer\AssociationsNormalizer
 
 services:
-    pcmt_catalog.draft_new.property_normalizer:
-        class: PcmtDraftBundle\Normalizer\NewDraftPropertyNormalizer
-        autowire: true
-
-    pcmt_catalog.draft_pending.property_normalizer:
-        class: PcmtDraftBundle\Normalizer\PendingDraftPropertyNormalizer
 
     pcmt_core.draft.status.normalizer:
         class: PcmtDraftBundle\Normalizer\DraftStatusNormalizer
