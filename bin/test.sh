@@ -32,4 +32,4 @@ ddev_run_ret_val=$?
 
 mkdir -p "$BUILD_DIR"
 docker cp "$CONTAINER_NAME":/srv/pim/unit-results.xml "$BUILD_DIR"/unit-results.xml
-docker cp "$CONTAINER_NAME":/srv/pim/coverage-report "$BUILD_DIR"/coverage-report
+docker cp "$CONTAINER_NAME":/srv/pim/coverage-report "$BUILD_DIR"
