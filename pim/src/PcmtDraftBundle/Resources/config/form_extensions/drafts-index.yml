@@ -57,3 +57,10 @@ extensions:
         module: pcmt/draft/filters
         parent: pcmt-product-drafts-index-grid-container
         targetZone: filters
+
+    pcmt-pictogram-index-mass-actions:
+        module: pcmt/draft/mass-actions
+        parent: pcmt-product-drafts-index
+        targetZone: bottom-panel
+        config:
+            label: pim_datagrid.mass_action.selected.product
