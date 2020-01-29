@@ -57,4 +57,17 @@ class DraftViolationException extends UnprocessableEntityHttpException
     {
         return $this->productModel;
     }
+
+    public function getContextForNormalizer(): array
+    {
+        $context = [];
+        if ($this->getProduct()) {
+            $context['product'] = $this->getProduct();
+        }
+        if ($this->getProductModel()) {
+            $context['productModel'] = $this->getProductModel();
+        }
+
+        return $context;
+    }
 }

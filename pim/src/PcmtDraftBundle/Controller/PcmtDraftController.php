@@ -196,13 +196,7 @@ class PcmtDraftController
             $this->draftFacade->approveDraft($draft);
         } catch (DraftViolationException $e) {
             $normalizedViolations = [];
-            $context = [];
-            if ($e->getProduct()) {
-                $context['product'] = $e->getProduct();
-            }
-            if ($e->getProductModel()) {
-                $context['productModel'] = $e->getProductModel();
-            }
+            $context = $e->getContextForNormalizer();
             foreach ($e->getViolations() as $violation) {
                 $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
                     $violation,
@@ -231,13 +225,7 @@ class PcmtDraftController
             try {
                 $this->draftFacade->approveDraft($draft);
             } catch (DraftViolationException $e) {
-                $context = [];
-                if ($e->getProduct()) {
-                    $context['product'] = $e->getProduct();
-                }
-                if ($e->getProductModel()) {
-                    $context['productModel'] = $e->getProductModel();
-                }
+                $context = $e->getContextForNormalizer();
                 foreach ($e->getViolations() as $violation) {
                     $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
                         $violation,
