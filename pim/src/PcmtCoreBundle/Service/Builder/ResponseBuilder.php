@@ -100,7 +100,7 @@ class ResponseBuilder
                     'total'       => $this->total,
                     'firstPage'   => self::FIRST_PAGE,
                     'currentPage' => $this->page,
-                    'lastPage'    => ceil($this->total / self::PER_PAGE),
+                    'lastPage'    => $this->getLastPage($this->total),
                 ],
             ];
         } else {
@@ -110,6 +110,11 @@ class ResponseBuilder
         $serializer = new Serializer($this->normalizers);
 
         return new JsonResponse($serializer->normalize($response, $this->format, $this->context));
+    }
+
+    public function getLastPage(int $total): int
+    {
+        return (int) ceil($total / self::PER_PAGE);
     }
 
     public function buildPaginatedResponse(array $result, int $total, ?int $page): JsonResponse
