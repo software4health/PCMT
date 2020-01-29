@@ -9,11 +9,13 @@ config:
         ### Dashboard widget
         pcmt/product/widget/draft-products-widget: pcmtdraft/js/draft/draft-products-widget
 
+
         ### form ###
         pcmt/product/form/attributes/read-only-all-attributes: pcmtdraft/js/product/form/attributes/read-only-all-attributes
         pcmt/product-model/form/add-child/add-child: pcmtdraft/js/product-model/form/add-child/add-child
 
         ### Drafts ###
+        pcmt/draft/mass-actions: pcmtdraft/js/draft/mass-actions
         pcmt/draft/list: pcmtdraft/js/draft/draft_list
         pcmt/draft/draft-pagination: pcmtdraft/js/draft/draft-pagination
         pcmt/draft/filters: pcmtdraft/js/draft/filters
@@ -87,6 +89,7 @@ config:
         pcmt/product/template/form/no-draft: pcmtdraft/templates/product/form/no-draft.html
         pcmt/product/template/form/column-tabs-navigation: pcmtdraft/templates/product/form/column-tabs-navigation.html
         pcmt/product/template/product/form/status-switcher-disabled: pcmtdraft/templates/product/form/status-switcher-disabled.html
+        pcmt/draft/template/mass-actions: pcmtdraft/templates/draft/mass-actions.html
 
         ### controllers ###
         pcmt/product/drafts/index: pcmtdraft/js/controller/drafts_index
