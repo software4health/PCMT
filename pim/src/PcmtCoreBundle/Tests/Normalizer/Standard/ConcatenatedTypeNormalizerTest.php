@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Tests\Normalizer;
 
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use PcmtCoreBundle\Normalizer\Standard\ConcatenatedTypeNormalizer;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -63,6 +64,24 @@ class ConcatenatedTypeNormalizerTest extends TestCase
                 'attribute2' => 'bbb',
                 'separator1' => ',',
             ]],
+        ];
+    }
+
+    /**
+     * @dataProvider provideDataForSupportsNormalization
+     */
+    public function testSupportsNormalization(object $object, bool $expectedResult): void
+    {
+        $descriptionNormalizer = new ConcatenatedTypeNormalizer();
+        $result = $descriptionNormalizer->supportsNormalization($object);
+        $this->assertSame($expectedResult, $result);
+    }
+
+    public function provideDataForSupportsNormalization(): array
+    {
+        return [
+            'correct object' => [$this->createMock(AttributeInterface::class), true],
+            'wrong object'   => [$this->createMock(ProductInterface::class), false],
         ];
     }
 }
