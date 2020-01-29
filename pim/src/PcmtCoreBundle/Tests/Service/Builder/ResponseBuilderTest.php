@@ -47,7 +47,8 @@ class ResponseBuilderTest extends TestCase
 
     public function testBuildEmptyResponse(): void
     {
-        $responseBuilder = $this->getResponseBuilderInstance();
+        $serializer = $this->createMock(NormalizerInterface::class);
+        $responseBuilder = new ResponseBuilder($serializer);
 
         $response = $responseBuilder->build();
 
@@ -55,24 +56,10 @@ class ResponseBuilderTest extends TestCase
         $this->assertSame(json_encode(new \stdClass()), $response->getContent());
     }
 
-    public function testBuildEmptyResponseWithNormalizer(): void
-    {
-        $responseBuilder = $this->getResponseBuilderInstance();
-
-        $normalizer = $this->createMock(NormalizerInterface::class);
-
-        $response = $responseBuilder
-            ->addNormalizers([$normalizer])
-            ->build();
-
-        $this->assertSame(json_encode(new \stdClass()), $response->getContent());
-    }
-
     public function testBuildResponseForDraftWithNormalizer(): void
     {
-        $responseBuilder = $this->getResponseBuilderInstance();
-
         $normalizer = $this->createMock(NormalizerInterface::class);
+        $responseBuilder = new ResponseBuilder($normalizer);
         $draft = $this->createMock(Attribute::class);
         $normalizerResult = [
             'id' => 1234,
@@ -88,7 +75,6 @@ class ResponseBuilderTest extends TestCase
             ->willReturn($normalizerResult);
 
         $response = $responseBuilder
-            ->addNormalizers([$normalizer])
             ->setData([$draft])
             ->build();
 
@@ -97,9 +83,8 @@ class ResponseBuilderTest extends TestCase
 
     public function testBuildResponseForDraftWithNormalizerAndIncludeProductInContext(): void
     {
-        $responseBuilder = $this->getResponseBuilderInstance();
-
         $normalizer = $this->createMock(NormalizerInterface::class);
+        $responseBuilder = new ResponseBuilder($normalizer);
         $draft = $this->createMock(Attribute::class);
         $normalizerResult = [
             'id'      => 1234,
@@ -118,7 +103,6 @@ class ResponseBuilderTest extends TestCase
             ->willReturn($normalizerResult);
 
         $response = $responseBuilder
-            ->addNormalizers([$normalizer])
             ->setData([$draft])
             ->setContext(['include_product' => true])
             ->build();
@@ -128,9 +112,8 @@ class ResponseBuilderTest extends TestCase
 
     public function testBuildResponseForDraftsListWithNormalizer(): void
     {
-        $responseBuilder = $this->getResponseBuilderInstance();
-
         $normalizer = $this->createMock(NormalizerInterface::class);
+        $responseBuilder = new ResponseBuilder($normalizer);
         $draft1 = $this->createMock(Attribute::class);
         $draft2 = $this->createMock(Attribute::class);
         $normalizerResult = [
@@ -153,7 +136,6 @@ class ResponseBuilderTest extends TestCase
             ->willReturn($normalizerResult);
 
         $response = $responseBuilder
-            ->addNormalizers([$normalizer])
             ->setData(
                 [
                     $draft1,
@@ -170,23 +152,11 @@ class ResponseBuilderTest extends TestCase
      */
     public function testBuildPaginatedResponse(array $input, array $result): void
     {
-        $responseBuilder = $this->getResponseBuilderInstance();
+        $serializer = $this->createMock(NormalizerInterface::class);
+        $responseBuilder = new ResponseBuilder($serializer);
         $total = count($input);
         $response = $responseBuilder->buildPaginatedResponse($input, $total, ResponseBuilder::FIRST_PAGE);
 
         $this->assertJsonStringEqualsJsonString(json_encode(new JsonResponse($result)), json_encode($response));
-    }
-
-    public function testShouldThrowExceptionWhenInvalidNormalizerProvided(): void
-    {
-        $responseBuilder = $this->getResponseBuilderInstance();
-        $invalidNormalizer = [$this->createMock(Response::class)];
-        $this->expectException(\InvalidArgumentException::class);
-        $responseBuilder->addNormalizers($invalidNormalizer);
-    }
-
-    private function getResponseBuilderInstance(): ResponseBuilder
-    {
-        return new ResponseBuilder([]);
     }
 }

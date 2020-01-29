@@ -11,7 +11,6 @@ namespace PcmtCoreBundle\Service\Builder;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 
 class ResponseBuilder
 {
@@ -36,24 +35,12 @@ class ResponseBuilder
     /** @var ?string */
     protected $format = null;
 
-    /** @var NormalizerInterface[] */
-    protected $normalizers = [];
+    /** @var NormalizerInterface */
+    protected $serializer;
 
-    public function __construct(array $normalizers)
+    public function __construct(NormalizerInterface $serializer)
     {
-        $this->addNormalizers($normalizers);
-    }
-
-    public function addNormalizers(array $normalizers): self
-    {
-        array_walk($normalizers, function (&$value): void {
-            if (!$value instanceof NormalizerInterface) {
-                throw new \InvalidArgumentException('Invalid normalizer class.');
-            }
-            $this->normalizers[] = $value;
-        });
-
-        return $this;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -107,9 +94,7 @@ class ResponseBuilder
             $response = $this->data;
         }
 
-        $serializer = new Serializer($this->normalizers);
-
-        return new JsonResponse($serializer->normalize($response, $this->format, $this->context));
+        return new JsonResponse($this->serializer->normalize($response, $this->format, $this->context));
     }
 
     public function getLastPage(int $total): int
