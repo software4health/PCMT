@@ -18,11 +18,6 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ResponseBuilderTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
     public function buildPaginatedResponseDataProvider(): array
     {
         $input = [];
