@@ -12,7 +12,7 @@ services:
     image: pcmt/mysql-backup
     restart: unless-stopped
     environment:
-      CRON_SCHEDULE: '*/15 * * * *'
+      CRON_SCHEDULE: '0 3 * * *'
       BACKUP_DIR: '/backup'
     secrets:
       - mysql-creds
@@ -25,7 +25,7 @@ services:
     image: pcmt/s3
     restart: unless-stopped
     environment:
-      CRON_SCHEDULE: '1,31 * * * *'
+      CRON_SCHEDULE: '15 3 * * *'
       LOCAL_DIR_TO_SYNC_OUT: '/backup'
       S3_BUCKET: "${PCMT_S3_BUCKET}"
     volumes:
