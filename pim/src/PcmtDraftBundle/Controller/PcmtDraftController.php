@@ -75,13 +75,15 @@ class PcmtDraftController
         $draftRepository = $this->entityManager->getRepository(AbstractDraft::class);
 
         $page = $request->query->get('page') ?? ResponseBuilder::FIRST_PAGE;
+        $total = $draftRepository->count($criteria);
+        $lastPage = $this->responseBuilder->getLastPage($total);
+        $page = $page > $lastPage ? $lastPage : $page;
         $drafts = $draftRepository->findBy(
             $criteria,
             null,
             ResponseBuilder::PER_PAGE,
             ($page * ResponseBuilder::PER_PAGE) - ResponseBuilder::PER_PAGE
         );
-        $total = $draftRepository->count($criteria);
 
         return $this->responseBuilder->buildPaginatedResponse($drafts, $total, (int) $page);
     }
