@@ -52,7 +52,7 @@ services:
         calls:
             - [setEntityManager, ['@doctrine.orm.entity_manager']]
         tags:
-            - { name: pim_internal_api_serializer.normalizer, priority: 100 }
+            - { name: pim_internal_api_serializer.normalizer, priority: 200 }
 
     pcmt_core.normalizer.product_model:
         class: PcmtDraftBundle\Normalizer\PcmtProductModelNormalizer
@@ -60,7 +60,7 @@ services:
         calls:
             - [setEntityManager, ['@doctrine.orm.entity_manager']]
         tags:
-            - { name: pim_internal_api_serializer.normalizer, priority: 100 }
+            - { name: pim_internal_api_serializer.normalizer, priority: 200 }
 
     pcmt_core.normalizer.product_violation:
         class: PcmtDraftBundle\Normalizer\ProductViolationNormalizer
