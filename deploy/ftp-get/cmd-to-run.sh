@@ -22,7 +22,7 @@ printf '%s, ' "${files[@]}"
     echo get "$file"
     echo !chown docker:docker "$file"
     echo !mv "$file" "$SFTP_LOCAL_DIR/$file"
-    #echo rename "$file" "$SFTP_REMOTE_ARCHIVE_DIR/$file"
+    echo rename "$file" "$SFTP_REMOTE_ARCHIVE_DIR/$file"
   done
 ) > /get-files.ftpbatch 
 
