@@ -99,7 +99,9 @@ class ResponseBuilder
 
     public function getLastPage(int $total): int
     {
-        return (int) ceil($total / self::PER_PAGE);
+        $lastPage = (int) ceil($total / self::PER_PAGE);
+
+        return $lastPage > 0 ? $lastPage : 1;
     }
 
     public function buildPaginatedResponse(array $result, int $total, ?int $page): JsonResponse

@@ -154,4 +154,28 @@ class ResponseBuilderTest extends TestCase
 
         $this->assertJsonStringEqualsJsonString(json_encode(new JsonResponse($result)), json_encode($response));
     }
+
+    /**
+     * @dataProvider dataGetLastPage
+     */
+    public function testGetLastPage(int $total, int $expectedLastPage): void
+    {
+        $normalizer = $this->createMock(NormalizerInterface::class);
+        $responseBuilder = new ResponseBuilder($normalizer);
+        $lastPage = $responseBuilder->getLastPage($total);
+        $this->assertSame($expectedLastPage, $lastPage);
+    }
+
+    public function dataGetLastPage(): array
+    {
+        $page = 5;
+        $numberOfElements = $page * ResponseBuilder::PER_PAGE;
+
+        return [
+            '0 elements'    => [0, 1],
+            '1 element'     => [1, 1],
+            'full pages'    => [$numberOfElements, $page],
+            'more elements' => [$numberOfElements + 2, $page + 1],
+        ];
+    }
 }
