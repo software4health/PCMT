@@ -34,6 +34,7 @@ default:
       - 'conf/**/*'
       - 'docker-compose.yml'
       - 'docker-compose.tls.yml'
+      - 'docker-compose.prod.yml'
 
 .pim_docker_build:
   stage: build
