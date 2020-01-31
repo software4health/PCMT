@@ -29,16 +29,16 @@ define(
                     this.$el.text(
                         __(this.config.title, {count: this.count}, this.count)
                     );
-                } else if (false === this.config.countable) {
+                } else {
                     this.$el.text(
-                        __(this.config.title)
+                        __(this.config.title, {count: 0}, 0)
                     );
                 }
             },
 
             setupCount() {
                 let model = this.getFormData();
-                this.count = model.draftsData.params.total;
+                this.count = model.draftsData.params.total ? model.draftsData.params.total : null;
                 this.render();
             }
         });
