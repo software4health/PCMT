@@ -3,7 +3,6 @@ services:
   fpm:
     volumes:
       - 'ftp-get:/srv/pim/src/PcmtCoreBundle/Resources/E2OpenImport/work/'
-      - 'fpm-logs:/srv/pim/var/logs/'
 
   mysql:
     ports:
@@ -55,13 +54,10 @@ services:
     volumes:
       - '/var/run/docker.sock:/var/scalyr/docker.sock'
       - '/var/lib/docker/containers:/var/lib/docker/containers'
-      - 'fpm-logs:/var/log/fpm/'
     secrets:
       - scalyr-creds
           
 volumes:
-  fpm-logs:
-    driver: local
   mysql-backup:
     driver: local
   ftp-get:
