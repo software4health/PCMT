@@ -13,14 +13,13 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
-use PcmtDraftBundle\Entity\NewProductDraft;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Service\AttributeChange\ProductAttributeChangeService;
 use PcmtDraftBundle\Service\Draft\ProductFromDraftCreator;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 
-class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterface
+class ProductDraftNormalizer extends AbstractDraftNormalizer implements NormalizerInterface
 {
     /** @var ProductFromDraftCreator */
     private $productFromDraftCreator;
@@ -69,7 +68,7 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
             // that's a special case when a original product has been removed after creating a draft.
             return $data;
         }
-        $data['label'] = $newProduct ? $this->getLabel($draft, $newProduct) : 'no label';
+        $data['label'] = $this->getLabel($draft, $newProduct);
 
         $changes = $this->productAttributeChangeService->get($newProduct, $draft->getProduct());
         $serializer = new Serializer([$this->attributeChangeNormalizer]);
@@ -104,14 +103,11 @@ class ProductDraftNormalizer extends DraftNormalizer implements NormalizerInterf
 
     private function getLabel(ProductDraftInterface $draft, ProductInterface $newProduct): string
     {
-        switch (get_class($draft)) {
-            case NewProductDraft::class:
-                return $newProduct->getIdentifier() ?? '-';
-            case ExistingProductDraft::class:
-                return $draft->getProduct()->getIdentifier() ?? '-';
+        if ($draft instanceof ExistingProductDraft) {
+            return $draft->getProduct()->getIdentifier() ?? '-';
         }
 
-        return '--';
+        return $newProduct->getIdentifier() ?? '-';
     }
 
     /**

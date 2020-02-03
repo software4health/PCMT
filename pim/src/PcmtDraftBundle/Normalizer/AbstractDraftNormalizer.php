@@ -14,7 +14,7 @@ use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\DraftStatus;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class DraftNormalizer implements NormalizerInterface
+class AbstractDraftNormalizer
 {
     /** @var DraftStatusNormalizer */
     private $statusNormalizer;
@@ -43,20 +43,14 @@ class DraftNormalizer implements NormalizerInterface
         $this->valuesNormalizer = $valuesNormalizer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize($draft, $format = null, array $context = []): array
+    public function normalize(DraftInterface $draft, ?string $format = null, array $context = []): array
     {
-        /** @var DraftInterface $draft */
         $data = [];
         $data['id'] = $draft->getId();
         $data['createdAt'] = $draft->getCreatedAtFormatted();
         $data['updatedAt'] = $draft->getUpdatedAtFormatted();
         $author = $draft->getAuthor();
-        $data['author'] = $author ?
-            $author->getFirstName() . ' ' . $author->getLastName() :
-            'no author';
+        $data['author'] = $author->getFirstName() . ' ' . $author->getLastName();
         $draftStatus = new DraftStatus($draft->getStatus());
         $data['status'] = $this->statusNormalizer->normalize($draftStatus);
         $data['type'] = ucfirst($draft->getType());
@@ -67,13 +61,5 @@ class DraftNormalizer implements NormalizerInterface
         ];
 
         return $data;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsNormalization($data, $format = null, array $context = []): bool
-    {
-        return false;
     }
 }
