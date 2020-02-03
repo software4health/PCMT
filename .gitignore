@@ -5,6 +5,5 @@ pim/vendor
 web/
 pim/src/PcmtCoreBundle/Command/PcmtHelperCommand
 pim/phpunit.xml
-pim/src/PcmtCoreBundle/Resources/E2OpenImport
 conf/ftp-get-creds.env
 conf/rhsc-sftp-openssh

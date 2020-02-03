@@ -57,26 +57,34 @@ class ProcessE2OpenImport extends ContainerAwareCommand
         }
 
         while ($workDirIterator->current()) {
-            $fileName = $workDirIterator->getFileName();
-
             try {
+                $fileName = $workDirIterator->getFileName();
+
                 $arguments['code'] = 'pcmt_e2open_import';
                 $arguments['--config'] = sprintf('{"xmlFilePath": "%s"}', $workDir . $fileName);
                 $input = new ArrayInput($arguments);
                 $returnCode = $this->executeCommand($output, $input);
 
                 if (0 === $returnCode) {
-                    rename($workDirIterator->key(), $doneDir . $fileName);
-                    $this->logger->log('import succesful');
+                    rename($workDirIterator->key(), $doneDir . $this->getNewFileName($fileName));
+                    $this->logger->info('E2Open import successful');
+                } else {
+                    throw new \Exception('returnCode from command equals ' . $returnCode);
                 }
-
-                $workDirIterator->next();
             } catch (\Throwable $exception) {
-                $output->writeln($exception->getMessage());
-                $this->logger->error('Moving file: ' . $fileName . ' to failed directory.');
-                rename($workDirIterator->key(), $failedDir . $fileName);
+                $this->logger->error('E2Open import failed: '. $exception->getMessage());
+                rename($workDirIterator->key(), $failedDir . $this->getNewFileName($fileName));
+            } finally {
+                $workDirIterator->next();
             }
         }
+    }
+
+    private function getNewFileName(string $fileName): string
+    {
+        $dt = new \DateTime();
+
+        return $dt->format('Y-m-d H:i:s:u') . ' ' . $fileName;
     }
 
     private function executeCommand(OutputInterface $output, ArrayInput $arrayInput): int
