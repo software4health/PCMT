@@ -20,7 +20,7 @@ use PcmtDraftBundle\Service\Draft\ProductModelFromDraftCreator;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 
-class ProductModelDraftNormalizer extends DraftNormalizer implements NormalizerInterface
+class ProductModelDraftNormalizer extends AbstractDraftNormalizer implements NormalizerInterface
 {
     /** @var ProductModelFromDraftCreator */
     private $productModelFromDraftCreator;

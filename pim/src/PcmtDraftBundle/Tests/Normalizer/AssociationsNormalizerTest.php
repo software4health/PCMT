@@ -18,7 +18,7 @@ use PcmtDraftBundle\Normalizer\AssociationsNormalizer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class AssociationNormalizerTest extends TestCase
+class AssociationsNormalizerTest extends TestCase
 {
     /** @var AssociationsNormalizer */
     private $associationNormalizer;
