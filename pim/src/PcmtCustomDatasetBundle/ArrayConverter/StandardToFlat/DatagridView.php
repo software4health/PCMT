@@ -27,16 +27,16 @@ class DatagridView extends AbstractSimpleArrayConverter implements ArrayConverte
     protected function convertProperty($property, $data, array $convertedItem, array $options): array
     {
         switch ($property) {
-      case 'labels':
-        foreach ($data as $localeCode => $label) {
-            $labelKey = sprintf('label-%s', $localeCode);
-            $convertedItem[$labelKey] = $label;
-        }
+            case 'labels':
+                foreach ($data as $localeCode => $label) {
+                    $labelKey = sprintf('label-%s', $localeCode);
+                    $convertedItem[$labelKey] = $label;
+                }
 
                 break;
-      default:
-        $convertedItem[$property] = (string) $data;
-    }
+            default:
+                $convertedItem[$property] = (string) $data;
+        }
 
         return $convertedItem;
     }
