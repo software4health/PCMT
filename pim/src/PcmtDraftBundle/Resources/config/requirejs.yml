@@ -15,6 +15,8 @@ config:
         pcmt/product-model/form/add-child/add-child: pcmtdraft/js/product-model/form/add-child/add-child
 
         ### Drafts ###
+        pcmt/draft/collection: pcmtdraft/js/draft/collection
+
         pcmt/draft/mass-actions: pcmtdraft/js/draft/mass-actions
         pcmt/draft/list: pcmtdraft/js/draft/draft_list
         pcmt/draft/draft-pagination: pcmtdraft/js/draft/draft-pagination
