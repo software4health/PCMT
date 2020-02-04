@@ -19,11 +19,13 @@ define(
         'pim/security-context',
         'pim/router',
         'pim/form-builder',
-        'pim/form-modal'
+        'pim/form-modal',
+        'pcmt/draft/collection'
     ],
-    function (BaseForm, Backbone, $, _, __, Routing, template, Dialog, SecurityContext, Router, FormBuilder, FormModal) {
+    function (BaseForm, Backbone, $, _, __, Routing, template, Dialog, SecurityContext, Router, FormBuilder, FormModal, DraftCollection) {
 
         return BaseForm.extend({
+            collection: null,
             events: {
                 "click .draft-changes-shortcut": "changesExpand",
                 "click .draft-changes-full": "changesCollapse",
@@ -40,6 +42,11 @@ define(
                 model.draftsData = {params: {currentPage: 1}};
                 model.loading = true;
                 this.setData(model);
+
+                this.collection = new DraftCollection(null, {
+                    inputName: 'draft-grid'
+                });
+
                 this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_update', this.render);
                 this.listenTo(this.getRoot(), 'pcmt:form:entity:update_pagination', this.onUpdatePagination);
                 this.listenTo(this.getRoot(), 'pcmt:drafts:status_choice:changed', this.onUpdateStatusChoice);
@@ -223,34 +230,38 @@ define(
 
             loadDrafts: function (reset = false) {
                 const model = this.getFormData();
+
                 if (!model.chosenStatus) {
                     return;
                 }
                 if (reset) {
                     model.draftsData.params.currentPage = 1;
                 }
+
+                this.collection.updateState({currentPage: model.draftsData.params.currentPage});
+
                 this.resetChosenDrafts();
                 model.loading = true;
                 this.setData(model);
-                $.get(Routing.generate('pcmt_core_drafts_api', {
-                    status: model.chosenStatus.id,
-                    page: model.draftsData.params.currentPage
-                }))
-                    .done(_.bind(function (resp) {
-                        const model = this.getFormData();
-                        model.drafts = resp.objects;
-                        model.draftsData.params = resp.params;
+
+                this.collection.fetch({
+                    url: Routing.generate('pcmt_core_drafts_api', {
+                        status: model.chosenStatus.id
+                    }),
+                    success: (collection, response) => {
+                        model.drafts = response.objects;
+                        model.draftsData.params = response.params;
                         model.loading = false;
                         this.setData(model);
                         this.getRoot().trigger('pcmt:drafts:listReloaded', model.drafts);
-                    }, this))
-                    .fail(_.bind(function () {
-                        const model = this.getFormData();
+                    },
+                    error: () => {
                         model.drafts = [];
                         model.loading = false;
                         this.setData(model);
                         this.getRoot().trigger('pcmt:drafts:listReloaded', model.drafts);
-                    }, this));
+                    }
+                });
             },
             render: function () {
                 const model = this.getFormData();
