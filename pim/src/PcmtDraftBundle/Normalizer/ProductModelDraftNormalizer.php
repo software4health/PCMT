@@ -13,7 +13,6 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
-use PcmtDraftBundle\Entity\NewProductModelDraft;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
 use PcmtDraftBundle\Service\AttributeChange\ProductModelAttributeChangeService;
 use PcmtDraftBundle\Service\Draft\ProductModelFromDraftCreator;
@@ -102,14 +101,11 @@ class ProductModelDraftNormalizer extends AbstractDraftNormalizer implements Nor
 
     private function getLabel(ProductModelDraftInterface $draft, ProductModelInterface $newProductModel): string
     {
-        switch (get_class($draft)) {
-            case NewProductModelDraft::class:
-                return $newProductModel->getCode() ?? '-';
-            case ExistingProductModelDraft::class:
-                return $draft->getProductModel()->getCode() ?? '-';
+        if ($draft instanceof ExistingProductModelDraft) {
+            return $draft->getProductModel()->getCode() ?? '-';
         }
 
-        return '--';
+        return $newProductModel->getCode() ?? '-';
     }
 
     /**
