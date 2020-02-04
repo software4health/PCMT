@@ -48,9 +48,9 @@ services:
 
     pcmt_core.normalizer.product:
         class: PcmtDraftBundle\Normalizer\PcmtProductNormalizer
-        parent: pim_enrich.normalizer.product
-        calls:
-            - [setEntityManager, ['@doctrine.orm.entity_manager']]
+        arguments:
+            - '@pim_enrich.normalizer.product'
+            - '@doctrine.orm.entity_manager'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 200 }
 
