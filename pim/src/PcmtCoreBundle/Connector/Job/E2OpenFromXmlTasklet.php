@@ -56,16 +56,6 @@ class E2OpenFromXmlTasklet implements TaskletInterface
     /** @var LoggerInterface */
     private $logger;
 
-    /** @var string[] */
-    private $parentMappingRequired = [
-        '{}gln',
-        '{}partyName',
-        '{}partyAddress',
-        '{}depth',
-        'measurementUnitCode',
-        'languageCode',
-    ];
-
     /** @var \PcmtCoreBundle\Service\E2Open\E2OpenAttributesService */
     private $attributesService;
 
@@ -123,12 +113,12 @@ class E2OpenFromXmlTasklet implements TaskletInterface
             return;
         }
 
-        $name = $element['name'];
-        if (in_array($name, $this->parentMappingRequired)) {
-            $name = $parent . $name;
+        $name = $parent.$element['name'];
+        if (!$mappedAttributeCode = E2OpenMapping::findMappingForKey($name)) {
+            $name = $element['name'];
+            $mappedAttributeCode = E2OpenMapping::findMappingForKey($name);
         }
 
-        $mappedAttributeCode = E2OpenMapping::findMappingForKey($name);
         if (!$mappedAttributeCode) {
             // no mapping defined for this node
             return;
@@ -223,26 +213,20 @@ class E2OpenFromXmlTasklet implements TaskletInterface
 
     private function instantiateProduct(array $element): ProductInterface
     {
-        $gtinIdentifier = $element['value'];
-
+        $identifier = $element['value'];
         $elasticIndexName = 'akeneo_pim_product';
         $esClient = $this->getElasticSearchClient($elasticIndexName);
         $esQuery = [];
         $esQuery['query']['bool']['must'] = [
             [
                 'match' => [
-                    'values.GTIN-text.<all_channels>.<all_locales>' => $gtinIdentifier,
-                ],
-            ],
-            [
-                'match' => [
-                    'family.code' => E2OpenAttributesService::FAMILY_CODE,
+                    'identifier' => $identifier,
                 ],
             ],
         ];
         $result = $esClient->search('pim_catalog_product', $esQuery);
         if ($result['hits']['total'] < 1) {
-            return $this->createNewProductInstance($gtinIdentifier);
+            return $this->createNewProductInstance($identifier);
         }
         $response = $result['hits']['hits'];
 
