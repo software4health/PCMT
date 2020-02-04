@@ -50,7 +50,7 @@ To stop & cleanup:  `make dev-clean`.
       ```
 
 1. Browse to `localhost`
-1. Login with `admin` / `admin`.
+1. Login with `admin` / `Admin123`.
 
 Notes:
 - As local files in `pim/` are updated, the containers will reflect it.
