@@ -35,7 +35,7 @@ copyrighted and licensed from Akeneo SAS:
 1. Clone Repository
 1. `make up`
 1. Browse to `localhost`
-1. Login with `admin` / `admin`.
+1. Login with `admin` / `Admin123`.
 
 To stop & cleanup:  `make dev-clean`.
 
