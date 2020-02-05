@@ -88,6 +88,7 @@ class ResponseBuilder
                     'firstPage'   => self::FIRST_PAGE,
                     'currentPage' => $this->page,
                     'lastPage'    => $this->getLastPage($this->total),
+                    'pageSize'    => self::PER_PAGE,
                 ],
             ];
         } else {
