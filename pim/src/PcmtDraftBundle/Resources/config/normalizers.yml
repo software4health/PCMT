@@ -25,7 +25,7 @@ services:
         autowire: true
         calls:
             - [setProductFromDraftCreator, ['@pcmt.service.product_from_draft_creator']]
-            - [setProductAttributeChangeService, ['@pcmt.service.product_attribute_change']]
+            - [setAttributeChangeService, ['@pcmt.service.attribute_change']]
             - [setValuesNormalizer, ['@pim_catalog.normalizer.standard.product.product_value']]
         arguments:
             $productNormalizer: '@pcmt_core.normalizer.product'
@@ -38,7 +38,7 @@ services:
         autowire: true
         calls:
             - [setProductModelFromDraftCreator, ['@pcmt.service.product_model_from_draft_creator']]
-            - [setProductModelAttributeChangeService, ['@pcmt.service.product_model_attribute_change']]
+            - [setAttributeChangeService, ['@pcmt.service.attribute_change']]
             - [setValuesNormalizer, ['@pim_catalog.normalizer.standard.product.product_value']]
         arguments:
             $productModelNormalizer: '@pcmt_core.normalizer.product_model'

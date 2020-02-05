@@ -14,7 +14,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
-use PcmtDraftBundle\Service\AttributeChange\ProductModelAttributeChangeService;
+use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
 use PcmtDraftBundle\Service\Draft\ProductModelFromDraftCreator;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -24,8 +24,8 @@ class ProductModelDraftNormalizer extends AbstractDraftNormalizer implements Nor
     /** @var ProductModelFromDraftCreator */
     private $productModelFromDraftCreator;
 
-    /** @var ProductModelAttributeChangeService */
-    protected $productModelAttributeChangeService;
+    /** @var AttributeChangeService */
+    protected $attributeChangeService;
 
     /** @var NormalizerInterface */
     protected $productModelNormalizer;
@@ -46,9 +46,9 @@ class ProductModelDraftNormalizer extends AbstractDraftNormalizer implements Nor
         $this->productModelFromDraftCreator = $productModelFromDraftCreator;
     }
 
-    public function setProductModelAttributeChangeService(ProductModelAttributeChangeService $productModelAttributeChangeService): void
+    public function setAttributeChangeService(AttributeChangeService $attributeChangeService): void
     {
-        $this->productModelAttributeChangeService = $productModelAttributeChangeService;
+        $this->attributeChangeService = $attributeChangeService;
     }
 
     /**
@@ -67,7 +67,7 @@ class ProductModelDraftNormalizer extends AbstractDraftNormalizer implements Nor
         }
         $data['label'] = $this->getLabel($draft, $newProductModel);
 
-        $changes = $this->productModelAttributeChangeService->get($newProductModel, $draft->getProductModel());
+        $changes = $this->attributeChangeService->get($newProductModel, $draft->getProductModel());
         $serializer = new Serializer([$this->attributeChangeNormalizer]);
         $data['changes'] = $serializer->normalize($changes);
 

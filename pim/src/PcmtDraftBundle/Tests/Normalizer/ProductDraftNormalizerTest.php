@@ -25,7 +25,7 @@ use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Normalizer\AttributeChangeNormalizer;
 use PcmtDraftBundle\Normalizer\DraftStatusNormalizer;
 use PcmtDraftBundle\Normalizer\ProductDraftNormalizer;
-use PcmtDraftBundle\Service\AttributeChange\ProductAttributeChangeService;
+use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
 use PcmtDraftBundle\Service\Draft\DraftStatusTranslatorService;
 use PcmtDraftBundle\Service\Draft\ProductFromDraftCreator;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -56,8 +56,8 @@ class ProductDraftNormalizerTest extends TestCase
     /** @var ProductFromDraftCreator|MockObject */
     private $creator;
 
-    /** @var ProductAttributeChangeService */
-    private $productAttributeChangeService;
+    /** @var AttributeChangeService */
+    private $attributeChangeService;
 
     /** @var FormProviderInterface */
     private $formProvider;
@@ -90,7 +90,7 @@ class ProductDraftNormalizerTest extends TestCase
         $this->creator = $this->createMock(ProductFromDraftCreator::class);
         $this->creator->method('getProductToCompare')->willReturn($this->productNew);
 
-        $this->productAttributeChangeService = $this->createMock(ProductAttributeChangeService::class);
+        $this->attributeChangeService = $this->createMock(AttributeChangeService::class);
         $this->productNormalizer = $this->createMock(NormalizerInterface::class);
 
         $this->formProvider = $this->createMock(FormProviderInterface::class);
@@ -111,7 +111,7 @@ class ProductDraftNormalizerTest extends TestCase
             $this->productNormalizer
         );
         $this->productDraftNormalizer->setProductFromDraftCreator($this->creator);
-        $this->productDraftNormalizer->setProductAttributeChangeService($this->productAttributeChangeService);
+        $this->productDraftNormalizer->setAttributeChangeService($this->attributeChangeService);
         $this->productDraftNormalizer->setValuesNormalizer($this->valuesNormalizer);
 
         $draft = $this->createMock(NewProductDraft::class);
@@ -136,7 +136,7 @@ class ProductDraftNormalizerTest extends TestCase
         $changes = [
             new AttributeChange('atName', null, 'newVal'),
         ];
-        $this->productAttributeChangeService->method('get')->willReturn($changes);
+        $this->attributeChangeService->method('get')->willReturn($changes);
 
         $this->productDraftNormalizer = new ProductDraftNormalizer(
             $this->draftStatusNormalizer,
@@ -145,7 +145,7 @@ class ProductDraftNormalizerTest extends TestCase
             $this->productNormalizer
         );
         $this->productDraftNormalizer->setProductFromDraftCreator($this->creator);
-        $this->productDraftNormalizer->setProductAttributeChangeService($this->productAttributeChangeService);
+        $this->productDraftNormalizer->setAttributeChangeService($this->attributeChangeService);
         $this->productDraftNormalizer->setValuesNormalizer($this->valuesNormalizer);
         $draft = $this->createMock(NewProductDraft::class);
         $draft->method('getProduct')->willReturn(null);
@@ -161,7 +161,7 @@ class ProductDraftNormalizerTest extends TestCase
         $changes = [
             new AttributeChange('atName', null, 'newVal'),
         ];
-        $this->productAttributeChangeService->method('get')->willReturn($changes);
+        $this->attributeChangeService->method('get')->willReturn($changes);
 
         $this->productDraftNormalizer = new ProductDraftNormalizer(
             $this->draftStatusNormalizer,
@@ -170,7 +170,7 @@ class ProductDraftNormalizerTest extends TestCase
             $this->productNormalizer
         );
         $this->productDraftNormalizer->setProductFromDraftCreator($this->creator);
-        $this->productDraftNormalizer->setProductAttributeChangeService($this->productAttributeChangeService);
+        $this->productDraftNormalizer->setAttributeChangeService($this->attributeChangeService);
         $this->productDraftNormalizer->setValuesNormalizer($this->valuesNormalizer);
 
         $draft = $this->createMock(ExistingProductDraft::class);
@@ -193,7 +193,7 @@ class ProductDraftNormalizerTest extends TestCase
         );
 
         $this->productDraftNormalizer->setProductFromDraftCreator($this->creator);
-        $this->productDraftNormalizer->setProductAttributeChangeService($this->productAttributeChangeService);
+        $this->productDraftNormalizer->setAttributeChangeService($this->attributeChangeService);
         $this->productDraftNormalizer->setValuesNormalizer($this->valuesNormalizer);
 
         $draft = $this->createMock(ExistingProductDraft::class);
@@ -217,7 +217,7 @@ class ProductDraftNormalizerTest extends TestCase
         );
 
         $this->productDraftNormalizer->setProductFromDraftCreator($this->creator);
-        $this->productDraftNormalizer->setProductAttributeChangeService($this->productAttributeChangeService);
+        $this->productDraftNormalizer->setAttributeChangeService($this->attributeChangeService);
         $this->productDraftNormalizer->setValuesNormalizer($this->valuesNormalizer);
 
         $draft = $this->createMock(ExistingProductDraft::class);
@@ -242,7 +242,7 @@ class ProductDraftNormalizerTest extends TestCase
         );
 
         $this->productDraftNormalizer->setProductFromDraftCreator($this->creator);
-        $this->productDraftNormalizer->setProductAttributeChangeService($this->productAttributeChangeService);
+        $this->productDraftNormalizer->setAttributeChangeService($this->attributeChangeService);
         $this->productDraftNormalizer->setValuesNormalizer($this->valuesNormalizer);
 
         $draft = $this->createMock(ExistingProductDraft::class);

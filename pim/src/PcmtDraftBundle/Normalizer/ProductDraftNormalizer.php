@@ -14,7 +14,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
-use PcmtDraftBundle\Service\AttributeChange\ProductAttributeChangeService;
+use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
 use PcmtDraftBundle\Service\Draft\ProductFromDraftCreator;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -24,8 +24,8 @@ class ProductDraftNormalizer extends AbstractDraftNormalizer implements Normaliz
     /** @var ProductFromDraftCreator */
     private $productFromDraftCreator;
 
-    /** @var ProductAttributeChangeService */
-    protected $productAttributeChangeService;
+    /** @var AttributeChangeService */
+    protected $attributeChangeService;
 
     /** @var NormalizerInterface */
     private $productNormalizer;
@@ -50,9 +50,9 @@ class ProductDraftNormalizer extends AbstractDraftNormalizer implements Normaliz
         $this->productFromDraftCreator = $productFromDraftCreator;
     }
 
-    public function setProductAttributeChangeService(ProductAttributeChangeService $productAttributeChangeService): void
+    public function setAttributeChangeService(AttributeChangeService $attributeChangeService): void
     {
-        $this->productAttributeChangeService = $productAttributeChangeService;
+        $this->attributeChangeService = $attributeChangeService;
     }
 
     /**
@@ -70,7 +70,7 @@ class ProductDraftNormalizer extends AbstractDraftNormalizer implements Normaliz
         }
         $data['label'] = $this->getLabel($draft, $newProduct);
 
-        $changes = $this->productAttributeChangeService->get($newProduct, $draft->getProduct());
+        $changes = $this->attributeChangeService->get($newProduct, $draft->getProduct());
         $serializer = new Serializer([$this->attributeChangeNormalizer]);
         $data['changes'] = $serializer->normalize($changes);
 
