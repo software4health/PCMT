@@ -6,7 +6,7 @@
   -->
 
 <a class="AknActionButton AknGridToolbar-actionButton <% if(handle.className) { %> <%- handle.className %> <% } %>"
-   href="javascript:void(0);">
-    <span class="js-page-change" data-page="<%- handle.pageNo %>"><%- handle.pageText %></span>
+   href="javascript:void(0);" data-page="<%- handle.pageNo %>">
+    <span class="js-page-change"><%- handle.pageText %></span>
 </a>
 <% });%>

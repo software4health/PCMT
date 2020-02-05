@@ -19,99 +19,85 @@ define(
     function (BaseForm, Backbone, $, _, __, Routing, template) {
         return BaseForm.extend({
             template: _.template(template),
+            collection: null,
+            handles: [],
             events: {
                 "click a": "onChangePage"
             },
 
             configure: function () {
-                this.listenTo(this.getRoot(), 'pcmt:drafts:listReloaded', this.render);
+                this.listenTo(this.getRoot(), 'pcmt:drafts:listReloaded', this.setCollection);
             },
 
-            getPaginationHandles: function (model) {
+            setCollection: function (collection) {
+                this.collection = collection;
 
-                if (null == model) {
+                this.updateView();
+            },
+
+            getPaginationHandles: function (state) {
+                this.handles = [];
+
+                if (!state || 0 === state.lastPage) {
                     return;
                 }
 
-                let handles = [];
+                const diff = (state.currentPage === state.firstPage || state.currentPage === state.lastPage) ? 2 : 1;
 
-                const _firstPage = model.firstPage;
-                const _currentPage = model.currentPage;
-                const _lastPage = model.lastPage;
-
-                if (_lastPage === 0) {
-                    return [];
-                }
-
-                // how many pages from current should we see in pagination
-                const diff = (_currentPage === _firstPage || _currentPage === _lastPage) ? 2 : 1;
-
-                for (let i = _firstPage; i <= _lastPage; ++i) {
-                    if (i === _firstPage || i === _lastPage) {
-                        this.addHandle(handles, i, i, _currentPage === i);
-                        continue;
-                    }
-                    if (i < _currentPage - diff) {
-                        this.addHandle(handles, null, '...');
-                        i = _currentPage - diff - 1;
-                        continue;
-                    }
-                    if (i <= _currentPage + diff) {
-                        this.addHandle(handles, i, i, _currentPage === i);
-                        continue;
-                    }
-                    if (i > _currentPage + diff) {
-                        this.addHandle(handles, null, '...');
-                        i = _lastPage - 1;
-                        continue;
+                for (let page = state.firstPage; page <= state.lastPage; page++) {
+                    if (page === state.firstPage || page === state.lastPage) {
+                        this.addHandle(page, page, state.currentPage === page);
+                    } else if (page < state.currentPage - diff) {
+                        this.addHandle(null, '...');
+                        page = state.currentPage - diff - 1;
+                    } else if (page <= state.currentPage + diff) {
+                        this.addHandle(page, page, state.currentPage === page);
+                    } else if (page > state.currentPage + diff) {
+                        this.addHandle(null, '...');
+                        page = state.lastPage - 1;
                     }
                 }
-
-                return handles;
             },
 
-            addHandle: function (handles, pageNo, pageText, isCurrent = false) {
+            updateView: function () {
+                this.$el.empty();
+
+                if (this.collection.state.totalPages <= 1) {
+                    return;
+                }
+
+                this.getPaginationHandles(this.collection.state);
+
+                this.$el.addClass('AknGridToolbar-center');
+                this.$el.append(this.template({
+                    handles: this.handles,
+                }));
+            },
+
+            addHandle: function (pageNo, pageText, isCurrent = false) {
                 let className = null;
+
                 if (isCurrent) {
                     className = 'active AknActionButton--highlight';
                 }
+
                 if (!pageNo) {
                     className = 'AknActionButton--unclickable';
                 }
-                return handles.push({
+
+                this.handles.push({
                     pageNo: pageNo,
                     pageText: pageText,
                     className: className
                 });
             },
 
-            render: function () {
-                let model = this.getFormData();
-                this.$el.empty();
-                if (model.draftsData.params.lastPage <= 1) {
-                    return;
-                }
-
-                let handles = this.getPaginationHandles(model.draftsData.params);
-                this.$el.addClass('AknGridToolbar-center');
-                this.$el.append(this.template({
-                    handles: handles,
-                }));
-            },
-
             onChangePage: function (e) {
-                const model = this.getFormData();
-                let a = $(e.currentTarget);
-                let $span = a.find('.js-page-change');
-                const page = $span.data('page');
-                if (!page) {
-                    return;
-                }
+                const page = parseInt($(e.currentTarget).data('page'));
 
-                model.draftsData.params.currentPage = page;
-                this.setData(model);
-                this.render();
-                this.getRoot().trigger('pcmt:form:entity:update_pagination');
+                if (page !== this.collection.state.currentPage) {
+                    this.getRoot().trigger('pcmt:drafts:pageChanged', page);
+                }
             }
         });
     }

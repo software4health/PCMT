@@ -23,12 +23,16 @@ define(
 
                 _.extend(this.queryParams, {
                     currentPage: 'page',
-                    pageSize:    'per_page'
+                    pageSize:    null
                 });
             },
 
             parse: function (resp) {
                 this.state.totalRecords = 'undefined' !== typeof(resp.params.total) ? resp.params.total : resp.options.totalRecords;
+                if ('undefined' !== typeof(resp.params.pageSize)) {
+                    this.state.pageSize = resp.params.pageSize;
+                }
+
                 this.state = this._checkState(this.state);
 
                 return resp.objects;

@@ -25,6 +25,7 @@ define(
     function (BaseForm, Backbone, $, _, __, Routing, template, Dialog, SecurityContext, Router, FormBuilder, FormModal, DraftCollection) {
 
         return BaseForm.extend({
+            template: _.template(template),
             collection: null,
             events: {
                 "click .draft-changes-shortcut": "changesExpand",
@@ -48,7 +49,7 @@ define(
                 });
 
                 this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_update', this.render);
-                this.listenTo(this.getRoot(), 'pcmt:form:entity:update_pagination', this.onUpdatePagination);
+                this.listenTo(this.getRoot(), 'pcmt:drafts:pageChanged', this.onUpdatePagination);
                 this.listenTo(this.getRoot(), 'pcmt:drafts:status_choice:changed', this.onUpdateStatusChoice);
                 this.listenTo(this.getRoot(), 'pcmt_draft_checkbox:selected', this.draftSelected);
                 this.listenTo(this.getRoot(), 'pcmt_draft_checkbox:selectAllVisible', this.allVisibleDraftsSelected);
@@ -56,12 +57,16 @@ define(
                 this.listenTo(this.getRoot(), 'pcmt_drafts:approved', this.loadDrafts);
             },
 
-            onUpdatePagination: function (ev) {
+            onUpdatePagination: function (page) {
+                this.collection.updateState({currentPage: page});
+
                 this.loadDrafts();
             },
 
-            onUpdateStatusChoice: function (ev) {
-                this.loadDrafts(true);
+            onUpdateStatusChoice: function () {
+                this.collection.updateState({currentPage: this.collection.state.firstPage});
+
+                this.loadDrafts();
             },
 
             changesExpand: function (ev) {
@@ -226,19 +231,12 @@ define(
                 });
             },
 
-            template: _.template(template),
-
-            loadDrafts: function (reset = false) {
+            loadDrafts: function () {
                 const model = this.getFormData();
 
                 if (!model.chosenStatus) {
                     return;
                 }
-                if (reset) {
-                    model.draftsData.params.currentPage = 1;
-                }
-
-                this.collection.updateState({currentPage: model.draftsData.params.currentPage});
 
                 this.resetChosenDrafts();
                 model.loading = true;
@@ -253,13 +251,13 @@ define(
                         model.draftsData.params = response.params;
                         model.loading = false;
                         this.setData(model);
-                        this.getRoot().trigger('pcmt:drafts:listReloaded', model.drafts);
+                        this.getRoot().trigger('pcmt:drafts:listReloaded', this.collection);
                     },
                     error: () => {
                         model.drafts = [];
                         model.loading = false;
                         this.setData(model);
-                        this.getRoot().trigger('pcmt:drafts:listReloaded', model.drafts);
+                        this.getRoot().trigger('pcmt:drafts:listReloaded', this.collection);
                     }
                 });
             },
