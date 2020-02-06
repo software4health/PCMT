@@ -14,15 +14,13 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithAssociationsInterfac
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Structure\Component\Model\AssociationType;
 use Doctrine\Common\Collections\ArrayCollection;
+use PcmtCoreBundle\Entity\Attribute;
 use PcmtDraftBundle\Normalizer\AssociationsNormalizer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class AssociationsNormalizerTest extends TestCase
 {
-    /** @var AssociationsNormalizer */
-    private $associationNormalizer;
-
     /** @var EntityWithAssociationsInterface|MockObject */
     private $normalizedEntity;
 
@@ -51,8 +49,8 @@ class AssociationsNormalizerTest extends TestCase
         $this->normalizedEntity = $this->createMock(EntityWithAssociationsInterface::class);
         $this->normalizedEntity->method('getAssociations')->willReturn([$association1, $association2]);
 
-        $this->associationNormalizer = new AssociationsNormalizer();
-        $array = $this->associationNormalizer->normalize($this->normalizedEntity, 'standard');
+        $associationNormalizer = new AssociationsNormalizer();
+        $array = $associationNormalizer->normalize($this->normalizedEntity, 'standard');
 
         $this->assertIsArray($array);
         $this->assertIsArray($array[$type1]);
@@ -62,5 +60,24 @@ class AssociationsNormalizerTest extends TestCase
         $this->assertIsArray($array[$type2]);
         $this->assertIsArray($array[$type2]['products']);
         $this->assertCount(1, $array[$type2]['products']);
+    }
+
+    /**
+     * @dataProvider dataSupportsNormalization
+     */
+    public function testSupportsNormalization(object $object, string $format, bool $expectedResult): void
+    {
+        $normalizer = new AssociationsNormalizer();
+        $result = $normalizer->supportsNormalization($object, $format);
+        $this->assertSame($expectedResult, $result);
+    }
+
+    public function dataSupportsNormalization(): array
+    {
+        return [
+            [$this->createMock(EntityWithAssociationsInterface::class), 'standard', true],
+            [$this->createMock(EntityWithAssociationsInterface::class), 'notstandard', false],
+            [$this->createMock(Attribute::class), 'standard', false],
+        ];
     }
 }
