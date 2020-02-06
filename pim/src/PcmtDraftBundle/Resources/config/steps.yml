@@ -37,3 +37,11 @@ services:
             - '%pim_job_product_batch_size%'
         calls:
             - [setUserRepository, ['@pim_user.repository.user']]
+
+    pcmt.step.drafts_bulk_approve:
+        class: '%pim_connector.step.tasklet.class%'
+        arguments:
+            - 'drafts_bulk_approve'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@pcmt.connector.job.tasklet.drafts_bulk_approve'

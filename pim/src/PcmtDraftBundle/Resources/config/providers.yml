@@ -10,3 +10,19 @@ services:
 
     pcmt.provider.form.product-model-draft:
         class: 'PcmtDraftBundle\Provider\Form\ProductModelDraftFormProvider'
+
+    pim_enrich.connector.job.job_parameters.constraint_collection_provider.drafts_bulk_approve:
+        class: 'Akeneo\Pim\Enrichment\Component\Product\Connector\Job\JobParameters\ConstraintCollectionProvider\ProductMassEdit'
+        arguments:
+            -
+                - 'job_drafts_bulk_approve'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
+
+    pim_enrich.connector.job.job_parameters.default_values_provider.drafts_bulk_approve:
+        class: 'Akeneo\Pim\Enrichment\Component\Product\Connector\Job\JobParameters\DefaultValueProvider\ProductAndProductModelMassDelete'
+        arguments:
+            -
+                - 'job_drafts_bulk_approve'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.default_values_provider }
