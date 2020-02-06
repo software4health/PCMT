@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2019, VillageReach
+ * Copyright (c) 2020, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
  */
@@ -13,14 +13,19 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Normalizer\InternalApi\ProductModelNormalizer;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class PcmtProductModelNormalizer extends ProductModelNormalizer
+class PcmtProductModelNormalizer implements NormalizerInterface
 {
-    /** @var EntityManagerInterface */
-    protected $entityManager;
+    /** @var ProductModelNormalizer */
+    private $productModelNormalizer;
 
-    public function setEntityManager(EntityManagerInterface $entityManager): void
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
+    public function __construct(ProductModelNormalizer $productModelNormalizer, EntityManagerInterface $entityManager)
     {
+        $this->productModelNormalizer = $productModelNormalizer;
         $this->entityManager = $entityManager;
     }
 
@@ -30,7 +35,7 @@ class PcmtProductModelNormalizer extends ProductModelNormalizer
     public function normalize($productModel, $format = null, array $context = []): array
     {
         /** @var ProductModelInterface $productModel */
-        $data = parent::normalize($productModel, $format, $context);
+        $data = $this->productModelNormalizer->normalize($productModel, $format, $context);
 
         if ($context['include_draft_id'] ?? false) {
             $draft = $this->entityManager->getRepository(AbstractDraft::class)->findOneBy(
@@ -44,5 +49,13 @@ class PcmtProductModelNormalizer extends ProductModelNormalizer
         }
 
         return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsNormalization($data, $format = null)
+    {
+        return $this->productModelNormalizer->supportsNormalization($data, $format);
     }
 }
