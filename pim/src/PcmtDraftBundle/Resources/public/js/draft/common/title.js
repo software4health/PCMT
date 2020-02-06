@@ -15,13 +15,20 @@ define(
     ) {
         return BaseForm.extend({
             count: null,
+            collection: null,
 
             initialize(config) {
                 this.config = config.config;
             },
 
             configure: function () {
-                this.listenTo(this.getRoot(), 'pcmt:drafts:listReloaded', this.setupCount.bind(this));
+                this.listenTo(this.getRoot(), 'pcmt:drafts:listReloaded', this.setCollection);
+            },
+
+            setCollection: function (collection) {
+                this.collection = collection;
+
+                this.setupCount();
             },
 
             render() {
@@ -37,8 +44,8 @@ define(
             },
 
             setupCount() {
-                let model = this.getFormData();
-                this.count = model.draftsData.params.total ? model.draftsData.params.total : null;
+                this.count = this.collection.state.totalRecords ? this.collection.state.totalRecords : null;
+
                 this.render();
             }
         });

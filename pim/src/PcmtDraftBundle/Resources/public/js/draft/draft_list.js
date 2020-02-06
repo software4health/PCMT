@@ -248,7 +248,6 @@ define(
                     }),
                     success: (collection, response) => {
                         model.drafts = response.objects;
-                        model.draftsData.params = response.params;
                         model.loading = false;
                         this.setData(model);
                         this.getRoot().trigger('pcmt:drafts:listReloaded', this.collection);
