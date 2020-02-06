@@ -53,19 +53,11 @@ services:
             - '@pim_catalog.updater.product_model'
             - '@pim_enrich.filter.product_model_attribute_filter'
 
-    pcmt.service.product_model_attribute_change:
-        class: PcmtDraftBundle\Service\AttributeChange\ProductModelAttributeChangeService
+    pcmt.service.attribute_change:
+        class: PcmtDraftBundle\Service\AttributeChange\AttributeChangeService
         arguments:
             - '@pim_versioning.serializer'
             - '@pim_catalog.repository.attribute'
-        autowire: true
-
-    pcmt.service.product_attribute_change:
-        class: PcmtDraftBundle\Service\AttributeChange\ProductAttributeChangeService
-        arguments:
-            - '@pim_versioning.serializer'
-            - '@pim_catalog.repository.attribute'
-        autowire: true
 
     pcmt_draft_saver_factory:
         class: 'PcmtDraftBundle\Service\Draft\DraftSaverFactory'
