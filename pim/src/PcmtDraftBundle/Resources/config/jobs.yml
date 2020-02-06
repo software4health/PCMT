@@ -26,3 +26,14 @@ services:
                 - '@pim_connector.step.xlsx_product_model.import_associations'
         tags:
             - { name: akeneo_batch.job, connector: '%pim_connector.connector_name.xlsx%', type: '%pim_connector.job.import_type%' }
+
+    pcmt_connector.job.drafts_bulk_approve:
+        class: '%pim_connector.job.simple_job.class%'
+        arguments:
+            - 'job_drafts_bulk_approve'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            -
+                - '@pcmt.step.drafts_bulk_approve'
+        tags:
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_enrich.job.mass_edit_type%' }

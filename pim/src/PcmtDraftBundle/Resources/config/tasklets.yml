@@ -1,0 +1,3 @@
+services:
+    pcmt.connector.job.tasklet.drafts_bulk_approve:
+        class: 'PcmtDraftBundle\Connector\Job\Tasklet\DraftsBulkApproveTasklet'

@@ -34,6 +34,7 @@ class PcmtDraftExtension extends Extension
         $loader->load('steps.yml');
         $loader->load('jobs.yml');
         $loader->load('writers.yml');
+        $loader->load('tasklets.yml');
     }
 
     public function getAlias(): string
