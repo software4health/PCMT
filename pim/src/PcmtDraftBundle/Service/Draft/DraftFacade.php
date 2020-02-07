@@ -20,24 +20,24 @@ class DraftFacade
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    /** @var ProductDraftApprover */
+    /** @var DraftApprover */
     private $productDraftApprover;
 
-    /** @var ProductModelDraftApprover */
+    /** @var DraftApprover */
     private $productModelDraftApprover;
 
     /** @var DraftSaverFactory */
     private $draftSaverFactory;
 
     public function __construct(
-        ProductDraftApprover $productDraftApprover,
-        ProductModelDraftApprover $productModelDraftApprover,
+        DraftApprover $productDraftApprover,
+        DraftApprover $productModelDraftApprover,
         EntityManagerInterface $entityManager,
         DraftSaverFactory $draftSaverFactory
     ) {
-        $this->entityManager = $entityManager;
         $this->productDraftApprover = $productDraftApprover;
         $this->productModelDraftApprover = $productModelDraftApprover;
+        $this->entityManager = $entityManager;
         $this->draftSaverFactory = $draftSaverFactory;
     }
 

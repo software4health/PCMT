@@ -11,25 +11,31 @@ services:
         arguments:
             - '@pim_internal_api_serializer'
 
-    pcmt.manager.draft_facade:
-        class: PcmtDraftBundle\Manager\DraftFacade
-        autowire: true
+    pcmt.service.draft_facade:
+        class: PcmtDraftBundle\Service\Draft\DraftFacade
+        arguments:
+            - '@pcmt.service.product_draft_approver'
+            - '@pcmt.service.product_model_draft_approver'
+            - '@doctrine.orm.entity_manager'
+            - '@pcmt_draft_saver_factory'
 
     pcmt.service.product_draft_approver:
-        class: PcmtDraftBundle\Service\Draft\ProductDraftApprover
-        autowire: true
-        calls:
-            - [setValidator, ['@pim_catalog.validator.product']]
-            - [setSaver, ['@pim_catalog.saver.product']]
-            - [setCreator, ['@pcmt.service.product_from_draft_creator']]
+        class: PcmtDraftBundle\Service\Draft\DraftApprover
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@security.token_storage'
+            - '@pim_catalog.validator.product'
+            - '@pim_catalog.saver.product'
+            - '@pcmt.service.product_from_draft_creator'
 
     pcmt.service.product_model_draft_approver:
-        class: PcmtDraftBundle\Service\Draft\ProductModelDraftApprover
-        autowire: true
-        calls:
-            - [setValidator, ['@pim_catalog.validator.product']]
-            - [setSaver, ['@pim_catalog.saver.product_model']]
-            - [setCreator, ['@pcmt.service.product_model_from_draft_creator']]
+        class: PcmtDraftBundle\Service\Draft\DraftApprover
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@security.token_storage'
+            - '@pim_catalog.validator.product'
+            - '@pim_catalog.saver.product_model'
+            - '@pcmt.service.product_model_from_draft_creator'
 
     pcmt.service.product_from_draft_creator:
         class: PcmtDraftBundle\Service\Draft\ProductFromDraftCreator

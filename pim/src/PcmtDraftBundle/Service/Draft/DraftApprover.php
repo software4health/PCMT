@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2019, VillageReach
+ * Copyright (c) 2020, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
  */
@@ -9,14 +9,19 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Service\Draft;
 
+use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
+use PcmtDraftBundle\Exception\DraftViolationException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-abstract class DraftApprover
+class DraftApprover
 {
     /** @var EntityManagerInterface */
     private $entityManager;
@@ -24,12 +29,27 @@ abstract class DraftApprover
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
+    /** @var ObjectFromDraftCreatorInterface */
+    private $creator;
+
+    /** @var SaverInterface */
+    private $saver;
+
+    /** @var ValidatorInterface */
+    private $validator;
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        ValidatorInterface $validator,
+        SaverInterface $saver,
+        ObjectFromDraftCreatorInterface $creator
     ) {
         $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;
+        $this->validator = $validator;
+        $this->saver = $saver;
+        $this->creator = $creator;
     }
 
     protected function updateDraftEntity(DraftInterface $draft): void
@@ -43,5 +63,30 @@ abstract class DraftApprover
         $this->entityManager->flush();
     }
 
-    abstract public function approve(DraftInterface $draft): void;
+    public function approve(DraftInterface $draft): void
+    {
+        $objectToSave = $this->creator->getObjectToSave($draft);
+        if (!$objectToSave) {
+            $violation = new ConstraintViolation(
+                'No corresponding object found.',
+                'No corresponding object found.',
+                [],
+                $draft,
+                'draft_approval',
+                'no'
+            );
+            $violations = new ConstraintViolationList();
+            $violations->add($violation);
+        } else {
+            $violations = $this->validator->validate($objectToSave, null, ['Default', 'creation']);
+        }
+
+        if (0 === $violations->count()) {
+            $this->saver->save($objectToSave);
+        } else {
+            throw new DraftViolationException($violations, $objectToSave);
+        }
+
+        $this->updateDraftEntity($draft);
+    }
 }
