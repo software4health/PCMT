@@ -46,7 +46,7 @@ define(
                 }
                 model.chosenStatus = status;
                 this.setData(model);
-                this.getRoot().trigger('pcmt:drafts:status_choice:changed');
+                this.getRoot().trigger('pcmt:drafts:statusChanged');
                 this.render();
             },
 

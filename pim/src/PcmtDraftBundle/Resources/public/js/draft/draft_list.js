@@ -27,13 +27,80 @@ define(
         return BaseForm.extend({
             template: _.template(template),
             collection: null,
+            chosenDrafts: {
+                allSelected: false,
+                selected: [],
+                excluded: [],
+
+                count: function (collection) {
+                    if (this.allSelected) {
+                        return collection.state.totalRecords - this.excluded.length;
+                    } else {
+                        return this.selected.length;
+                    }
+                },
+
+                isSelected: function (draftId) {
+                    return this.allSelected && !this.excluded.includes(parseInt(draftId)) || !this.allSelected && this.selected.includes(parseInt(draftId));
+                },
+
+                showCheckboxes: function () {
+                    return this.allSelected || this.selected.length > 0;
+                },
+
+                selectAll: function () {
+                    this.allSelected = true;
+                    this.selected = [];
+                    this.excluded = [];
+                },
+
+                selectNone: function () {
+                    this.allSelected = false;
+                    this.selected = [];
+                    this.excluded = [];
+                },
+
+                select: function (draftId) {
+                    if (!this.allSelected) {
+                        if (!this.selected.includes(parseInt(draftId))) {
+                            this.selected.push(parseInt(draftId));
+                        }
+                    } else {
+                        if (this.excluded.includes(parseInt(draftId))) {
+                            _.each(this.excluded, (draft, index) => {
+                                if (draft === parseInt(draftId)) {
+                                    this.excluded.splice(index, 1);
+                                    return true;
+                                }
+                            })
+                        }
+                    }
+                },
+
+                unselect: function (draftId) {
+                    if (!this.allSelected) {
+                        if (this.selected.includes(parseInt(draftId))) {
+                            _.each(this.selected, (draft, index) => {
+                                if (draft === parseInt(draftId)) {
+                                    this.selected.splice(index, 1);
+                                    return true;
+                                }
+                            })
+                        }
+                    } else {
+                        if (!this.excluded.includes(parseInt(draftId))) {
+                            this.excluded.push(parseInt(draftId));
+                        }
+                    }
+                }
+            },
             events: {
                 "click .draft-changes-shortcut": "changesExpand",
                 "click .draft-changes-full": "changesCollapse",
                 "click .draft-reject": "rejectDraftClicked",
                 "click .draft-approve": "approveDraftClicked",
                 "click .draft-edit": "editDraftClicked",
-                "click .draft-checkbox": "checkboxDraftClicked"
+                "click .draft-checkbox": "checkDraft"
             },
             configure: function () {
                 const model = this.getFormData();
@@ -48,13 +115,18 @@ define(
                     inputName: 'draft-grid'
                 });
 
-                this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_update', this.render);
                 this.listenTo(this.getRoot(), 'pcmt:drafts:pageChanged', this.onUpdatePagination);
-                this.listenTo(this.getRoot(), 'pcmt:drafts:status_choice:changed', this.onUpdateStatusChoice);
-                this.listenTo(this.getRoot(), 'pcmt_draft_checkbox:selected', this.draftSelected);
-                this.listenTo(this.getRoot(), 'pcmt_draft_checkbox:selectAllVisible', this.allVisibleDraftsSelected);
-                this.listenTo(this.getRoot(), 'pcmt_draft_checkbox:selectNone', this.resetChosenDrafts);
-                this.listenTo(this.getRoot(), 'pcmt_drafts:approved', this.loadDrafts);
+                this.listenTo(this.getRoot(), 'pcmt:drafts:statusChanged', this.onUpdateStatusChoice);
+
+                this.listenTo(this.getRoot(), 'pcmt:drafts:select', this.select);
+                this.listenTo(this.getRoot(), 'pcmt:drafts:selectAll', this.selectAll);
+                this.listenTo(this.getRoot(), 'pcmt:drafts:selectVisible', this.selectVisible);
+                this.listenTo(this.getRoot(), 'pcmt:drafts:selectNone', this.selectNone);
+
+                this.listenTo(this.getRoot(), 'pcmt:drafts:approve', this.approveBulkDraftClicked);
+                this.listenTo(this.getRoot(), 'pcmt:drafts:approved', this.loadDrafts);
+
+                this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_update', this.render);
             },
 
             onUpdatePagination: function (page) {
@@ -165,70 +237,80 @@ define(
                     console.log('rejecting failed.');
                 });
             },
-            checkboxDraftClicked: function (ev) {
-                const model = this.getFormData();
 
-                this.getRoot().trigger(
-                    'pcmt_draft_checkbox:selected',
-                    model.drafts,
-                    ev.currentTarget.checked,
-                    ev.currentTarget.dataset.draftId
+            approveBulkDraftClicked: function (ev) {
+                Dialog.confirm(
+                    `Are you sure you want to approve ${this.chosenDrafts.count(this.collection)} draft(s)?`,
+                    'Draft approval',
+                    function () {
+                        let model = this.getFormData();
+                        model.loading = true;
+                        this.setData(model);
+                        return this.approveBulkDraft();
+                    }.bind(this),
+                    '',
+                    'ok',
+                    'Approve'
                 );
             },
 
-            draftSelected: function (drafts, isChecked, draftId) {
-                let model = this.getFormData();
+            approveBulkDraft: function () {
+                $.ajax({
+                    url: Routing.generate('pcmt_core_drafts_approve_bulk'),
+                    data: JSON.stringify({
+                        chosenDrafts: {
+                            allSelected: this.chosenDrafts.allSelected,
+                            selected: this.chosenDrafts.selected,
+                            excluded: this.chosenDrafts.excluded,
+                        }
+                    }),
+                    type: 'PUT'
+                }).done((function () {
+                    this.getRoot().trigger('pcmt:drafts:approved');
+                }).bind(this)).fail((function (jqXHR) {
+                    let messages = _.map(jqXHR.responseJSON.values, function (value) {
+                        return value.attribute + ': ' + value.message;
+                    });
+                    Dialog.alert(messages.join('\n'), 'Problem with approving draft', '');
+                    console.log('bulk approve failed.');
+                    this.getRoot().trigger('pcmt:drafts:approved');
+                }).bind(this));
+            },
 
+            checkDraft: function (ev) {
+                this.getRoot().trigger('pcmt:drafts:select', parseInt(ev.currentTarget.dataset.draftId), ev.currentTarget.checked);
+            },
+
+            select: function (draftId, isChecked) {
                 if (isChecked) {
-                    if (!model.chosenDrafts.includes(parseInt(draftId))) {
-                        model.chosenDrafts.push(parseInt(draftId));
-                    }
+                    this.chosenDrafts.select(draftId);
                 } else {
-                    if (model.chosenDrafts.includes(parseInt(draftId))) {
-                        _.each(model.chosenDrafts, (draft, index) => {
-                            if (draft === parseInt(draftId)) {
-                                model.chosenDrafts.splice(index, 1);
-                                return true;
-                            }
-                        });
-                    }
+                    this.chosenDrafts.unselect(draftId);
                 }
 
-                if (model.chosenDrafts.length > 0) {
-                    $('.draft-checkbox-bodyCell').removeClass('AknGrid-bodyCell--actions');
-                } else {
-                    $('.draft-checkbox-bodyCell').addClass('AknGrid-bodyCell--actions');
-                }
+                this.render();
             },
 
-            allVisibleDraftsSelected: function () {
-                this.resetChosenDrafts();
+            selectAll: function () {
+                this.chosenDrafts.selectAll();
 
-                let model = this.getFormData();
-
-                _.each(this.$el.find('.draft-checkbox'), (checkbox) => {
-                    $(checkbox).prop('checked', true);
-                    this.getRoot().trigger(
-                        'pcmt_draft_checkbox:selected',
-                        model.drafts,
-                        true,
-                        $(checkbox).data('draft-id')
-                    );
-                });
+                this.render();
             },
 
-            resetChosenDrafts: function () {
-                let model = this.getFormData();
+            selectNone: function () {
+                this.chosenDrafts.selectNone();
 
-                _.each(this.$el.find('.draft-checkbox'), (checkbox) => {
-                    $(checkbox).prop('checked', false);
-                    this.getRoot().trigger(
-                        'pcmt_draft_checkbox:selected',
-                        model.drafts,
-                        false,
-                        $(checkbox).data('draft-id')
-                    );
+                this.render();
+            },
+
+            selectVisible: function () {
+                this.chosenDrafts.selectNone();
+
+                this.collection.each((draft) => {
+                    this.getRoot().trigger('pcmt:drafts:select', draft.id, true);
                 });
+
+                this.render();
             },
 
             loadDrafts: function () {
@@ -238,7 +320,6 @@ define(
                     return;
                 }
 
-                this.resetChosenDrafts();
                 model.loading = true;
                 this.setData(model);
 
@@ -260,6 +341,21 @@ define(
                     }
                 });
             },
+
+            checkChosenDrafts: function () {
+                _.each($('.draft-checkbox'), (checkbox) => {
+                    if (this.chosenDrafts.isSelected($(checkbox).data('draft-id'))) {
+                        $(checkbox).prop('checked', true);
+                    }
+                });
+
+                if (this.chosenDrafts.showCheckboxes() > 0) {
+                    $('.draft-checkbox-bodyCell').removeClass('AknGrid-bodyCell--actions');
+                } else {
+                    $('.draft-checkbox-bodyCell').addClass('AknGrid-bodyCell--actions');
+                }
+            },
+
             render: function () {
                 const model = this.getFormData();
                 if (!model.chosenStatus) {
@@ -273,6 +369,7 @@ define(
                     approvePermission: SecurityContext.isGranted('pcmt_permission_drafts_approve'),
                     editPermission: SecurityContext.isGranted('pcmt_permission_drafts_edit')
                 }));
+                this.checkChosenDrafts();
                 $('#draft_status_choice_' + model.chosenStatus.id).addClass('AknDropdown-menuLink--active active');
             }
         });
