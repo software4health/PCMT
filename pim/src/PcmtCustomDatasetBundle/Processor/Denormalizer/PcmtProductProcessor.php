@@ -12,14 +12,12 @@ namespace PcmtCustomDatasetBundle\Processor\Denormalizer;
 use Akeneo\Pim\Enrichment\Component\Product\Comparator\Filter\FilterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Connector\Processor\Denormalizer\FindProductToImport;
 use Akeneo\Pim\Enrichment\Component\Product\Connector\Processor\Denormalizer\MediaStorer;
+use Akeneo\Pim\Enrichment\Component\Product\Connector\Processor\Denormalizer\ProductProcessor as OriginalProcessor;
 use Akeneo\Pim\Enrichment\Component\Product\EntityWithFamilyVariant\AddParent;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterInterface;
 use Akeneo\Tool\Component\Batch\Item\FileInvalidItem;
 use Akeneo\Tool\Component\Batch\Item\InvalidItemException;
-use Akeneo\Tool\Component\Batch\Item\ItemProcessorInterface;
-use Akeneo\Tool\Component\Batch\Step\StepExecutionAwareInterface;
-use Akeneo\Tool\Component\Connector\Processor\Denormalization\AbstractProcessor;
 use Akeneo\Tool\Component\StorageUtils\Detacher\ObjectDetacherInterface;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Tool\Component\StorageUtils\Exception\PropertyException;
@@ -27,7 +25,6 @@ use Akeneo\Tool\Component\StorageUtils\Repository\IdentifiableObjectRepositoryIn
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\InvalidArgumentException;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /*******************************************************************************
@@ -37,26 +34,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0 AND OSL-3.0
  *******************************************************************************/
-
-class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
+class PcmtProductProcessor extends OriginalProcessor
 {
     /** @var FindProductToImport */
     private $findProductToImport;
 
     /** @var AddParent */
     private $addParent;
-
-    /** @var ObjectUpdaterInterface */
-    protected $updater;
-
-    /** @var ValidatorInterface */
-    protected $validator;
-
-    /** @var ObjectDetacherInterface */
-    protected $detacher;
-
-    /** @var FilterInterface */
-    protected $productFilter;
 
     /** @var AttributeFilterInterface */
     private $productAttributeFilter;
@@ -75,16 +59,21 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
         AttributeFilterInterface $productAttributeFilter,
         MediaStorer $mediaStorer
     ) {
-        parent::__construct($repository);
+        parent::__construct(
+            $repository,
+            $findProductToImport,
+            $addParent,
+            $updater,
+            $validator,
+            $detacher,
+            $productFilter,
+            $productAttributeFilter,
+            $mediaStorer
+        );
 
         $this->findProductToImport = $findProductToImport;
         $this->addParent = $addParent;
-        $this->updater = $updater;
-        $this->validator = $validator;
-        $this->detacher = $detacher;
-        $this->productFilter = $productFilter;
         $this->productAttributeFilter = $productAttributeFilter;
-        $this->repository = $repository;
         $this->mediaStorer = $mediaStorer;
     }
 
@@ -100,7 +89,7 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
 
         $identifier = $this->getIdentifier($item);
 
-        if (null === $identifier) {
+        if (null === $identifier || '' === $identifier) {
             $this->skipItemWithMessage($item, 'The identifier must be filled');
         }
 
@@ -165,74 +154,6 @@ class PcmtProductProcessor extends AbstractProcessor implements ItemProcessorInt
         }
 
         return $product;
-    }
-
-    protected function filterIdenticalData(ProductInterface $product, array $filteredItem): array
-    {
-        return $this->productFilter->filter($product, $filteredItem);
-    }
-
-    protected function getIdentifier(array $item): ?string
-    {
-        return $item['identifier'] ?? null;
-    }
-
-    protected function getFamilyCode(array $item): string
-    {
-        if (array_key_exists('family', $item)) {
-            return $item['family'];
-        }
-
-        $product = $this->repository->findOneByIdentifier($item['identifier']);
-        if (null === $product) {
-            return '';
-        }
-
-        $family = $product->getFamily();
-        if (null === $family) {
-            return '';
-        }
-
-        return $family->getCode();
-    }
-
-    /**
-     * Filters item data to remove associations which are imported through a dedicated processor because we need to
-     * create any products before to associate them
-     */
-    protected function filterItemData(array $item): array
-    {
-        foreach ($this->repository->getIdentifierProperties() as $identifierProperty) {
-            unset($item['values'][$identifierProperty]);
-        }
-        unset($item['identifier'], $item['associations']);
-
-        return $item;
-    }
-
-    /**
-     * @throws PropertyException
-     */
-    protected function updateProduct(ProductInterface $product, array $filteredItem): void
-    {
-        $this->updater->update($product, $filteredItem);
-    }
-
-    /**
-     * @throws \InvalidArgumentException
-     */
-    protected function validateProduct(ProductInterface $product): ConstraintViolationListInterface
-    {
-        return $this->validator->validate($product);
-    }
-
-    /**
-     * Detaches the product from the unit of work is the responsibility of the writer but in this case we
-     * want ensure that an updated and invalid product will not be used in the association processor
-     */
-    protected function detachProduct(ProductInterface $product): void
-    {
-        $this->detacher->detach($product);
     }
 
     private function skipItemAndReturnException(array $item, string $message, ?\Throwable $previousException = null): InvalidItemException
