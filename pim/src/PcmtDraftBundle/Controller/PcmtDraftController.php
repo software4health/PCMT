@@ -219,9 +219,27 @@ class PcmtDraftController
         $draftRepository = $this->entityManager->getRepository(AbstractDraft::class);
         $chosenDrafts = json_decode($request->getContent(), true)['chosenDrafts'];
 
+        if ((bool) ($chosenDrafts['allSelected'] ?? false)) {
+            $drafts = $draftRepository->findBy(['status' => AbstractDraft::STATUS_NEW]);
+
+            foreach ($drafts as $index => $draft) {
+                if (in_array($draft->getId(), $chosenDrafts['excluded'] ?? [])) {
+                    unset($drafts[$index]);
+                }
+            }
+
+            $draftsToApprove = $drafts;
+        } else {
+            $draftsToApprove = $draftRepository->findBy(
+                [
+                    'status' => AbstractDraft::STATUS_NEW,
+                    'id'     => $chosenDrafts['selected'] ?? [],
+                ]
+            );
+        }
+
         $normalizedViolations = [];
-        foreach ($chosenDrafts as $draftId) {
-            $draft = $draftRepository->find($draftId);
+        foreach ($draftsToApprove as $draft) {
             try {
                 $this->draftFacade->approveDraft($draft);
             } catch (DraftViolationException $e) {
