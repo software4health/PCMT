@@ -12,6 +12,7 @@ namespace PcmtDraftBundle\Service\Draft;
 use Akeneo\Pim\Enrichment\Component\Product\Comparator\Filter\FilterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Localization\Localizer\AttributeConverterInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithAssociationsInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterInterface;
@@ -19,11 +20,12 @@ use Akeneo\Tool\Component\StorageUtils\Factory\SimpleFactoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
 use Doctrine\Common\Collections\ArrayCollection;
+use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\NewProductModelDraft;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
 
-class ProductModelFromDraftCreator
+class ProductModelFromDraftCreator implements ObjectFromDraftCreatorInterface
 {
     /** @var ConverterInterface */
     private $productValueConverter;
@@ -74,7 +76,12 @@ class ProductModelFromDraftCreator
         }
     }
 
-    public function getProductModelToSave(ProductModelDraftInterface $draft): ?ProductModelInterface
+    public function getObjectToSave(DraftInterface $draft): ?EntityWithAssociationsInterface
+    {
+        return $this->getProductModelToSave($draft);
+    }
+
+    public function getProductModelToSave(DraftInterface $draft): ?ProductModelInterface
     {
         switch (get_class($draft)) {
             case NewProductModelDraft::class:
@@ -121,7 +128,7 @@ class ProductModelFromDraftCreator
         return $productModel;
     }
 
-    private function createNewProductModel(NewProductModelDraft $draft): ProductModelInterface
+    private function createNewProductModel(DraftInterface $draft): ProductModelInterface
     {
         $data = $draft->getProductData();
         /** @var ProductModelInterface $productModel */

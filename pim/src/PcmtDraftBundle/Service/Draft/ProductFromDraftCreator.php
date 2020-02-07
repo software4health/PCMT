@@ -13,6 +13,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Comparator\Filter\FilterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Localization\Localizer\AttributeConverterInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithAssociationsInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterInterface;
@@ -24,7 +25,7 @@ use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\NewProductDraft;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
 
-class ProductFromDraftCreator
+class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
 {
     /** @var ProductBuilderInterface */
     private $productBuilder;
@@ -75,6 +76,11 @@ class ProductFromDraftCreator
             default:
                 throw new \Exception('Wrong class: ' . get_class($draft));
         }
+    }
+
+    public function getObjectToSave(DraftInterface $draft): ?EntityWithAssociationsInterface
+    {
+        return $this->getProductToSave($draft);
     }
 
     public function getProductToSave(DraftInterface $draft): ?ProductInterface

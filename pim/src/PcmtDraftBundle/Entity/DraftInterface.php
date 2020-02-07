@@ -20,4 +20,12 @@ interface DraftInterface
     public function getType(): string;
 
     public function getAuthor(): UserInterface;
+
+    public function setStatus(int $statusId): void;
+
+    public function getStatus(): int;
+
+    public function setApproved(\DateTime $approved): void;
+
+    public function setApprovedBy(UserInterface $approvedBy): void;
 }
