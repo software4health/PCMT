@@ -5,11 +5,11 @@
 ######################################################################
 
 output "vpc-subnet-id" {
-  value       = module.pcmt-network-dev.vpc-subnet-id
+  value       = module.pcmt-network-useast.vpc-subnet-id
   description = "Id of the first subnet of the VPC"
 }
 
 output "security-group-id" {
-  value       = module.pcmt-network-dev.security-group-id
+  value       = module.pcmt-network-useast.security-group-id
   description = "Id of the security group"
 }

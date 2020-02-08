@@ -16,11 +16,20 @@ provider "aws" {
   region = "${var.aws-region}"
 }
 
-data "terraform_remote_state" "pcmt-network-dev" {
+data "terraform_remote_state" "pcmt-network" {
   backend = "s3"
   config = {
     bucket = "pcmt-terraform-states"
-    key    = "pcmt-network-dev.tf"
+    key    = "pcmt-network-useast.tf"
+    region = "eu-west-1"
+  }
+}
+
+data "terraform_remote_state" "pcmt-hosted-zone" {
+  backend = "s3"
+  config = {
+    bucket = "pcmt-terraform-states"
+    key    = "pcmt-productcatalog-io.tf"
     region = "eu-west-1"
   }
 }
@@ -37,7 +46,7 @@ module "gfpvan" {
   app-deploy-group        = "${var.app-deploy-group}"
   hosted-zone-domain-name = "${var.hosted-zone-domain-name}"
   domain-name             = "${var.domain-name}"
-  subnet-id               = "${data.terraform_remote_state.pcmt-network-dev.outputs.vpc-subnet-id}"
-  security-group-id       = "${data.terraform_remote_state.pcmt-network-dev.outputs.security-group-id}"
-  route53-zone-id         = "${data.terraform_remote_state.pcmt-network-dev.outputs.route53-zone-id}"
+  subnet-id               = "${data.terraform_remote_state.pcmt-network.outputs.vpc-subnet-id}"
+  security-group-id       = "${data.terraform_remote_state.pcmt-network.outputs.security-group-id}"
+  route53-zone-id         = "${data.terraform_remote_state.pcmt-hosted-zone.outputs.main-hosted-zone-id}"
 }

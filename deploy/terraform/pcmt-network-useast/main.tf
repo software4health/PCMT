@@ -7,7 +7,7 @@
 terraform {
   backend "s3" {
     bucket = "pcmt-terraform-states"
-    key    = "pcmt-network-dev.tf"
+    key    = "pcmt-network-useast.tf"
     region = "eu-west-1"
   }
 }
@@ -16,7 +16,7 @@ provider "aws" {
   region = "${var.aws-region}"
 }
 
-module "pcmt-network-dev" {
+module "pcmt-network-useast" {
   source = "../modules/pcmt-network"
 
   aws-region  = "${var.aws-region}"

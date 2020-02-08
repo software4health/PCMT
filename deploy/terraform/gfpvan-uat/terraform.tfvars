@@ -4,4 +4,4 @@ tag-name    = "gfpvan-uat"
 tag-type    = "staging"
 tag-bill-to = "PCMT"
 
-domain-name = "gfpvan-uat.pcmt.villagereach.org"
+domain-name = "gfpvan-uat.productcatalog.io"

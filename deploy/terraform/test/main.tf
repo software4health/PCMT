@@ -25,6 +25,15 @@ data "terraform_remote_state" "pcmt-network-dev" {
   }
 }
 
+data "terraform_remote_state" "pcmt-hosted-zone" {
+  backend = "s3"
+  config = {
+    bucket = "pcmt-terraform-states"
+    key    = "pcmt-villagereach-org.tf"
+    region = "eu-west-1"
+  }
+}
+
 module "test" {
   source = "../modules/pcmt"
 
@@ -39,5 +48,5 @@ module "test" {
   domain-name             = "${var.domain-name}"
   subnet-id               = "${data.terraform_remote_state.pcmt-network-dev.outputs.vpc-subnet-id}"
   security-group-id       = "${data.terraform_remote_state.pcmt-network-dev.outputs.security-group-id}"
-  route53-zone-id         = "${data.terraform_remote_state.pcmt-network-dev.outputs.route53-zone-id}"
+  route53-zone-id         = "${data.terraform_remote_state.pcmt-hosted-zone.outputs.main-hosted-zone-id}"
 }

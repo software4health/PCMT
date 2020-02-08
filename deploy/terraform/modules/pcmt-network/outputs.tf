@@ -13,8 +13,3 @@ output "security-group-id" {
   value       = aws_security_group.pcmt-web.id
   description = "Id of the security group"
 }
-
-output "route53-zone-id" {
-  value       = aws_route53_zone.pcmt.id
-  description = "Id of the dns zone"
-}

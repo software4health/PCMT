@@ -68,11 +68,3 @@ resource "aws_security_group" "pcmt-web" {
     Type   = "${var.tag-type}"
   }
 }
-
-resource "aws_route53_zone" "pcmt" {
-  name = "${var.hosted-zone-domain-name}"
-
-  tags = {
-    BillTo = "${var.tag-bill-to}"
-  }
-}

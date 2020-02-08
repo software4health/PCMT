@@ -13,9 +13,3 @@ variable "tag-bill-to" {
   description = "Which project to bill the provisioned resources"
   default     = "PCMT"
 }
-
-variable "hosted-zone-domain-name" {
-  type        = string
-  description = "AWS Route53 Hosted Zone Domain Name"
-  default     = "pcmt.villagereach.org"
-}
