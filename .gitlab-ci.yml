@@ -412,14 +412,13 @@ env-ethiopia-beta-destroy:
   only:
     - master@pcmt/pcmt
   when: manual
-  before_script:
-    - source .ci-gfpvan.env
   environment:
     name: gfpvan
     url: http://gfpvan.productcatalog.io
 
 .env-gfpvan_script-deploy:
   script:
+    - source .ci-gfpvan.env
     - ./bin/ci-deploy.sh gfpvan
     
 env-gfpvan (WIPE DB):
@@ -445,8 +444,6 @@ env-gfpvan (KEEP DB):
   only:
     - master@pcmt/pcmt
   when: manual
-  before_script:
-    - source .ci-gfpvan-uat.env
   environment:
     name: gfpvan-uat
     url: http://gfpvan-uat.pcmt.villagereach.org
@@ -454,6 +451,7 @@ env-gfpvan (KEEP DB):
 
 .env-gfpvan-uat_script-deploy:
   script:
+    - source .ci-gfpvan-uat.env
     - ./bin/ci-deploy.sh gfpvan-uat
     
 env-gfpvan-uat (WIPE DB):
