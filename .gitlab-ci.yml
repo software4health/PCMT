@@ -413,7 +413,7 @@ env-ethiopia-beta-destroy:
     - master@pcmt/pcmt
   when: manual
   before_script:
-    - source ".ci-gfpvan.env"
+    - source .ci-gfpvan.env
   environment:
     name: gfpvan
     url: http://gfpvan.productcatalog.io
@@ -446,7 +446,7 @@ env-gfpvan (KEEP DB):
     - master@pcmt/pcmt
   when: manual
   before_script:
-    - source ".ci-gfpvan-uat.env"
+    - source .ci-gfpvan-uat.env
   environment:
     name: gfpvan-uat
     url: http://gfpvan-uat.pcmt.villagereach.org
