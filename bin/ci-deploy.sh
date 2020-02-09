@@ -23,11 +23,13 @@ fi
 
 if [ -z "$PCMT_VER" ]; then
     echo "PCMT_VER not set, so setting to full version..."
-    export PCMT_VER=$($DIR/pcmt-ver-sha.sh)
+    export PCMT_VER=$("$DIR/pcmt-ver-sha.sh")
 fi
-echo "Deploying $PCMT_VER to $ENV_NAME"
     
-COMMIT_SHA=$(git rev-parse HEAD)
-export PCMT_ASSET_URL="https://gitlab.com/pcmt/pcmt/-/archive/$COMMIT_SHA/pcmt-$COMMIT_SHA.tar.gz"
+if [ -z "$PCMT_ASSET_URL" ]; then
+    COMMIT_SHA=$(git rev-parse HEAD)
+    export PCMT_ASSET_URL="https://gitlab.com/pcmt/pcmt/-/archive/$COMMIT_SHA/pcmt-$COMMIT_SHA.tar.gz"
+fi
 
-. $DIR/../deploy/terraform/run-docker.sh "$ENV_NAME" apply -auto-approve
+echo "Deploying $PCMT_VER to $ENV_NAME using $PCMT_ASSET_URL"
+. "$DIR/../deploy/terraform/run-docker.sh" "$ENV_NAME" apply -auto-approve
