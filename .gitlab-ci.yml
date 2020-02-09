@@ -258,6 +258,7 @@ env-test (manual):
   extends:
     - .env-test
     - .env-test_script-deploy
+  only:
   when: manual
 
 env-test-destroy:
@@ -415,7 +416,7 @@ env-ethiopia-beta-destroy:
     - source ".ci-gfpvan.env"
   environment:
     name: gfpvan
-    url: http://gfpvan.pcmt.villagereach.org
+    url: http://gfpvan.productcatalog.io
 
 .env-gfpvan_script-deploy:
   script:
