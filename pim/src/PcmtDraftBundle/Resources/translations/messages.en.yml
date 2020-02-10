@@ -5,3 +5,7 @@ pcmt.permission:
         approve: Approve Product Draft
         reject: Reject Product Draft
         edit: Edit Product Draft
+
+job_execution.summary:
+    failed: failed
+    approved: approved

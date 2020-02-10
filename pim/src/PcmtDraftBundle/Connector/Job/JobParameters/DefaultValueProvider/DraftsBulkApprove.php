@@ -34,6 +34,8 @@ class DraftsBulkApprove implements DefaultValuesProviderInterface
             'allSelected'           => false,
             'selected'              => [],
             'excluded'              => [],
+            'user_to_notify'        => null,
+            'is_user_authenticated' => false,
         ];
     }
 

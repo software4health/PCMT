@@ -88,3 +88,12 @@ pim_title:
 pim_menu:
     navigation:
         product_draft: Product Draft Navigation
+
+# Job labels
+batch_jobs:
+    default_steps:
+        drafts_bulk_approve: Drafts bulk approve
+    job_drafts_bulk_approve:
+        label: Drafts bulk approve
+        mass_action.label: Drafts bulk approve
+        perform.label: Mass approve drafts

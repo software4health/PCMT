@@ -36,9 +36,11 @@ class DraftsBulkApprove implements ConstraintCollectionProviderInterface
         return new Collection(
             [
                 'fields' => [
-                    'excluded'    => new NotNull(),
-                    'selected'    => new NotNull(),
-                    'allSelected' => new Type('bool'),
+                    'excluded'              => new NotNull(),
+                    'selected'              => new NotNull(),
+                    'allSelected'           => new Type('bool'),
+                    'user_to_notify'        => new Type('string'),
+                    'is_user_authenticated' => new Type('bool'),
                 ],
             ]
         );
