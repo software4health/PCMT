@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Service\Draft;
 
-use Akeneo\UserManagement\Component\Model\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
@@ -42,13 +41,11 @@ class DraftFacade
         $this->draftSaverFactory = $draftSaverFactory;
     }
 
-    public function approveDraft(DraftInterface $draft, ?UserInterface $user = null): void
+    public function approveDraft(DraftInterface $draft): void
     {
         if ($draft instanceof ProductDraftInterface) {
-            $this->productDraftApprover->setUser($user);
             $this->productDraftApprover->approve($draft);
         } elseif ($draft instanceof ProductModelDraftInterface) {
-            $this->productModelDraftApprover->setUser($user);
             $this->productModelDraftApprover->approve($draft);
         } else {
             $class = get_class($draft);

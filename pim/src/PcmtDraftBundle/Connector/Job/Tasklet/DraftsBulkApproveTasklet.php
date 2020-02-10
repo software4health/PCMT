@@ -9,9 +9,10 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Connector\Job\Tasklet;
 
+use Akeneo\Tool\Component\Batch\Item\InvalidItemException;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
-use Akeneo\UserManagement\Bundle\Doctrine\ORM\Repository\UserRepository;
+use PcmtDraftBundle\Connector\Job\InvalidItems\DraftInvalidItem;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\DraftRepositoryInterface;
@@ -21,9 +22,6 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class DraftsBulkApproveTasklet implements TaskletInterface
 {
-    /** @var UserRepository */
-    private $userRepository;
-
     /** @var DraftFacade */
     private $draftFacade;
 
@@ -39,12 +37,10 @@ class DraftsBulkApproveTasklet implements TaskletInterface
     public function __construct(
         DraftFacade $draftFacade,
         NormalizerInterface $constraintViolationNormalizer,
-        UserRepository $userRepository,
         DraftRepositoryInterface $draftRepository
     ) {
         $this->draftFacade = $draftFacade;
         $this->constraintViolationNormalizer = $constraintViolationNormalizer;
-        $this->userRepository = $userRepository;
         $this->draftRepository = $draftRepository;
     }
 
@@ -92,24 +88,42 @@ class DraftsBulkApproveTasklet implements TaskletInterface
             );
         }
 
-        $normalizedViolations = [];
         foreach ($draftsToApprove as $draft) {
+            $normalizedViolations = [];
             try {
-                /** @var DraftInterface $draft */
-                $user = $this->userRepository->findOneByIdentifier('admin');
-                $this->draftFacade->approveDraft($draft, $user);
-                $this->stepExecution->incrementSummaryInfo('approved');
-            } catch (DraftViolationException $e) {
-                $this->stepExecution->incrementSummaryInfo('failed');
-                $context = $e->getContextForNormalizer();
-                foreach ($e->getViolations() as $violation) {
-                    $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
-                        $violation,
-                        'internal_api',
-                        $context
-                    );
+                try {
+                    /** @var DraftInterface $draft */
+                    $this->draftFacade->approveDraft($draft);
+                    $this->stepExecution->incrementSummaryInfo('approved');
+                } catch (DraftViolationException $e) {
+                    $context = $e->getContextForNormalizer();
+                    foreach ($e->getViolations() as $violation) {
+                        $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
+                            $violation,
+                            'internal_api',
+                            $context
+                        );
+                    }
+                    throw $this->skipItemAndReturnException($normalizedViolations, $draft->getId());
                 }
+            } catch (InvalidItemException $exception) {
+                $this->stepExecution->addWarning(
+                    $exception->getMessage(),
+                    $exception->getMessageParameters(),
+                    $exception->getItem()
+                );
             }
         }
+    }
+
+    private function skipItemAndReturnException(array $violations, int $draftId, ?\Throwable $previousException = null): InvalidItemException
+    {
+        if ($this->stepExecution) {
+            $this->stepExecution->incrementSummaryInfo('failed');
+        }
+        $invalidItem = new DraftInvalidItem($draftId, $violations);
+        $message = 'Cannot approve draft ' . $invalidItem->getDraftId();
+
+        return new InvalidItemException($message, $invalidItem, [], 0, $previousException);
     }
 }

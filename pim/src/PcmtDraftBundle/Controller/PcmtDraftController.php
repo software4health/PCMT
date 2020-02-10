@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Controller;
 
+use Akeneo\Pim\Enrichment\Bundle\MassEditAction\OperationJobLauncher;
 use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use PcmtCoreBundle\Service\Builder\ResponseBuilder;
@@ -17,6 +18,7 @@ use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
+use PcmtDraftBundle\MassActions\DraftsBulkApproveOperation;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
 use PcmtDraftBundle\Service\Draft\DraftStatusListService;
 use PcmtDraftBundle\Service\Draft\DraftStatusTranslatorService;
@@ -47,13 +49,17 @@ class PcmtDraftController
     /** @var ResponseBuilder */
     protected $responseBuilder;
 
+    /** @var OperationJobLauncher */
+    protected $operationJobLauncher;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         DraftStatusTranslatorService $draftStatusTranslatorService,
         DraftStatusListService $draftStatusListService,
         DraftFacade $draftFacade,
         NormalizerInterface $constraintViolationNormalizer,
-        ResponseBuilder $responseBuilder
+        ResponseBuilder $responseBuilder,
+        OperationJobLauncher $operationJobLauncher
     ) {
         $this->entityManager = $entityManager;
         $this->draftStatusTranslatorService = $draftStatusTranslatorService;
@@ -61,6 +67,7 @@ class PcmtDraftController
         $this->draftFacade = $draftFacade;
         $this->constraintViolationNormalizer = $constraintViolationNormalizer;
         $this->responseBuilder = $responseBuilder;
+        $this->operationJobLauncher = $operationJobLauncher;
     }
 
     /**
@@ -216,46 +223,16 @@ class PcmtDraftController
      */
     public function approveBulkDraft(Request $request): JsonResponse
     {
-        $draftRepository = $this->entityManager->getRepository(AbstractDraft::class);
         $chosenDrafts = json_decode($request->getContent(), true)['chosenDrafts'];
+        $data = [
+            'jobInstanceCode' => 'job_drafts_bulk_approve',
+            'allSelected'     => $chosenDrafts['allSelected'] ?? false,
+            'selected'        => $chosenDrafts['selected'] ?? [],
+            'excluded'        => $chosenDrafts['excluded'] ?? [],
+        ];
 
-        if ((bool) ($chosenDrafts['allSelected'] ?? false)) {
-            $drafts = $draftRepository->findBy(['status' => AbstractDraft::STATUS_NEW]);
-
-            foreach ($drafts as $index => $draft) {
-                if (in_array($draft->getId(), $chosenDrafts['excluded'] ?? [])) {
-                    unset($drafts[$index]);
-                }
-            }
-
-            $draftsToApprove = $drafts;
-        } else {
-            $draftsToApprove = $draftRepository->findBy(
-                [
-                    'status' => AbstractDraft::STATUS_NEW,
-                    'id'     => $chosenDrafts['selected'] ?? [],
-                ]
-            );
-        }
-
-        $normalizedViolations = [];
-        foreach ($draftsToApprove as $draft) {
-            try {
-                $this->draftFacade->approveDraft($draft);
-            } catch (DraftViolationException $e) {
-                $context = $e->getContextForNormalizer();
-                foreach ($e->getViolations() as $violation) {
-                    $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
-                        $violation,
-                        'internal_api',
-                        $context
-                    );
-                }
-            }
-        }
-        if ($normalizedViolations) {
-            return new JsonResponse(['values' => $normalizedViolations], 400);
-        }
+        $operation = new DraftsBulkApproveOperation($data['jobInstanceCode'], $data['allSelected'], $data['selected'], $data['excluded']);
+        $this->operationJobLauncher->launch($operation);
 
         return new JsonResponse();
     }
