@@ -1,3 +1,6 @@
+parameters:
+    pcmt_connector.job.drafts_bulk_approve.name: 'job_drafts_bulk_approve'
+
 services:
     pim_connector.job.xlsx_product_import:
         class: '%pim_connector.job.simple_job.class%'
@@ -30,7 +33,7 @@ services:
     pcmt_connector.job.drafts_bulk_approve:
         class: '%pim_connector.job.simple_job.class%'
         arguments:
-            - 'job_drafts_bulk_approve'
+            - '%pcmt_connector.job.drafts_bulk_approve.name%'
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             -

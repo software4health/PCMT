@@ -38,6 +38,9 @@ class DraftApprover
     /** @var ValidatorInterface */
     private $validator;
 
+    /** @var UserInterface */
+    private $user;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         TokenStorageInterface $tokenStorage,
@@ -52,11 +55,16 @@ class DraftApprover
         $this->creator = $creator;
     }
 
+    public function setUser(?UserInterface $user): void
+    {
+        $this->user = $user;
+    }
+
     protected function updateDraftEntity(DraftInterface $draft): void
     {
         $draft->setStatus(AbstractDraft::STATUS_APPROVED);
         $draft->setApproved(Carbon::now());
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->user ?? $this->tokenStorage->getToken()->getUser();
         /** @var UserInterface $user */
         $draft->setApprovedBy($user);
         $this->entityManager->persist($draft);
