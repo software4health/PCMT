@@ -1,3 +1,6 @@
 services:
     pcmt.connector.job.tasklet.drafts_bulk_approve:
         class: 'PcmtDraftBundle\Connector\Job\Tasklet\DraftsBulkApproveTasklet'
+        autowire: true
+        arguments:
+            $constraintViolationNormalizer: '@pcmt_draft.normalizer.product_violation_with_label'
