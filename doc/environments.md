@@ -9,7 +9,7 @@ Every environment should have the following logins:
 
 | User name | Password |
 | --------- | -------- |
-| admin     | admin    |
+| admin     | Admin123 |
 
 ## CD Environments
 
