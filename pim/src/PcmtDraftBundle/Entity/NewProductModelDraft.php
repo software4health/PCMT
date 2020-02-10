@@ -11,7 +11,7 @@ namespace PcmtDraftBundle\Entity;
 
 use Akeneo\UserManagement\Component\Model\UserInterface;
 
-class NewProductModelDraft extends AbstractProductModelDraft
+class NewProductModelDraft extends AbstractProductModelDraft implements NewObjectDraftInterface
 {
     public const TYPE = 'new product model draft';
 

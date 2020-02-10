@@ -28,7 +28,7 @@ use PcmtDraftBundle\Normalizer\DraftStatusNormalizer;
 use PcmtDraftBundle\Normalizer\ProductModelDraftNormalizer;
 use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
 use PcmtDraftBundle\Service\Draft\DraftStatusTranslatorService;
-use PcmtDraftBundle\Service\Draft\ProductModelFromDraftCreator;
+use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -54,7 +54,7 @@ class ProductModelDraftNormalizerTest extends TestCase
     /** @var NormalizerInterface|MockObject */
     private $productModelNormalizer;
 
-    /** @var ProductModelFromDraftCreator|MockObject */
+    /** @var GeneralObjectFromDraftCreator|MockObject */
     private $creator;
 
     /** @var AttributeChangeService */
@@ -91,8 +91,8 @@ class ProductModelDraftNormalizerTest extends TestCase
         $translator = $this->createMock(DraftStatusTranslatorService::class);
         $this->draftStatusNormalizer = new DraftStatusNormalizer($logger, $translator);
 
-        $this->creator = $this->createMock(ProductModelFromDraftCreator::class);
-        $this->creator->method('getProductModelToCompare')->willReturn($this->productModelNew);
+        $this->creator = $this->createMock(GeneralObjectFromDraftCreator::class);
+        $this->creator->method('getObjectToCompare')->willReturn($this->productModelNew);
 
         $this->attributeChangeService = $this->createMock(AttributeChangeService::class);
         $this->productModelNormalizer = $this->createMock(NormalizerInterface::class);
@@ -237,8 +237,8 @@ class ProductModelDraftNormalizerTest extends TestCase
 
     public function testNormalizeWhenNoProductModelToCompare(): void
     {
-        $this->creator = $this->createMock(ProductModelFromDraftCreator::class);
-        $this->creator->method('getProductModelToCompare')->willReturn(null);
+        $this->creator = $this->createMock(GeneralObjectFromDraftCreator::class);
+        $this->creator->method('getObjectToCompare')->willReturn(null);
 
         $productModelDraftNormalizer = new ProductModelDraftNormalizer(
             $this->draftStatusNormalizer,

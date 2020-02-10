@@ -14,7 +14,7 @@ use Akeneo\Pim\Enrichment\Bundle\Controller\InternalApi\ProductModelCategoryCont
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Doctrine\ORM\EntityManager;
 use PcmtDraftBundle\Entity\AbstractDraft;
-use PcmtDraftBundle\Service\Draft\ProductModelFromDraftCreator;
+use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PcmtProductModelCategoryController extends ProductModelCategoryControllerOriginal
@@ -22,7 +22,7 @@ class PcmtProductModelCategoryController extends ProductModelCategoryControllerO
     /** @var EntityManager */
     private $entityManager;
 
-    /** @var ProductModelFromDraftCreator */
+    /** @var GeneralObjectFromDraftCreator */
     private $creator;
 
     public function setEntityManager(EntityManager $entityManager): void
@@ -30,7 +30,7 @@ class PcmtProductModelCategoryController extends ProductModelCategoryControllerO
         $this->entityManager = $entityManager;
     }
 
-    public function setCreator(ProductModelFromDraftCreator $creator): void
+    public function setCreator(GeneralObjectFromDraftCreator $creator): void
     {
         $this->creator = $creator;
     }
@@ -50,6 +50,6 @@ class PcmtProductModelCategoryController extends ProductModelCategoryControllerO
             );
         }
 
-        return $this->creator->getProductModelToSave($draft);
+        return $this->creator->getObjectToSave($draft);
     }
 }

@@ -15,5 +15,9 @@ use PcmtDraftBundle\Entity\DraftInterface;
 
 interface ObjectFromDraftCreatorInterface
 {
-    public function getObjectToSave(DraftInterface $draft): ?EntityWithAssociationsInterface;
+    public function createNewObject(DraftInterface $draft): ?EntityWithAssociationsInterface;
+
+    public function updateObject(EntityWithAssociationsInterface $entity, array $data): void;
+
+    public function createForSaveForDraftForExistingObject(DraftInterface $draft): ?EntityWithAssociationsInterface;
 }

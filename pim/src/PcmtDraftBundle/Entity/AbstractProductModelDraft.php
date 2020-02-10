@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Entity;
 
+use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithAssociationsInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 
@@ -28,5 +29,10 @@ abstract class AbstractProductModelDraft extends AbstractDraft implements Produc
     public function getProductModel(): ?ProductModelInterface
     {
         return $this->productModel;
+    }
+
+    public function getObject(): ?EntityWithAssociationsInterface
+    {
+        return $this->getProductModel();
     }
 }

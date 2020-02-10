@@ -24,7 +24,7 @@ services:
         class: PcmtDraftBundle\Normalizer\ProductDraftNormalizer
         autowire: true
         calls:
-            - [setProductFromDraftCreator, ['@pcmt.service.product_from_draft_creator']]
+            - [setProductFromDraftCreator, ['@pcmt.service.general_object_from_draft_creator']]
             - [setAttributeChangeService, ['@pcmt.service.attribute_change']]
             - [setValuesNormalizer, ['@pim_catalog.normalizer.standard.product.product_value']]
         arguments:
@@ -37,7 +37,7 @@ services:
         class: PcmtDraftBundle\Normalizer\ProductModelDraftNormalizer
         autowire: true
         calls:
-            - [setProductModelFromDraftCreator, ['@pcmt.service.product_model_from_draft_creator']]
+            - [setProductModelFromDraftCreator, ['@pcmt.service.general_object_from_draft_creator']]
             - [setAttributeChangeService, ['@pcmt.service.attribute_change']]
             - [setValuesNormalizer, ['@pim_catalog.normalizer.standard.product.product_value']]
         arguments:

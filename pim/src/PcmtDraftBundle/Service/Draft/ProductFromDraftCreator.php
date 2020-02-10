@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2019, VillageReach
+ * Copyright (c) 2020, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
  */
@@ -14,21 +14,18 @@ use Akeneo\Pim\Enrichment\Component\Product\Comparator\Filter\FilterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Localization\Localizer\AttributeConverterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithAssociationsInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
-use Doctrine\Common\Collections\ArrayCollection;
 use PcmtDraftBundle\Entity\DraftInterface;
-use PcmtDraftBundle\Entity\ExistingProductDraft;
-use PcmtDraftBundle\Entity\NewProductDraft;
-use PcmtDraftBundle\Entity\ProductDraftInterface;
 
 class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
 {
     /** @var ProductBuilderInterface */
     private $productBuilder;
+
+    /** @var AttributeFilterInterface */
+    private $productAttributeFilter;
 
     /** @var ConverterInterface */
     private $productValueConverter;
@@ -43,10 +40,7 @@ class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
     private $emptyValuesFilter;
 
     /** @var ObjectUpdaterInterface */
-    private $productUpdater;
-
-    /** @var AttributeFilterInterface */
-    private $productAttributeFilter;
+    private $objectUpdater;
 
     public function __construct(
         ProductBuilderInterface $productBuilder,
@@ -54,7 +48,7 @@ class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
         AttributeConverterInterface $localizedConverter,
         UserContext $userContext,
         FilterInterface $emptyValuesFilter,
-        ObjectUpdaterInterface $productUpdater,
+        ObjectUpdaterInterface $objectUpdater,
         AttributeFilterInterface $productAttributeFilter
     ) {
         $this->productBuilder = $productBuilder;
@@ -62,61 +56,11 @@ class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
         $this->localizedConverter = $localizedConverter;
         $this->userContext = $userContext;
         $this->emptyValuesFilter = $emptyValuesFilter;
-        $this->productUpdater = $productUpdater;
+        $this->objectUpdater = $objectUpdater;
         $this->productAttributeFilter = $productAttributeFilter;
     }
 
-    public function getProductToCompare(ProductDraftInterface $draft): ?ProductInterface
-    {
-        switch (get_class($draft)) {
-            case NewProductDraft::class:
-                return $this->createNewProduct($draft);
-            case ExistingProductDraft::class:
-                return $this->createExistingProductForComparing($draft);
-            default:
-                throw new \Exception('Wrong class: ' . get_class($draft));
-        }
-    }
-
-    public function getObjectToSave(DraftInterface $draft): ?EntityWithAssociationsInterface
-    {
-        return $this->getProductToSave($draft);
-    }
-
-    public function getProductToSave(DraftInterface $draft): ?ProductInterface
-    {
-        switch (get_class($draft)) {
-            case NewProductDraft::class:
-                return $this->createNewProduct($draft);
-            case ExistingProductDraft::class:
-                return $this->createForSaveForDraftForExistingProduct($draft);
-        }
-    }
-
-    private function createExistingProductForComparing(ExistingProductDraft $draft): ?ProductInterface
-    {
-        $product = $draft->getProduct();
-        if (!$product) {
-            return null;
-        }
-        $newProduct = clone $product;
-
-        // cloning values, otherwise the original values would also be overwritten
-        $newProduct->setValues(new WriteValueCollection());
-        $newProduct->setAssociations(new ArrayCollection());
-        $newProduct->setCategories(new ArrayCollection());
-        foreach ($product->getValuesForVariation() as $value) {
-            $newProduct->addValue($value);
-        }
-        $data = $draft->getProductData();
-        if (isset($data['values'])) {
-            $this->updateProduct($newProduct, $data);
-        }
-
-        return $newProduct;
-    }
-
-    private function createForSaveForDraftForExistingProduct(ExistingProductDraft $draft): ?ProductInterface
+    public function createForSaveForDraftForExistingObject(DraftInterface $draft): ?EntityWithAssociationsInterface
     {
         $product = $draft->getProduct();
         if (!$product) {
@@ -124,13 +68,13 @@ class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
         }
         $data = $draft->getProductData();
         if (isset($data['values'])) {
-            $this->updateProduct($product, $data);
+            $this->updateObject($product, $data);
         }
 
         return $product;
     }
 
-    private function createNewProduct(NewProductDraft $draft): ProductInterface
+    public function createNewObject(DraftInterface $draft): EntityWithAssociationsInterface
     {
         $data = $draft->getProductData();
 
@@ -141,7 +85,7 @@ class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
             );
 
             if (isset($data['values'])) {
-                $this->updateProduct($product, $data);
+                $this->updateObject($product, $data);
             }
         } else {
             $product = $this->productBuilder->createProduct(
@@ -157,7 +101,7 @@ class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
      * Updates product with the provided data
      * Copied from ProductController
      */
-    protected function updateProduct(ProductInterface $product, array $data): void
+    public function updateObject(EntityWithAssociationsInterface $entity, array $data): void
     {
         $values = $this->productValueConverter->convert($data['values']);
 
@@ -165,7 +109,7 @@ class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
             'locale' => $this->userContext->getUiLocale()->getCode(),
         ]);
 
-        $dataFiltered = $this->emptyValuesFilter->filter($product, ['values' => $values]);
+        $dataFiltered = $this->emptyValuesFilter->filter($entity, ['values' => $values]);
 
         if (!empty($dataFiltered)) {
             $data = array_replace($data, $dataFiltered);
@@ -175,10 +119,10 @@ class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
 
         // don't filter during creation, because identifier is needed
         // but not sent by the frontend during creation (it sends the sku in the values)
-        if (null !== $product->getId() && $product->isVariant()) {
+        if (null !== $entity->getId() && $entity->isVariant()) {
             $data = $this->productAttributeFilter->filter($data);
         }
 
-        $this->productUpdater->update($product, $data);
+        $this->objectUpdater->update($entity, $data);
     }
 }
