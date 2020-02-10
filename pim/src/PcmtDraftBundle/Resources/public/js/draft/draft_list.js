@@ -27,6 +27,7 @@ define(
         return BaseForm.extend({
             template: _.template(template),
             collection: null,
+
             chosenDrafts: {
                 allSelected: false,
                 selected: [],
@@ -94,6 +95,7 @@ define(
                     }
                 }
             },
+
             events: {
                 "click .draft-changes-shortcut": "changesExpand",
                 "click .draft-changes-full": "changesCollapse",
@@ -102,14 +104,10 @@ define(
                 "click .draft-edit": "editDraftClicked",
                 "click .draft-checkbox": "checkDraft"
             },
+
             configure: function () {
-                const model = this.getFormData();
-                model.drafts = [];
-                model.chosenDrafts = [];
-                model.params = {};
-                model.draftsData = {params: {currentPage: 1}};
-                model.loading = true;
-                this.setData(model);
+                this.setDrafts([]);
+                this.startLoading();
 
                 this.collection = new DraftCollection(null, {
                     inputName: 'draft-grid'
@@ -127,6 +125,34 @@ define(
                 this.listenTo(this.getRoot(), 'pcmt:drafts:approved', this.loadDrafts);
 
                 this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_update', this.render);
+            },
+
+            startLoading: function () {
+                let model = this.getFormData();
+
+                model.loading = true;
+
+                this.setData(model);
+            },
+
+            stopLoading: function () {
+                let model = this.getFormData();
+
+                model.loading = false;
+
+                this.setData(model);
+            },
+
+            setDrafts: function (drafts) {
+                let model = this.getFormData();
+
+                model.drafts = drafts;
+
+                this.setData(model);
+            },
+
+            getDrafts: function () {
+                return this.getFormData().drafts;
             },
 
             onUpdatePagination: function (page) {
@@ -148,6 +174,7 @@ define(
                 let divShortcutId = '#draft-changes-shortcut-' + id;
                 $(divShortcutId).hide();
             },
+
             changesCollapse: function (ev) {
                 let id = ev.currentTarget.dataset.draftId;
                 let divFullId = '#draft-changes-full-' + id;
@@ -155,6 +182,7 @@ define(
                 let divShortcutId = '#draft-changes-shortcut-' + id;
                 $(divShortcutId).show();
             },
+
             approveDraftClicked: function (ev) {
                 let draftId = ev.currentTarget.dataset.draftId;
                 Dialog.confirm(
@@ -168,9 +196,10 @@ define(
                     'Approve'
                 );
             },
+
             editDraftClicked: function (ev) {
                 var draftId = parseInt(ev.currentTarget.dataset.draftId);
-                var draft = _.filter(this.getFormData().drafts, (draft) => {
+                var draft = _.filter(this.getDrafts(), (draft) => {
                     return draftId === draft.id;
                 })[0];
 
@@ -202,6 +231,7 @@ define(
                     Router.navigate('/' + Routing.generate('pcmt_core_drafts_edit', {id: draftId}), true);
                 }
             },
+
             approveDraft: function (draftId) {
                 $.ajax({
                     url: Routing.generate('pcmt_core_drafts_approve', {id: draftId}),
@@ -215,6 +245,7 @@ define(
                     Dialog.alert(messages.join('\n'), 'Problem with approving draft', '');
                 });
             },
+
             rejectDraftClicked: function (ev) {
                 let draftId = ev.currentTarget.dataset.draftId;
                 Dialog.confirmDelete(
@@ -227,6 +258,7 @@ define(
                     'Reject'
                 );
             },
+
             rejectDraft: function (draftId) {
                 $.ajax({
                     url: Routing.generate('pcmt_core_drafts_delete', {id: draftId}),
@@ -243,9 +275,7 @@ define(
                     `Are you sure you want to approve ${this.chosenDrafts.count(this.collection)} draft(s)?`,
                     'Draft approval',
                     function () {
-                        let model = this.getFormData();
-                        model.loading = true;
-                        this.setData(model);
+                        this.startLoading();
                         return this.approveBulkDraft();
                     }.bind(this),
                     '',
@@ -272,7 +302,7 @@ define(
                         return value.attribute + ': ' + value.message;
                     });
                     Dialog.alert(messages.join('\n'), 'Problem with approving draft', '');
-                    console.log('bulk approve failed.');
+                    console.error('Bulk approve failed.');
                     this.getRoot().trigger('pcmt:drafts:approved');
                 }).bind(this));
             },
@@ -320,23 +350,20 @@ define(
                     return;
                 }
 
-                model.loading = true;
-                this.setData(model);
+                this.startLoading();
 
                 this.collection.fetch({
                     url: Routing.generate('pcmt_core_drafts_api', {
                         status: model.chosenStatus.id
                     }),
                     success: (collection, response) => {
-                        model.drafts = response.objects;
-                        model.loading = false;
-                        this.setData(model);
+                        this.setDrafts(response.objects);
+                        this.stopLoading();
                         this.getRoot().trigger('pcmt:drafts:listReloaded', this.collection);
                     },
                     error: () => {
-                        model.drafts = [];
-                        model.loading = false;
-                        this.setData(model);
+                        this.setDrafts([]);
+                        this.stopLoading();
                         this.getRoot().trigger('pcmt:drafts:listReloaded', this.collection);
                     }
                 });
