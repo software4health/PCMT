@@ -43,12 +43,6 @@ variable "ec2-key-pair" {
   default     = "pcmt-ec2"
 }
 
-variable "hosted-zone-domain-name" {
-  type        = string
-  description = "AWS Route53 Hosted Zone Domain Name"
-  default     = "pcmt.villagereach.org"
-}
-
 variable "domain-name" {
   type        = string
   description = "AWS Route53 Domain Name"

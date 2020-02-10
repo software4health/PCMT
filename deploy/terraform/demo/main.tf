@@ -7,7 +7,7 @@
 terraform {
   backend "s3" {
     bucket = "pcmt-terraform-states"
-    key    = "pcmt-gfpvan-uat.tf"
+    key    = "pcmt-demo.tf"
     region = "eu-west-1"
   }
 }
@@ -34,7 +34,7 @@ data "terraform_remote_state" "pcmt-hosted-zone" {
   }
 }
 
-module "gfpvan-uat" {
+module "demo" {
   source = "../modules/pcmt"
 
   aws-region              = "${var.aws-region}"

@@ -24,6 +24,9 @@ default:
     - apk add bash make git curl
     - bash --version
 
+include: 
+  - local: '.gitlab-ci.env-demo.yml'
+
 ############### PIM ###############
 
 .pim_only_changes:
@@ -268,139 +271,6 @@ env-test-destroy:
   when: manual
   environment:
     name: test 
-    action: stop
-
-############### Beta Environment ###############
-
-.env-beta:
-  extends:
-    - .pim_only_changes
-  stage: deploy
-  only:
-    - master@pcmt/pcmt
-  when: manual
-  environment:
-    name: beta
-    url: http://beta.pcmt.villagereach.org
-    on_stop: env-beta-destroy
-
-.env-beta_script-deploy:
-  script:
-    - ./bin/ci-deploy.sh beta
-    
-.env-beta_script-destroy:
-  script: 
-    - ./deploy/terraform/run-docker.sh beta destroy -auto-approve
-
-env-beta (WIPE DB):
-  extends:
-    - .env-beta
-    - .env-beta_script-deploy
-  variables:
-    PCMT_PROFILE: dev
-
-env-beta (KEEP DB):
-  extends:
-    - .env-beta
-    - .env-beta_script-deploy
-  variables:
-    PCMT_PROFILE: production
-
-env-beta-destroy:
-  extends:
-    - .env-beta
-    - .env-beta_script-destroy
-  environment:
-    name: beta
-    action: stop
-
-############### Rwanda Beta Environment ###############
-
-.env-rwanda-beta:
-  extends:
-    - .pim_only_changes
-  stage: deploy
-  only:
-    - master@pcmt/pcmt
-  when: manual
-  environment:
-    name: rwanda-beta
-    url: http://rwanda-beta.pcmt.villagereach.org
-    on_stop: env-rwanda-beta-destroy
-
-.env-rwanda-beta_script-deploy:
-  script:
-    - ./bin/ci-deploy.sh rwanda-beta
-    
-.env-rwanda-beta_script-destroy:
-  script: 
-    - ./deploy/terraform/run-docker.sh rwanda-beta destroy -auto-approve
-
-env-rwanda-beta (WIPE DB):
-  extends:
-    - .env-rwanda-beta
-    - .env-rwanda-beta_script-deploy
-  variables:
-    PCMT_PROFILE: dev
-
-env-rwanda-beta (KEEP DB):
-  extends:
-    - .env-rwanda-beta
-    - .env-rwanda-beta_script-deploy
-  variables:
-    PCMT_PROFILE: production
-
-env-rwanda-beta-destroy:
-  extends:
-    - .env-rwanda-beta
-    - .env-rwanda-beta_script-destroy
-  environment:
-    name: rwanda-beta
-    action: stop
-
-############### Ethiopia Beta Environment ###############
-
-.env-ethiopia-beta:
-  extends:
-    - .pim_only_changes
-  stage: deploy
-  only:
-    - master@pcmt/pcmt
-  when: manual
-  environment:
-    name: ethiopia-beta
-    url: http://ethiopia-beta.pcmt.villagereach.org
-    on_stop: env-ethiopia-beta-destroy
-
-.env-ethiopia-beta_script-deploy:
-  script:
-    - ./bin/ci-deploy.sh ethiopia-beta
-    
-.env-ethiopia-beta_script-destroy:
-  script: 
-    - ./deploy/terraform/run-docker.sh ethiopia-beta destroy -auto-approve
-
-env-ethiopia-beta (WIPE DB):
-  extends:
-    - .env-ethiopia-beta
-    - .env-ethiopia-beta_script-deploy
-  variables:
-    PCMT_PROFILE: dev
-    PCMT_VER: 1.0.0-beta2
-
-env-ethiopia-beta (KEEP DB):
-  extends:
-    - .env-ethiopia-beta
-    - .env-ethiopia-beta_script-deploy
-  variables:
-    PCMT_PROFILE: production
-
-env-ethiopia-beta-destroy:
-  extends:
-    - .env-ethiopia-beta
-    - .env-ethiopia-beta_script-destroy
-  environment:
-    name: ethiopia-beta
     action: stop
 
 ############### GFPVAN Prod Environment ###############

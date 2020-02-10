@@ -35,7 +35,6 @@ module "pcmt" {
   root-volume-size        = "${var.root-volume-size}"
   instance-type           = "${var.instance-type}"
   app-deploy-group        = "${var.app-deploy-group}"
-  hosted-zone-domain-name = "${var.hosted-zone-domain-name}"
   domain-name             = "${var.domain-name}"
   subnet-id               = "${data.terraform_remote_state.pcmt-network-dev.outputs.vpc-subnet-id}"
   security-group-id       = "${data.terraform_remote_state.pcmt-network-dev.outputs.security-group-id}"
