@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Entity;
 
+use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithAssociationsInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 
 interface DraftInterface
@@ -28,4 +29,6 @@ interface DraftInterface
     public function setApproved(\DateTime $approved): void;
 
     public function setApprovedBy(UserInterface $approvedBy): void;
+
+    public function getObject(): ?EntityWithAssociationsInterface;
 }

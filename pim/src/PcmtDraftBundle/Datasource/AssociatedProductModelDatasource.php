@@ -18,7 +18,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
-use PcmtDraftBundle\Service\Draft\ProductModelFromDraftCreator;
+use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 
 /**
  * Product datasource dedicated to the product association datagrid.
@@ -29,10 +29,10 @@ use PcmtDraftBundle\Service\Draft\ProductModelFromDraftCreator;
  */
 class AssociatedProductModelDatasource extends OriginalAssociatedProductModelDatasource
 {
-    /** @var ProductModelFromDraftCreator */
+    /** @var GeneralObjectFromDraftCreator */
     protected $creator;
 
-    public function setCreator(ProductModelFromDraftCreator $creator): void
+    public function setCreator(GeneralObjectFromDraftCreator $creator): void
     {
         $this->creator = $creator;
     }
@@ -61,7 +61,7 @@ class AssociatedProductModelDatasource extends OriginalAssociatedProductModelDat
             throw InvalidObjectException::objectExpected($draft, DraftInterface::class);
         }
 
-        $sourceProduct = $this->creator->getProductModelToSave($draft);
+        $sourceProduct = $this->creator->getObjectToSave($draft);
         if (!$sourceProduct) {
             return [
                 'totalRecords' => 0,

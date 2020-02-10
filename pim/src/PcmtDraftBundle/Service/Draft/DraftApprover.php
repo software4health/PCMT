@@ -29,7 +29,7 @@ class DraftApprover
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var ObjectFromDraftCreatorInterface */
+    /** @var GeneralObjectFromDraftCreator */
     private $creator;
 
     /** @var SaverInterface */
@@ -43,7 +43,7 @@ class DraftApprover
         TokenStorageInterface $tokenStorage,
         ValidatorInterface $validator,
         SaverInterface $saver,
-        ObjectFromDraftCreatorInterface $creator
+        GeneralObjectFromDraftCreator $creator
     ) {
         $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;

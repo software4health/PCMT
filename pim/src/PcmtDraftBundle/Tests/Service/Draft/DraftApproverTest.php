@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Service\Draft\DraftApprover;
-use PcmtDraftBundle\Service\Draft\ObjectFromDraftCreatorInterface;
+use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DraftApproverTest extends TestCase
 {
-    /** @var ObjectFromDraftCreatorInterface */
+    /** @var GeneralObjectFromDraftCreator */
     private $creatorMock;
 
     /** @var EntityManagerInterface */
@@ -43,7 +43,7 @@ class DraftApproverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->creatorMock = $this->createMock(ObjectFromDraftCreatorInterface::class);
+        $this->creatorMock = $this->createMock(GeneralObjectFromDraftCreator::class);
         $this->entityManagerMock = $this->createMock(EntityManagerInterface::class);
         $user = $this->createMock(UserInterface::class);
         $token = $this->createMock(TokenInterface::class);

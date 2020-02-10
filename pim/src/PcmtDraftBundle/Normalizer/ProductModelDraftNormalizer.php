@@ -15,13 +15,13 @@ use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
 use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
-use PcmtDraftBundle\Service\Draft\ProductModelFromDraftCreator;
+use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 
 class ProductModelDraftNormalizer extends AbstractDraftNormalizer implements NormalizerInterface
 {
-    /** @var ProductModelFromDraftCreator */
+    /** @var GeneralObjectFromDraftCreator */
     private $productModelFromDraftCreator;
 
     /** @var AttributeChangeService */
@@ -41,7 +41,7 @@ class ProductModelDraftNormalizer extends AbstractDraftNormalizer implements Nor
         $this->productModelNormalizer = $productModelNormalizer;
     }
 
-    public function setProductModelFromDraftCreator(ProductModelFromDraftCreator $productModelFromDraftCreator): void
+    public function setProductModelFromDraftCreator(GeneralObjectFromDraftCreator $productModelFromDraftCreator): void
     {
         $this->productModelFromDraftCreator = $productModelFromDraftCreator;
     }
@@ -59,7 +59,7 @@ class ProductModelDraftNormalizer extends AbstractDraftNormalizer implements Nor
         /** @var ProductModelDraftInterface $draft */
         $data = parent::normalize($draft, $format, $context);
 
-        $newProductModel = $this->productModelFromDraftCreator->getProductModelToCompare($draft);
+        $newProductModel = $this->productModelFromDraftCreator->getObjectToCompare($draft);
 
         if (!$newProductModel) {
             // that's a special case when a original product has been removed after creating a draft.

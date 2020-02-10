@@ -27,7 +27,7 @@ use PcmtDraftBundle\Normalizer\DraftStatusNormalizer;
 use PcmtDraftBundle\Normalizer\ProductDraftNormalizer;
 use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
 use PcmtDraftBundle\Service\Draft\DraftStatusTranslatorService;
-use PcmtDraftBundle\Service\Draft\ProductFromDraftCreator;
+use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -53,7 +53,7 @@ class ProductDraftNormalizerTest extends TestCase
     /** @var NormalizerInterface|MockObject */
     private $productNormalizer;
 
-    /** @var ProductFromDraftCreator|MockObject */
+    /** @var GeneralObjectFromDraftCreator|MockObject */
     private $creator;
 
     /** @var AttributeChangeService */
@@ -87,8 +87,8 @@ class ProductDraftNormalizerTest extends TestCase
         $translator = $this->createMock(DraftStatusTranslatorService::class);
         $this->draftStatusNormalizer = new DraftStatusNormalizer($logger, $translator);
 
-        $this->creator = $this->createMock(ProductFromDraftCreator::class);
-        $this->creator->method('getProductToCompare')->willReturn($this->productNew);
+        $this->creator = $this->createMock(GeneralObjectFromDraftCreator::class);
+        $this->creator->method('getObjectToCompare')->willReturn($this->productNew);
 
         $this->attributeChangeService = $this->createMock(AttributeChangeService::class);
         $this->productNormalizer = $this->createMock(NormalizerInterface::class);
@@ -231,8 +231,8 @@ class ProductDraftNormalizerTest extends TestCase
 
     public function testNormalizeWhenNoProductToCompare(): void
     {
-        $this->creator = $this->createMock(ProductFromDraftCreator::class);
-        $this->creator->method('getProductToCompare')->willReturn(null);
+        $this->creator = $this->createMock(GeneralObjectFromDraftCreator::class);
+        $this->creator->method('getObjectToCompare')->willReturn(null);
 
         $this->productDraftNormalizer = new ProductDraftNormalizer(
             $this->draftStatusNormalizer,

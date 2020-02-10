@@ -12,7 +12,7 @@ namespace PcmtDraftBundle\Entity;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 
-class ExistingProductDraft extends AbstractProductDraft
+class ExistingProductDraft extends AbstractProductDraft implements ExistingObjectDraftInterface
 {
     public const TYPE = 'existing product draft';
 
