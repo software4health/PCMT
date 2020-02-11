@@ -20,9 +20,11 @@ define(
         'pim/router',
         'pim/form-builder',
         'pim/form-modal',
-        'pcmt/draft/collection'
+        'pcmt/draft/collection',
+        'oro/messenger'
     ],
-    function (BaseForm, Backbone, $, _, __, Routing, template, Dialog, SecurityContext, Router, FormBuilder, FormModal, DraftCollection) {
+    function (BaseForm, Backbone, $, _, __, Routing, template, Dialog, SecurityContext, Router, FormBuilder, FormModal, DraftCollection,
+              messenger) {
 
         return BaseForm.extend({
             template: _.template(template),
@@ -297,6 +299,10 @@ define(
                     type: 'PUT'
                 }).done((function () {
                     this.getRoot().trigger('pcmt:drafts:approved');
+                    messenger.notify(
+                        'success',
+                        __('pcmt_messages.job_drafts_bulk_approve.success', {})
+                    );
                 }).bind(this)).fail((function (jqXHR) {
                     let messages = _.map(jqXHR.responseJSON.values, function (value) {
                         return value.attribute + ': ' + value.message;
