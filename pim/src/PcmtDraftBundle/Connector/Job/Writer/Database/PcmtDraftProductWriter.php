@@ -22,7 +22,7 @@ use Akeneo\UserManagement\Component\Model\UserInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 
-class PcmtDraftProductWriter extends ProductWriter
+class PcmtDraftProductWriter extends ProductWriter implements PcmtDraftWriterInterface
 {
     /** @var UserInterface */
     private $user;

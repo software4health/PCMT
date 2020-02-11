@@ -14,6 +14,7 @@ use Akeneo\Tool\Component\Batch\Step\ItemStep;
 use Akeneo\UserManagement\Bundle\Doctrine\ORM\Repository\UserRepository;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Akeneo\UserManagement\Component\Repository\UserRepositoryInterface;
+use PcmtDraftBundle\Exception\UserNotFoundException;
 
 class PcmtImportViaDraftStep extends ItemStep
 {
@@ -40,12 +41,14 @@ class PcmtImportViaDraftStep extends ItemStep
 
     /**
      * {@inheritdoc}
+     *
+     * @throws UserNotFoundException
      */
     protected function write($processedItems)
     {
         $user = $this->userRepository->find($this->user->getId());
         if (!$user) {
-            throw new \Exception('No user found');
+            throw new UserNotFoundException('No user found');
         }
         $this->writer->setUser($user);
 
