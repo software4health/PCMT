@@ -169,8 +169,13 @@ scalyr docker build:
   environment:
     name: dev
     url: http://dev.pcmt.villagereach.org
+    on_stop: env-dev-destroy
   script:
     - ./bin/ci-deploy.sh dev
+
+.env-dev_script-destroy:
+  script: 
+    - ./deploy/terraform/run-docker.sh dev destroy -auto-approve
 
 .env-dev (WIPE DB):
   extends:
@@ -183,6 +188,14 @@ scalyr docker build:
     - .env-dev
   variables:
     PCMT_PROFILE: production
+
+env-dev-destroy:
+  extends:
+    - .env-dev
+    - .env-dev_script-destroy
+  environment:
+    name: dev
+    action: stop
 
 ############### Showcase Environment ###############
 
