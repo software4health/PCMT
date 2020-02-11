@@ -11,6 +11,7 @@ namespace PcmtDraftBundle\Tests\Service\Draft;
 
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Service\Draft\DraftStatusTranslatorService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -22,33 +23,64 @@ use Symfony\Component\Translation\TranslatorInterface;
 class DraftStatusTranslatorServiceTest extends TestCase
 {
     /**
-     * @var DraftStatusTranslatorService
+     * @var TranslatorInterface|MockObject
      */
-    private $draftStatusTranslatorService;
-
-    /**
-     * @var string
-     */
-    private $nameTranslated = 'name translated';
+    private $translatorServiceMock;
 
     protected function setUp(): void
     {
-        $translatorService = $this->createMock(TranslatorInterface::class);
-        $translatorService->method('trans')->willReturn($this->nameTranslated);
-        $this->draftStatusTranslatorService = new DraftStatusTranslatorService($translatorService);
-        parent::setUp();
+        $this->translatorServiceMock = $this->createMock(TranslatorInterface::class);
     }
 
-    public function testGetName(): void
+    public function testGetNameThrowsError(): void
     {
-        $name = $this->draftStatusTranslatorService->getName(AbstractDraft::STATUS_NEW);
+        $draftStatusTranslatorService = new DraftStatusTranslatorService($this->translatorServiceMock);
+        $this->expectException(\Throwable::class);
+        $draftStatusTranslatorService->getName(-1);
+    }
+
+    /**
+     * @dataProvider dataGetName
+     */
+    public function testGetName(int $statusId): void
+    {
+        $this->translatorServiceMock->expects($this->never())->method('trans');
+
+        $draftStatusTranslatorService = new DraftStatusTranslatorService($this->translatorServiceMock);
+
+        $name = $draftStatusTranslatorService->getName($statusId);
+
         $this->assertNotEmpty($name);
         $this->assertIsString($name);
     }
 
-    public function testGetNameTranslated(): void
+    public function dataGetName(): array
     {
-        $name = $this->draftStatusTranslatorService->getNameTranslated(AbstractDraft::STATUS_NEW);
-        $this->assertSame($this->nameTranslated, $name);
+        return [
+            [AbstractDraft::STATUS_NEW],
+            [AbstractDraft::STATUS_APPROVED],
+            [AbstractDraft::STATUS_REJECTED],
+        ];
+    }
+
+    /**
+     * @dataProvider dataGetNameTranslated
+     */
+    public function testGetNameTranslated(int $statusId, string $nameTranslated): void
+    {
+        $this->translatorServiceMock->expects($this->once())->method('trans')->willReturn($nameTranslated);
+
+        $draftStatusTranslatorService = new DraftStatusTranslatorService($this->translatorServiceMock);
+
+        $name = $draftStatusTranslatorService->getNameTranslated($statusId);
+        $this->assertSame($nameTranslated, $name);
+    }
+
+    public function dataGetNameTranslated(): array
+    {
+        return [
+            [AbstractDraft::STATUS_NEW, 'only new!'],
+            [AbstractDraft::STATUS_REJECTED, 'only rejestected #'],
+        ];
     }
 }

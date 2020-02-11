@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2019, VillageReach
+ * Copyright (c) 2020, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
  */
@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Tests\Service\Draft;
 
+use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
 use PcmtDraftBundle\Saver\ProductDraftSaver;
@@ -23,19 +24,30 @@ class DraftSaverFactoryTest extends TestCase
     private $factory;
 
     /** @var ProductDraftSaver|MockObject */
-    private $productDraftSaver;
+    private $productDraftSaverMock;
 
     /** @var ProductModelDraftSaver|MockObject */
-    private $productModelDraftSaver;
+    private $productModelDraftSaverMock;
 
     protected function setUp(): void
     {
-        $this->productDraftSaver = $this->createMock(ProductDraftSaver::class);
-        $this->productModelDraftSaver = $this->createMock(ProductModelDraftSaver::class);
-        $this->factory = new DraftSaverFactory($this->productDraftSaver, $this->productModelDraftSaver);
+        $this->productDraftSaverMock = $this->createMock(ProductDraftSaver::class);
+        $this->productModelDraftSaverMock = $this->createMock(ProductModelDraftSaver::class);
+        $this->factory = new DraftSaverFactory($this->productDraftSaverMock, $this->productModelDraftSaverMock);
     }
 
-    public function draftsProvider(): array
+    /**
+     * @dataProvider dataCreate
+     *
+     * @throws \ReflectionException
+     */
+    public function testCreate(string $class, string $expected): void
+    {
+        $productDraftMock = $this->createMock($class);
+        $this->assertInstanceOf($expected, $this->factory->create($productDraftMock));
+    }
+
+    public function dataCreate(): array
     {
         return [
             'product_draft'       => [
@@ -50,16 +62,14 @@ class DraftSaverFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider draftsProvider
+     * @dataProvider dataCreate
      *
      * @throws \ReflectionException
      */
-    public function testFactoryWhenPassedDraftInstanceThenShouldReturnSpecifiedDraftSaver(
-        string $class,
-        string $expected
-    ): void {
-        $productDraft = $this->createMock($class);
-
-        $this->assertInstanceOf($expected, $this->factory->create($productDraft));
+    public function testCreateThrowsException(): void
+    {
+        $objectMock = $this->createMock(DraftInterface::class);
+        $this->expectException(\Throwable::class);
+        $this->factory->create($objectMock);
     }
 }
