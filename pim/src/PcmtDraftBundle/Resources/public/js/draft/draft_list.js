@@ -93,6 +93,12 @@ define(
                             this.excluded.push(parseInt(draftId));
                         }
                     }
+                },
+
+                reset: function () {
+                    this.allSelected = false;
+                    this.selected = [];
+                    this.excluded = [];
                 }
             },
 
@@ -108,6 +114,7 @@ define(
             configure: function () {
                 this.setDrafts([]);
                 this.startLoading();
+                this.chosenDrafts.reset();
 
                 this.collection = new DraftCollection(null, {
                     inputName: 'draft-grid'
