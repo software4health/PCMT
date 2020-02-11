@@ -51,3 +51,16 @@ services:
             - '@monolog.logger'
         tags:
             - { name: 'console.command', command: 'pcmt:e2Open:import_from_files' }
+
+    pcmt_core.service.esquery.product:
+        class: PcmtCoreBundle\Service\Query\ESQuery
+        arguments:
+            - '@akeneo_elasticsearch.client.product'
+            - 'pim_catalog_product'
+
+    pcmt_core.service.e2Open.trade_item_xml_processor:
+        class: PcmtCoreBundle\Service\E2Open\TradeItemXmlProcessor
+        arguments:
+            - '@monolog.logger'
+            - '@pcmt_e2Open_attributes_service'
+            - '@pim_catalog.updater.product'

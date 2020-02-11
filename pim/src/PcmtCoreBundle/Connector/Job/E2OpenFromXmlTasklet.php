@@ -11,16 +11,13 @@ namespace PcmtCoreBundle\Connector\Job;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterface;
-use Akeneo\Tool\Bundle\ElasticsearchBundle\Client;
-use Akeneo\Tool\Bundle\ElasticsearchBundle\ClientRegistry;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
-use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
-use PcmtCoreBundle\Connector\Mapping\E2OpenMapping;
 use PcmtCoreBundle\Service\E2Open\E2OpenAttributesService;
+use PcmtCoreBundle\Service\E2Open\TradeItemXmlProcessor;
+use PcmtCoreBundle\Service\Query\ESQuery;
 use PcmtCoreBundle\Util\Adapter\FileGetContentsWrapper;
-use Psr\Log\LoggerInterface;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Service;
 
@@ -35,14 +32,8 @@ class E2OpenFromXmlTasklet implements TaskletInterface
     /** @var mixed */
     private $item;
 
-    /** @var string[] */
-    protected $valueMapping = [];
-
     /** @var ProductRepositoryInterface */
     private $productRepository;
-
-    /** @var ObjectUpdaterInterface */
-    private $productUpdater;
 
     /** @var SaverInterface */
     private $productSaver;
@@ -50,32 +41,25 @@ class E2OpenFromXmlTasklet implements TaskletInterface
     /** @var ProductBuilderInterface */
     private $productBuilder;
 
-    /** @var ClientRegistry */
-    private $elasticClientRegistry;
+    /** @var ESQuery */
+    private $esQueryService;
 
-    /** @var LoggerInterface */
-    private $logger;
-
-    /** @var \PcmtCoreBundle\Service\E2Open\E2OpenAttributesService */
-    private $attributesService;
+    /** @var TradeItemXmlProcessor */
+    private $nodeProcessor;
 
     public function __construct(
         ProductRepositoryInterface $productRepository,
-        ObjectUpdaterInterface $productUpdater,
         SaverInterface $productSaver,
         ProductBuilderInterface $productBuilder,
-        ClientRegistry $clientRegistry,
-        LoggerInterface $logger,
-        E2OpenAttributesService $attributesService
+        TradeItemXmlProcessor $nodeProcessor,
+        ESQuery $esQueryService
     ) {
         $this->xmlReader = new Service();
         $this->productRepository = $productRepository;
-        $this->productUpdater = $productUpdater;
         $this->productSaver = $productSaver;
         $this->productBuilder = $productBuilder;
-        $this->elasticClientRegistry = $clientRegistry;
-        $this->logger = $logger;
-        $this->attributesService = $attributesService;
+        $this->esQueryService = $esQueryService;
+        $this->nodeProcessor = $nodeProcessor;
     }
 
     public function setStepExecution(StepExecution $stepExecution): void
@@ -88,50 +72,6 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         $filePath = $this->stepExecution->getJobParameters()
             ->get('xmlFilePath');
         $this->processFile($filePath);
-    }
-
-    private function processNode(array $element, string $parent = ''): void
-    {
-        if (!empty($element['attributes'])) {
-            // there are some additional attributes in node, process them individually
-            foreach ($element['attributes'] as $name => $value) {
-                $newElement = [
-                    'name'  => $name,
-                    'value' => $value,
-                ];
-                $this->processNode($newElement, $element['name']);
-            }
-            // but don't finish processing here, process also whole node.
-        }
-
-        if (is_array($element['value'])) {
-            // there are still further nodes
-            foreach ($element['value'] as $subElement) {
-                $this->processNode($subElement, $element['name']);
-            }
-            // finish processing node in such case
-            return;
-        }
-
-        $name = $parent.$element['name'];
-        if (!$mappedAttributeCode = E2OpenMapping::findMappingForKey($name)) {
-            $name = $element['name'];
-            $mappedAttributeCode = E2OpenMapping::findMappingForKey($name);
-        }
-
-        if (!$mappedAttributeCode) {
-            // no mapping defined for this node
-            return;
-        }
-        try {
-            $value = E2OpenMapping::mapValue($element['value']);
-            $this->processProductAttributeValue($mappedAttributeCode, $value, $element['attributes'] ?? []);
-        } catch (\Throwable $exception) {
-            $this->logger->error(
-                'Processing key ' . $element['name'] . ' failed. Key and value will be ignored. ' .
-                'Details: ' . $exception->getMessage()
-            );
-        }
     }
 
     private function processFile(string $filePath): void
@@ -149,6 +89,7 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                 foreach ($subTree as $element) {
                     if ('{}gtin' === $element['name']) {
                         $this->item = $this->instantiateProduct($element);
+                        $this->nodeProcessor->setProductToUpdate($this->item);
                         break;
                     }
                 }
@@ -158,7 +99,7 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                 array_walk(
                     $subTree,
                     function ($element): void {
-                        $this->processNode($element);
+                        $this->nodeProcessor->processNode($element);
                     }
                 );
 
@@ -169,54 +110,9 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         $this->xmlReader->parse($xmlInput);
     }
 
-    /**
-     * @param string|int $value
-     *
-     * @throws \Exception
-     */
-    private function processProductAttributeValue(string $mappedAttributeCode, $value, ?array $nodeAttributes): void
-    {
-        $pcmtAttribute = $this->attributesService->getForCode($mappedAttributeCode);
-        if (!$pcmtAttribute) {
-            throw new \Exception('Attribute not found for ' . $mappedAttributeCode);
-        }
-
-        $unit = null;
-        if (E2OpenAttributesService::MEASURE_UNIT === $pcmtAttribute->getMetricFamily()) {
-            foreach ($nodeAttributes as $name => $v) {
-                if (false !== mb_stripos($name, 'measurementUnitCode')) {
-                    if ($u = $this->attributesService->getMeasureUnitForSymbol($v)) {
-                        $unit = $u;
-                    }
-                }
-            }
-        }
-
-        if ($unit) {
-            // if measurement unit found, this is a special metric field and we need to send array instead of string/int
-            $value = [
-                'unit'   => $unit,
-                'amount' => $value,
-            ];
-        }
-
-        $valuesToUpdate[$pcmtAttribute->getCode()]['data']['data'] = $value;
-        $valuesToUpdate[$pcmtAttribute->getCode()]['data']['locale'] = null;
-        $valuesToUpdate[$pcmtAttribute->getCode()]['data']['scope'] = null;
-        $this->productUpdater->update(
-            $this->item,
-            [
-                'values' => $valuesToUpdate,
-            ]
-        );
-    }
-
     private function instantiateProduct(array $element): ProductInterface
     {
         $identifier = $element['value'];
-        $elasticIndexName = 'akeneo_pim_product';
-        $esClient = $this->getElasticSearchClient($elasticIndexName);
-        $esQuery = [];
         $esQuery['query']['bool']['must'] = [
             [
                 'match' => [
@@ -224,7 +120,8 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                 ],
             ],
         ];
-        $result = $esClient->search('pim_catalog_product', $esQuery);
+        $result = $this->esQueryService->execute($esQuery);
+
         if ($result['hits']['total'] < 1) {
             return $this->createNewProductInstance($identifier);
         }
@@ -248,15 +145,5 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                 'id' => $id,
             ]
         );
-    }
-
-    private function getElasticSearchClient(string $indexName): Client
-    {
-        foreach ($this->elasticClientRegistry->getClients() as $client) {
-            if ($client->getIndexName() === $indexName) {
-                return $client;
-            }
-        }
-        throw new \InvalidArgumentException('Wrong index ' . $indexName . ' passed');
     }
 }
