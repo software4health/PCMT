@@ -25,18 +25,45 @@ data "terraform_remote_state" "pcmt-network-dev" {
   }
 }
 
-module "beta" {
-  source = "../modules/pcmt"
+data "terraform_remote_state" "pcmt-hosted-zone" {
+  backend = "s3"
+  config = {
+    bucket = "pcmt-terraform-states"
+    key    = "pcmt-villagereach-org.tf"
+    region = "eu-west-1"
+  }
+}
 
-  aws-region              = "${var.aws-region}"
-  tag-name                = "${var.tag-name}"
-  tag-type                = "${var.tag-type}"
-  tag-bill-to             = "${var.tag-bill-to}"
-  root-volume-size        = "${var.root-volume-size}"
-  instance-type           = "${var.instance-type}"
-  app-deploy-group        = "${var.app-deploy-group}"
-  domain-name             = "${var.domain-name}"
-  subnet-id               = "${data.terraform_remote_state.pcmt-network-dev.outputs.vpc-subnet-id}"
-  security-group-id       = "${data.terraform_remote_state.pcmt-network-dev.outputs.security-group-id}"
-  route53-zone-id         = "${data.terraform_remote_state.pcmt-network-dev.outputs.route53-zone-id}"
+# s3 bucket to serve http redirect
+resource "aws_s3_bucket" "redirect" {
+  region = "${var.aws-region}"
+  bucket = "${var.domain-name}"
+  acl    = "public-read"
+
+  tags = {
+    Name   = "${var.tag-name}"
+    BillTo = "${var.tag-bill-to}"
+    Type   = "${var.tag-type}"
+  }
+
+  versioning {
+    enabled = false
+  }
+
+  website {
+    redirect_all_requests_to = "https://demo.productcatalog.io"
+  }
+}
+
+#route 53 to s3 bucket
+resource "aws_route53_record" "main" {
+  zone_id = "${data.terraform_remote_state.pcmt-hosted-zone.outputs.main-hosted-zone-id}"
+  name    = "${var.domain-name}"
+  type    = "A"
+
+  alias {
+    name                   = "${aws_s3_bucket.redirect.website_domain}"
+    zone_id                = "${aws_s3_bucket.redirect.hosted_zone_id}"
+    evaluate_target_health = false
+  }
 }
