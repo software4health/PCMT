@@ -20,7 +20,7 @@ data "terraform_remote_state" "pcmt-network-dev" {
   backend = "s3"
   config = {
     bucket = "pcmt-terraform-states"
-    key    = "pcmt-network-dev.tf"
+    key    = "pcmt-network-useast.tf"
     region = "eu-west-1"
   }
 }
