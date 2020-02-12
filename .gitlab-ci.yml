@@ -157,46 +157,6 @@ scalyr docker build:
     - make scalyr
     - docker push pcmt/scalyr:latest
 
-############### Dev Environment ###############
-
-.env-dev: 
-  extends:
-    - .pim_only_changes
-  stage: deploy
-  only:
-    - master@pcmt/pcmt
-  when: manual
-  environment:
-    name: dev
-    url: http://dev.pcmt.villagereach.org
-    on_stop: env-dev-destroy
-  script:
-    - ./bin/ci-deploy.sh dev
-
-.env-dev_script-destroy:
-  script: 
-    - ./deploy/terraform/run-docker.sh dev destroy -auto-approve
-
-.env-dev (WIPE DB):
-  extends:
-    - .env-dev
-  variables:
-    PCMT_PROFILE: dev
-
-.env-dev (KEEP DB):
-  extends:
-    - .env-dev
-  variables:
-    PCMT_PROFILE: production
-
-env-dev-destroy:
-  extends:
-    - .env-dev
-    - .env-dev_script-destroy
-  environment:
-    name: dev
-    action: stop
-
 ############### Showcase Environment ###############
 
 .env-showcase:
