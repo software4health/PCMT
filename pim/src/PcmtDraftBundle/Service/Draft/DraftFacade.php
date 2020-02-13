@@ -14,6 +14,7 @@ use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
+use PcmtDraftBundle\Saver\DraftSaver;
 
 class DraftFacade
 {
@@ -26,19 +27,19 @@ class DraftFacade
     /** @var DraftApprover */
     private $productModelDraftApprover;
 
-    /** @var DraftSaverFactory */
-    private $draftSaverFactory;
+    /** @var DraftSaver */
+    private $draftSaver;
 
     public function __construct(
         DraftApprover $productDraftApprover,
         DraftApprover $productModelDraftApprover,
         EntityManagerInterface $entityManager,
-        DraftSaverFactory $draftSaverFactory
+        DraftSaver $draftSaver
     ) {
         $this->productDraftApprover = $productDraftApprover;
         $this->productModelDraftApprover = $productModelDraftApprover;
         $this->entityManager = $entityManager;
-        $this->draftSaverFactory = $draftSaverFactory;
+        $this->draftSaver = $draftSaver;
     }
 
     public function approveDraft(DraftInterface $draft): void
@@ -62,8 +63,6 @@ class DraftFacade
 
     public function updateDraft(DraftInterface $draft): void
     {
-        $this->draftSaverFactory
-            ->create($draft)
-            ->save($draft);
+        $this->draftSaver->save($draft);
     }
 }

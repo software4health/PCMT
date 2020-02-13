@@ -12,12 +12,12 @@ namespace PcmtDraftBundle\Saver;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\StorageEvents;
 use Doctrine\ORM\EntityManagerInterface;
-use PcmtDraftBundle\Entity\AbstractDraft;
-use PcmtDraftBundle\Entity\ProductDraftInterface;
+use PcmtDraftBundle\Entity\DraftInterface;
+use PcmtDraftBundle\Entity\DraftRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
-class ProductDraftSaver implements SaverInterface
+class DraftSaver implements SaverInterface
 {
     /** @var EntityManagerInterface */
     protected $entityManager;
@@ -25,12 +25,17 @@ class ProductDraftSaver implements SaverInterface
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
+    /** @var DraftRepositoryInterface */
+    private $draftRepository;
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        DraftRepositoryInterface $draftRepository
     ) {
         $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
+        $this->draftRepository = $draftRepository;
     }
 
     /**
@@ -39,43 +44,28 @@ class ProductDraftSaver implements SaverInterface
     public function save($draft, array $options = []): void
     {
         $this->validateDraft($draft);
-        $this->entityManager->beginTransaction();
-
-        try {
-            $this->entityManager->persist($draft);
-            $this->eventDispatcher->dispatch(StorageEvents::PRE_SAVE, new GenericEvent($draft, $options));
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-            $this->eventDispatcher->dispatch(StorageEvents::POST_SAVE, new GenericEvent($draft, $options));
-        } catch (\Throwable $exception) {
-            $this->entityManager->rollback();
-
-            throw $exception;
-        }
+        $this->eventDispatcher->dispatch(StorageEvents::PRE_SAVE, new GenericEvent($draft, $options));
+        $this->entityManager->persist($draft);
+        $this->entityManager->flush();
+        $this->eventDispatcher->dispatch(StorageEvents::POST_SAVE, new GenericEvent($draft, $options));
     }
 
     protected function validateDraft(object $draft): void
     {
-        if (!$draft instanceof ProductDraftInterface) {
+        if (!$draft instanceof DraftInterface) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Expects a %s, "%s" provided',
-                    ProductDraftInterface::class,
+                    DraftInterface::class,
                     get_class($draft)
                 )
             );
         }
 
-        if (!$draft->getId() && $draft->getProduct()) {
-            $draftRepository = $this->entityManager->getRepository(AbstractDraft::class);
-            $criteria = [
-                'status'  => AbstractDraft::STATUS_NEW,
-                'product' => $draft->getProduct(),
-            ];
-            $count = $draftRepository->count($criteria);
-            if ($count > 0) {
+        if (!$draft->getId() && $draft->getObject()) {
+            if ($this->draftRepository->checkIfDraftForObjectAlreadyExists($draft)) {
                 throw new \InvalidArgumentException(
-                    'There is already a draft for this product'
+                    'There is already a draft for this object'
                 );
             }
         }
