@@ -106,5 +106,6 @@ parameters:
         PhpCsFixer\Fixer\Phpdoc\PhpdocAnnotationWithoutDotFixer: ~
         PhpCsFixer\Fixer\Phpdoc\PhpdocSummaryFixer: ~
         PhpCsFixer\Fixer\Whitespace\SingleBlankLineAtEofFixer: ~
+        PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer: ~
         SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff.MissingTraversableParameterTypeHintSpecification: ~
         SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff.MissingTraversableReturnTypeHintSpecification: ~
