@@ -1,4 +1,4 @@
-aws-region = "eu-west-1"
+aws-region = "us-east-2"
 
 tag-name    = "gfpvan-uat"
 tag-type    = "staging"
