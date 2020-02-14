@@ -10,15 +10,14 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Tests\Service\Draft;
 
-use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
+use PcmtDraftBundle\Saver\DraftSaver;
 use PcmtDraftBundle\Service\Draft\DraftApprover;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
-use PcmtDraftBundle\Service\Draft\DraftSaverFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -33,15 +32,15 @@ class DraftFacadeTest extends TestCase
     /** @var EntityManagerInterface|MockObject */
     private $entityManagerMock;
 
-    /** @var DraftSaverFactory|MockObject */
-    private $draftSaverFactoryMock;
+    /** @var DraftSaver|MockObject */
+    private $draftSaverMock;
 
     protected function setUp(): void
     {
         $this->productDraftApproverMock = $this->createMock(DraftApprover::class);
         $this->productModelDraftApproverMock = $this->createMock(DraftApprover::class);
         $this->entityManagerMock = $this->createMock(EntityManagerInterface::class);
-        $this->draftSaverFactoryMock = $this->createMock(DraftSaverFactory::class);
+        $this->draftSaverMock = $this->createMock(DraftSaver::class);
     }
 
     /**
@@ -84,9 +83,7 @@ class DraftFacadeTest extends TestCase
     {
         $facade = $this->getDraftFacadeInstance();
         $draft = $this->createMock(DraftInterface::class);
-        $saverMock = $this->createMock(SaverInterface::class);
-        $this->draftSaverFactoryMock->expects($this->once())->method('create')->with($draft)->willReturn($saverMock);
-        $saverMock->expects($this->once())->method('save')->with($draft);
+        $this->draftSaverMock->expects($this->once())->method('save')->with($draft);
         $facade->updateDraft($draft);
     }
 
@@ -96,7 +93,7 @@ class DraftFacadeTest extends TestCase
             $this->productDraftApproverMock,
             $this->productModelDraftApproverMock,
             $this->entityManagerMock,
-            $this->draftSaverFactoryMock
+            $this->draftSaverMock
         );
     }
 }

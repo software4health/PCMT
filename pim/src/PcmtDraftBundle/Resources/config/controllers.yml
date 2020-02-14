@@ -41,7 +41,7 @@ services:
             - '@akeneo_elasticsearch.client.product_and_product_model'
         calls:
             - [setEventDispatcher, ['@event_dispatcher']]
-            - [setDraftSaver, ['@pcmt_core.save.productDraft']]
+            - [setDraftSaver, ['@pcmt.saver.draft']]
             - [setResponseBuilder, ['@pcmt.service.builder.response_builder']]
 
     ### overrides product model controller
@@ -68,7 +68,7 @@ services:
             - '@akeneo_elasticsearch.client.product_model'
             - '@akeneo_elasticsearch.client.product_and_product_model'
         calls:
-            - [setDraftSaver, ['@pcmt_core.save.productModelDraft']]
+            - [setDraftSaver, ['@pcmt.saver.draft']]
             - [setResponseBuilder, ['@pcmt.service.builder.response_builder']]
 
     pcmt.draft.controller.product_category:

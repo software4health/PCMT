@@ -18,4 +18,18 @@ class ProductDraftORMRepository extends EntityRepository implements DraftReposit
     {
         throw new NotImplementedException('method not implemented');
     }
+
+    public function checkIfDraftForObjectAlreadyExists(DraftInterface $draft): bool
+    {
+        $criteria = [
+            'status'  => AbstractDraft::STATUS_NEW,
+        ];
+        if ($draft instanceof ProductModelDraftInterface) {
+            $criteria['productModel'] = $draft->getObject();
+        } else {
+            $criteria['product'] = $draft->getObject();
+        }
+
+        return $this->count($criteria) > 0;
+    }
 }

@@ -6,14 +6,10 @@
 
 services:
 
-    pcmt_core.save.productDraft:
-        class: PcmtDraftBundle\Saver\ProductDraftSaver
+    pcmt.saver.draft:
+        class: PcmtDraftBundle\Saver\DraftSaver
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@event_dispatcher'
+            - '@pcmt_catalog.repository.draft'
 
-    pcmt_core.save.productModelDraft:
-        class: PcmtDraftBundle\Saver\ProductModelDraftSaver
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@event_dispatcher'

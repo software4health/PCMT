@@ -17,7 +17,7 @@ services:
             - '@pcmt.service.product_draft_approver'
             - '@pcmt.service.product_model_draft_approver'
             - '@doctrine.orm.entity_manager'
-            - '@pcmt_draft_saver_factory'
+            - '@pcmt.saver.draft'
 
     pcmt.service.product_draft_approver:
         class: PcmtDraftBundle\Service\Draft\DraftApprover
@@ -70,13 +70,6 @@ services:
         arguments:
             - '@pim_versioning.serializer'
             - '@pim_catalog.repository.attribute'
-
-    pcmt_draft_saver_factory:
-        class: 'PcmtDraftBundle\Service\Draft\DraftSaverFactory'
-        arguments:
-            - '@pcmt_core.save.productDraft'
-            - '@pcmt_core.save.productModelDraft'
-        autowire: true
 
     pcmt.factory.mass_action_notification:
         class: 'Akeneo\Platform\Bundle\ImportExportBundle\Factory\MassEditNotificationFactory'

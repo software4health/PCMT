@@ -4,7 +4,7 @@ services:
         parent: pim_connector.writer.database.product
         calls:
             - [setProductNormalizer, ['@pim_catalog.normalizer.standard.product']]
-            - [setProductDraftSaver, ['@pcmt_core.save.productDraft']]
+            - [setProductDraftSaver, ['@pcmt.saver.draft']]
             - [setProductBuilder, ['@pim_catalog.builder.product']]
             - [setAttributeProvider, ['@pim_catalog.family_variant.provider.entity_with_family_variant_attributes']]
 
@@ -13,7 +13,7 @@ services:
         parent: pim_connector.writer.database.product_model
         calls:
             - [setProductModelNormalizer, ['@pim_catalog.normalizer.standard.product_model']]
-            - [setProductModelDraftSaver, ['@pcmt_core.save.productModelDraft']]
+            - [setProductModelDraftSaver, ['@pcmt.saver.draft']]
             - [setProductModelFactory, ['@pim_catalog.factory.product_model']]
             - [setProductModelUpdater, ['@pim_catalog.updater.product_model']]
             - [setAttributeProvider, ['@pim_catalog.family_variant.provider.entity_with_family_variant_attributes']]

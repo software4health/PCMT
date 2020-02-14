@@ -12,4 +12,6 @@ namespace PcmtDraftBundle\Entity;
 interface DraftRepositoryInterface
 {
     public function findById(): AbstractDraft;
+
+    public function checkIfDraftForObjectAlreadyExists(DraftInterface $draft): bool;
 }
