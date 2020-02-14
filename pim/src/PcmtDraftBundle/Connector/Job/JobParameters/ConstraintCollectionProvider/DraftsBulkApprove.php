@@ -11,6 +11,7 @@ namespace PcmtDraftBundle\Connector\Job\JobParameters\ConstraintCollectionProvid
 
 use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters\ConstraintCollectionProviderInterface;
+use PcmtDraftBundle\MassActions\DraftsBulkApproveOperation;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
@@ -36,11 +37,11 @@ class DraftsBulkApprove implements ConstraintCollectionProviderInterface
         return new Collection(
             [
                 'fields' => [
-                    'excluded'              => new NotNull(),
-                    'selected'              => new NotNull(),
-                    'allSelected'           => new Type('bool'),
-                    'user_to_notify'        => new Type('string'),
-                    'is_user_authenticated' => new Type('bool'),
+                    DraftsBulkApproveOperation::KEY_EXCLUDED              => new NotNull(),
+                    DraftsBulkApproveOperation::KEY_SELECTED              => new NotNull(),
+                    DraftsBulkApproveOperation::KEY_ALL_SELECTED          => new Type('bool'),
+                    DraftsBulkApproveOperation::KEY_USER_TO_NOTIFY        => new Type('string'),
+                    DraftsBulkApproveOperation::KEY_IS_USER_AUTHENTICATED => new Type('bool'),
                 ],
             ]
         );

@@ -225,13 +225,18 @@ class PcmtDraftController
     {
         $chosenDrafts = json_decode($request->getContent(), true)['chosenDrafts'];
         $data = [
-            'jobInstanceCode' => 'job_drafts_bulk_approve',
-            'allSelected'     => $chosenDrafts['allSelected'] ?? false,
-            'selected'        => $chosenDrafts['selected'] ?? [],
-            'excluded'        => $chosenDrafts['excluded'] ?? [],
+            'jobInstanceCode'                            => 'job_drafts_bulk_approve',
+            DraftsBulkApproveOperation::KEY_ALL_SELECTED => $chosenDrafts[DraftsBulkApproveOperation::KEY_ALL_SELECTED] ?? false,
+            DraftsBulkApproveOperation::KEY_SELECTED     => $chosenDrafts[DraftsBulkApproveOperation::KEY_SELECTED] ?? [],
+            DraftsBulkApproveOperation::KEY_EXCLUDED     => $chosenDrafts[DraftsBulkApproveOperation::KEY_EXCLUDED] ?? [],
         ];
 
-        $operation = new DraftsBulkApproveOperation($data['jobInstanceCode'], $data['allSelected'], $data['selected'], $data['excluded']);
+        $operation = new DraftsBulkApproveOperation(
+            $data['jobInstanceCode'],
+            $data[DraftsBulkApproveOperation::KEY_ALL_SELECTED],
+            $data[DraftsBulkApproveOperation::KEY_SELECTED],
+            $data[DraftsBulkApproveOperation::KEY_EXCLUDED]
+        );
         $this->operationJobLauncher->launch($operation);
 
         return new JsonResponse();

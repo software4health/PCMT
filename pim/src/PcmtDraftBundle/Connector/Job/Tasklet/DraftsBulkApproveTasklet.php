@@ -17,6 +17,7 @@ use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\DraftRepositoryInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
+use PcmtDraftBundle\MassActions\DraftsBulkApproveOperation;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -64,16 +65,16 @@ class DraftsBulkApproveTasklet implements TaskletInterface
         }
         $jobInstance = $this->stepExecution->getJobParameters();
         $chosenDrafts = [
-            'allSelected' => $jobInstance->get('allSelected'),
-            'excluded'    => $jobInstance->get('excluded'),
-            'selected'    => $jobInstance->get('selected'),
+            DraftsBulkApproveOperation::KEY_ALL_SELECTED => $jobInstance->get(DraftsBulkApproveOperation::KEY_ALL_SELECTED),
+            DraftsBulkApproveOperation::KEY_EXCLUDED     => $jobInstance->get(DraftsBulkApproveOperation::KEY_EXCLUDED),
+            DraftsBulkApproveOperation::KEY_SELECTED     => $jobInstance->get(DraftsBulkApproveOperation::KEY_SELECTED),
         ];
 
-        if ((bool) $chosenDrafts['allSelected']) {
+        if ((bool) $chosenDrafts[DraftsBulkApproveOperation::KEY_ALL_SELECTED]) {
             $drafts = $this->draftRepository->findBy(['status' => AbstractDraft::STATUS_NEW]);
 
             foreach ($drafts as $index => $draft) {
-                if (in_array($draft->getId(), $chosenDrafts['excluded'])) {
+                if (in_array($draft->getId(), $chosenDrafts[DraftsBulkApproveOperation::KEY_EXCLUDED])) {
                     unset($drafts[$index]);
                 }
             }
@@ -83,7 +84,7 @@ class DraftsBulkApproveTasklet implements TaskletInterface
             $draftsToApprove = $this->draftRepository->findBy(
                 [
                     'status' => AbstractDraft::STATUS_NEW,
-                    'id'     => $chosenDrafts['selected'],
+                    'id'     => $chosenDrafts[DraftsBulkApproveOperation::KEY_SELECTED],
                 ]
             );
         }
