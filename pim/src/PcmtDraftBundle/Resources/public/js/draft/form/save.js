@@ -30,8 +30,8 @@ define(
         UserContext
     ) {
         return BaseSave.extend({
-            updateSuccessMessage: __('pim_enrich.entity.product.flash.update.success'),
-            updateFailureMessage: __('pim_enrich.entity.product.flash.update.fail'),
+            updateSuccessMessage: __('pcmt.entity.draft.flash.update.success'),
+            updateFailureMessage: __('pcmt.entity.draft.flash.update.fail'),
             label: __('pcmt_core.drafts_editing.button.save_draft'),
 
             configure: function () {
@@ -63,7 +63,7 @@ define(
 
                     messenger.notify(
                         'error',
-                        __('pim_enrich.entity.product.flash.update.fields_not_ready', {
+                        __('pcmt.entity.draft.flash.update.fields_not_ready', {
                             'fields': fieldLabels.join(', ')
                         })
                     );

@@ -98,12 +98,26 @@ batch_jobs:
         mass_action.label: Drafts bulk approve
         perform.label: Mass approve drafts
 
-pcmt_messages:
-    job_drafts_bulk_approve:
-        success: The bulk action "Draft mass approve" has been launched. You will be notified when it is done
-
 pim_notification:
     types:
         mass_action: Mass action
 
 pim_import_export.widget.last_operations.job_type.mass_action: Mass action
+
+# Messages
+# Bulk approve job
+pcmt_messages:
+    job_drafts_bulk_approve:
+        success: The bulk action "Draft mass approve" has been launched. You will be notified when it is done
+
+# Managing drafts
+pcmt.entity.draft:
+    flash:
+        create:
+            success: Draft successfully created.
+            fail: The draft could not be created.
+            fields_not_ready: "The draft cannot be created right now. The following fields are not ready: {{ fields }}"
+        update:
+            success: Draft successfully updated.
+            fail: The draft could not be updated.
+            fields_not_ready: "The draft cannot be saved right now. The following fields are not ready: {{ fields }}"

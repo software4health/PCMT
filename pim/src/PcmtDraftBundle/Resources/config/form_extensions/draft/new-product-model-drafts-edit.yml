@@ -13,7 +13,7 @@ extensions:
                 subTitle: pim_enrich.entity.product.plural_label
                 content: pim_enrich.entity.product_model.module.create.content
             picture: illustrations/Product-model.svg
-            successMessage: pcmt_core.drafts_editing.new_product_model_draft.success
+            successMessage: pcmt.entity.draft.flash.update.success
             editRoute: pcmt_core_drafts_index
             postUrl: pcmt_core_draft_update_api
             excludedProperties: [ family ]
