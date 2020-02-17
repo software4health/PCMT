@@ -12,7 +12,7 @@ extensions:
                 title: pcmt_core.drafts_editing.new_product_draft.title
                 subTitle: pim_enrich.entity.product.plural_label
             picture: illustrations/Product.svg
-            successMessage: pcmt_core.drafts_editing.new_product_draft.success
+            successMessage: pcmt.entity.draft.flash.update.success
             editRoute: pcmt_core_drafts_index
             postUrl: pcmt_core_draft_update_api
 
@@ -26,6 +26,7 @@ extensions:
         parent: pcmt-product-model-add-child-form
         targetZone: fields-container
         config:
+            successMessage: pcmt.entity.draft.flash.update.success
             fieldModules:
                 akeneo-simple-select-field: pim-product-model-add-child-field-simple-select
                 akeneo-metric-field: pim-product-model-add-child-field-metric
