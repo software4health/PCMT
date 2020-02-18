@@ -116,6 +116,8 @@ pcmt.entity.draft:
         create:
             success: Draft successfully created.
             fail: The draft could not be created.
+            product_model_added: Draft successfully created.
+            variant_product_added: Draft successfully created.
             fields_not_ready: "The draft cannot be created right now. The following fields are not ready: {{ fields }}"
         update:
             success: Draft successfully updated.

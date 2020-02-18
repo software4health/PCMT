@@ -16,11 +16,15 @@
 define(
     [
         'pim/router',
-        'pim/product-edit-form/variant-navigation'
+        'pim/product-edit-form/variant-navigation',
+        'oro/messenger',
+        'oro/translator'
     ],
     function (
         router,
-        BaseForm
+        BaseForm,
+        messenger,
+        __
     ) {
         return BaseForm.extend({
             /**
@@ -47,6 +51,29 @@ define(
                 }
 
                 router.redirectToRoute(route, params);
+            },
+
+            /**
+             * Action made when user submit the modal.
+             *
+             * @param {boolean} isVariantProduct
+             * @param {Object} formModal
+             */
+            submitForm: function (isVariantProduct, formModal) {
+                const message = isVariantProduct
+                    ? __('pcmt.entity.draft.flash.create.variant_product_added')
+                    : __('pcmt.entity.draft.flash.create.product_model_added');
+
+                const route = isVariantProduct
+                    ? 'pim_enrich_product_rest_create'
+                    : 'pim_enrich_product_model_rest_create';
+
+                return formModal
+                    .saveProductModelChild(route)
+                    .done((entity) => {
+                        this.redirectToEntity(entity.meta);
+                        messenger.notify('success', message);
+                    });
             }
         });
     }
