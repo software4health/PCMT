@@ -6,4 +6,4 @@
 
 PcmtDraftBundle\Entity\AbstractProductDraft:
     type: entity
-    repositoryClass: PcmtDraftBundle\Entity\ProductDraftORMRepository
+    repositoryClass: PcmtDraftBundle\Repository\DraftRepository

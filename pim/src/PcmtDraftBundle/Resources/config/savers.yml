@@ -11,5 +11,5 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@event_dispatcher'
-            - '@pcmt_catalog.repository.draft'
+            - '@pcmt.service.draft.existence_checker'
 

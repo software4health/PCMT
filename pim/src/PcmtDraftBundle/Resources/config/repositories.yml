@@ -1,5 +1,5 @@
 parameters:
-    pcmt_catalog.repository.draft.class: PcmtDraftBundle\Entity\ProductDraftORMRepository
+    pcmt_catalog.repository.draft.class: PcmtDraftBundle\Repository\DraftRepository
     pcmt_catalog.entity.abstract_draft.class: PcmtDraftBundle\Entity\AbstractDraft
 
 services:

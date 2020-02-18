@@ -6,6 +6,6 @@
 
 PcmtDraftBundle\Entity\ExistingProductDraft:
     type: entity
-    repositoryClass: PcmtDraftBundle\Entity\ProductDraftORMRepository
+    repositoryClass: PcmtDraftBundle\Repository\DraftRepository
 
 

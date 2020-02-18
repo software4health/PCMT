@@ -13,7 +13,8 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\StorageEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\DraftInterface;
-use PcmtDraftBundle\Entity\DraftRepositoryInterface;
+use PcmtDraftBundle\Entity\ExistingObjectDraftInterface;
+use PcmtDraftBundle\Service\Draft\DraftExistenceChecker;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
@@ -25,17 +26,17 @@ class DraftSaver implements SaverInterface
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
-    /** @var DraftRepositoryInterface */
-    private $draftRepository;
+    /** @var DraftExistenceChecker */
+    private $draftExistenceChecker;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         EventDispatcherInterface $eventDispatcher,
-        DraftRepositoryInterface $draftRepository
+        DraftExistenceChecker $draftExistenceChecker
     ) {
         $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->draftRepository = $draftRepository;
+        $this->draftExistenceChecker = $draftExistenceChecker;
     }
 
     /**
@@ -62,8 +63,8 @@ class DraftSaver implements SaverInterface
             );
         }
 
-        if (!$draft->getId() && $draft->getObject()) {
-            if ($this->draftRepository->checkIfDraftForObjectAlreadyExists($draft)) {
+        if (!$draft->getId() && $draft instanceof ExistingObjectDraftInterface) {
+            if ($this->draftExistenceChecker->checkIfDraftForObjectAlreadyExists($draft)) {
                 throw new \InvalidArgumentException(
                     'There is already a draft for this object'
                 );

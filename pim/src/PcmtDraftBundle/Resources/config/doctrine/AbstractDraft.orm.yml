@@ -12,7 +12,7 @@ PcmtDraftBundle\Entity\AbstractDraft:
         name: type
         type: string
     changeTrackingPolicy: DEFERRED_EXPLICIT
-    repositoryClass: PcmtDraftBundle\Entity\ProductDraftORMRepository
+    repositoryClass: PcmtDraftBundle\Repository\DraftRepository
     fields:
         id:
             type: integer
