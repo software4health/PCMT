@@ -9,11 +9,16 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Test\Updater;
 
+use Akeneo\Channel\Bundle\Doctrine\Repository\ChannelRepository;
+use Akeneo\Channel\Bundle\Doctrine\Repository\LocaleRepository;
+use Akeneo\Channel\Component\Repository\ChannelRepositoryInterface;
+use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
 use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
 use Akeneo\Pim\Enrichment\Component\Product\Updater\EntityWithValuesUpdater;
 use Akeneo\Pim\Enrichment\Component\Product\Value\MetricValue;
+use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use PcmtCoreBundle\Entity\Attribute;
 use PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
 use PcmtCoreBundle\Updater\ConcatenatedAttributesUpdater;
@@ -30,6 +35,12 @@ class ConcatenatedAttributesUpdaterTest extends TestCase
     /** @var NormalizerInterface |Mock */
     private $rawValuesStorageFormatNormalizer;
 
+    /** @var ChannelRepositoryInterface|Mock */
+    private $channelRepositoryMock;
+
+    /** @var LocaleRepositoryInterface|Mock */
+    private $localeRepositoryMock;
+
     protected function setUp(): void
     {
         $this->entityWithValuesUpdater = $this->createMock(
@@ -38,6 +49,9 @@ class ConcatenatedAttributesUpdaterTest extends TestCase
         $this->rawValuesStorageFormatNormalizer = $this->createMock(
             Serializer::class
         );
+
+        $this->channelRepositoryMock = $this->createMock(ChannelRepository::class);
+        $this->localeRepositoryMock = $this->createMock(LocaleRepository::class);
     }
 
     /**
@@ -73,6 +87,20 @@ class ConcatenatedAttributesUpdaterTest extends TestCase
             ->method('update')
             ->with($mockProductEntityObject, $normalized);
 
+        $concatenatedAttribute = $parameters['concatenatedAttribute'];
+
+        if ($concatenatedAttribute->isScopable()) {
+            $this->channelRepositoryMock->expects($this->once())
+                ->method('getChannelCodes')
+                ->willReturn(['GFP_VAN']);
+        }
+
+        if ($concatenatedAttribute->isLocalizable()) {
+            $this->localeRepositoryMock->expects($this->once())
+                ->method('getActivatedLocaleCodes')
+                ->willReturn(['en_US']);
+        }
+
         $updater->update($mockProductEntityObject, $parameters);
     }
 
@@ -100,17 +128,11 @@ class ConcatenatedAttributesUpdaterTest extends TestCase
             $memberAttribute2,
         ];
 
-        $concatenatedAttribute = new Attribute();
-        $concatenatedAttribute->setType(PcmtAtributeTypes::CONCATENATED_FIELDS);
-        $concatenatedAttribute->setCode('concatenated_attribute');
-        $concatenatedAttribute->setProperty('attributes', implode(',', $memberAttributes));
-        $concatenatedAttribute->setProperty('separators', '$$$');
-
         return [
             [
                 $this->createMock(Product::class),
                 [
-                    'concatenatedAttribute'  => $concatenatedAttribute,
+                    'concatenatedAttribute'  => $this->getConcatenatedAttributeInstance($memberAttributes, false, false),
                     'memberAttributes'       => $memberAttributes,
                 ],
                 [
@@ -125,9 +147,26 @@ class ConcatenatedAttributesUpdaterTest extends TestCase
             ],
 
             [
+                $this->createMock(Product::class),
+                [
+                    'concatenatedAttribute'  => $this->getConcatenatedAttributeInstance($memberAttributes, true, true),
+                    'memberAttributes'       => $memberAttributes,
+                ],
+                [
+                    'concatenated_attribute' => [
+                        'data' => [
+                            'data'   => ['attrValue$$$attrValue'],
+                            'locale' => 'en_US',
+                            'scope'  => 'GFP_VAN',
+                        ],
+                    ],
+                ],
+            ],
+
+            [
                 $this->createMock(ProductModel::class),
                 [
-                    'concatenatedAttribute'  => $concatenatedAttribute,
+                    'concatenatedAttribute'  => $this->getConcatenatedAttributeInstance($memberAttributes, false, false),
                     'memberAttributes'       => $memberAttributes,
                 ],
                 [
@@ -177,11 +216,27 @@ class ConcatenatedAttributesUpdaterTest extends TestCase
         ];
     }
 
+    private function getConcatenatedAttributeInstance(array $memberAttributes, bool $isScopable, bool $isLocalizable): AttributeInterface
+    {
+        $concatenatedAttribute = new Attribute();
+        $concatenatedAttribute->setType(PcmtAtributeTypes::CONCATENATED_FIELDS);
+        $concatenatedAttribute->setCode('concatenated_attribute');
+        $concatenatedAttribute->setProperty('attributes', implode(',', $memberAttributes));
+        $concatenatedAttribute->setProperty('separators', '$$$');
+
+        $concatenatedAttribute->setScopable($isScopable);
+        $concatenatedAttribute->setLocalizable($isLocalizable);
+
+        return $concatenatedAttribute;
+    }
+
     private function getConcatenatedAttributesUpdaterInstance(): ConcatenatedAttributesUpdater
     {
         return new ConcatenatedAttributesUpdater(
             $this->entityWithValuesUpdater,
-            $this->rawValuesStorageFormatNormalizer
+            $this->rawValuesStorageFormatNormalizer,
+            $this->channelRepositoryMock,
+            $this->localeRepositoryMock
         );
     }
 }

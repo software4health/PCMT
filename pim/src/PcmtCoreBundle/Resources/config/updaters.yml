@@ -11,6 +11,8 @@ services:
         arguments:
             - '@pim_catalog.updater.entity_with_values'
             - '@pim_storage_serializer'
+            - '@pim_catalog.repository.channel'
+            - '@pim_catalog.repository.locale'
 
     pim_structure.updater.translatable:
         class: 'PcmtCoreBundle\Updater\TranslatableUpdater'
