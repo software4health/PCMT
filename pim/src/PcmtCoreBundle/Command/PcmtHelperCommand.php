@@ -29,6 +29,7 @@ class PcmtHelperCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $attributeRepository = $this->getContainer()->get('pim_catalog.repository.attribute');
+
         $mappingAttribute = $attributeRepository->findOneBy(
             [
                 'code' => 'GTIN',

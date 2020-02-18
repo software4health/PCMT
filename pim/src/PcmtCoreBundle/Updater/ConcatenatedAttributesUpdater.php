@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Updater;
 
+use Akeneo\Channel\Component\Repository\ChannelRepositoryInterface;
+use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithValuesInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
@@ -29,12 +31,22 @@ class ConcatenatedAttributesUpdater implements ObjectUpdaterInterface
     /** @var NormalizerInterface */
     private $rawValuesStorageFormatNormalizer;
 
+    /** @var ChannelRepositoryInterface */
+    private $channelRepository;
+
+    /** @var LocaleRepositoryInterface */
+    private $localeRepository;
+
     public function __construct(
         ObjectUpdaterInterface $entityWithValuesUpdater,
-        NormalizerInterface $rawValuesStorageFormatNormalizer
+        NormalizerInterface $rawValuesStorageFormatNormalizer,
+        ChannelRepositoryInterface $channelRepository,
+        LocaleRepositoryInterface $localeRepository
     ) {
         $this->entityWithValuesUpdater = $entityWithValuesUpdater;
         $this->rawValuesStorageFormatNormalizer = $rawValuesStorageFormatNormalizer;
+        $this->channelRepository = $channelRepository;
+        $this->localeRepository = $localeRepository;
     }
 
     /**
@@ -66,18 +78,23 @@ class ConcatenatedAttributesUpdater implements ObjectUpdaterInterface
             }
         }
 
-        $values[$concatenatedAttribute->getCode()]['data']['data'] =
-            array_reverse([
-                implode(
-                    $concatenatedAttribute->getProperty('separators'),
-                    $concatenatedValue
-                ),
-            ]);
+        if ($concatenatedAttribute->isScopable()) {
+            $scopes = $this->channelRepository->getChannelCodes();
+        }
 
-        $values[$concatenatedAttribute->getCode()]['data']['locale'] = null;
-        $values[$concatenatedAttribute->getCode()]['data']['scope'] = null;
+        if ($concatenatedAttribute->isLocalizable()) {
+            $locales = $this->localeRepository->getActivatedLocaleCodes();
+        }
 
-        $this->entityWithValuesUpdater->update($object, $values);
+        $scopes = $scopes ?? [null];
+        $locales = $locales ?? [null];
+
+        foreach ($scopes as $scope) {
+            foreach ($locales as $locale) {
+                $this->updateWithSpecificScopeAndLocale($object, $concatenatedAttribute, $concatenatedValue, $scope, $locale);
+            }
+        }
+
         $this->computeRawValues($object);
     }
 
@@ -116,5 +133,27 @@ class ConcatenatedAttributesUpdater implements ObjectUpdaterInterface
         if (!($object instanceof ProductInterface || $object instanceof ProductModelInterface)) {
             throw new \InvalidArgumentException('Improper data passed for concatenated attribute update.');
         }
+    }
+
+    private function updateWithSpecificScopeAndLocale(
+        EntityWithValuesInterface $objectToUpdate,
+        AttributeInterface $concatenatedAttribute,
+        array $concatenatedValue,
+        ?string $scope = null,
+        ?string $locale = null
+    ): void {
+        $valuesToUpdate[$concatenatedAttribute->getCode()]['data'] = [
+            'data' => array_reverse(
+                [
+                    implode(
+                        $concatenatedAttribute->getProperty('separators'),
+                        $concatenatedValue
+                    ),
+                ]
+            ),
+            'scope'  => $scope,
+            'locale' => $locale,
+        ];
+        $this->entityWithValuesUpdater->update($objectToUpdate, $valuesToUpdate);
     }
 }

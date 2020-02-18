@@ -29,7 +29,6 @@ class ConcatenatedAttributeCommand extends AbstractUpdateCommand
                 break;
             case mb_strpos($field, 'attribute'):
                 $this->updateConcatenatedAttributes($value);
-
                 break;
         }
     }

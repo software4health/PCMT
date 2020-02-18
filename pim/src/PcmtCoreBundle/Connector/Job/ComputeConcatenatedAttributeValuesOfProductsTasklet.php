@@ -144,6 +144,7 @@ class ComputeConcatenatedAttributeValuesOfProductsTasklet implements TaskletInte
             'products'      => [],
             'productModels' => [],
         ];
+
         foreach ($entitiesToUpdate as $entity) {
             foreach ($concatenatedAttributes as $concatenatedAttribute) {
                 $memberAttributes = $this->attributeRepository->findBy(

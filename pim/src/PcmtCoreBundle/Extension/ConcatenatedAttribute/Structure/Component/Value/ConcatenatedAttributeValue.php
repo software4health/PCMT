@@ -16,7 +16,7 @@ final class ConcatenatedAttributeValue extends AbstractValue implements Concaten
 {
     public function isEqual(ValueInterface $value): bool
     {
-        return false;
+        return $this->getData() === $value->getData();
     }
 
     public function getData(): ?string
