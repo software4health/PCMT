@@ -10,12 +10,16 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Tests\Saver;
 
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtCoreBundle\Entity\Attribute;
-use PcmtDraftBundle\Entity\DraftRepositoryInterface;
+use PcmtDraftBundle\Entity\DraftInterface;
+use PcmtDraftBundle\Entity\ExistingProductDraft;
+use PcmtDraftBundle\Entity\ExistingProductModelDraft;
+use PcmtDraftBundle\Entity\NewProductDraft;
+use PcmtDraftBundle\Entity\NewProductModelDraft;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Saver\DraftSaver;
+use PcmtDraftBundle\Service\Draft\DraftExistenceChecker;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -28,8 +32,8 @@ class DraftSaverTest extends TestCase
     /** @var EventDispatcherInterface|MockObject */
     private $eventDispatcherMock;
 
-    /** @var DraftRepositoryInterface|MockObject */
-    private $draftRepositoryMock;
+    /** @var DraftExistenceChecker|MockObject */
+    private $draftExistenceChekerMock;
 
     /**
      * {@inheritdoc}
@@ -38,13 +42,13 @@ class DraftSaverTest extends TestCase
     {
         $this->entityManagerMock = $this->createMock(EntityManagerInterface::class);
         $this->eventDispatcherMock = $this->createMock(EventDispatcherInterface::class);
-        $this->draftRepositoryMock = $this->createMock(DraftRepositoryInterface::class);
+        $this->draftExistenceChekerMock = $this->createMock(DraftExistenceChecker::class);
     }
 
     /**
      * @dataProvider dataSaveExistingDraft
      */
-    public function testSaveExistingDraft(ProductDraftInterface $draft): void
+    public function testSaveExistingDraft(DraftInterface $draft): void
     {
         $this->entityManagerMock->expects($this->once())->method('persist')->with($draft);
         $this->entityManagerMock->expects($this->once())->method('flush');
@@ -57,20 +61,24 @@ class DraftSaverTest extends TestCase
 
     public function dataSaveExistingDraft(): array
     {
-        $draft1 = $this->createMock(ProductDraftInterface::class);
+        $draft1 = $this->createMock(ExistingProductDraft::class);
         $draft1->method('getId')->willReturn(112);
+
+        $draft2 = $this->createMock(NewProductModelDraft::class);
+        $draft2->method('getId')->willReturn(11);
 
         return [
             [$draft1],
+            [$draft2],
         ];
     }
 
     /**
      * @dataProvider dataSaveNewDraft
      */
-    public function testSaveNewDraft(ProductDraftInterface $draft): void
+    public function testSaveNewDraft(DraftInterface $draft): void
     {
-        $this->draftRepositoryMock->method('checkIfDraftForObjectAlreadyExists')->willReturn(false);
+        $this->draftExistenceChekerMock->method('checkIfDraftForObjectAlreadyExists')->willReturn(false);
 
         $this->entityManagerMock->expects($this->once())->method('persist')->with($draft);
         $this->entityManagerMock->expects($this->once())->method('flush');
@@ -83,14 +91,11 @@ class DraftSaverTest extends TestCase
 
     public function dataSaveNewDraft(): array
     {
-        $draft1 = $this->createMock(ProductDraftInterface::class);
+        $draft1 = $this->createMock(ExistingProductModelDraft::class);
         $draft1->method('getId')->willReturn(0);
-        $object1 = $this->createMock(ProductInterface::class);
-        $draft1->method('getObject')->willReturn($object1);
 
-        $draft2 = $this->createMock(ProductDraftInterface::class);
+        $draft2 = $this->createMock(NewProductDraft::class);
         $draft2->method('getId')->willReturn(0);
-        $draft2->method('getObject')->willReturn(null);
 
         return [
             [$draft1],
@@ -103,7 +108,7 @@ class DraftSaverTest extends TestCase
      */
     public function testSaveNewDraftForObjectThatAlreadyHasADraft(ProductDraftInterface $draft): void
     {
-        $this->draftRepositoryMock->method('checkIfDraftForObjectAlreadyExists')->willReturn(true);
+        $this->draftExistenceChekerMock->method('checkIfDraftForObjectAlreadyExists')->willReturn(true);
 
         $this->entityManagerMock->expects($this->never())->method('persist')->with($draft);
         $this->entityManagerMock->expects($this->never())->method('flush');
@@ -118,11 +123,8 @@ class DraftSaverTest extends TestCase
 
     public function dataSaveNewDraftForObjectThatAlreadyHasADraft(): array
     {
-        $draft1 = $this->createMock(ProductDraftInterface::class);
+        $draft1 = $this->createMock(ExistingProductDraft::class);
         $draft1->method('getId')->willReturn(0);
-
-        $object1 = $this->createMock(ProductInterface::class);
-        $draft1->method('getObject')->willReturn($object1);
 
         return [
             [$draft1],
@@ -146,6 +148,6 @@ class DraftSaverTest extends TestCase
 
     private function getDraftSaverInstance(): DraftSaver
     {
-        return new DraftSaver($this->entityManagerMock, $this->eventDispatcherMock, $this->draftRepositoryMock);
+        return new DraftSaver($this->entityManagerMock, $this->eventDispatcherMock, $this->draftExistenceChekerMock);
     }
 }

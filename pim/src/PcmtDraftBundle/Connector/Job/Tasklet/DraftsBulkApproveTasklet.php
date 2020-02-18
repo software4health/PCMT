@@ -15,9 +15,9 @@ use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
 use PcmtDraftBundle\Connector\Job\InvalidItems\DraftInvalidItem;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
-use PcmtDraftBundle\Entity\DraftRepositoryInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\MassActions\DraftsBulkApproveOperation;
+use PcmtDraftBundle\Repository\DraftRepository;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -32,13 +32,13 @@ class DraftsBulkApproveTasklet implements TaskletInterface
     /** @var NormalizerInterface */
     protected $constraintViolationNormalizer;
 
-    /** @var DraftRepositoryInterface */
+    /** @var DraftRepository */
     protected $draftRepository;
 
     public function __construct(
         DraftFacade $draftFacade,
         NormalizerInterface $constraintViolationNormalizer,
-        DraftRepositoryInterface $draftRepository
+        DraftRepository $draftRepository
     ) {
         $this->draftFacade = $draftFacade;
         $this->constraintViolationNormalizer = $constraintViolationNormalizer;
