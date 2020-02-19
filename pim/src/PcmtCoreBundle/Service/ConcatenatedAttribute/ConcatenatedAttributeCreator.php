@@ -18,9 +18,13 @@ class ConcatenatedAttributeCreator
     /** @var LoggerInterface */
     private $logger;
 
+    /** @var string[] */
+    private $concatenatedAttributes = [];
+
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
+        $this->concatenatedAttributes = [];
     }
 
     public function update(AttributeInterface $attribute, string $field, array $data): AttributeInterface
@@ -83,8 +87,8 @@ class ConcatenatedAttributeCreator
 
     private function updateConcatenatedAttributes(AttributeInterface $attribute, string $value): void
     {
-        $concatenatedAttributes[] = $value;
-        $serializedAttributes = implode(',', $concatenatedAttributes);
+        $this->concatenatedAttributes[] = $value;
+        $serializedAttributes = implode(',', $this->concatenatedAttributes);
         $attribute->setProperty('attributes', $serializedAttributes);
     }
 }
