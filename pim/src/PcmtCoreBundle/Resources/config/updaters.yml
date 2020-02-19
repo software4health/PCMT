@@ -30,15 +30,21 @@ services:
             - '@pim_catalog.repository.attribute_requirement'
             - '@pim_structure.updater.translatable'
 
-    pim_catalog.updater.attribute:
-        class: 'PcmtCoreBundle\Updater\AttributeUpdater'
+    pim_catalog.updater.attribute.base:
+        class: 'Akeneo\Pim\Structure\Component\Updater\AttributeUpdater'
         arguments:
             - '@pim_catalog.repository.attribute_group'
             - '@pim_catalog.repository.locale'
             - '@pim_catalog.registry.attribute_type'
             - '@pim_structure.updater.translatable'
-            - '@pcmt_update_attribute.concatenated_fields_values'
             - ['auto_option_sorting', 'is_read_only']
+
+    pim_catalog.updater.attribute:
+        class: 'PcmtCoreBundle\Updater\AttributeUpdater'
+        arguments:
+            - '@pim_catalog.updater.attribute.base'
+            - '@pim_structure.updater.translatable'
+            - '@pcmt_update_attribute.concatenated_fields_values'
 
     ## field setters
     pcmt_catalog.updater.setter.concatenated_value:

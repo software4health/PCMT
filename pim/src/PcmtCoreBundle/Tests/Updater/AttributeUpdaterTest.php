@@ -9,224 +9,151 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Tests\Updater;
 
-use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
-use Akeneo\Pim\Structure\Component\AttributeTypeRegistry;
-use Akeneo\Pim\Structure\Component\Repository\AttributeGroupRepositoryInterface;
+use Akeneo\Pim\Structure\Component\Updater\AttributeUpdater as BaseAttributeUpdater;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyTypeException;
-use Akeneo\Tool\Component\StorageUtils\Exception\UnknownPropertyException;
 use PcmtCoreBundle\Entity\Attribute;
 use PcmtCoreBundle\Service\ConcatenatedAttribute\ConcatenatedAttributeCreator;
 use PcmtCoreBundle\Updater\AttributeUpdater;
 use PcmtCoreBundle\Updater\TranslatableUpdater;
-use PHPUnit\Framework\MockObject\MockObject as Mock;
+use PcmtDraftBundle\Entity\DraftInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class AttributeUpdaterTest extends TestCase
 {
-    /** @var AttributeGroupRepositoryInterface|Mock */
-    protected $attrGroupRepoMock;
-
-    /** @var LocaleRepositoryInterface|Mock */
-    protected $localeRepositoryMock;
-
-    /** @var AttributeTypeRegistry|Mock */
-    protected $registryMock;
-
-    /** @var TranslatableUpdater|Mock */
+    /** @var TranslatableUpdater|MockObject */
     protected $translatableUpdaterMock;
 
-    /** @var mixed[]|Mock */
-    protected $propertiesMock;
-
-    /** @var Attribute|Mock */
+    /** @var Attribute */
     protected $attribute;
 
-    /** @var ConcatenatedAttributeCreator|Mock */
-    protected $attributeCreator;
+    /** @var ConcatenatedAttributeCreator|MockObject */
+    protected $concatenatedAttributeCreatorMock;
+
+    /** @var MockObject|BaseAttributeUpdater */
+    private $baseAttributeUpdaterMock;
 
     protected function setUp(): void
     {
-        $this->attrGroupRepoMock = $this->createMock(AttributeGroupRepositoryInterface::class);
-        $this->localeRepositoryMock = $this->createMock(LocaleRepositoryInterface::class);
-        $this->registryMock = $this->createMock(AttributeTypeRegistry::class);
+        $this->baseAttributeUpdaterMock = $this->createMock(BaseAttributeUpdater::class);
         $this->translatableUpdaterMock = $this->createMock(TranslatableUpdater::class);
-        $this->attribute = $this->createMock(Attribute::class);
-        $this->attributeCreator = $this->createMock(ConcatenatedAttributeCreator::class);
+        $this->concatenatedAttributeCreatorMock = $this->createMock(ConcatenatedAttributeCreator::class);
+        $this->attribute = new Attribute();
 
-        $this->propertiesMock = [];
         parent::setUp();
     }
 
     private function getAttributeUpdaterInstance(): AttributeUpdater
     {
         return new AttributeUpdater(
-            $this->attrGroupRepoMock,
-            $this->localeRepositoryMock,
-            $this->registryMock,
+            $this->baseAttributeUpdaterMock,
             $this->translatableUpdaterMock,
-            $this->attributeCreator,
-            $this->propertiesMock
+            $this->concatenatedAttributeCreatorMock
         );
     }
 
-    private function getWrongAttributeClassType(): AttributeUpdater
+    /**
+     * @dataProvider dataUpdate
+     */
+    public function testUpdate(array $data, int $externalFields): void
     {
-        return $this->getAttributeUpdaterInstance();
+        $this->baseAttributeUpdaterMock->expects($this->exactly($externalFields))->method('update');
+        if (isset($data['descriptions'])) {
+            $this->translatableUpdaterMock->expects($this->once())->method('updateDescription');
+        } else {
+            $this->translatableUpdaterMock->expects($this->never())->method('updateDescription');
+        }
+        if (isset($data['concatenated'])) {
+            $this->concatenatedAttributeCreatorMock->expects($this->once())->method('update');
+        } else {
+            $this->concatenatedAttributeCreatorMock->expects($this->never())->method('update');
+        }
+        $updater = $this->getAttributeUpdaterInstance();
+        $updater->update($this->attribute, $data, []);
     }
 
-    /**
-     * @dataProvider dataWithRightDescriptions
-     */
-    public function testUpdateFunctionShouldInvokeValidateDataTypeMethodAndSetDataMethodWhenRightData(array $data): void
+    public function dataUpdate(): array
     {
-        $attributeUpdater = $this->getMockBuilder(AttributeUpdater::class)
-            ->setMethods(
+        return [
+            'single description' => [
                 [
-                    'validateDataType',
-                    'setData',
-                ]
-            )
-            ->setConstructorArgs(
+                    'descriptions' => [
+                        'en_US' => 'alo',
+                    ],
+                ],
+                'externalFields' => 0,
+            ],
+            'multi description' => [
                 [
-                    $this->attrGroupRepoMock,
-                    $this->localeRepositoryMock,
-                    $this->registryMock,
-                    $this->translatableUpdaterMock,
-                    $this->attributeCreator,
-                    $this->propertiesMock,
-                ]
-            )
-            ->getMock();
-        $attributeUpdater->expects($this->atLeastOnce())->method('validateDataType');
-        $attributeUpdater->expects($this->atLeastOnce())->method('setData');
-        $attributeUpdater->update($this->attribute, $data);
+                    'descriptions' => [
+                        'en_US' => 'alo',
+                        'de'    => 'lol',
+                    ],
+                ],
+                'externalFields' => 0,
+            ],
+            'multi description with other data' => [
+                [
+                    'descriptions' => [
+                        'en_US' => 'alo',
+                        'de'    => 'lol',
+                    ],
+                    'concatenated' => [
+                        'xxx',
+                    ],
+                    'code'           => 'test',
+                    'externalField2' => 'xxx',
+                ],
+                'externalFields' => 2,
+            ],
+            'empty array' => [
+                [
+                    'descriptions' => [],
+                ],
+                'externalFields' => 0,
+            ],
+        ];
     }
 
-    /**
-     * @dataProvider dataWithRightDescriptions
-     */
-    public function testUpdateFunctionShouldThrowExceptionWhenWrongAttributeClassType(array $data): void
+    public function testUpdateFunctionShouldThrowExceptionWhenWrongAttributeClassType(): void
     {
-        $attribute = $this->getWrongAttributeClassType();
         $attributeUpdater = $this->getAttributeUpdaterInstance();
         $this->expectException(InvalidObjectException::class);
-        $attributeUpdater->update($attribute, $data);
+        $attributeUpdater->update($this->createMock(DraftInterface::class), []);
     }
 
     /**
-     * @dataProvider dataWithUnknownProperty
+     * @dataProvider dataUpdateInvalidPropertyType
      */
-    public function testUpdateFunctionShouldThrowUnknownPropertyExceptionWhenUnknownPropertyInData(array $data): void
-    {
-        $attributeUpdater = $this->getAttributeUpdaterInstance();
-        $this->expectException(UnknownPropertyException::class);
-        $attributeUpdater->update($this->attribute, $data);
-    }
-
-    /**
-     * @dataProvider dataWithInvalidPropertyType
-     */
-    public function testUpdateFunctionShouldThrowInvalidPropertyTypeExceptionWithWrongData(array $data): void
+    public function testUpdateInvalidData(array $data): void
     {
         $attributeUpdater = $this->getAttributeUpdaterInstance();
         $this->expectException(InvalidPropertyTypeException::class);
         $attributeUpdater->update($this->attribute, $data);
     }
 
-    /**
-     * @dataProvider dataWithRightDescriptions
-     */
-    public function testUpdateFunctionShouldUpdateDescriptionsViaSetDataFunctionWhenRightData(array $data): void
-    {
-        $attributeUpdater = $this->getAttributeUpdaterInstance();
-        $this->translatableUpdaterMock->expects($this->atLeastOnce())
-            ->method('updateDescription');
-        $attributeUpdater->update($this->attribute, $data);
-    }
-
-    /** @dataProvider dataWithConcatenatedType */
-    public function testShouldInvokeConcatenatedAttributeCommand(array $data): void
-    {
-        $attributeUpdater = $this->getAttributeUpdaterInstance();
-
-        $this->attributeCreator->expects($this->once())
-            ->method('update');
-
-        $attributeUpdater->update($this->attribute, $data);
-    }
-
-    public function dataWithRightDescriptions(): array
+    public function dataUpdateInvalidPropertyType(): array
     {
         return [
-            'single description'                 => [
+            'not an array' => [
+                ['descriptions' => 'en_US'],
+            ],
+            'not an array - concatenated' => [
+                ['concatenated' => 'xxx'],
+            ],
+            'not a scalar' => [
                 [
                     'descriptions' => [
-                        'en_US' => 'alo',
-                    ],
-                ],
-                'code' => 'test',
-            ],
-            'single description with other data' => [
-                [
-                    'descriptions' => [
-                        'en_US' => 'alo',
+                        [],
                     ],
                 ],
             ],
-            'multi description'                  => [
+            'not a scalar - concatenated' => [
                 [
-                    'descriptions' => [
-                        'en_US' => 'alo',
-                        'de'    => 'lol',
+                    'concatenated' => [
+                        [],
                     ],
-                ],
-            ],
-            'multi description with other data'  => [
-                [
-                    'descriptions' => [
-                        'en_US' => 'alo',
-                        'de'    => 'lol',
-                    ],
-                ],
-                'code' => 'test',
-            ],
-            'empty array'                        => [
-                [
-                    'descriptions' => [],
-                ],
-            ],
-        ];
-    }
-
-    public function dataWithUnknownProperty(): array
-    {
-        return [
-            'one of property is unknown' => [
-                [
-                    'descriptions'     => [
-                        'en_US' => 'alo',
-                    ],
-                    'unknown_property' => 0,
-                ],
-            ],
-            'wrong property'             => [
-                [
-                    'description' => [
-                        'en_US' => 'alo',
-                    ],
-                ],
-            ],
-        ];
-    }
-
-    public function dataWithInvalidPropertyType(): array
-    {
-        return [
-            'not an array'        => [['descriptions' => 'en_US']],
-            'not a scalar'        => [
-                [
-                    'descriptions' => [[]],
                 ],
             ],
             'one is not a scalar' => [
@@ -235,17 +162,6 @@ class AttributeUpdaterTest extends TestCase
                         'en_US' => 'alo',
                         'de'    => [],
                     ],
-                ],
-            ],
-        ];
-    }
-
-    public function dataWithConcatenatedType(): array
-    {
-        return [
-            [
-                [
-                    'concatenated' => ['mock'],
                 ],
             ],
         ];

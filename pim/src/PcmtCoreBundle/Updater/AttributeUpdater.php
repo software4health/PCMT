@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2019, VillageReach
+ * Copyright (c) 2020, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
  */
@@ -9,15 +9,12 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Updater;
 
-use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
-use Akeneo\Pim\Structure\Component\AttributeTypeRegistry;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
-use Akeneo\Pim\Structure\Component\Repository\AttributeGroupRepositoryInterface;
 use Akeneo\Pim\Structure\Component\Updater\AttributeUpdater as BaseAttributeUpdater;
+use Akeneo\Tool\Component\Localization\TranslatableUpdater;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyTypeException;
-use Akeneo\Tool\Component\StorageUtils\Exception\UnknownPropertyException;
-use Doctrine\Common\Util\ClassUtils;
+use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use PcmtCoreBundle\Service\ConcatenatedAttribute\ConcatenatedAttributeCreator;
 
 /**
@@ -31,7 +28,7 @@ use PcmtCoreBundle\Service\ConcatenatedAttribute\ConcatenatedAttributeCreator;
  *
  * @see                   http://www.dnd.fr/
  */
-class AttributeUpdater extends BaseAttributeUpdater
+class AttributeUpdater implements ObjectUpdaterInterface
 {
     /** @var TranslatableUpdater */
     protected $translatableUpdater;
@@ -39,43 +36,56 @@ class AttributeUpdater extends BaseAttributeUpdater
     /** @var ConcatenatedAttributeCreator */
     protected $concatenatedAttributeCreator;
 
+    /** @var BaseAttributeUpdater */
+    private $baseAttributeUpdater;
+
     public function __construct(
-        AttributeGroupRepositoryInterface $attrGroupRepo,
-        LocaleRepositoryInterface $localeRepository,
-        AttributeTypeRegistry $registry,
-        \Akeneo\Tool\Component\Localization\TranslatableUpdater $translatableUpdater,
-        ConcatenatedAttributeCreator $concatenatedAttributeCreator,
-        array $properties
+        BaseAttributeUpdater $baseAttributeUpdater,
+        TranslatableUpdater $translatableUpdater,
+        ConcatenatedAttributeCreator $concatenatedAttributeCreator
     ) {
         $this->concatenatedAttributeCreator = $concatenatedAttributeCreator;
-        parent::__construct($attrGroupRepo, $localeRepository, $registry, $translatableUpdater, $properties);
+        $this->translatableUpdater = $translatableUpdater;
+        $this->baseAttributeUpdater = $baseAttributeUpdater;
     }
 
     /**
-     * {@inheritdoc}
+     * @param AttributeInterface|AttributeInterface $object
+     *
+     * @return $this|ObjectUpdaterInterface
      */
-    public function update($attribute, array $data, array $options = [])
+    public function update($object, array $data, array $options = [])
     {
-        if (!$attribute instanceof AttributeInterface) {
+        if (!$object instanceof AttributeInterface) {
             throw InvalidObjectException::objectExpected(
-                ClassUtils::getClass($attribute),
+                get_class($object),
                 AttributeInterface::class
             );
         }
+
         foreach ($data as $field => $value) {
-            $this->validateDataType($field, $value);
-            $this->setData($attribute, $field, $value);
+            if ($this->supports($field)) {
+                $this->validateDataType($field, $value);
+                $this->setData($object, $field, $value);
+            } else {
+                $this->baseAttributeUpdater->update($object, [$field => $value], $options);
+            }
         }
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function validateDataType($field, $data): void
+    protected function supports(string $field): bool
     {
-        if (in_array($field, ['labels', 'available_locales', 'allowed_extensions', 'descriptions', 'concatenated'])) {
+        return in_array($field, ['descriptions', 'concatenated']);
+    }
+
+    /**
+     * @param array|string|int|bool $data
+     */
+    protected function validateDataType(string $field, $data): void
+    {
+        if (in_array($field, ['descriptions', 'concatenated'])) {
             if (!is_array($data)) {
                 throw InvalidPropertyTypeException::arrayExpected($field, static::class, $data);
             }
@@ -90,97 +100,22 @@ class AttributeUpdater extends BaseAttributeUpdater
                     );
                 }
             }
-        } elseif (in_array(
-            $field,
-            [
-                'code',
-                'type',
-                'group',
-                'unique',
-                'useable_as_grid_filter',
-                'metric_family',
-                'default_metric_unit',
-                'reference_data_name',
-                'max_characters',
-                'validation_rule',
-                'validation_regexp',
-                'wysiwyg_enabled',
-                'number_min',
-                'number_max',
-                'decimals_allowed',
-                'negative_allowed',
-                'date_min',
-                'date_max',
-                'max_file_size',
-                'minimum_input_length',
-                'sort_order',
-                'localizable',
-                'scopable',
-                'required',
-                'auto_option_sorting',
-                'concatenated',
-            ]
-        )) {
-            if (null !== $data && !is_scalar($data)) {
-                throw InvalidPropertyTypeException::scalarExpected($field, static::class, $data);
-            }
-        } else {
-            throw UnknownPropertyException::unknownProperty($field);
         }
     }
 
     /**
-     * {@inheritdoc}
+     * @param array|string|int|bool $data
      */
-    protected function setData(AttributeInterface $attribute, $field, $data): void
+    protected function setData(AttributeInterface $attribute, string $field, $data): void
     {
         switch ($field) {
-      case 'type':
-        $this->setType($attribute, $data);
-
+            case 'descriptions':
+                // update localizable attribute description fields
+                $this->translatableUpdater->updateDescription($attribute, $data);
                 break;
-      case 'labels':
-        $this->translatableUpdater->update($attribute, $data);
-
+            case 'concatenated':
+                $this->concatenatedAttributeCreator->update($attribute, $field, $data);
                 break;
-      // Add @DND
-      case 'descriptions':
-        $this->translatableUpdater->updateDescription($attribute, $data); // update localizable attribute description fields
-                break;
-      // / Add @DND
-      case 'group':
-        $this->setGroup($attribute, $data);
-
-                break;
-      case 'available_locales':
-        $this->setAvailableLocales($attribute, $field, $data);
-
-                break;
-      case 'date_min':
-        $this->validateDateFormat('date_min', $data);
-        $date = $this->getDate($data);
-        $attribute->setDateMin($date);
-
-                break;
-      case 'date_max':
-        $this->validateDateFormat('date_max', $data);
-        $date = $this->getDate($data);
-        $attribute->setDateMax($date);
-
-                break;
-      case 'allowed_extensions':
-        $attribute->setAllowedExtensions(implode(',', $data));
-
-                break;
-      case 'auto_option_sorting':
-        $attribute->setProperty('auto_option_sorting', $data);
-
-                break;
-      case 'concatenated':
-          $this->concatenatedAttributeCreator->update($attribute, $field, $data);
-                break;
-      default:
-        $this->setValue($attribute, $field, $data);
-    }
+        }
     }
 }
