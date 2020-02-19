@@ -110,3 +110,7 @@ scalyr:
 .PHONY: dev-pcmt-migrate
 dev-pcmt-migrate:
 	bin/pcmt-migrate.sh
+
+.PHONY: dev-pcmt-migration-generate
+dev-pcmt-migration-generate:
+	bin/pcmt-migration-generate.sh

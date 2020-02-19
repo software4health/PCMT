@@ -538,10 +538,3 @@ jobs:
         type: import_hidden
         configuration:
             dirPath: 'src/PcmtCoreBundle/Resources/reference_data/gs1Codes/'
-
-    #drafts
-    job_drafts_bulk_approve:
-        connector: Pcmt Connector
-        alias: job_drafts_bulk_approve
-        label: Drafts bulk approve
-        type: mass_action
