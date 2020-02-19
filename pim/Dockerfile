@@ -38,6 +38,7 @@ ADD --chown=docker:docker docker/pim/wait.sh /srv/pim/
 ADD --chown=docker:docker docker/pim/start.sh /srv/pim/
 ADD --chown=docker:docker docker/pim/cpFromTmp.sh /srv/pim/
 ADD --chown=docker:docker docker/pim/cronRun.sh /srv/pim/
+ADD --chown=docker:docker docker/pim/pcmtMigrate.sh /srv/pim/
 
 USER docker
 WORKDIR /srv/pim    
