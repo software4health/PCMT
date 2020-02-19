@@ -106,3 +106,7 @@ ftp-get: cron
 .PHONY: scalyr
 scalyr:
 	cd deploy/scalyr && docker build -t pcmt/scalyr .
+
+.PHONY: dev-pcmt-migrate
+dev-pcmt-migrate:
+	bin/pcmt-migrate.sh

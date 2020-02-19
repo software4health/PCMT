@@ -11,6 +11,7 @@ imports:
     - { resource: pim_parameters.yml }
     - { resource: parameters.yml }
     - { resource: security.yml }
+    - { resource: migrations.yml }
 
 framework:
     translator:      { fallback: en_US }

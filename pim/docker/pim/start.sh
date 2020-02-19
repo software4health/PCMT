@@ -33,6 +33,7 @@ else
     bin/console --env=prod pim:installer:assets --symlink
 fi
 
+./pcmtMigrate.sh
 bin/console --env=prod akeneo:batch:job-queue-consumer-daemon &
 
 sudo php-fpm7.2 -F
