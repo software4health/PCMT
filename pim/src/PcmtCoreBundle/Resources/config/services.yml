@@ -24,8 +24,9 @@ services:
             - { name: 'console.command', command: 'pcmt:job-creator' }
 
     pcmt_update_attribute.concatenated_fields_values:
-        class: PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\Command\ConcatenatedAttributeCommand
-        autowire: true
+        class: PcmtCoreBundle\Service\ConcatenatedAttribute\ConcatenatedAttributeCreator
+        arguments:
+            - '@logger'
 
     pcmt_e2Open_mapping:
         class: PcmtCoreBundle\Connector\Mapping\E2OpenMapping

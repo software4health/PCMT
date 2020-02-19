@@ -18,7 +18,7 @@ use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use Akeneo\Tool\Component\StorageUtils\Exception\UnknownPropertyException;
 use Doctrine\Common\Util\ClassUtils;
-use PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\Command\ConcatenatedAttributeCommand;
+use PcmtCoreBundle\Service\ConcatenatedAttribute\ConcatenatedAttributeCreator;
 
 /**
  * @override: Handle localizable attribute description when updating an attribute
@@ -36,18 +36,18 @@ class AttributeUpdater extends BaseAttributeUpdater
     /** @var TranslatableUpdater */
     protected $translatableUpdater;
 
-    /** @var ConcatenatedAttributeCommand */
-    protected $concatenatedAttributeCommand;
+    /** @var ConcatenatedAttributeCreator */
+    protected $concatenatedAttributeCreator;
 
     public function __construct(
         AttributeGroupRepositoryInterface $attrGroupRepo,
         LocaleRepositoryInterface $localeRepository,
         AttributeTypeRegistry $registry,
         \Akeneo\Tool\Component\Localization\TranslatableUpdater $translatableUpdater,
-        ConcatenatedAttributeCommand $concatenatedAttributeCommand,
+        ConcatenatedAttributeCreator $concatenatedAttributeCreator,
         array $properties
     ) {
-        $this->concatenatedAttributeCommand = $concatenatedAttributeCommand;
+        $this->concatenatedAttributeCreator = $concatenatedAttributeCreator;
         parent::__construct($attrGroupRepo, $localeRepository, $registry, $translatableUpdater, $properties);
     }
 
@@ -177,7 +177,7 @@ class AttributeUpdater extends BaseAttributeUpdater
 
                 break;
       case 'concatenated':
-          $this->concatenatedAttributeCommand->update($attribute, $field, $data);
+          $this->concatenatedAttributeCreator->update($attribute, $field, $data);
                 break;
       default:
         $this->setValue($attribute, $field, $data);

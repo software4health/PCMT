@@ -16,7 +16,7 @@ use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use Akeneo\Tool\Component\StorageUtils\Exception\UnknownPropertyException;
 use PcmtCoreBundle\Entity\Attribute;
-use PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\Command\ConcatenatedAttributeCommand;
+use PcmtCoreBundle\Service\ConcatenatedAttribute\ConcatenatedAttributeCreator;
 use PcmtCoreBundle\Updater\AttributeUpdater;
 use PcmtCoreBundle\Updater\TranslatableUpdater;
 use PHPUnit\Framework\MockObject\MockObject as Mock;
@@ -42,8 +42,8 @@ class AttributeUpdaterTest extends TestCase
     /** @var Attribute|Mock */
     protected $attribute;
 
-    /** @var ConcatenatedAttributeCommand|Mock */
-    protected $attributeCommand;
+    /** @var ConcatenatedAttributeCreator|Mock */
+    protected $attributeCreator;
 
     protected function setUp(): void
     {
@@ -52,7 +52,7 @@ class AttributeUpdaterTest extends TestCase
         $this->registryMock = $this->createMock(AttributeTypeRegistry::class);
         $this->translatableUpdaterMock = $this->createMock(TranslatableUpdater::class);
         $this->attribute = $this->createMock(Attribute::class);
-        $this->attributeCommand = $this->createMock(ConcatenatedAttributeCommand::class);
+        $this->attributeCreator = $this->createMock(ConcatenatedAttributeCreator::class);
 
         $this->propertiesMock = [];
         parent::setUp();
@@ -65,10 +65,11 @@ class AttributeUpdaterTest extends TestCase
             $this->localeRepositoryMock,
             $this->registryMock,
             $this->translatableUpdaterMock,
-            $this->attributeCommand,
+            $this->attributeCreator,
             $this->propertiesMock
         );
     }
+
     private function getWrongAttributeClassType(): AttributeUpdater
     {
         return $this->getAttributeUpdaterInstance();
@@ -80,14 +81,22 @@ class AttributeUpdaterTest extends TestCase
     public function testUpdateFunctionShouldInvokeValidateDataTypeMethodAndSetDataMethodWhenRightData(array $data): void
     {
         $attributeUpdater = $this->getMockBuilder(AttributeUpdater::class)
-            ->setMethods(['validateDataType', 'setData'])
-            ->setConstructorArgs([
-                $this->attrGroupRepoMock,
-                $this->localeRepositoryMock,
-                $this->registryMock,
-                $this->translatableUpdaterMock,
-                $this->attributeCommand,
-                $this->propertiesMock, ])
+            ->setMethods(
+                [
+                    'validateDataType',
+                    'setData',
+                ]
+            )
+            ->setConstructorArgs(
+                [
+                    $this->attrGroupRepoMock,
+                    $this->localeRepositoryMock,
+                    $this->registryMock,
+                    $this->translatableUpdaterMock,
+                    $this->attributeCreator,
+                    $this->propertiesMock,
+                ]
+            )
             ->getMock();
         $attributeUpdater->expects($this->atLeastOnce())->method('validateDataType');
         $attributeUpdater->expects($this->atLeastOnce())->method('setData');
@@ -124,6 +133,7 @@ class AttributeUpdaterTest extends TestCase
         $this->expectException(InvalidPropertyTypeException::class);
         $attributeUpdater->update($this->attribute, $data);
     }
+
     /**
      * @dataProvider dataWithRightDescriptions
      */
@@ -135,10 +145,21 @@ class AttributeUpdaterTest extends TestCase
         $attributeUpdater->update($this->attribute, $data);
     }
 
+    /** @dataProvider dataWithConcatenatedType */
+    public function testShouldInvokeConcatenatedAttributeCommand(array $data): void
+    {
+        $attributeUpdater = $this->getAttributeUpdaterInstance();
+
+        $this->attributeCreator->expects($this->once())
+            ->method('update');
+
+        $attributeUpdater->update($this->attribute, $data);
+    }
+
     public function dataWithRightDescriptions(): array
     {
         return [
-            'single description' => [
+            'single description'                 => [
                 [
                     'descriptions' => [
                         'en_US' => 'alo',
@@ -146,18 +167,22 @@ class AttributeUpdaterTest extends TestCase
                 ],
                 'code' => 'test',
             ],
-            'single description with other data' => [[
-                'descriptions' => [
-                    'en_US' => 'alo',
+            'single description with other data' => [
+                [
+                    'descriptions' => [
+                        'en_US' => 'alo',
+                    ],
                 ],
-            ]],
-            'multi description' => [[
-                'descriptions' => [
-                    'en_US' => 'alo',
-                    'de'    => 'lol',
+            ],
+            'multi description'                  => [
+                [
+                    'descriptions' => [
+                        'en_US' => 'alo',
+                        'de'    => 'lol',
+                    ],
                 ],
-            ]],
-            'multi description with other data' => [
+            ],
+            'multi description with other data'  => [
                 [
                     'descriptions' => [
                         'en_US' => 'alo',
@@ -166,41 +191,63 @@ class AttributeUpdaterTest extends TestCase
                 ],
                 'code' => 'test',
             ],
-            'empty array' => [[
-                'descriptions' => [],
-            ]],
+            'empty array'                        => [
+                [
+                    'descriptions' => [],
+                ],
+            ],
         ];
     }
+
     public function dataWithUnknownProperty(): array
     {
         return [
-            'one of property is unknown' => [[
-                'descriptions' => [
-                    'en_US' => 'alo',
+            'one of property is unknown' => [
+                [
+                    'descriptions'     => [
+                        'en_US' => 'alo',
+                    ],
+                    'unknown_property' => 0,
                 ],
-                'unknown_property' => 0,
-            ]],
-            'wrong property' => [[
-                'description' => [
-                    'en_US' => 'alo',
+            ],
+            'wrong property'             => [
+                [
+                    'description' => [
+                        'en_US' => 'alo',
+                    ],
                 ],
-            ]],
+            ],
         ];
     }
 
     public function dataWithInvalidPropertyType(): array
     {
         return [
-            'not an array' => [['descriptions' => 'en_US']],
-            'not a scalar' => [[
-                'descriptions' => [[]],
-            ]],
-            'one is not a scalar' => [[
-                'descriptions' => [
-                    'en_US' => 'alo',
-                    'de'    => [],
+            'not an array'        => [['descriptions' => 'en_US']],
+            'not a scalar'        => [
+                [
+                    'descriptions' => [[]],
                 ],
-            ]],
+            ],
+            'one is not a scalar' => [
+                [
+                    'descriptions' => [
+                        'en_US' => 'alo',
+                        'de'    => [],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    public function dataWithConcatenatedType(): array
+    {
+        return [
+            [
+                [
+                    'concatenated' => ['mock'],
+                ],
+            ],
         ];
     }
 }
