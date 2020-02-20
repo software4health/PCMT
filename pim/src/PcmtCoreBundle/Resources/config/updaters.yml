@@ -17,19 +17,6 @@ services:
     pim_structure.updater.translatable:
         class: 'PcmtCoreBundle\Updater\TranslatableUpdater'
 
-    pim_catalog.updater.family:
-        class: 'PcmtCoreBundle\Updater\PcmtFamilyUpdater'
-        arguments:
-            - '@pim_catalog.repository.product'
-            - '@event_dispatcher'
-            - '@logger'
-            - '@pim_catalog.repository.family'
-            - '@pim_catalog.repository.attribute'
-            - '@pim_catalog.repository.channel'
-            - '@pim_catalog.factory.attribute_requirement'
-            - '@pim_catalog.repository.attribute_requirement'
-            - '@pim_structure.updater.translatable'
-
     pim_catalog.updater.attribute.base:
         class: 'Akeneo\Pim\Structure\Component\Updater\AttributeUpdater'
         arguments:
