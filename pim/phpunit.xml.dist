@@ -23,6 +23,8 @@
                 <directory>./src/*/Resources</directory>
                 <directory>./src/*/Tests</directory>
                 <directory>./src/*/Entity</directory>
+                <directory>./src/*/DependencyInjection</directory>
+                <directory>./src/*/upgrades</directory>
             </exclude>
         </whitelist>
     </filter>
