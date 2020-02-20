@@ -170,3 +170,22 @@ Restore:
    < <(gzip -d -c name-of-backup.sql.zip)
    ```
 
+
+### Migrations
+
+PCMT is using standard Doctrine migrations mechanism, same as Akeneo. 
+PCMT migrations configuration is different than the Akeneo migrations configuration
+(it has a separate directory for migration files and separate table for migrations already run) -
+it is defined in `config/pcmt_migrations.yml` file.
+
+PCMT migrations are run automatically each time the application is deployed.
+
+#### Creating PCMT migration
+
+Run `make dev-pcmt-migration-generate`. The new file will be added to folder
+ `PcmtCoreBundle/upgrades/schema`.
+
+#### Running PCMT migration manually
+
+If you want to run PCMT migrations manually, type `make dev-pcmt-migrate`. 
+  
