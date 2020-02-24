@@ -114,3 +114,7 @@ dev-pcmt-migrate:
 .PHONY: dev-pcmt-migration-generate
 dev-pcmt-migration-generate:
 	bin/pcmt-migration-generate.sh
+
+.PHONY: dev-import-sql
+dev-import-sql:
+	bin/import-sql.sh

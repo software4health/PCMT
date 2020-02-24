@@ -163,13 +163,8 @@ Restore:
 1. Download the backup desired from the instance's S3 bucket.
 1. Transfer the backup to the instance.
 1. SSH to instance
-1. Load the backup into the running database with:
-   ```shell
-   docker exec -i pcmt_mysql_1 \
-   sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD" akeneo_pim' \
-   < <(gzip -d -c name-of-backup.sql.zip)
-   ```
-
+1. Unpack the backup into pcmt.sql file
+1. Run `make dev-import-sql` 
 
 ### Migrations
 
