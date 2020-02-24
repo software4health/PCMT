@@ -53,6 +53,7 @@ define(
                     if (null === this.collection) {
                         this.listenTo(this.getRoot(), 'pcmt:drafts:select', this.select.bind(this));
                         this.listenTo(this.getRoot(), 'pcmt:drafts:approved', this.selectNone.bind(this));
+                        this.listenTo(this.getRoot(), 'pcmt:drafts:rejected', this.selectNone.bind(this));
                     }
 
                     this.collection = collection;
