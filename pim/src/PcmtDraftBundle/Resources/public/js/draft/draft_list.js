@@ -273,6 +273,7 @@ define(
                     url: Routing.generate('pcmt_core_drafts_delete', {id: draftId}),
                     type: 'DELETE'
                 }).done((function () {
+                    this.getRoot().trigger('pcmt:drafts:rejected');
                     this.loadDrafts();
                 }).bind(this)).fail(function () {
                     console.log('rejecting failed.');
