@@ -56,31 +56,6 @@ pcmt_core:
             status: Status
             empty: No drafts
 
-pcmt_core.entity.draft:
-    label: draft
-    uppercase_label: Draft
-    plural_label: Drafts
-    flash:
-        update:
-            success: Draft successfully updated.
-            fail: An error occurred during draft update.
-        create:
-            success: Draft successfully created
-        delete:
-            success: Draft successfully removed
-            fail: Cannot delete this draft
-    property:
-        attribute_as_label: Attribute used as label
-        attribute_as_image: Attribute used as the main picture
-        empty_attribute_as_image: Not selected
-    page_title:
-        index: "]-Inf, 1]{{ count }} draft|]1, Inf[{{ count }} drafts"
-    module:
-        create:
-            button: Create draft
-        delete:
-            confirm: Are you sure you want to delete this draft?
-
 pim_title:
     pcmt_core_drafts_index: 'Drafts page'
     pcmt_core_drafts_edit: 'Editing draft'
@@ -123,3 +98,9 @@ pcmt.entity.draft:
             success: Draft successfully updated.
             fail: The draft could not be updated.
             fields_not_ready: "The draft cannot be saved right now. The following fields are not ready: {{ fields }}"
+        approve:
+            success: Draft successfully approved.
+            fail: There was a problem with approving the draft.
+        reject:
+            success: Draft successfully rejected.
+            fail: There was a problem with rejecting the draft.

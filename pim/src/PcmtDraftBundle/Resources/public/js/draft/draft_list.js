@@ -247,11 +247,18 @@ define(
                     type: 'PUT'
                 }).done((function () {
                     this.loadDrafts();
+                    messenger.notify(
+                        'success',
+                        __('pcmt.entity.draft.flash.approve.success')
+                    );
                 }).bind(this)).fail(function (jqXHR) {
-                    let messages = _.map(jqXHR.responseJSON.values, function (value) {
-                        return value.attribute + ': ' + value.message;
-                    });
-                    Dialog.alert(messages.join('\n'), 'Problem with approving draft', '');
+                    let messages = [];
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.values) {
+                        messages = _.map(jqXHR.responseJSON.values, function (value) {
+                            return value.attribute + ': ' + value.message;
+                        });
+                    }
+                    Dialog.alert(messages.join('\n'), __('pcmt.entity.draft.flash.approve.fail'), '');
                 });
             },
 
@@ -275,8 +282,12 @@ define(
                 }).done((function () {
                     this.getRoot().trigger('pcmt:drafts:rejected');
                     this.loadDrafts();
+                    messenger.notify(
+                        'success',
+                        __('pcmt.entity.draft.flash.reject.success')
+                    );
                 }).bind(this)).fail(function () {
-                    console.log('rejecting failed.');
+                    Dialog.alert('', __('pcmt.entity.draft.flash.reject.fail'), '');
                 });
             },
 
@@ -316,7 +327,6 @@ define(
                         return value.attribute + ': ' + value.message;
                     });
                     Dialog.alert(messages.join('\n'), 'Problem with approving draft', '');
-                    console.error('Bulk approve failed.');
                     this.getRoot().trigger('pcmt:drafts:approved');
                 }).bind(this));
             },
