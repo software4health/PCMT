@@ -13,8 +13,8 @@ use Akeneo\Pim\Structure\Component\Updater\AttributeUpdater as BaseAttributeUpda
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use PcmtCoreBundle\Entity\Attribute;
-use PcmtCoreBundle\Service\ConcatenatedAttribute\ConcatenatedAttributeCreator;
 use PcmtCoreBundle\Updater\AttributeUpdater;
+use PcmtCoreBundle\Updater\ConcatenatedAttributeUpdater;
 use PcmtCoreBundle\Updater\TranslatableUpdater;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -28,7 +28,7 @@ class AttributeUpdaterTest extends TestCase
     /** @var Attribute */
     protected $attribute;
 
-    /** @var ConcatenatedAttributeCreator|MockObject */
+    /** @var ConcatenatedAttributeUpdater|MockObject */
     protected $concatenatedAttributeCreatorMock;
 
     /** @var MockObject|BaseAttributeUpdater */
@@ -38,7 +38,7 @@ class AttributeUpdaterTest extends TestCase
     {
         $this->baseAttributeUpdaterMock = $this->createMock(BaseAttributeUpdater::class);
         $this->translatableUpdaterMock = $this->createMock(TranslatableUpdater::class);
-        $this->concatenatedAttributeCreatorMock = $this->createMock(ConcatenatedAttributeCreator::class);
+        $this->concatenatedAttributeCreatorMock = $this->createMock(ConcatenatedAttributeUpdater::class);
         $this->attribute = new Attribute();
 
         parent::setUp();

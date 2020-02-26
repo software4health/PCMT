@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace PcmtCoreBundle\Service\ConcatenatedAttribute;
+namespace PcmtCoreBundle\Updater;
 
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
 use Psr\Log\LoggerInterface;
 
-class ConcatenatedAttributeCreator
+class ConcatenatedAttributeUpdater
 {
     /** @var LoggerInterface */
     private $logger;
@@ -27,12 +27,10 @@ class ConcatenatedAttributeCreator
         $this->concatenatedAttributes = [];
     }
 
-    public function update(AttributeInterface $attribute, string $field, array $data): AttributeInterface
+    public function update(AttributeInterface $attribute, array $data): AttributeInterface
     {
         try {
             $this->validateAttribute($attribute);
-            $this->validateDataFields($field);
-
             foreach ($data as $field => $value) {
                 $this->updatePropertyValue($attribute, $field, $value);
             }
@@ -43,46 +41,29 @@ class ConcatenatedAttributeCreator
         return $attribute;
     }
 
-    private function validateDataFields(string $field): void
-    {
-        if (!in_array($field, $this->getAvailableFields())) {
-            throw new \InvalidArgumentException('Invalid attribute field name: ' . $field);
-        }
-    }
-
     private function updatePropertyValue(AttributeInterface $attribute, string $field, string $value): void
     {
-        switch ($field) {
-            case mb_strpos($field, 'separator'):
-                $attribute->setProperty(
-                    'separators',
-                    $value
-                );
+        switch (true) {
+            case 0 === mb_strpos($field, 'separator'):
+                $attribute->setProperty('separators', $value);
                 break;
-            case mb_strpos($field, 'attribute'):
+            case 0 === mb_strpos($field, 'attribute'):
                 $this->updateConcatenatedAttributes($attribute, $value);
-
                 break;
         }
     }
 
     private function validateAttribute(AttributeInterface $attribute): void
     {
-        if ($attribute->getId() && PcmtAtributeTypes::CONCATENATED_FIELDS === !$attribute->getType()) {
+        if (PcmtAtributeTypes::CONCATENATED_FIELDS !== $attribute->getType()) {
             $message = sprintf(
-                'Attribute is of a wrong type. Attribute of type ',
+                'Attribute is of a wrong type. Attribute of type %s passed, and attribute %s expected.',
                 $attribute->getType(),
-                ' passed, and attribute ',
-                PcmtAtributeTypes::CONCATENATED_FIELDS,
-                ' expected.'
+                PcmtAtributeTypes::CONCATENATED_FIELDS
             );
+
             throw new \InvalidArgumentException($message);
         }
-    }
-
-    private function getAvailableFields(): array
-    {
-        return ['concatenated'];
     }
 
     private function updateConcatenatedAttributes(AttributeInterface $attribute, string $value): void

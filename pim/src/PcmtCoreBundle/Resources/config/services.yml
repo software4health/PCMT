@@ -23,11 +23,6 @@ services:
         tags:
             - { name: 'console.command', command: 'pcmt:job-creator' }
 
-    pcmt_update_attribute.concatenated_fields_values:
-        class: PcmtCoreBundle\Service\ConcatenatedAttribute\ConcatenatedAttributeCreator
-        arguments:
-            - '@logger'
-
     pcmt_e2Open_mapping:
         class: PcmtCoreBundle\Connector\Mapping\E2OpenMapping
         autowire: true
@@ -65,3 +60,11 @@ services:
             - '@monolog.logger'
             - '@pcmt_e2Open_attributes_service'
             - '@pim_catalog.updater.product'
+
+    pcmt_catalog.product.updater.concatenated_attributes_for_product_and_model:
+        class: PcmtCoreBundle\Service\ConcatenatedAttribute\ObjectUpdater
+        arguments:
+            - '@pim_catalog.updater.entity_with_values'
+            - '@pim_storage_serializer'
+            - '@pim_catalog.repository.channel'
+            - '@pim_catalog.repository.locale'
