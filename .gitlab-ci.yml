@@ -48,6 +48,17 @@ include:
     reports:
       junit: build/unit-results.xml
 
+.pim_erd_base:
+  stage: deploy
+  allow_failure: true
+  script:
+    - bin/ci-erd.sh "http://docker"
+  artifacts:
+    paths:
+      - build/erd/
+    expire_in: "7 days"
+
+
 pim docker build (on git push):
   extends: 
     - .pim_docker_build
@@ -58,16 +69,18 @@ pim docker build (manual retry):
   when: manual
 
 pim_erd:
-  extends: .pim_only_changes
-  stage: deploy
-  allow_failure: true
-  script:
-    - bin/ci-erd.sh "http://docker"
-  artifacts:
-    paths:
-      - build/erd/
-    expire_in: "7 days"
-  
+  extends:
+    - .pim_only_changes
+    - .pim_erd_base
+  only:
+    refs:
+      - master@pcmt/pcmt
+
+pim_erd (manual):
+  extends:
+    - .pim_erd_base
+  when: manual
+
 
 ############### IoC ###############
 
