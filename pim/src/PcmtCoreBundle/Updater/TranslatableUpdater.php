@@ -65,7 +65,7 @@ class TranslatableUpdater extends BaseTranslatableUpdater
     /**
      * Check the database row, then remove it if both label and description fields are null
      */
-    public function checkTranslationValues(TranslatableInterface $object): void
+    private function checkTranslationValues(TranslatableInterface $object): void
     {
         /** @var AbstractTranslation $translation */
         $translation = $object->getTranslation();
