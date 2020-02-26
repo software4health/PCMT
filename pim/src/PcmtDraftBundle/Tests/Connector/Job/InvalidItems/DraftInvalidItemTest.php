@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace PcmtDraftBundle\Tests\Connector\InvalidItems;
+namespace PcmtDraftBundle\Tests\Connector\Job\InvalidItems;
 
 use PcmtDraftBundle\Connector\Job\InvalidItems\DraftInvalidItem;
 use PHPUnit\Framework\TestCase;

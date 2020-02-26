@@ -8,7 +8,7 @@ declare(strict_types=1);
  * SPDX-License-Identifier: NPOSL-3.0
  */
 
-namespace PcmtDraftBundle\Tests\Connector\JobParameters\DefaultValueProvider;
+namespace PcmtDraftBundle\Tests\Connector\Job\JobParameters\DefaultValueProvider;
 
 use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use PcmtDraftBundle\Connector\Job\JobParameters\DefaultValueProvider\DraftsBulkApprove;

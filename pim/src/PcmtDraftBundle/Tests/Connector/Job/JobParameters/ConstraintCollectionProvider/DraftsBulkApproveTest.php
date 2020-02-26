@@ -8,7 +8,7 @@ declare(strict_types=1);
  * SPDX-License-Identifier: NPOSL-3.0
  */
 
-namespace PcmtDraftBundle\Tests\Connector\JobParameters\ConstraintCollectionProvider;
+namespace PcmtDraftBundle\Tests\Connector\Job\JobParameters\ConstraintCollectionProvider;
 
 use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use PcmtDraftBundle\Connector\Job\JobParameters\ConstraintCollectionProvider\DraftsBulkApprove;
