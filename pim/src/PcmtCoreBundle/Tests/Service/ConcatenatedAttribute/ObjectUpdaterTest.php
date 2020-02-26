@@ -1,13 +1,13 @@
 <?php
 /**
- * Copyright (c) 2019, VillageReach
+ * Copyright (c) 2020, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace PcmtCoreBundle\Test\Updater;
+namespace PcmtCoreBundle\Tests\Service\ConcatenatedAttribute;
 
 use Akeneo\Channel\Bundle\Doctrine\Repository\ChannelRepository;
 use Akeneo\Channel\Bundle\Doctrine\Repository\LocaleRepository;
@@ -21,13 +21,13 @@ use Akeneo\Pim\Enrichment\Component\Product\Value\MetricValue;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use PcmtCoreBundle\Entity\Attribute;
 use PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
-use PcmtCoreBundle\Updater\ConcatenatedAttributesUpdater;
+use PcmtCoreBundle\Service\ConcatenatedAttribute\ObjectUpdater;
 use PHPUnit\Framework\MockObject\MockObject as Mock;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 
-class ConcatenatedAttributesUpdaterTest extends TestCase
+class ObjectUpdaterTest extends TestCase
 {
     /** @var EntityWithValuesUpdater|Mock */
     private $entityWithValuesUpdater;
@@ -59,7 +59,7 @@ class ConcatenatedAttributesUpdaterTest extends TestCase
      */
     public function testUpdate(object $mockProductEntityObject, array $parameters, array $normalized): void
     {
-        $updater = $this->getConcatenatedAttributesUpdaterInstance();
+        $updater = $this->getTestedInstance();
 
         $valueMock = $this->createMock(MetricValue::class);
 
@@ -109,7 +109,7 @@ class ConcatenatedAttributesUpdaterTest extends TestCase
      */
     public function testThrowsExceptionWhenInvalidData(object $object, array $parameters): void
     {
-        $updater = $this->getConcatenatedAttributesUpdaterInstance();
+        $updater = $this->getTestedInstance();
         $this->expectException(\InvalidArgumentException::class);
 
         $updater->update($object, $parameters);
@@ -230,9 +230,9 @@ class ConcatenatedAttributesUpdaterTest extends TestCase
         return $concatenatedAttribute;
     }
 
-    private function getConcatenatedAttributesUpdaterInstance(): ConcatenatedAttributesUpdater
+    private function getTestedInstance(): ObjectUpdater
     {
-        return new ConcatenatedAttributesUpdater(
+        return new ObjectUpdater(
             $this->entityWithValuesUpdater,
             $this->rawValuesStorageFormatNormalizer,
             $this->channelRepositoryMock,

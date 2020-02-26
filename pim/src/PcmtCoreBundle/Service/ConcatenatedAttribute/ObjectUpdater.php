@@ -1,13 +1,13 @@
 <?php
 /**
- * Copyright (c) 2019, VillageReach
+ * Copyright (c) 2020, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace PcmtCoreBundle\Updater;
+namespace PcmtCoreBundle\Service\ConcatenatedAttribute;
 
 use Akeneo\Channel\Component\Repository\ChannelRepositoryInterface;
 use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
@@ -20,7 +20,7 @@ use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class ConcatenatedAttributesUpdater implements ObjectUpdaterInterface
+class ObjectUpdater implements ObjectUpdaterInterface
 {
     private const IS_MISSING = ' [missing]';
     private const IS_EMPTY = ' [empty]';

@@ -15,7 +15,6 @@ use Akeneo\Tool\Component\Localization\TranslatableUpdater;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
-use PcmtCoreBundle\Service\ConcatenatedAttribute\ConcatenatedAttributeCreator;
 
 /**
  * @override: Handle localizable attribute description when updating an attribute
@@ -33,7 +32,7 @@ class AttributeUpdater implements ObjectUpdaterInterface
     /** @var TranslatableUpdater */
     protected $translatableUpdater;
 
-    /** @var ConcatenatedAttributeCreator */
+    /** @var ConcatenatedAttributeUpdater */
     protected $concatenatedAttributeCreator;
 
     /** @var BaseAttributeUpdater */
@@ -42,7 +41,7 @@ class AttributeUpdater implements ObjectUpdaterInterface
     public function __construct(
         BaseAttributeUpdater $baseAttributeUpdater,
         TranslatableUpdater $translatableUpdater,
-        ConcatenatedAttributeCreator $concatenatedAttributeCreator
+        ConcatenatedAttributeUpdater $concatenatedAttributeCreator
     ) {
         $this->concatenatedAttributeCreator = $concatenatedAttributeCreator;
         $this->translatableUpdater = $translatableUpdater;
@@ -114,7 +113,7 @@ class AttributeUpdater implements ObjectUpdaterInterface
                 $this->translatableUpdater->updateDescription($attribute, $data);
                 break;
             case 'concatenated':
-                $this->concatenatedAttributeCreator->update($attribute, $field, $data);
+                $this->concatenatedAttributeCreator->update($attribute, $data);
                 break;
         }
     }
