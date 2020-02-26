@@ -17,27 +17,36 @@ function cleanup {
 }
 trap cleanup EXIT
 
-function yq() {
-    local retval=$(docker run --rm -i -v "$CONF_DIR:/workdir:ro" mikefarah/yq \
-    yq \
-    read "$PARAMS_FILE" \
-    $@)
-    echo "$retval"
+function parse_yaml {
+   local prefix=$2
+   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
+   sed -ne "s|^\($s\):|\1|" \
+        -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
+        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
+   awk -F$fs '{
+      indent = length($1)/2;
+      vname[indent] = $2;
+      for (i in vname) {if (i > indent) {delete vname[i]}}
+      if (length($3) > 0) {
+         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
+      }
+   }'
 }
 
 echo "Reading from $CONF_DIR/$PARAMS_FILE"
-db_host=$(yq parameters.database_host)
-db_port=$(yq parameters.database_port)
-db_name=$(yq parameters.database_name)
-db_user=$(yq parameters.database_user)
-db_pass=$(yq parameters.database_password)
-cat <<END
-    DB host ($db_host)
-    DB port ($db_port)
-    DB name ($db_name)
-    DB user ($db_user)
-    DB pass ($db_pass)
-END
+
+eval $(parse_yaml "$CONF_DIR/$PARAMS_FILE")
+db_port=$parameters__database_port
+echo " DB port ($db_port)"
+db_name=$parameters__database_name
+echo " DB name ($db_name)"
+db_user=$parameters__database_user
+echo " DB user ($db_user)"
+db_pass=$parameters__database_password
+echo " DB pass ($db_pass)"
+db_host=$parameters__database_host
+echo " DB host ($db_host)"
 
 docker run \
     --network pcmt_akeneo \
