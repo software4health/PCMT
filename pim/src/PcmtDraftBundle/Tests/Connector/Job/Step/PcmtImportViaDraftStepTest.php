@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Copyright (c) 2020, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
  */
 
-namespace PcmtDraftBundle\Tests\Connector\Step;
+declare(strict_types=1);
+
+namespace PcmtDraftBundle\Tests\Connector\Job\Step;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Tool\Component\Batch\Item\ItemProcessorInterface;

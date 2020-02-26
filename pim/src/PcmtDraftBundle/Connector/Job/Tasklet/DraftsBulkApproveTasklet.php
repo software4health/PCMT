@@ -64,30 +64,12 @@ class DraftsBulkApproveTasklet implements TaskletInterface
             );
         }
         $jobInstance = $this->stepExecution->getJobParameters();
-        $chosenDrafts = [
-            DraftsBulkApproveOperation::KEY_ALL_SELECTED => $jobInstance->get(DraftsBulkApproveOperation::KEY_ALL_SELECTED),
-            DraftsBulkApproveOperation::KEY_EXCLUDED     => $jobInstance->get(DraftsBulkApproveOperation::KEY_EXCLUDED),
-            DraftsBulkApproveOperation::KEY_SELECTED     => $jobInstance->get(DraftsBulkApproveOperation::KEY_SELECTED),
-        ];
 
-        if ((bool) $chosenDrafts[DraftsBulkApproveOperation::KEY_ALL_SELECTED]) {
-            $drafts = $this->draftRepository->findBy(['status' => AbstractDraft::STATUS_NEW]);
-
-            foreach ($drafts as $index => $draft) {
-                if (in_array($draft->getId(), $chosenDrafts[DraftsBulkApproveOperation::KEY_EXCLUDED])) {
-                    unset($drafts[$index]);
-                }
-            }
-
-            $draftsToApprove = $drafts;
-        } else {
-            $draftsToApprove = $this->draftRepository->findBy(
-                [
-                    'status' => AbstractDraft::STATUS_NEW,
-                    'id'     => $chosenDrafts[DraftsBulkApproveOperation::KEY_SELECTED],
-                ]
-            );
-        }
+        $draftsToApprove = $this->prepareDraftsToApprove(
+            (bool) ($jobInstance->get(DraftsBulkApproveOperation::KEY_ALL_SELECTED)),
+            $jobInstance->get(DraftsBulkApproveOperation::KEY_EXCLUDED),
+            $jobInstance->get(DraftsBulkApproveOperation::KEY_SELECTED)
+        );
 
         foreach ($draftsToApprove as $draft) {
             $normalizedViolations = [];
@@ -115,6 +97,28 @@ class DraftsBulkApproveTasklet implements TaskletInterface
                 );
             }
         }
+    }
+
+    private function prepareDraftsToApprove(bool $allSelected, array $excluded, array $selected): array
+    {
+        if ($allSelected) {
+            $drafts = $this->draftRepository->findBy(['status' => AbstractDraft::STATUS_NEW]);
+
+            foreach ($drafts as $index => $draft) {
+                if (in_array($draft->getId(), $excluded)) {
+                    unset($drafts[$index]);
+                }
+            }
+
+            return $drafts;
+        }
+
+        return $this->draftRepository->findBy(
+            [
+                'status' => AbstractDraft::STATUS_NEW,
+                'id'     => $selected,
+            ]
+        );
     }
 
     private function skipItemAndReturnException(array $violations, int $draftId, ?\Throwable $previousException = null): InvalidItemException
