@@ -21,17 +21,19 @@ default:
   before_script:
     - docker info
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
-    - apk add bash make git curl
+    - apk add bash make git curl libxml2-utils bc
     - bash --version
 
-include: 
+include:
   - local: '.gitlab-ci.env-demo.yml'
+
 
 ############### PIM ###############
 
 .pim_only_changes:
   only:
     changes:
+      - '.gitlab-ci.yml'
       - 'pim/**/*'
       - '.env'
       - 'conf/**/*'
@@ -43,6 +45,7 @@ include:
   stage: build
   script:
     - bin/ci-build.sh
+    - bin/ci-parse-coverage.sh $CODE_COVERAGE_THRESHOLD
     - bin/ci-push.sh
   artifacts:
     reports:
@@ -60,7 +63,7 @@ include:
 
 
 pim docker build (on git push):
-  extends: 
+  extends:
     - .pim_docker_build
     - .pim_only_changes
 
