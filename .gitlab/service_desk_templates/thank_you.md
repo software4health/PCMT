@@ -3,7 +3,7 @@ as: %{ISSUE_ID}.
 
 Someone from PCMT will be responding to you shortly as a followup to this email.
 
-Best regards,   
+Sincerely,   
 \- The PCMT team
 
 ---
