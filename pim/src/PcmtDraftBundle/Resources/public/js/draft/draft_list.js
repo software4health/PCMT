@@ -257,8 +257,9 @@ define(
                         messages = _.map(jqXHR.responseJSON.values, function (value) {
                             return value.attribute + ': ' + value.message;
                         });
+                        messages = _.uniq(messages);
                     }
-                    Dialog.alert(messages.join('\n'), __('pcmt.entity.draft.flash.approve.fail'), '');
+                    Dialog.alert(messages.join('<br>'), __('pcmt.entity.draft.flash.approve.fail'), '');
                 });
             },
 
@@ -323,11 +324,11 @@ define(
                         __('pcmt_messages.job_drafts_bulk_approve.success', {})
                     );
                 }).bind(this)).fail((function (jqXHR) {
-                    let messages = _.map(jqXHR.responseJSON.values, function (value) {
-                        return value.attribute + ': ' + value.message;
-                    });
-                    Dialog.alert(messages.join('\n'), 'Problem with approving draft', '');
                     this.getRoot().trigger('pcmt:drafts:approved');
+                    messenger.notify(
+                        'error',
+                        __('pcmt_messages.job_drafts_bulk_approve.fail', {})
+                    );
                 }).bind(this));
             },
 
