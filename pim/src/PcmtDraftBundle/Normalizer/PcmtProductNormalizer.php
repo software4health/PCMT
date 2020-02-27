@@ -10,23 +10,30 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Normalizer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Normalizer\InternalApi\ProductNormalizer;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
+use PcmtDraftBundle\Service\Helper\UnexpectedAttributesFilter;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class PcmtProductNormalizer implements NormalizerInterface
 {
-    /** @var ProductNormalizer */
+    /** @var NormalizerInterface */
     private $productNormalizer;
 
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    public function __construct(ProductNormalizer $productNormalizer, EntityManagerInterface $entityManager)
-    {
+    /** @var UnexpectedAttributesFilter */
+    private $attributesFilter;
+
+    public function __construct(
+        NormalizerInterface $productNormalizer,
+        EntityManagerInterface $entityManager,
+        UnexpectedAttributesFilter $attributesFilter
+    ) {
         $this->productNormalizer = $productNormalizer;
         $this->entityManager = $entityManager;
+        $this->attributesFilter = $attributesFilter;
     }
 
     /**
@@ -48,6 +55,10 @@ class PcmtProductNormalizer implements NormalizerInterface
             $data['draftId'] = $draft ? $draft->getId() : 0;
         }
 
+        if ($this->hasToFilterUnexpectedValues($context, $product, $data)) {
+            $data['values'] = $this->attributesFilter->filter($product, $data['values']);
+        }
+
         return $data;
     }
 
@@ -57,5 +68,12 @@ class PcmtProductNormalizer implements NormalizerInterface
     public function supportsNormalization($data, $format = null)
     {
         return $this->productNormalizer->supportsNormalization($data, $format);
+    }
+
+    private function hasToFilterUnexpectedValues(array $context, ProductInterface $product, array $data): bool
+    {
+        return ($context['import_via_drafts'] ?? false)
+            && $product->isVariant()
+            && isset($data['values']);
     }
 }

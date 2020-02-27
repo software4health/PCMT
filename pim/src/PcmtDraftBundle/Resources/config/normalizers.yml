@@ -51,6 +51,16 @@ services:
         arguments:
             - '@pim_enrich.normalizer.product'
             - '@doctrine.orm.entity_manager'
+            - '@pcmt.service.helper.unexpected_attributes_filter'
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 200 }
+
+    pcmt_core.normalizer.standard.product:
+        class: PcmtDraftBundle\Normalizer\PcmtProductNormalizer
+        arguments:
+            - '@pim_catalog.normalizer.standard.product'
+            - '@doctrine.orm.entity_manager'
+            - '@pcmt.service.helper.unexpected_attributes_filter'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 200 }
 
@@ -59,6 +69,16 @@ services:
         arguments:
             - '@pim_enrich.normalizer.product_model'
             - '@doctrine.orm.entity_manager'
+            - '@pcmt.service.helper.unexpected_attributes_filter'
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 200 }
+
+    pcmt_core.normalizer.standard.product_model:
+        class: PcmtDraftBundle\Normalizer\PcmtProductModelNormalizer
+        arguments:
+            - '@pim_catalog.normalizer.standard.product_model'
+            - '@doctrine.orm.entity_manager'
+            - '@pcmt.service.helper.unexpected_attributes_filter'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 200 }
 
