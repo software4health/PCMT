@@ -27,6 +27,7 @@ $DDEV_CMD -p "$PROJECT_NAME" run \
     fpm /srv/pim/vendor/phpunit/phpunit/phpunit \
 		-c /srv/pim/phpunit.xml.dist \
 		--log-junit /srv/pim/unit-results.xml \
+		--coverage-clover /srv/pim/coverage.xml \
 		--coverage-html /srv/pim/coverage-report \
 		--coverage-text \
 		--colors=never
@@ -35,3 +36,4 @@ ddev_run_ret_val=$?
 mkdir -p "$BUILD_DIR"
 docker cp "$CONTAINER_NAME":/srv/pim/unit-results.xml "$BUILD_DIR"/unit-results.xml
 docker cp "$CONTAINER_NAME":/srv/pim/coverage-report "$BUILD_DIR"
+docker cp "$CONTAINER_NAME":/srv/pim/coverage.xml "$BUILD_DIR"
