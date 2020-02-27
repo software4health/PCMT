@@ -84,6 +84,7 @@ pim_import_export.widget.last_operations.job_type.mass_action: Mass action
 pcmt_messages:
     job_drafts_bulk_approve:
         success: The bulk action "Draft mass approve" has been launched. You will be notified when it is done
+        fail: There was a problem and the bulk action "Draft mass approve" has not been launched.
 
 # Managing drafts
 pcmt.entity.draft:
