@@ -83,3 +83,25 @@ services:
         class: 'PcmtDraftBundle\Service\Draft\DraftExistenceChecker'
         arguments:
             - '@pcmt_catalog.repository.draft'
+
+    pcmt.service.helper.unexpected_attributes_filter:
+        class: 'PcmtDraftBundle\Service\Helper\UnexpectedAttributesFilter'
+        arguments:
+            - '@pim_catalog.family_variant.provider.entity_with_family_variant_attributes'
+
+    pcmt.service.draft.base_entity_creator.product_model:
+        class: 'PcmtDraftBundle\Service\Draft\BaseProductModelCreatorForDraft'
+        arguments:
+            - '@pim_catalog.updater.product_model'
+            - '@pim_standard_format_serializer'
+
+    pcmt.service.draft.base_entity_creator.product:
+        class: 'PcmtDraftBundle\Service\Draft\BaseProductCreatorForDraft'
+        arguments:
+            - '@pim_catalog.builder.product'
+
+    pcmt.service.creator.product_model:
+        class: 'PcmtDraftBundle\Service\Draft\ProductModelDraftCreator'
+
+    pcmt.service.creator.product:
+        class: 'PcmtDraftBundle\Service\Draft\ProductDraftCreator'

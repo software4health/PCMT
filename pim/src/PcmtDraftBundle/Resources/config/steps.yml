@@ -7,7 +7,7 @@ services:
             - '@akeneo_batch.job_repository'
             - '@pim_connector.reader.file.xlsx_product'
             - '@pim_connector.processor.denormalization.product'
-            - '@pcmt_connector.job.writer.database.product_draft'
+            - '@pcmt_connector.job.writer.database.draft.product'
             - '%pim_job_product_batch_size%'
         calls:
             - [setUserRepository, ['@pim_user.repository.user']]
@@ -20,7 +20,7 @@ services:
             - '@akeneo_batch.job_repository'
             - '@pim_connector.reader.file.xlsx_product_model'
             - '@pim_connector.processor.denormalization.root_product_model'
-            - '@pcmt_connector.job.writer.database.product_model'
+            - '@pcmt_connector.job.writer.database.draft.product_model'
             - '%pim_job_product_batch_size%'
         calls:
             - [setUserRepository, ['@pim_user.repository.user']]
@@ -33,7 +33,7 @@ services:
             - '@akeneo_batch.job_repository'
             - '@pim_connector.reader.file.xlsx_product_model'
             - '@pim_connector.processor.denormalization.sub_product_model'
-            - '@pcmt_connector.job.writer.database.product_model'
+            - '@pcmt_connector.job.writer.database.draft.product_model'
             - '%pim_job_product_batch_size%'
         calls:
             - [setUserRepository, ['@pim_user.repository.user']]

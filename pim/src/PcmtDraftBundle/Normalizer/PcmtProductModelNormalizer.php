@@ -10,23 +10,30 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Normalizer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Normalizer\InternalApi\ProductModelNormalizer;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
+use PcmtDraftBundle\Service\Helper\UnexpectedAttributesFilter;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class PcmtProductModelNormalizer implements NormalizerInterface
 {
-    /** @var ProductModelNormalizer */
+    /** @var NormalizerInterface */
     private $productModelNormalizer;
 
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    public function __construct(ProductModelNormalizer $productModelNormalizer, EntityManagerInterface $entityManager)
-    {
+    /** @var UnexpectedAttributesFilter */
+    private $attributesFilter;
+
+    public function __construct(
+        NormalizerInterface $productModelNormalizer,
+        EntityManagerInterface $entityManager,
+        UnexpectedAttributesFilter $attributesFilter
+    ) {
         $this->productModelNormalizer = $productModelNormalizer;
         $this->entityManager = $entityManager;
+        $this->attributesFilter = $attributesFilter;
     }
 
     /**
@@ -48,6 +55,10 @@ class PcmtProductModelNormalizer implements NormalizerInterface
             $data['draftId'] = $draft ? $draft->getId() : 0;
         }
 
+        if ($this->hasToFilterUnexpectedValues($context, $productModel, $data)) {
+            $data['values'] = $this->attributesFilter->filter($productModel, $data['values']);
+        }
+
         return $data;
     }
 
@@ -57,5 +68,12 @@ class PcmtProductModelNormalizer implements NormalizerInterface
     public function supportsNormalization($data, $format = null)
     {
         return $this->productModelNormalizer->supportsNormalization($data, $format);
+    }
+
+    private function hasToFilterUnexpectedValues(array $context, ProductModelInterface $productModel, array $data): bool
+    {
+        return ($context['import_via_drafts'] ?? false)
+            && !$productModel->isRoot()
+            && isset($data['values']);
     }
 }

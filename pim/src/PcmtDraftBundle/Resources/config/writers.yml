@@ -1,19 +1,20 @@
 services:
-    pcmt_connector.job.writer.database.product_draft:
-        class: 'PcmtDraftBundle\Connector\Job\Writer\Database\PcmtDraftProductWriter'
-        parent: pim_connector.writer.database.product
-        calls:
-            - [setProductNormalizer, ['@pim_catalog.normalizer.standard.product']]
-            - [setProductDraftSaver, ['@pcmt.saver.draft']]
-            - [setProductBuilder, ['@pim_catalog.builder.product']]
-            - [setAttributeProvider, ['@pim_catalog.family_variant.provider.entity_with_family_variant_attributes']]
+    pcmt_connector.job.writer.database.draft.product:
+        class: 'PcmtDraftBundle\Connector\Job\Writer\Database\DraftWriter'
+        arguments:
+            - '@pim_versioning.manager.version'
+            - '@pim_catalog.saver.product'
+            - '@pcmt_core.normalizer.standard.product'
+            - '@pcmt.saver.draft'
+            - '@pcmt.service.draft.base_entity_creator.product'
+            - '@pcmt.service.creator.product'
 
-    pcmt_connector.job.writer.database.product_model:
-        class: 'PcmtDraftBundle\Connector\Job\Writer\Database\PcmtDraftProductModelWriter'
-        parent: pim_connector.writer.database.product_model
-        calls:
-            - [setProductModelNormalizer, ['@pim_catalog.normalizer.standard.product_model']]
-            - [setProductModelDraftSaver, ['@pcmt.saver.draft']]
-            - [setProductModelFactory, ['@pim_catalog.factory.product_model']]
-            - [setProductModelUpdater, ['@pim_catalog.updater.product_model']]
-            - [setAttributeProvider, ['@pim_catalog.family_variant.provider.entity_with_family_variant_attributes']]
+    pcmt_connector.job.writer.database.draft.product_model:
+        class: 'PcmtDraftBundle\Connector\Job\Writer\Database\DraftWriter'
+        arguments:
+            - '@pim_versioning.manager.version'
+            - '@pim_catalog.saver.product_model'
+            - '@pcmt_core.normalizer.standard.product_model'
+            - '@pcmt.saver.draft'
+            - '@pcmt.service.draft.base_entity_creator.product_model'
+            - '@pcmt.service.creator.product_model'
