@@ -1,4 +1,2 @@
-A new Service Desk inquiry has been received:
-
-/assign @joshzamor
 /due "in 2 days"
+/label ~"type::service-desk-inquiry" ~"priority::Triage"
