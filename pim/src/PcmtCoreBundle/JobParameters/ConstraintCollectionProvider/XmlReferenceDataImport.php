@@ -9,14 +9,13 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\JobParameters\ConstraintCollectionProvider;
 
-use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters\ConstraintCollectionProviderInterface;
+use PcmtCoreBundle\JobParameters\SupportedJobsTrait;
 use Symfony\Component\Validator\Constraints\Collection;
 
 class XmlReferenceDataImport implements ConstraintCollectionProviderInterface
 {
-    /** @var string[] */
-    protected $supportedJobNames = [];
+    use SupportedJobsTrait;
 
     public function __construct(
         array $supportedJobNames
@@ -31,10 +30,5 @@ class XmlReferenceDataImport implements ConstraintCollectionProviderInterface
                 'filePath' => null,
             ],
         ]);
-    }
-
-    public function supports(JobInterface $job): bool
-    {
-        return in_array($job->getName(), $this->supportedJobNames);
     }
 }

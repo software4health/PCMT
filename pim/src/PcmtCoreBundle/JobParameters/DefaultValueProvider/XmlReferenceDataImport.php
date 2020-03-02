@@ -9,16 +9,15 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\JobParameters\DefaultValueProvider;
 
-use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface;
+use PcmtCoreBundle\JobParameters\SupportedJobsTrait;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
 class XmlReferenceDataImport implements DefaultValuesProviderInterface
 {
-    /** @var string[] */
-    protected $supportedJobNames = [];
+    use SupportedJobsTrait;
 
     /** @var string */
     protected $fileDirectory = 'Xml';
@@ -44,10 +43,5 @@ class XmlReferenceDataImport implements DefaultValuesProviderInterface
                 'code'                                           => 'Sabre\Xml\Element\KeyValue',
             ],
         ];
-    }
-
-    public function supports(JobInterface $job): bool
-    {
-        return in_array($job->getName(), $this->supportedJobNames);
     }
 }

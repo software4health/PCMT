@@ -9,19 +9,18 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\JobParameters\DefaultValueProvider;
 
-use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface;
+use PcmtCoreBundle\JobParameters\SupportedJobsTrait;
 
 class XmlReferenceDataDownload implements DefaultValuesProviderInterface
 {
+    use SupportedJobsTrait;
+
     /** @var string */
     protected $fileDirectory;
 
     /** @var string */
     protected $refDirName;
-
-    /** @var string[] */
-    protected $supportedJobNames = [];
 
     public function __construct(
         array $supportedJobNames,
@@ -58,10 +57,5 @@ class XmlReferenceDataDownload implements DefaultValuesProviderInterface
             'dirPath'  => 'src/PcmtCoreBundle/Resources/' . $this->fileDirectory . $this->refDirName . '/',
             'filePath' => null,
         ];
-    }
-
-    public function supports(JobInterface $job): bool
-    {
-        return in_array($job->getName(), $this->supportedJobNames);
     }
 }
