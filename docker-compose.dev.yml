@@ -18,7 +18,6 @@ services:
       - './pim/ecs.yml:/srv/pim/ecs.yml'
       - './pim/phpunit.xml.dist:/srv/pim/phpunit.xml.dist:ro'
       - './pim/crontab:/srv/pim/crontab'
-      - './build/phpstorm-coverage:/opt/phpstorm-coverage'
     # we use depends_on so that the pim volume is initialized by one container
     # with a complete /srv/pim.  Otherwise there isn't a gurantee how this
     # volume will be initialized.
