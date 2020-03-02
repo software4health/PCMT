@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace PcmtCustomDatasetBundle\Reader\Database;
 
-use Akeneo\Tool\Component\Batch\Item\InitializableInterface;
-use Akeneo\Tool\Component\Batch\Item\ItemReaderInterface;
-use Akeneo\Tool\Component\Batch\Step\StepExecutionAwareInterface;
 use Akeneo\Tool\Component\Connector\Reader\Database\AbstractReader;
 use Oro\Bundle\PimDataGridBundle\Repository\DatagridViewRepository;
 
@@ -22,7 +19,7 @@ use Oro\Bundle\PimDataGridBundle\Repository\DatagridViewRepository;
  * @copyright 2016 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class PcmtDatagridViewReader extends AbstractReader implements ItemReaderInterface, InitializableInterface, StepExecutionAwareInterface
+class PcmtDatagridViewReader extends AbstractReader
 {
     /** @var DatagridViewRepository */
     protected $datagridViewRepository;
