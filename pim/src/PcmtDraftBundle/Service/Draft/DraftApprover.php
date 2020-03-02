@@ -17,8 +17,6 @@ use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Validator\ConstraintViolation;
-use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DraftApprover
@@ -67,19 +65,10 @@ class DraftApprover
     {
         $objectToSave = $this->creator->getObjectToSave($draft);
         if (!$objectToSave) {
-            $violation = new ConstraintViolation(
-                'No corresponding object found.',
-                'No corresponding object found.',
-                [],
-                $draft,
-                'draft_approval',
-                'no'
-            );
-            $violations = new ConstraintViolationList();
-            $violations->add($violation);
-        } else {
-            $violations = $this->validator->validate($objectToSave, null, ['Default', 'creation']);
+            throw new \Exception('pcmt.entity.draft.error.no_corresponding_object');
         }
+
+        $violations = $this->validator->validate($objectToSave, null, ['Default', 'creation']);
 
         if (0 === $violations->count()) {
             $this->saver->save($objectToSave);

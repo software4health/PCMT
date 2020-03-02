@@ -105,3 +105,5 @@ pcmt.entity.draft:
         reject:
             success: Draft successfully rejected.
             fail: There was a problem with rejecting the draft.
+    error:
+        no_corresponding_object: "There is not corresponding object for this draft. You can only reject it."

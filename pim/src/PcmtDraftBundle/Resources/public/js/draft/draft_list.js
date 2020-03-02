@@ -259,6 +259,9 @@ define(
                         });
                         messages = _.uniq(messages);
                     }
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                        messages = [__(jqXHR.responseJSON.message)];
+                    }
                     Dialog.alert(messages.join('<br>'), __('pcmt.entity.draft.flash.approve.fail'), '');
                 });
             },
