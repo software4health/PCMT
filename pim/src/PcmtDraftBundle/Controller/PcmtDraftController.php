@@ -201,6 +201,8 @@ class PcmtDraftController
 
         try {
             $this->draftFacade->approveDraft($draft);
+
+            return new JsonResponse();
         } catch (DraftViolationException $e) {
             $normalizedViolations = [];
             $context = $e->getContextForNormalizer();
@@ -212,10 +214,10 @@ class PcmtDraftController
                 );
             }
 
-            return new JsonResponse(['values' => $normalizedViolations], 400);
+            return new JsonResponse(['values' => $normalizedViolations], Response::HTTP_BAD_REQUEST);
+        } catch (\Throwable $e) {
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
-
-        return new JsonResponse();
     }
 
     /**

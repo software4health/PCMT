@@ -14,7 +14,6 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\DraftInterface;
-use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Service\Draft\DraftApprover;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -100,7 +99,7 @@ class DraftApproverTest extends TestCase
 
         $this->validatorMock->expects($this->never())->method('validate');
 
-        $this->expectException(DraftViolationException::class);
+        $this->expectException(\Throwable::class);
 
         $service = new DraftApprover($this->entityManagerMock, $this->tokenStorageMock, $this->validatorMock, $this->saverMock, $this->creatorMock);
 
