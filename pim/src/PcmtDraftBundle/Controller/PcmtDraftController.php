@@ -180,7 +180,10 @@ class PcmtDraftController
             throw new NotFoundHttpException('The draft does not exist');
         }
         if (AbstractDraft::STATUS_NEW !== $draft->getStatus()) {
-            throw new BadRequestHttpException("You can only reject draft of status 'new'");
+            return new JsonResponse(
+                ['message' => 'pcmt.entity.draft.error.cannot_reject_wrong_status'],
+                Response::HTTP_BAD_REQUEST
+            );
         }
         $this->draftFacade->rejectDraft($draft);
 
@@ -196,7 +199,10 @@ class PcmtDraftController
             throw new NotFoundHttpException('The draft does not exist');
         }
         if (AbstractDraft::STATUS_NEW !== $draft->getStatus()) {
-            throw new BadRequestHttpException("You can only approve draft of status 'new'");
+            return new JsonResponse(
+                ['message' => 'pcmt.entity.draft.error.cannot_approve_wrong_status'],
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         try {

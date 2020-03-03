@@ -290,8 +290,12 @@ define(
                         'success',
                         __('pcmt.entity.draft.flash.reject.success')
                     );
-                }).bind(this)).fail(function () {
-                    Dialog.alert('', __('pcmt.entity.draft.flash.reject.fail'), '');
+                }).bind(this)).fail(function (jqXHR) {
+                    let messages = [];
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                        messages = [__(jqXHR.responseJSON.message)];
+                    }
+                    Dialog.alert(messages.join('<br>'), __('pcmt.entity.draft.flash.reject.fail'), '');
                 });
             },
 

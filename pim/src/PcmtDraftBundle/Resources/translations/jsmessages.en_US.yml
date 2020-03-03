@@ -107,3 +107,5 @@ pcmt.entity.draft:
             fail: There was a problem with rejecting the draft.
     error:
         no_corresponding_object: "There is not corresponding object for this draft. You can only reject it."
+        cannot_approve_wrong_status: "You can't approve the draft when it has status different than 'new'."
+        cannot_reject_wrong_status: "You can't reject the draft when it has status different than 'new'."
