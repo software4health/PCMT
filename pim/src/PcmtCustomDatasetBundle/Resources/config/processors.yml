@@ -26,7 +26,7 @@ services:
       - '@akeneo_storage_utils.doctrine.object_detacher'
 
   pcmt_connector.processor.denormalization.datagrid_view:
-    class: 'PcmtCustomDatasetBundle\Processor\Denormalizer\PcmtDatagridViewProcessor'
+    class: 'PcmtCustomDatasetBundle\Processor\Denormalizer\DatagridViewProcessor'
     arguments:
       - '@pim_datagrid.repository.datagrid_view'
       - '@pim_datagrid.factory.datagrid_view'

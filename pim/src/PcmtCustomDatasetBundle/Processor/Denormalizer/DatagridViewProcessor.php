@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @copyright 2016 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class PcmtDatagridViewProcessor extends AbstractProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
+class DatagridViewProcessor extends AbstractProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
 {
     /** @var SimpleFactoryInterface */
     protected $factory;
