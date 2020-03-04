@@ -32,6 +32,7 @@ class PcmtCoreExtension extends Extension
         $loader->load('handlers.yml');
         $loader->load('jobs.yml');
         $loader->load('job_constraints.yml');
+        $loader->load('locale_provider.yml');
         $loader->load('normalizers.yml');
         $loader->load('processors.yml');
         $loader->load('providers.yml');

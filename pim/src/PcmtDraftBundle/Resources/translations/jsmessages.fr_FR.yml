@@ -1,0 +1,111 @@
+pcmt_core:
+    draft:
+        status_new: FR New
+        status_approved: FR Approved
+        status_rejected: FR Rejected
+    drafts_list:
+        title: FR Drafts
+        product: FR Product
+        date: FR Date
+        changes: FR Changes
+        author: FR Author
+        status: FR Status
+        action: FR Actions
+        empty: FR No drafts
+        loading: FR Loading...
+        previous_value: FR Previous
+        new_value: FR New
+        collapse: FR Collapse
+        show_more: FR Show more
+        page_title:
+            index: "]-Inf, 1]{{ count }} FR draft|]1, Inf[{{ count }} FR drafts"
+    drafts_editing:
+        new_product_draft:
+            breadcrumb: FR New product draft
+            title: FR Edit draft of a new product
+            success: FR Draft saved
+        new_product_model_draft:
+            title: FR Edit draft of a new product model
+            success: FR Draft saved
+        labels:
+            created_product_draft: FR You are editing the draft of a product
+            created_product_model_draft: FR You are editing the draft of a product model
+            updated_draft: FR This draft was last edited at
+        button:
+            save_draft: FR Save draft
+    editing:
+        button:
+            edit_as_a_draft: FR Edit as a draft
+            edit_existing_draft: FR Edit existing draft
+    products_editing:
+        noDraft:
+            title: FR There is no draft in progress for this product yet
+            description: FR Edit as a draft to start working on changes
+        current_draft: FR Current draft
+        labels:
+            existing_draft: FR There is a draft IN PROGRESS for this product
+    product_models_editing:
+        labels:
+            existing_draft: FR There is a draft IN PROGRESS for this product model
+    widget:
+        drafts_overview:
+            product: FR Product
+            date: FR Date
+            changes: FR Changes
+            author: FR Author
+            status: FR Status
+            empty: FR No drafts
+
+pim_title:
+    pcmt_core_drafts_index: FR Drafts page
+    pcmt_core_drafts_edit: FR Editing draft
+
+pim_menu:
+    navigation:
+        product_draft: FR Product Draft Navigation
+
+# Job labels
+batch_jobs:
+    default_steps:
+        drafts_bulk_approve: FR Drafts bulk approve
+    job_drafts_bulk_approve:
+        label: FR Drafts bulk approve
+        mass_action.label: FR Drafts bulk approve
+        perform.label: FR Mass approve drafts
+
+pim_notification:
+    types:
+        mass_action: FR Mass action
+
+pim_import_export.widget.last_operations.job_type.mass_action: FR Mass action
+
+# Messages
+# Bulk approve job
+pcmt_messages:
+    job_drafts_bulk_approve:
+        success: FR The bulk action "Draft mass approve" has been launched. You will be notified when it is done
+        fail: FR There was a problem and the bulk action "Draft mass approve" has not been launched.
+
+# Managing drafts
+pcmt.entity.draft:
+    flash:
+        create:
+            success: FR Draft successfully created.
+            fail: FR The draft could not be created.
+            product_model_added: FR Draft successfully created.
+            variant_product_added: FR Draft successfully created.
+            fields_not_ready: "FR The draft cannot be created right now. The following fields are not ready: {{ fields }}"
+        update:
+            success: FR Draft successfully updated.
+            fail: FR The draft could not be updated.
+            fields_not_ready: "FR The draft cannot be saved right now. The following fields are not ready: {{ fields }}"
+        approve:
+            success: FR Draft successfully approved.
+            fail: FR There was a problem with approving the draft.
+        reject:
+            success: FR Draft successfully rejected.
+            fail: FR There was a problem with rejecting the draft.
+    error:
+        no_corresponding_object: FR There is not corresponding object for this draft. You can only reject it.
+        cannot_approve_wrong_status: FR You can't approve the draft when it has status different than 'new'.
+        cannot_reject_wrong_status: FR You can't reject the draft when it has status different than 'new'.
