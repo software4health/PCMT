@@ -130,7 +130,7 @@ class E2OpenMapping
             '{}value'                                                  => '',
             '{}attr'                                                   => '',
             '{}lastChangeDateTime'                                     => '',
-            '{}effectiveDateTime'                                      => '',
+            '{}effectiveDateTime'                                      => 'GS1_EFFECTIVEDATETIME',
             '{}publicationDateTime'                                    => '',
             '{}childTradeItem{}quantityOfChildren'                     => 'GS1_QUANTITYOFCHILDREN',
             '{}childTradeItem{}gtin'                                   => 'GS1__GTIN_CHILD_NEXTLOWERLEVELTRADEITEMINFORMATION',
