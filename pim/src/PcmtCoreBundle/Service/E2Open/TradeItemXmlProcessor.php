@@ -118,9 +118,11 @@ class TradeItemXmlProcessor
             ];
         }
 
-        $valuesToUpdate[$pcmtAttribute->getCode()]['data']['data'] = $value;
-        $valuesToUpdate[$pcmtAttribute->getCode()]['data']['locale'] = null;
-        $valuesToUpdate[$pcmtAttribute->getCode()]['data']['scope'] = null;
+        $valuesToUpdate[$mappedAttributeCode]['data'] = [
+            'data'   => $value,
+            'locale' => null,
+            'scope'  => null,
+        ];
 
         $this->productUpdater->update(
             $this->productToUpdate,

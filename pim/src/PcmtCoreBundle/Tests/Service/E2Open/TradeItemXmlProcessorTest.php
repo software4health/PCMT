@@ -65,12 +65,62 @@ class TradeItemXmlProcessorTest extends TestCase
             ->method('getMetricFamily')
             ->willReturn(null);
 
-        $attributeMock->expects($this->atLeastOnce())
-            ->method('getCode')
-            ->willReturn('GS1_PACKAGINGTYPECODE');
-
         $tradeItemProcessor->setProductToUpdate($this->productMock);
         $tradeItemProcessor->processNode($node);
+    }
+
+    public function dataProcess(): array
+    {
+        return [
+            [
+                [
+                    'name'       => '{}packaging',
+                    'value'      => [
+                        0 => [
+                            'name'       => '{}packagingTypeCode',
+                            'value'      => 'BPG',
+                            'attributes' => [],
+                        ],
+                    ],
+                    'attributes' => [
+                        '{}packagingTypeCode' => 'BPG',
+                    ],
+                ],
+                [
+                    'GS1_PACKAGINGTYPECODE' => [
+                        'data' => [
+                            'data'   => 'BPG',
+                            'locale' => null,
+                            'scope'  => null,
+                        ],
+                    ],
+                ],
+            ],
+            [
+                [
+                    'name'       => '{}tradeItemSynchronisationDates',
+                    'value'      => [
+                        0 => [
+                            'name'       => '{}effectiveDateTime',
+                            'value'      => '2019-11-26T00:00:00',
+                            'attributes' => [],
+                        ],
+                    ],
+                    'attributes' => [
+                        '{}effectiveDateTime' => '2019-11-26T00:00:00',
+                    ],
+                ],
+                [
+                    'GS1_EFFECTIVEDATETIME' => [
+                        'data' => [
+                            'data'   => '2019-11-26T00:00:00',
+                            'locale' => null,
+                            'scope'  => null,
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function testProcessMetricUnitAttributes(): void
@@ -130,36 +180,6 @@ class TradeItemXmlProcessorTest extends TestCase
 
         $tradeItemProcessor->setProductToUpdate($this->productMock);
         $tradeItemProcessor->processNode($node);
-    }
-
-    public function dataProcess(): array
-    {
-        return [
-            [
-                [
-                    'name'       => '{}packaging',
-                    'value'      => [
-                        0 => [
-                            'name'       => '{}packagingTypeCode',
-                            'value'      => 'BPG',
-                            'attributes' => [],
-                        ],
-                    ],
-                    'attributes' => [
-                        '{}packagingTypeCode' => 'BPG',
-                    ],
-                ],
-                [
-                    'GS1_PACKAGINGTYPECODE' => [
-                        'data' => [
-                            'data'   => 'BPG',
-                            'locale' => null,
-                            'scope'  => null,
-                        ],
-                    ],
-                ],
-            ],
-        ];
     }
 
     private function getTradeItemXmlProcessorInstance(): TradeItemXmlProcessor
