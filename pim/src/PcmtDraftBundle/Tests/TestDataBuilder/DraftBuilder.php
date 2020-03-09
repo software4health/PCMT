@@ -9,9 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Tests\TestDataBuilder;
 
-use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
-use Akeneo\UserManagement\Component\Model\User;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
@@ -41,9 +39,9 @@ class DraftBuilder
     public function __construct()
     {
         $this->id = 1;
-        $this->product = new Product();
+        $this->product = (new ProductBuilder())->build();
         $this->productData = [];
-        $this->author = new User();
+        $this->author = (new UserBuilder())->build();
         $this->created = new \DateTime();
         $this->status = AbstractDraft::STATUS_NEW;
     }
