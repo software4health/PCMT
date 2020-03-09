@@ -28,10 +28,9 @@ class ProductDraftCreatorTest extends TestCase
         $this->productDraftCreator = new ProductDraftCreator();
     }
 
-    public function testCreateWhenProductModelExists(): void
+    public function testCreateWhenProductExists(): void
     {
         $product = (new ProductBuilder())
-            ->withId(143)
             ->build();
 
         $user = (new UserBuilder())
@@ -48,9 +47,10 @@ class ProductDraftCreatorTest extends TestCase
         $this->assertEquals(['ATTRIBUTE' => 'VALUE'], $draft->getProductData());
     }
 
-    public function testCreateWhenProductModelDoesNotExist(): void
+    public function testCreateWhenProductDoesNotExist(): void
     {
         $product = (new ProductBuilder())
+            ->withId(null)
             ->build();
 
         $user = (new UserBuilder())

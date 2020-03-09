@@ -13,3 +13,15 @@ services:
             - '@event_dispatcher'
             - '@pcmt.service.draft.existence_checker'
 
+    pcmt.saver.product_through_draft_upsert:
+        class: 'PcmtDraftBundle\Saver\ProductThroughDraftUpsertSaver'
+        arguments:
+            - '@pim_catalog.saver.product'
+            - '@pcmt_core.normalizer.standard.product'
+            - '@pcmt.saver.draft'
+            - '@pcmt.service.draft.base_entity_creator.product'
+            - '@pcmt.service.creator.product'
+            - '@pim_user.repository.user'
+            - '@pcmt_catalog.repository.draft'
+
+
