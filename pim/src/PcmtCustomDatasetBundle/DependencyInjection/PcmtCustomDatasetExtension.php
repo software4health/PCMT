@@ -29,6 +29,7 @@ class PcmtCustomDatasetExtension extends Extension
         $loader->load('jobs.yml');
         $loader->load('forms.yml');
         $loader->load('providers.yml');
+        $loader->load('repositories.yml');
     }
 
     public function getAlias(): string
