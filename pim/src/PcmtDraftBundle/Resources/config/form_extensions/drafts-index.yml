@@ -64,3 +64,8 @@ extensions:
         targetZone: bottom-panel
         config:
             label: pim_datagrid.mass_action.selected.product
+
+    pcmt-product-drafts-actions-panel:
+        module: pcmt/draft/actions-panel
+        parent: pcmt-pictogram-index-mass-actions
+        targetZone: actions-panel
