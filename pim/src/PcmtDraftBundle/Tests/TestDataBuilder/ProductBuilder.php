@@ -16,12 +16,16 @@ use Akeneo\Pim\Structure\Component\Model\Family;
 
 class ProductBuilder
 {
+    public const EXAMPLE_ID = 12;
+
     /** @var ProductInterface */
     private $product;
 
     public function __construct()
     {
         $this->product = new Product();
+        $this->product->setId(self::EXAMPLE_ID);
+        $this->product->setFamily((new FamilyBuilder())->build());
     }
 
     public function withParent(ProductModel $parent): self
@@ -31,7 +35,7 @@ class ProductBuilder
         return $this;
     }
 
-    public function withId(int $id): self
+    public function withId(?int $id): self
     {
         $this->product->setId($id);
 
