@@ -18,7 +18,10 @@ class ProductViolationWithLabelNormalizer extends ProductViolationNormalizer
     {
         $return = parent::normalize($violation, $format, $context);
         if (isset($return['attribute']) && !in_array($return['attribute'], ['family'])) {
-            $return['attribute'] = $this->attributeRepository->findOneByIdentifier($return['attribute'])->getLabel();
+            $attribute = $this->attributeRepository->findOneByIdentifier($return['attribute']);
+
+            $return['attribute'] = $attribute->getLabel();
+            $return['attributeCode'] = $attribute->getCode();
         }
 
         return $return;

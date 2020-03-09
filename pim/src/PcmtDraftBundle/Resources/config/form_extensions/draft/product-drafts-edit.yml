@@ -239,7 +239,7 @@ extensions:
             context: base_product
 
     pcmt-product-drafts-edit-form-validation:
-        module: pim/product-edit-form/attributes/validation
+        module: pcmt/draft/form/attributes/validation
         parent: pcmt-product-drafts-edit-form-attributes
         targetZone: header
         position: 100

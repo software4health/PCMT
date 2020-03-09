@@ -16,7 +16,8 @@ use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Repository\DraftRepository;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
-use PcmtDraftBundle\Tests\TestDataBuilder\DraftBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\ExistingProductDraftBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\NewProductDraftBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -71,8 +72,8 @@ class DraftsBulkApproveTaskletTest extends TestCase
             ->withConsecutive(['allSelected'], ['excluded'], ['selected'])
             ->willReturnOnConsecutiveCalls(true, [], []);
 
-        $draftOfANewProduct = (new DraftBuilder())->buildDraftOfANewProduct();
-        $draftOfAnExistingProduct = (new DraftBuilder())->buildDraftOfAnExistingProduct();
+        $draftOfANewProduct = (new NewProductDraftBuilder())->build();
+        $draftOfAnExistingProduct = (new ExistingProductDraftBuilder())->build();
 
         $drafts = [
             $draftOfANewProduct,
@@ -105,13 +106,13 @@ class DraftsBulkApproveTaskletTest extends TestCase
             ->withConsecutive(['allSelected'], ['excluded'], ['selected'])
             ->willReturnOnConsecutiveCalls(true, [31], []);
 
-        $draftOfANewProduct = (new DraftBuilder())
+        $draftOfANewProduct = (new NewProductDraftBuilder())
             ->withId(30)
-            ->buildDraftOfANewProduct();
+            ->build();
 
-        $draftOfAnExistingProduct = (new DraftBuilder())
+        $draftOfAnExistingProduct = (new ExistingProductDraftBuilder())
             ->withId(31)
-            ->buildDraftOfAnExistingProduct();
+            ->build();
 
         $drafts = [
             $draftOfANewProduct,
@@ -147,13 +148,13 @@ class DraftsBulkApproveTaskletTest extends TestCase
                 31,
             ]);
 
-        $draftOfANewProduct = (new DraftBuilder())
+        $draftOfANewProduct = (new NewProductDraftBuilder())
             ->withId(30)
-            ->buildDraftOfANewProduct();
+            ->build();
 
-        $draftOfAnExistingProduct = (new DraftBuilder())
+        $draftOfAnExistingProduct = (new ExistingProductDraftBuilder())
             ->withId(31)
-            ->buildDraftOfAnExistingProduct();
+            ->build();
 
         $drafts = [
             $draftOfANewProduct,
@@ -204,13 +205,13 @@ class DraftsBulkApproveTaskletTest extends TestCase
                 31,
             ]);
 
-        $draftOfANewProduct = (new DraftBuilder())
+        $draftOfANewProduct = (new NewProductDraftBuilder())
             ->withId(30)
-            ->buildDraftOfANewProduct();
+            ->build();
 
-        $draftOfAnExistingProduct = (new DraftBuilder())
+        $draftOfAnExistingProduct = (new ExistingProductDraftBuilder())
             ->withId(31)
-            ->buildDraftOfAnExistingProduct();
+            ->build();
 
         $drafts = [
             $draftOfANewProduct,

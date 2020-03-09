@@ -11,21 +11,29 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Tests\Saver;
 
 use Doctrine\ORM\EntityManagerInterface;
-use PcmtCoreBundle\Entity\Attribute;
-use PcmtDraftBundle\Entity\DraftInterface;
-use PcmtDraftBundle\Entity\ExistingProductDraft;
-use PcmtDraftBundle\Entity\ExistingProductModelDraft;
-use PcmtDraftBundle\Entity\NewProductDraft;
-use PcmtDraftBundle\Entity\NewProductModelDraft;
-use PcmtDraftBundle\Entity\ProductDraftInterface;
+use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Saver\DraftSaver;
 use PcmtDraftBundle\Service\Draft\DraftExistenceChecker;
+use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
+use PcmtDraftBundle\Tests\TestDataBuilder\AttributeBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\ConstraintViolationBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\ConstraintViolationListBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\ExistingProductDraftBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\ExistingProductModelDraftBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\NewProductDraftBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\NewProductModelDraftBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\ProductBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\ProductModelBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DraftSaverTest extends TestCase
 {
+    /** @var DraftSaver */
+    private $draftSaver;
+
     /** @var EntityManagerInterface|MockObject */
     private $entityManagerMock;
 
@@ -33,7 +41,16 @@ class DraftSaverTest extends TestCase
     private $eventDispatcherMock;
 
     /** @var DraftExistenceChecker|MockObject */
-    private $draftExistenceChekerMock;
+    private $draftExistenceCheckerMock;
+
+    /** @var ValidatorInterface|MockObject */
+    private $productValidatorMock;
+
+    /** @var ValidatorInterface|MockObject */
+    private $productModelValidatorMock;
+
+    /** @var GeneralObjectFromDraftCreator|MockObject */
+    private $creatorMock;
 
     /**
      * {@inheritdoc}
@@ -42,112 +59,173 @@ class DraftSaverTest extends TestCase
     {
         $this->entityManagerMock = $this->createMock(EntityManagerInterface::class);
         $this->eventDispatcherMock = $this->createMock(EventDispatcherInterface::class);
-        $this->draftExistenceChekerMock = $this->createMock(DraftExistenceChecker::class);
+        $this->draftExistenceCheckerMock = $this->createMock(DraftExistenceChecker::class);
+        $this->productValidatorMock = $this->createMock(ValidatorInterface::class);
+        $this->productModelValidatorMock = $this->createMock(ValidatorInterface::class);
+        $this->creatorMock = $this->createMock(GeneralObjectFromDraftCreator::class);
+
+        $this->draftSaver = new DraftSaver(
+            $this->entityManagerMock,
+            $this->eventDispatcherMock,
+            $this->draftExistenceCheckerMock,
+            $this->productValidatorMock,
+            $this->productModelValidatorMock,
+            $this->creatorMock
+        );
     }
 
-    /**
-     * @dataProvider dataSaveExistingDraft
-     */
-    public function testSaveExistingDraft(DraftInterface $draft): void
+    public function testSaveExistingProductDraft(): void
     {
-        $this->entityManagerMock->expects($this->once())->method('persist')->with($draft);
-        $this->entityManagerMock->expects($this->once())->method('flush');
+        $draft = (new ExistingProductDraftBuilder())->withId(112)->build();
 
-        $this->eventDispatcherMock->expects($this->exactly(2))->method('dispatch');
+        $this->creatorMock
+            ->method('getObjectToSave')
+            ->willReturn((new ProductBuilder())->build());
 
-        $saver = $this->getDraftSaverInstance();
-        $saver->save($draft);
-    }
-
-    public function dataSaveExistingDraft(): array
-    {
-        $draft1 = $this->createMock(ExistingProductDraft::class);
-        $draft1->method('getId')->willReturn(112);
-
-        $draft2 = $this->createMock(NewProductModelDraft::class);
-        $draft2->method('getId')->willReturn(11);
-
-        return [
-            [$draft1],
-            [$draft2],
-        ];
-    }
-
-    /**
-     * @dataProvider dataSaveNewDraft
-     */
-    public function testSaveNewDraft(DraftInterface $draft): void
-    {
-        $this->draftExistenceChekerMock->method('checkIfDraftForObjectAlreadyExists')->willReturn(false);
+        $this->productValidatorMock
+            ->expects($this->once())
+            ->method('validate')
+            ->willReturn((new ConstraintViolationListBuilder())->build());
 
         $this->entityManagerMock->expects($this->once())->method('persist')->with($draft);
         $this->entityManagerMock->expects($this->once())->method('flush');
-
         $this->eventDispatcherMock->expects($this->exactly(2))->method('dispatch');
 
-        $saver = $this->getDraftSaverInstance();
-        $saver->save($draft);
+        $this->draftSaver->save($draft);
     }
 
-    public function dataSaveNewDraft(): array
+    public function testSaveExistingProductModelDraft(): void
     {
-        $draft1 = $this->createMock(ExistingProductModelDraft::class);
-        $draft1->method('getId')->willReturn(0);
+        $draft = (new ExistingProductModelDraftBuilder())->withId(11)->build();
 
-        $draft2 = $this->createMock(NewProductDraft::class);
-        $draft2->method('getId')->willReturn(0);
+        $this->creatorMock
+            ->method('getObjectToSave')
+            ->willReturn((new ProductModelBuilder())->build());
 
-        return [
-            [$draft1],
-            [$draft2],
-        ];
+        $this->productModelValidatorMock
+            ->expects($this->once())
+            ->method('validate')
+            ->willReturn((new ConstraintViolationListBuilder())->build());
+
+        $this->entityManagerMock->expects($this->once())->method('persist')->with($draft);
+        $this->entityManagerMock->expects($this->once())->method('flush');
+        $this->eventDispatcherMock->expects($this->exactly(2))->method('dispatch');
+
+        $this->draftSaver->save($draft);
     }
 
-    /**
-     * @dataProvider dataSaveNewDraftForObjectThatAlreadyHasADraft
-     */
-    public function testSaveNewDraftForObjectThatAlreadyHasADraft(ProductDraftInterface $draft): void
+    public function testSaveNewProductDraft(): void
     {
-        $this->draftExistenceChekerMock->method('checkIfDraftForObjectAlreadyExists')->willReturn(true);
+        $draft = (new NewProductDraftBuilder())->withId(2)->build();
+
+        $this->creatorMock
+            ->method('getObjectToSave')
+            ->willReturn((new ProductBuilder())->build());
+
+        $this->productValidatorMock
+            ->expects($this->once())
+            ->method('validate')
+            ->willReturn((new ConstraintViolationListBuilder())->build());
+
+        $this->entityManagerMock->expects($this->once())->method('persist')->with($draft);
+        $this->entityManagerMock->expects($this->once())->method('flush');
+        $this->eventDispatcherMock->expects($this->exactly(2))->method('dispatch');
+
+        $this->draftSaver->save($draft);
+    }
+
+    public function testSaveNewProductModelDraft(): void
+    {
+        $draft = (new NewProductModelDraftBuilder())->withId(2)->build();
+
+        $this->creatorMock
+            ->method('getObjectToSave')
+            ->willReturn((new ProductModelBuilder())->build());
+
+        $this->productModelValidatorMock
+            ->expects($this->once())
+            ->method('validate')
+            ->willReturn((new ConstraintViolationListBuilder())->build());
+
+        $this->entityManagerMock->expects($this->once())->method('persist')->with($draft);
+        $this->entityManagerMock->expects($this->once())->method('flush');
+        $this->eventDispatcherMock->expects($this->exactly(2))->method('dispatch');
+
+        $this->draftSaver->save($draft);
+    }
+
+    public function testSaveNewDraftForObjectThatAlreadyHasADraft(): void
+    {
+        $draft = (new ExistingProductDraftBuilder())->withId(0)->build();
+
+        $this->creatorMock
+            ->method('getObjectToSave')
+            ->willReturn((new ProductBuilder())->build());
+
+        $this->productValidatorMock
+            ->expects($this->once())
+            ->method('validate')
+            ->willReturn((new ConstraintViolationListBuilder())->build());
+
+        $this->draftExistenceCheckerMock->method('checkIfDraftForObjectAlreadyExists')->willReturn(true);
 
         $this->entityManagerMock->expects($this->never())->method('persist')->with($draft);
         $this->entityManagerMock->expects($this->never())->method('flush');
-
         $this->eventDispatcherMock->expects($this->never())->method('dispatch');
 
         $this->expectException(\InvalidArgumentException::class);
 
-        $saver = $this->getDraftSaverInstance();
-        $saver->save($draft);
-    }
-
-    public function dataSaveNewDraftForObjectThatAlreadyHasADraft(): array
-    {
-        $draft1 = $this->createMock(ExistingProductDraft::class);
-        $draft1->method('getId')->willReturn(0);
-
-        return [
-            [$draft1],
-        ];
+        $this->draftSaver->save($draft);
     }
 
     public function testSaveIncorrectObject(): void
     {
-        $object = $this->createMock(Attribute::class);
+        $object = (new AttributeBuilder())->build();
 
         $this->entityManagerMock->expects($this->never())->method('persist');
         $this->entityManagerMock->expects($this->never())->method('flush');
-
         $this->eventDispatcherMock->expects($this->never())->method('dispatch');
 
         $this->expectException(\InvalidArgumentException::class);
 
-        $saver = $this->getDraftSaverInstance();
-        $saver->save($object);
+        $this->draftSaver->save($object);
     }
 
-    private function getDraftSaverInstance(): DraftSaver
+    public function testSaveWhenCreatorReturnNullInsteadOfObject(): void
     {
-        return new DraftSaver($this->entityManagerMock, $this->eventDispatcherMock, $this->draftExistenceChekerMock);
+        $this->creatorMock
+            ->method('getObjectToSave')
+            ->willReturn(null);
+
+        $this->entityManagerMock->expects($this->never())->method('persist');
+        $this->entityManagerMock->expects($this->never())->method('flush');
+        $this->eventDispatcherMock->expects($this->never())->method('dispatch');
+
+        $this->expectException(\Throwable::class);
+        $this->expectExceptionMessage('pcmt.entity.draft.error.no_corresponding_object');
+
+        $this->draftSaver->save((new ExistingProductDraftBuilder())->withId(112)->build());
+    }
+
+    public function testSaveWhenDraftDidNotPassValidation(): void
+    {
+        $draft = (new NewProductDraftBuilder())->build();
+
+        $this->creatorMock
+            ->method('getObjectToSave')
+            ->willReturn((new ProductBuilder())->build());
+
+        $this->productValidatorMock
+            ->expects($this->once())
+            ->method('validate')
+            ->willReturn((new ConstraintViolationListBuilder())->withViolation((new ConstraintViolationBuilder())->build())->build());
+
+        $this->entityManagerMock->expects($this->never())->method('persist');
+        $this->entityManagerMock->expects($this->never())->method('flush');
+        $this->eventDispatcherMock->expects($this->never())->method('dispatch');
+
+        $this->expectException(DraftViolationException::class);
+
+        $this->draftSaver->save($draft);
     }
 }

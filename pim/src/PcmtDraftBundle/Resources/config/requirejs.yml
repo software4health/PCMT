@@ -41,6 +41,7 @@ config:
         pcmt/draft/form/attributes/variant-axes: pcmtdraft/js/draft/form/attributes/variant-axes
         pcmt/draft/form/attributes/read-only-parent-attributes: pcmtdraft/js/draft/form/attributes/read-only-parent-attributes
         pcmt/draft/form/attributes/attribute-group-selector: pcmtdraft/js/draft/form/attributes/attribute-group-selector
+        pcmt/draft/form/attributes/validation: pcmtdraft/js/draft/form/attributes/validation
         pcmt/draft/form/meta/updated: pcmtdraft/js/draft/form/meta/updated
         pcmt/draft/form/meta/created: pcmtdraft/js/draft/form/meta/created
         pcmt/draft/form/meta/family: pcmtdraft/js/draft/form/meta/family

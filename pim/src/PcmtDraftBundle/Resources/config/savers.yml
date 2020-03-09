@@ -12,6 +12,9 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@event_dispatcher'
             - '@pcmt.service.draft.existence_checker'
+            - '@pim_catalog.validator.product'
+            - '@pim_catalog.validator.product_model'
+            - '@pcmt.service.general_object_from_draft_creator'
 
     pcmt.saver.product_through_draft_upsert:
         class: 'PcmtDraftBundle\Saver\ProductThroughDraftUpsertSaver'
