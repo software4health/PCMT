@@ -195,14 +195,14 @@ define(
             approveDraftClicked: function (ev) {
                 let draftId = ev.currentTarget.dataset.draftId;
                 Dialog.confirm(
-                    'Are you sure you want to approve this draft?',
-                    'Draft approval',
+                    'pcmt.entity.draft.confirm.approve.content',
+                    'pcmt.entity.draft.confirm.approve.title',
                     function () {
                         return this.approveDraft(draftId);
                     }.bind(this),
                     '',
                     'ok',
-                    'Approve'
+                    'pcmt.entity.draft.confirm.approve.button_text'
                 );
             },
 
@@ -269,13 +269,13 @@ define(
             rejectDraftClicked: function (ev) {
                 let draftId = ev.currentTarget.dataset.draftId;
                 Dialog.confirmDelete(
-                    'Are you sure you want to reject this draft?',
-                    'Draft rejection',
+                    'pcmt.entity.draft.confirm.reject.content',
+                    'pcmt.entity.draft.confirm.reject.title',
                     function () {
                         return this.rejectDraft(draftId);
                     }.bind(this),
                     'subtitle',
-                    'Reject'
+                    'pcmt.entity.draft.confirm.reject.button_text'
                 );
             },
 

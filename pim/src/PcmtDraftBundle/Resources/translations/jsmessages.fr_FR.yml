@@ -109,3 +109,17 @@ pcmt.entity.draft:
         no_corresponding_object: FR There is not corresponding object for this draft. You can only reject it.
         cannot_approve_wrong_status: FR You can't approve the draft when it has status different than 'new'.
         cannot_reject_wrong_status: FR You can't reject the draft when it has status different than 'new'.
+    confirm:
+        approve:
+            title: FR Draft approval
+            content: FR Are you sure you want to approve this draft?
+            button_text: FR Approve
+        reject:
+            title: FR Draft rejection
+            content: FR Are you sure you want to reject this draft?
+            button_text: FR Reject
+    type:
+        existing_product_draft: FR Existing product draft
+        existing_product_model_draft: FR Existing product model draft
+        new_product_draft: FR New product draft
+        new_product_model_draft: FR New product model draft

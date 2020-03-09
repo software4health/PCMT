@@ -27,6 +27,9 @@ services:
             - [setProductFromDraftCreator, ['@pcmt.service.general_object_from_draft_creator']]
             - [setAttributeChangeService, ['@pcmt.service.attribute_change']]
             - [setValuesNormalizer, ['@pim_catalog.normalizer.standard.product.product_value']]
+            - [setDatetimePresenter, ['@pim_catalog.localization.presenter.datetime']]
+            - [setTranslator, ['@translator']]
+            - [setUserContext, ['@pim_user.context.user']]
         arguments:
             $productNormalizer: '@pcmt_core.normalizer.product'
             $formProvider: '@pcmt.provider.form.draft'
@@ -40,6 +43,9 @@ services:
             - [setProductModelFromDraftCreator, ['@pcmt.service.general_object_from_draft_creator']]
             - [setAttributeChangeService, ['@pcmt.service.attribute_change']]
             - [setValuesNormalizer, ['@pim_catalog.normalizer.standard.product.product_value']]
+            - [setDatetimePresenter, ['@pim_catalog.localization.presenter.datetime']]
+            - [setTranslator, ['@translator']]
+            - [setUserContext, ['@pim_user.context.user']]
         arguments:
             $productModelNormalizer: '@pcmt_core.normalizer.product_model'
             $formProvider: '@pcmt.provider.form.product-model-draft'
