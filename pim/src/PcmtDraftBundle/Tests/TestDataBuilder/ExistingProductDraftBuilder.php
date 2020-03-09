@@ -1,0 +1,47 @@
+<?php
+/**
+ * Copyright (c) 2020, VillageReach
+ * Licensed under the Non-Profit Open Software License version 3.0.
+ * SPDX-License-Identifier: NPOSL-3.0
+ */
+
+declare(strict_types=1);
+
+namespace PcmtDraftBundle\Tests\TestDataBuilder;
+
+use PcmtDraftBundle\Entity\AbstractDraft;
+use PcmtDraftBundle\Entity\ExistingProductDraft;
+
+class ExistingProductDraftBuilder extends AbstractDraftBuilder
+{
+    private const EXAMPLE_PRODUCT_DATA = [];
+    private const EXAMPLE_DRAFT_ID = 1;
+
+    /** @var ExistingProductDraft */
+    private $existingProductDraft;
+
+    public function __construct()
+    {
+        $this->existingProductDraft = new ExistingProductDraft(
+            (new ProductBuilder())->build(),
+            self::EXAMPLE_PRODUCT_DATA,
+            (new UserBuilder())->build(),
+            new \DateTime(),
+            AbstractDraft::STATUS_NEW
+        );
+
+        $this->setDraftId($this->existingProductDraft, self::EXAMPLE_DRAFT_ID);
+    }
+
+    public function withId(int $id): self
+    {
+        $this->setDraftId($this->existingProductDraft, $id);
+
+        return $this;
+    }
+
+    public function build(): ExistingProductDraft
+    {
+        return $this->existingProductDraft;
+    }
+}

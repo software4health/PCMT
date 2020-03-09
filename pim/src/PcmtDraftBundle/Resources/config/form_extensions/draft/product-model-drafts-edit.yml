@@ -205,7 +205,7 @@ extensions:
         position: 140
 
     pcmt-product-model-drafts-edit-form-validation:
-        module: pim/product-edit-form/attributes/validation
+        module: pcmt/draft/form/attributes/validation
         parent: pcmt-product-model-drafts-edit-form-attributes
         targetZone: header
         position: 100

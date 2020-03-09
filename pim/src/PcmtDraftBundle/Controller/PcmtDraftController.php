@@ -139,7 +139,21 @@ class PcmtDraftController
             $draft->setProductData($data);
         }
 
-        $this->draftFacade->updateDraft($draft);
+        try {
+            $this->draftFacade->updateDraft($draft);
+        } catch (DraftViolationException $e) {
+            $normalizedViolations = [];
+            $context = $e->getContextForNormalizer();
+            foreach ($e->getViolations() as $violation) {
+                $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
+                    $violation,
+                    'internal_api',
+                    $context
+                );
+            }
+
+            return new JsonResponse(['values' => $normalizedViolations], Response::HTTP_BAD_REQUEST);
+        }
 
         $responseBuilder = $this->responseBuilder
             ->setData($draft);
