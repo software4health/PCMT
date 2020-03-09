@@ -20,8 +20,7 @@ define(
         'oro/translator',
         'backbone',
         'pim/grid/mass-actions',
-        'pcmt/draft/template/mass-actions',
-        'pim/dialog'
+        'pcmt/draft/template/mass-actions'
     ],
     function (
         $,
@@ -29,8 +28,7 @@ define(
         __,
         Backbone,
         BaseForm,
-        template,
-        Dialog
+        template
     ) {
         return BaseForm.extend({
             template: _.template(template),
@@ -41,8 +39,7 @@ define(
                 'click .select-all': 'selectAll',
                 'click .select-none': 'selectNone',
                 'click .select-visible': 'selectVisible',
-                'click .select-button': 'toggleButton',
-                'click .draft-bulk-approve': 'approveDrafts'
+                'click .select-button': 'toggleButton'
             },
 
             /**
@@ -109,10 +106,6 @@ define(
                 this.getRoot().trigger('pcmt:drafts:selectNone');
 
                 this.updateView();
-            },
-
-            approveDrafts() {
-                this.getRoot().trigger('pcmt:drafts:approve');
             }
         });
     }

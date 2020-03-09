@@ -123,3 +123,5 @@ pcmt.entity.draft:
         existing_product_model_draft: FR Existing product model draft
         new_product_draft: FR New product draft
         new_product_model_draft: FR New product model draft
+    bulk_actions:
+        approve: FR Bulk approve
