@@ -24,7 +24,4 @@ services:
             - '@pcmt.saver.draft'
             - '@pcmt.service.draft.base_entity_creator.product'
             - '@pcmt.service.creator.product'
-            - '@pim_user.repository.user'
             - '@pcmt_catalog.repository.draft'
-
-

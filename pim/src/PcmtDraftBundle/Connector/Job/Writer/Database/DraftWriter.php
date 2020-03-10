@@ -21,7 +21,6 @@ use Akeneo\Tool\Component\Batch\Step\StepExecutionAwareInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\Versioning\Model\VersionableInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
-use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Service\Draft\BaseEntityCreatorInterface;
 use PcmtDraftBundle\Service\Draft\DraftCreatorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -98,12 +97,7 @@ class DraftWriter implements PcmtDraftWriterInterface, InitializableInterface, S
                 $baseProductModel = $this->getEntityOrCreateIfNotExists($entity);
                 $data = $this->standardNormalizer->normalize($entity, 'standard', ['import_via_drafts']);
                 try {
-                    $draft = $this->draftCreator->create(
-                        $baseProductModel,
-                        $data,
-                        $this->user,
-                        AbstractDraft::STATUS_NEW
-                    );
+                    $draft = $this->draftCreator->create($baseProductModel, $data, $this->user);
                     $this->draftSaver->save($draft);
                 } catch (\InvalidArgumentException $exception) {
                     throw $this->skipItemAndReturnException($data, $exception->getMessage(), $exception);

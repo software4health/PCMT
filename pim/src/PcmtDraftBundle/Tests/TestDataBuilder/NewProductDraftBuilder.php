@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Tests\TestDataBuilder;
 
-use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\NewProductDraft;
 
 class NewProductDraftBuilder extends AbstractDraftBuilder
@@ -24,9 +23,8 @@ class NewProductDraftBuilder extends AbstractDraftBuilder
     {
         $this->newProductDraft = new NewProductDraft(
             self::EXAMPLE_PRODUCT_DATA,
-            (new UserBuilder())->build(),
             new \DateTime(),
-            AbstractDraft::STATUS_NEW
+            (new UserBuilder())->build()
         );
 
         $this->setDraftId($this->newProductDraft, self::EXAMPLE_DRAFT_ID);

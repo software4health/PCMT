@@ -19,12 +19,11 @@ class ExistingProductDraft extends AbstractProductDraft implements ExistingObjec
     public function __construct(
         ProductInterface $product,
         array $productData,
-        UserInterface $author,
         \DateTime $created,
-        int $status
+        ?UserInterface $author = null
     ) {
         $this->product = $product;
         $this->productData = $productData;
-        parent::__construct($author, $created, $status);
+        parent::__construct($created, $author);
     }
 }

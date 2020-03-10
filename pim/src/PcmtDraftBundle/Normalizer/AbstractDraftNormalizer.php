@@ -12,6 +12,7 @@ namespace PcmtDraftBundle\Normalizer;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use Akeneo\Tool\Component\Localization\Presenter\PresenterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
+use Akeneo\UserManagement\Component\Model\User;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\DraftStatus;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
@@ -87,7 +88,7 @@ class AbstractDraftNormalizer
         $data['createdAt'] = $this->datetimePresenter->present($draft->getCreatedAtFormatted(), $datetimeContext);
         $data['updatedAt'] = $this->datetimePresenter->present($draft->getUpdatedAtFormatted(), $datetimeContext);
         $author = $draft->getAuthor();
-        $data['author'] = $author->getFirstName() . ' ' . $author->getLastName();
+        $data['author'] = $author ? $author->getFirstName() . ' ' . $author->getLastName() : User::SYSTEM_USER_NAME;
         $draftStatus = new DraftStatus($draft->getStatus());
         $data['status'] = $this->statusNormalizer->normalize($draftStatus);
         $data['type'] = ucfirst($draft->getType());

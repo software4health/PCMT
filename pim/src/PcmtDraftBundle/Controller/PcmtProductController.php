@@ -13,7 +13,6 @@ use Akeneo\Pim\Enrichment\Bundle\Controller\InternalApi\ProductController;
 use Akeneo\Pim\Enrichment\Component\Product\Exception\ObjectNotFoundException;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtCoreBundle\Service\Builder\ResponseBuilder;
-use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\NewProductDraft;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -87,9 +86,8 @@ class PcmtProductController extends ProductController
          **/
         $draft = new NewProductDraft(
             $data,
-            $this->userContext->getUser(),
             new \DateTime(),
-            AbstractDraft::STATUS_NEW
+            $this->userContext->getUser()
         );
 
         $this->draftSaver->save($draft);
@@ -144,9 +142,8 @@ class PcmtProductController extends ProductController
         $draft = new ExistingProductDraft(
             $product,
             $data,
-            $this->userContext->getUser(),
             new \DateTime(),
-            AbstractDraft::STATUS_NEW
+            $this->userContext->getUser()
         );
 
         $this->draftSaver->save($draft);

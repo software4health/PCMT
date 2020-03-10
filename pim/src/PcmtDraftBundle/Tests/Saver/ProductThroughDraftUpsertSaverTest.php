@@ -11,14 +11,12 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Tests\Saver;
 
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
-use Akeneo\UserManagement\Component\Model\User;
-use Akeneo\UserManagement\Component\Repository\UserRepositoryInterface;
 use PcmtDraftBundle\Entity\AttributeChange;
 use PcmtDraftBundle\Repository\DraftRepository;
 use PcmtDraftBundle\Saver\ProductThroughDraftUpsertSaver;
 use PcmtDraftBundle\Service\Draft\BaseEntityCreatorInterface;
 use PcmtDraftBundle\Service\Draft\DraftCreatorInterface;
-use PcmtDraftBundle\Tests\TestDataBuilder\DraftBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\ExistingProductDraftBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -41,9 +39,6 @@ class ProductThroughDraftUpsertSaverTest extends TestCase
     /** @var DraftCreatorInterface|MockObject */
     private $draftCreatorMock;
 
-    /** @var UserRepositoryInterface|MockObject */
-    private $userRepositoryMock;
-
     /** @var DraftRepository|MockObject */
     private $draftRepositoryMock;
 
@@ -54,8 +49,6 @@ class ProductThroughDraftUpsertSaverTest extends TestCase
         $this->draftSaverMock = $this->createMock(SaverInterface::class);
         $this->baseEntityCreatorMock = $this->createMock(BaseEntityCreatorInterface::class);
         $this->draftCreatorMock = $this->createMock(DraftCreatorInterface::class);
-        $this->userRepositoryMock = $this->createMock(UserRepositoryInterface::class);
-        $this->userRepositoryMock->method('findOneBy')->willReturn(new User());
         $this->draftRepositoryMock = $this->createMock(DraftRepository::class);
 
         parent::setUp();
@@ -69,7 +62,6 @@ class ProductThroughDraftUpsertSaverTest extends TestCase
             $this->draftSaverMock,
             $this->baseEntityCreatorMock,
             $this->draftCreatorMock,
-            $this->userRepositoryMock,
             $this->draftRepositoryMock
         );
     }
@@ -93,7 +85,7 @@ class ProductThroughDraftUpsertSaverTest extends TestCase
 
         $this->standardNormalizerMock->method('normalize')->willReturn([]);
 
-        $draft = (new DraftBuilder())->buildDraftOfAnExistingProduct();
+        $draft = (new ExistingProductDraftBuilder())->build();
         $this->draftRepositoryMock->method('findOneBy')->willReturn($draft);
 
         $this->draftSaverMock->expects($this->once())->method('save');
@@ -114,7 +106,7 @@ class ProductThroughDraftUpsertSaverTest extends TestCase
         $this->baseEntityCreatorMock->expects($this->once())->method('create')->willReturn($newProduct);
         $this->entitySaverMock->expects($this->once())->method('save')->with($newProduct);
 
-        $draft = (new DraftBuilder())->buildDraftOfAnExistingProduct();
+        $draft = (new ExistingProductDraftBuilder())->build();
         $this->draftCreatorMock->expects($this->once())->method('create')->willReturn($draft);
 
         $this->draftSaverMock->expects($this->once())->method('save')->with($draft);
