@@ -9,8 +9,9 @@ declare(strict_types=1);
 
 namespace PcmtCustomDatasetBundle\Updater;
 
+use Akeneo\Tool\Component\StorageUtils\Repository\IdentifiableObjectRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
-use Oro\Bundle\PimDataGridBundle\Updater\DatagridViewUpdater as BaseDatagridViewUpdater;
+use Oro\Bundle\PimDataGridBundle\Entity\DatagridView;
 use PcmtCustomDatasetBundle\Exception\UserMissingException;
 
 /**
@@ -20,10 +21,24 @@ use PcmtCustomDatasetBundle\Exception\UserMissingException;
  * @copyright 2016 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class DatagridViewUpdater extends BaseDatagridViewUpdater implements ObjectUpdaterInterface
+class DatagridViewUpdater implements ObjectUpdaterInterface
 {
+    /** @var IdentifiableObjectRepositoryInterface */
+    protected $userRepository;
+
+    /** @var ObjectUpdaterInterface */
+    private $baseDatagridViewUpdater;
+
+    public function __construct(
+        IdentifiableObjectRepositoryInterface $userRepository,
+        ObjectUpdaterInterface $baseDatagridViewUpdater
+    ) {
+        $this->userRepository = $userRepository;
+        $this->baseDatagridViewUpdater = $baseDatagridViewUpdater;
+    }
+
     /**
-     * {@inheritdoc}
+     * @param object|DatagridView $datagridView
      */
     public function update($datagridView, array $data, array $options = []): ObjectUpdaterInterface
     {
@@ -31,7 +46,8 @@ class DatagridViewUpdater extends BaseDatagridViewUpdater implements ObjectUpdat
         if (null === $user) {
             throw new UserMissingException($data['owner']);
         }
+        $this->baseDatagridViewUpdater->update($datagridView, $data, $options);
 
-        return parent::update($datagridView, $data, $options);
+        return $this;
     }
 }
