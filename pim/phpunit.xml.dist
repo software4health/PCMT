@@ -25,6 +25,7 @@
                 <directory>./src/*/Entity</directory>
                 <directory>./src/*/DependencyInjection</directory>
                 <directory>./src/*/upgrades</directory>
+                <directory>./src/*/Exception</directory>
                 <directory>./src/*/Repository</directory>
             </exclude>
         </whitelist>
