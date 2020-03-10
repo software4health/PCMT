@@ -5,7 +5,7 @@
 ######################################################################
 
 parameters:
-  pcmt_connector.updater.datagrid_view.class: PcmtCustomDatasetBundle\Updater\PcmtDatagridViewUpdater
+  pcmt_connector.updater.datagrid_view.class: PcmtCustomDatasetBundle\Updater\DatagridViewUpdater
 
 services:
   pcmt_connector.updater.datagrid_view:
