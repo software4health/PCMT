@@ -132,22 +132,22 @@
                     <% if (editPermission && draft.values) { %>
                     <a href="javascript:void(0);"
                        class="AknIconButton AknIconButton--small AknIconButton--edit AknButtonList-item draft-edit"
-                       title="Edit draft" data-draft-id="<%- draft.id %>">
-                        Edit draft
+                       title="<%- __('pcmt.entity.draft.actions.edit') %>" data-draft-id="<%- draft.id %>">
+                        <%- __('pcmt.entity.draft.actions.edit') %>
                     </a>
                     <% } %>
                     <% if (approvePermission) { %>
                     <a href="javascript:void(0);"
                        class="AknIconButton AknIconButton--small AknIconButton--play AknButtonList-item draft-approve"
-                       title="Approve draft" data-draft-id="<%- draft.id %>">
-                        Approve draft
+                       title="<%- __('pcmt.entity.draft.actions.approve') %>" data-draft-id="<%- draft.id %>">
+                        <%- __('pcmt.entity.draft.actions.approve') %>
                     </a>
                     <% } %>
                     <% if (rejectPermission) { %>
                     <a href="javascript:void(0);"
                        class="AknIconButton AknIconButton--small AknIconButton--trash AknButtonList-item draft-reject"
-                       title="Reject draft" data-draft-id="<%- draft.id %>">
-                        Reject draft
+                       title="<%- __('pcmt.entity.draft.actions.reject') %>" data-draft-id="<%- draft.id %>">
+                        <%- __('pcmt.entity.draft.actions.reject') %>
                     </a>
                     <% } %>
                 </div>
