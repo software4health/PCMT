@@ -301,15 +301,17 @@ define(
 
             approveBulkDraftClicked: function (ev) {
                 Dialog.confirm(
-                    `Are you sure you want to approve ${this.chosenDrafts.count(this.collection)} draft(s)?`,
-                    'Draft approval',
+                    __('pcmt.entity.draft.confirm.bulk_approve.content', {
+                        count: this.chosenDrafts.count(this.collection)
+                    }),
+                    __('pcmt.entity.draft.confirm.bulk_approve.title'),
                     function () {
                         this.startLoading();
                         return this.approveBulkDraft();
                     }.bind(this),
                     '',
                     'ok',
-                    'Approve'
+                    __('pcmt.entity.draft.confirm.bulk_approve.button_text'),
                 );
             },
 

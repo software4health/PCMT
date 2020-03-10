@@ -114,6 +114,10 @@ pcmt.entity.draft:
             title: FR Draft approval
             content: FR Are you sure you want to approve this draft?
             button_text: FR Approve
+        bulk_approve:
+            title: FR Draft approval
+            content: "FR Are you sure you want to approve {{ count }} draft(s)?"
+            button_text: FR Approve
         reject:
             title: FR Draft rejection
             content: FR Are you sure you want to reject this draft?
@@ -123,5 +127,9 @@ pcmt.entity.draft:
         existing_product_model_draft: FR Existing product model draft
         new_product_draft: FR New product draft
         new_product_model_draft: FR New product model draft
+    actions:
+        edit: FR Edit draft
+        approve: FR Approve draft
+        reject: FR Reject draft
     bulk_actions:
         approve: FR Bulk approve
