@@ -17,11 +17,10 @@ class NewProductDraft extends AbstractProductDraft implements NewObjectDraftInte
 
     public function __construct(
         array $productData,
-        UserInterface $author,
         \DateTime $created,
-        int $status
+        ?UserInterface $author = null
     ) {
         $this->productData = $productData;
-        parent::__construct($author, $created, $status);
+        parent::__construct($created, $author);
     }
 }

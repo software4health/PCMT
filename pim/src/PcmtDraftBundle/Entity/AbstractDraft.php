@@ -85,7 +85,7 @@ abstract class AbstractDraft implements DraftInterface
         return $this->updated ? Carbon::parse($this->updated)->isoFormat('LLLL') : '';
     }
 
-    public function getAuthor(): UserInterface
+    public function getAuthor(): ?UserInterface
     {
         return $this->author;
     }

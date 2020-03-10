@@ -19,12 +19,11 @@ class ExistingProductModelDraft extends AbstractProductModelDraft implements Exi
     public function __construct(
         ProductModelInterface $productModel,
         array $productData,
-        UserInterface $author,
-        \DateTime $created,
-        int $status
+        ?UserInterface $author,
+        \DateTime $created
     ) {
         $this->productModel = $productModel;
         $this->productData = $productData;
-        parent::__construct($author, $created, $status);
+        parent::__construct($author, $created);
     }
 }

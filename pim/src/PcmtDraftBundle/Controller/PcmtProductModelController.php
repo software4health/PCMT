@@ -25,7 +25,6 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
 use PcmtCoreBundle\Service\Builder\ResponseBuilder;
-use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\NewProductModelDraft;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -171,8 +170,7 @@ class PcmtProductModelController extends ProductModelController
         $draft = new NewProductModelDraft(
             $data,
             $this->userContext->getUser(),
-            new \DateTime(),
-            AbstractDraft::STATUS_NEW
+            new \DateTime()
         );
 
         $this->draftSaver->save($draft);
@@ -220,8 +218,7 @@ class PcmtProductModelController extends ProductModelController
             $productModel,
             $data,
             $this->userContext->getUser(),
-            new \DateTime(),
-            AbstractDraft::STATUS_NEW
+            new \DateTime()
         );
 
         $this->draftSaver->save($draft);

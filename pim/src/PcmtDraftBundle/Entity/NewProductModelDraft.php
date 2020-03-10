@@ -17,11 +17,10 @@ class NewProductModelDraft extends AbstractProductModelDraft implements NewObjec
 
     public function __construct(
         array $productModelData,
-        UserInterface $author,
-        \DateTime $created,
-        int $status
+        ?UserInterface $author,
+        \DateTime $created
     ) {
         $this->productData = $productModelData;
-        parent::__construct($author, $created, $status);
+        parent::__construct($author, $created);
     }
 }

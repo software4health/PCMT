@@ -23,24 +23,21 @@ class ProductDraftCreator implements DraftCreatorInterface
     public function create(
         $baseEntity,
         array $productData,
-        UserInterface $author,
-        int $status
+        ?UserInterface $author = null
     ): AbstractDraft {
         if ($baseEntity->getId()) {
             return new ExistingProductDraft(
                 $baseEntity,
                 $productData,
-                $author,
                 new \DateTime(),
-                $status
+                $author
             );
         }
 
         return new NewProductDraft(
             $productData,
-            $author,
             new \DateTime(),
-            $status
+            $author
         );
     }
 }

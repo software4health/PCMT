@@ -20,7 +20,7 @@ interface DraftInterface
 
     public function getType(): string;
 
-    public function getAuthor(): UserInterface;
+    public function getAuthor(): ?UserInterface;
 
     public function setStatus(int $statusId): void;
 

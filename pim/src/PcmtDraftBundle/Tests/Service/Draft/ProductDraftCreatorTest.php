@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Tests\Service\Draft;
 
-use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\NewProductDraft;
 use PcmtDraftBundle\Service\Draft\ProductDraftCreator;
@@ -39,8 +38,7 @@ class ProductDraftCreatorTest extends TestCase
         $draft = $this->productDraftCreator->create(
             $product,
             ['ATTRIBUTE' => 'VALUE'],
-            $user,
-            AbstractDraft::STATUS_NEW
+            $user
         );
 
         $this->assertInstanceOf(ExistingProductDraft::class, $draft);
@@ -59,8 +57,7 @@ class ProductDraftCreatorTest extends TestCase
         $draft = $this->productDraftCreator->create(
             $product,
             ['ATTRIBUTE' => 'VALUE'],
-            $user,
-            AbstractDraft::STATUS_NEW
+            $user
         );
 
         $this->assertInstanceOf(NewProductDraft::class, $draft);

@@ -20,5 +20,5 @@ interface DraftCreatorInterface
     /**
      * @param ProductInterface|ProductModelInterface $baseEntity
      */
-    public function create($baseEntity, array $productData, UserInterface $author, int $status): AbstractDraft;
+    public function create($baseEntity, array $productData, ?UserInterface $author = null): AbstractDraft;
 }

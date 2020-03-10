@@ -16,13 +16,12 @@ use Akeneo\UserManagement\Component\Model\UserInterface;
 abstract class AbstractProductModelDraft extends AbstractDraft implements ProductModelDraftInterface
 {
     protected function __construct(
-        UserInterface $author,
-        \DateTime $created,
-        int $status
+        ?UserInterface $author,
+        \DateTime $created
     ) {
         $this->author = $author;
         $this->created = $created;
-        $this->status = $status;
+        $this->status = self::STATUS_NEW;
         $this->version = self::DRAFT_VERSION_NEW;
     }
 

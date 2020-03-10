@@ -12,7 +12,6 @@ namespace PcmtDraftBundle\Saver;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
-use Akeneo\UserManagement\Component\Repository\UserRepositoryInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Repository\DraftRepository;
@@ -37,9 +36,6 @@ class ProductThroughDraftUpsertSaver implements SaverInterface
     /** @var DraftCreatorInterface */
     private $draftCreator;
 
-    /** @var UserRepositoryInterface */
-    private $userRepository;
-
     /** @var DraftRepository */
     private $draftRepository;
 
@@ -49,7 +45,6 @@ class ProductThroughDraftUpsertSaver implements SaverInterface
         SaverInterface $draftSaver,
         BaseEntityCreatorInterface $baseEntityCreator,
         DraftCreatorInterface $draftCreator,
-        UserRepositoryInterface $userRepository,
         DraftRepository $draftRepository
     ) {
         $this->entitySaver = $entitySaver;
@@ -57,7 +52,6 @@ class ProductThroughDraftUpsertSaver implements SaverInterface
         $this->draftSaver = $draftSaver;
         $this->baseEntityCreator = $baseEntityCreator;
         $this->draftCreator = $draftCreator;
-        $this->userRepository = $userRepository;
         $this->draftRepository = $draftRepository;
     }
 
@@ -76,9 +70,6 @@ class ProductThroughDraftUpsertSaver implements SaverInterface
         $baseObject = $this->getEntityOrCreateIfNotExists($object);
         $data = $this->standardNormalizer->normalize($object, 'standard', ['import_via_drafts']);
 
-        /** @todo handle user in a better way */
-        $user = $this->userRepository->findOneBy([]);
-
         $criteria = [
             'status'  => AbstractDraft::STATUS_NEW,
             'product' => $baseObject,
@@ -87,12 +78,7 @@ class ProductThroughDraftUpsertSaver implements SaverInterface
         /** @var ExistingProductDraft $draft */
         $draft = $this->draftRepository->findOneBy($criteria);
         if (!$draft) {
-            $draft = $this->draftCreator->create(
-                $baseObject,
-                $data,
-                $user,
-                AbstractDraft::STATUS_NEW
-            );
+            $draft = $this->draftCreator->create($baseObject, $data);
         } else {
             $draft->setProductData($data);
         }
