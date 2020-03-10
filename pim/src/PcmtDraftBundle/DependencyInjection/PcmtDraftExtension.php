@@ -21,7 +21,6 @@ class PcmtDraftExtension extends Extension
         //load and merge configuration
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('controllers.yml');
-        $loader->load('fetchers.yml');
         $loader->load('normalizers.yml');
         $loader->load('providers.yml');
         $loader->load('savers.yml');

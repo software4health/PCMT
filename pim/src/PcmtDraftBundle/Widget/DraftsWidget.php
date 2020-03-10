@@ -10,15 +10,24 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Widget;
 
 use Akeneo\Platform\Bundle\DashboardBundle\Widget\WidgetInterface;
+use PcmtDraftBundle\Entity\AbstractDraft;
+use PcmtDraftBundle\Repository\DraftRepository;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class DraftsWidget implements WidgetInterface
 {
-    /** @var DraftsFetcher */
-    protected $draftsFetcher;
+    /** @var DraftRepository */
+    protected $draftRepository;
 
-    public function __construct(DraftsFetcher $draftsFetcher)
-    {
-        $this->draftsFetcher = $draftsFetcher;
+    /** @var NormalizerInterface */
+    private $serializer;
+
+    public function __construct(
+        DraftRepository $draftRepository,
+        NormalizerInterface $serializer
+    ) {
+        $this->draftRepository = $draftRepository;
+        $this->serializer = $serializer;
     }
 
     public function getAlias(): string
@@ -38,6 +47,11 @@ class DraftsWidget implements WidgetInterface
 
     public function getData(): array
     {
-        return $this->draftsFetcher->fetch();
+        $criteria = [
+            'status' => AbstractDraft::STATUS_NEW,
+        ];
+        $drafts = $this->draftRepository->findBy($criteria, null, 20, 0);
+
+        return $this->serializer->normalize($drafts);
     }
 }

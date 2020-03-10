@@ -8,6 +8,7 @@ services:
     pim_dashboard.widget.product_drafts_overview:
         class: PcmtDraftBundle\Widget\DraftsWidget
         arguments:
-          - '@pcmt_catalog.draft.fetcher'
+            - '@pcmt_catalog.repository.draft'
+            - '@pim_internal_api_serializer'
         tags:
           - { name: pim_dashboard.widget, position: 40 }
