@@ -15,6 +15,7 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtCoreBundle\Service\Builder\ResponseBuilder;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\NewProductDraft;
+use PcmtDraftBundle\Exception\DraftViolationException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -49,37 +50,6 @@ class PcmtProductController extends ProductController
 
         $data = json_decode($request->getContent(), true);
 
-        /* this part is copied from parent controller, as it is responsible for validation */
-        if (isset($data['parent'])) {
-            $product = $this->variantProductBuilder->createProduct(
-                $data['identifier'] ?? null,
-                $data['family'] ?? null
-            );
-
-            if (isset($data['values'])) {
-                $this->updateProduct($product, $data);
-            }
-        } else {
-            $product = $this->productBuilder->createProduct(
-                $data['identifier'] ?? null,
-                $data['family'] ?? null
-            );
-        }
-
-        $violations = $this->validator->validate($product, null, ['Default', 'creation']);
-        if ($violations->count() > 0) {
-            $normalizedViolations = [];
-            foreach ($violations as $violation) {
-                $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
-                    $violation,
-                    'internal_api',
-                    ['product' => $product]
-                );
-            }
-
-            return new JsonResponse(['values' => $normalizedViolations], 400);
-        }
-
         /**
          * at this stage we create NewDraft, populate it with data (which we will later use to create Product itself)
          * and prevent Product from being created.
@@ -90,7 +60,21 @@ class PcmtProductController extends ProductController
             $this->userContext->getUser()
         );
 
-        $this->draftSaver->save($draft);
+        try {
+            $this->draftSaver->save($draft);
+        } catch (DraftViolationException $e) {
+            $normalizedViolations = [];
+            $context = $e->getContextForNormalizer();
+            foreach ($e->getViolations() as $violation) {
+                $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
+                    $violation,
+                    'internal_api',
+                    $context
+                );
+            }
+
+            return new JsonResponse(['values' => $normalizedViolations], Response::HTTP_BAD_REQUEST);
+        }
 
         return $this->responseBuilder->setData($draft)->setContext($this->getNormalizationContext())->build();
     }
