@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Tests\Normalizer;
 
-use PcmtCoreBundle\Entity\Attribute;
+use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftStatus;
 use PcmtDraftBundle\Normalizer\DraftStatusNormalizer;
@@ -85,7 +85,7 @@ class DraftStatusNormalizerTest extends TestCase
     {
         return [
             [$this->createMock(DraftStatus::class), true],
-            [$this->createMock(Attribute::class), false],
+            [$this->createMock(AttributeInterface::class), false],
         ];
     }
 }

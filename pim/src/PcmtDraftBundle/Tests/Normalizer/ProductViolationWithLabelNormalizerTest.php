@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Tests\Normalizer;
 
 use Akeneo\Pim\Structure\Bundle\Doctrine\ORM\Repository\AttributeRepository;
+use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
-use PcmtCoreBundle\Entity\Attribute;
 use PcmtDraftBundle\Normalizer\ProductViolationWithLabelNormalizer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintViolation;
@@ -81,9 +81,9 @@ class ProductViolationWithLabelNormalizerTest extends TestCase
         ];
     }
 
-    private function getAttributeMockInstance(string $label): Attribute
+    private function getAttributeMockInstance(string $label): AttributeInterface
     {
-        $attributeMock = $this->createMock(Attribute::class);
+        $attributeMock = $this->createMock(AttributeInterface::class);
         $attributeMock->method('getLabel')->willReturn($label);
 
         return $attributeMock;

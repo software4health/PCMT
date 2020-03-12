@@ -13,12 +13,12 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
+use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Pim\Structure\Component\Model\FamilyVariantInterface;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use Akeneo\Tool\Component\Localization\Presenter\PresenterInterface;
 use Akeneo\UserManagement\Component\Model\User;
-use PcmtCoreBundle\Entity\Attribute;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\AttributeChange;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
@@ -229,7 +229,7 @@ class ProductModelDraftNormalizerTest extends TestCase
     {
         return [
             [$this->createMock(ProductModelDraftInterface::class), true],
-            [$this->createMock(Attribute::class), false],
+            [$this->createMock(AttributeInterface::class), false],
         ];
     }
 

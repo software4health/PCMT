@@ -15,11 +15,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * To run, type:
- * phpunit src/PcmtCoreBundle/Tests/
- * in docker console
- */
 class DraftStatusTranslatorServiceTest extends TestCase
 {
     /**

@@ -7,7 +7,7 @@
 services:
 
     pcmt.service.builder.response_builder:
-        class: PcmtCoreBundle\Service\Builder\ResponseBuilder
+        class: PcmtDraftBundle\Service\Builder\ResponseBuilder
         arguments:
             - '@pim_internal_api_serializer'
 

@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace PcmtCoreBundle\Service\Builder;
+namespace PcmtDraftBundle\Service\Builder;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;

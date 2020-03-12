@@ -13,8 +13,8 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\AssociationInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithAssociationsInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Structure\Component\Model\AssociationType;
+use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use PcmtCoreBundle\Entity\Attribute;
 use PcmtDraftBundle\Normalizer\AssociationsNormalizer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -77,7 +77,7 @@ class AssociationsNormalizerTest extends TestCase
         return [
             [$this->createMock(EntityWithAssociationsInterface::class), 'standard', true],
             [$this->createMock(EntityWithAssociationsInterface::class), 'notstandard', false],
-            [$this->createMock(Attribute::class), 'standard', false],
+            [$this->createMock(AttributeInterface::class), 'standard', false],
         ];
     }
 }
