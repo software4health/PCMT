@@ -13,7 +13,6 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use Akeneo\Tool\Component\Versioning\Model\VersionableInterface;
-use PcmtCoreBundle\Entity\Attribute;
 use PcmtDraftBundle\Entity\AttributeChange;
 use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -73,7 +72,7 @@ class AttributeChangeServiceTest extends TestCase
     public function dataGetWithAttributesNames(): array
     {
         $attributeLabel = 'attributeLabel';
-        $attributeInstanceMock = $this->createMock(Attribute::class);
+        $attributeInstanceMock = $this->createMock(AttributeInterface::class);
         $attributeInstanceMock->method('getLabel')->willReturn($attributeLabel);
 
         $attributeCode2 = 'attrCode2';

@@ -1,16 +1,16 @@
 <?php
 /**
- * Copyright (c) 2019, VillageReach
+ * Copyright (c) 2020, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace PcmtCoreBundle\Tests\Service\Builder;
+namespace PcmtDraftBundle\Tests\Service\Builder;
 
-use PcmtCoreBundle\Entity\Attribute;
-use PcmtCoreBundle\Service\Builder\ResponseBuilder;
+use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
+use PcmtDraftBundle\Service\Builder\ResponseBuilder;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,7 +55,7 @@ class ResponseBuilderTest extends TestCase
     {
         $normalizer = $this->createMock(NormalizerInterface::class);
         $responseBuilder = new ResponseBuilder($normalizer);
-        $draft = $this->createMock(Attribute::class);
+        $draft = $this->createMock(AttributeInterface::class);
         $normalizerResult = [
             'id' => 1234,
         ];
@@ -80,7 +80,7 @@ class ResponseBuilderTest extends TestCase
     {
         $normalizer = $this->createMock(NormalizerInterface::class);
         $responseBuilder = new ResponseBuilder($normalizer);
-        $draft = $this->createMock(Attribute::class);
+        $draft = $this->createMock(AttributeInterface::class);
         $normalizerResult = [
             'id'      => 1234,
             'product' => [
@@ -109,8 +109,8 @@ class ResponseBuilderTest extends TestCase
     {
         $normalizer = $this->createMock(NormalizerInterface::class);
         $responseBuilder = new ResponseBuilder($normalizer);
-        $draft1 = $this->createMock(Attribute::class);
-        $draft2 = $this->createMock(Attribute::class);
+        $draft1 = $this->createMock(AttributeInterface::class);
+        $draft2 = $this->createMock(AttributeInterface::class);
         $normalizerResult = [
             ['id' => 1234],
             ['id' => 1235],

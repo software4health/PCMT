@@ -12,11 +12,6 @@ namespace PcmtDraftBundle\Tests\Service\Draft;
 use PcmtDraftBundle\Service\Draft\DraftStatusListService;
 use PHPUnit\Framework\TestCase;
 
-/**
- * To run, type:
- * phpunit src/PcmtCoreBundle/Tests/
- * in docker console
- */
 class DraftStatusListServiceTest extends TestCase
 {
     /**
