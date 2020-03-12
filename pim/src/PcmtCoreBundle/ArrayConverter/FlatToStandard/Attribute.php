@@ -9,17 +9,33 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\ArrayConverter\FlatToStandard;
 
-use Akeneo\Pim\Structure\Component\ArrayConverter\FlatToStandard\Attribute as BaseAttribute;
+use Akeneo\Tool\Component\Connector\ArrayConverter\ArrayConverterInterface;
+use Akeneo\Tool\Component\Connector\ArrayConverter\FieldsRequirementChecker;
 
 /**
  * @override: Handle localizable attribute description in flat array to standard array conversion
  */
-class Attribute extends BaseAttribute
+class Attribute implements ArrayConverterInterface
 {
+    /** @var FieldsRequirementChecker */
+    protected $fieldChecker;
+
+    /** @var ArrayConverterInterface */
+    private $baseAttributeConverter;
+
+    /** @var string[] */
+    public $supportedFields = ['concatenated'];
+
+    public function __construct(
+        FieldsRequirementChecker $fieldChecker,
+        ArrayConverterInterface $baseAttributeConverter
+    ) {
+        $this->fieldChecker = $fieldChecker;
+        $this->baseAttributeConverter = $baseAttributeConverter;
+    }
+
     /**
      * {@inheritdoc}
-     *
-     * Converts flat csv array to standard structured array:
      */
     public function convert(array $item, array $options = [])
     {
@@ -27,21 +43,30 @@ class Attribute extends BaseAttribute
         $this->fieldChecker->checkFieldsFilling($item, ['code']);
 
         $convertedItem = [
-            'labels'       => [],
             'descriptions' => [],
-        ]; // add descriptions field to convertedItem array
+        ];
 
+        $tmpItem = [
+            'code' => $item['code'],
+        ];
         foreach ($item as $field => $data) {
-            $convertedItem = $this->convertFields($field, $this->booleanFields, $data, $convertedItem);
+            if ($this->supportField($field)) {
+                $convertedItem = $this->convertFields($field, $data, $convertedItem);
+            } else {
+                $tmpItem[$field] = $data;
+            }
         }
 
-        return $convertedItem;
+        return array_merge(
+            $convertedItem,
+            $this->baseAttributeConverter->convert($tmpItem, $options)
+        );
     }
 
     /**
-     * {@inheritdoc}
+     * @param int|string|null $data
      */
-    protected function convertFields($field, $booleanFields, $data, $convertedItem): array
+    public function convertFields(string $field, $data, array $convertedItem): array
     {
         if ('concatenated' === $field) {
             return $convertedItem;
@@ -49,11 +74,14 @@ class Attribute extends BaseAttribute
         if (false !== mb_strpos($field, 'description-', 0)) {
             $descriptionTokens = explode('-', $field);
             $descriptionLocale = $descriptionTokens[1];
-            $convertedItem['descriptions'][$descriptionLocale] = $data; // convert all localizable values of  attribute description field
-        } else {
-            $convertedItem = parent::convertFields($field, $booleanFields, $data, $convertedItem);
+            $convertedItem['descriptions'][$descriptionLocale] = $data;
         }
 
         return $convertedItem;
+    }
+
+    public function supportField(string $field): bool
+    {
+        return in_array($field, $this->supportedFields) || false !== mb_strpos($field, 'description-', 0);
     }
 }
