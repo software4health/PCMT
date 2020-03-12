@@ -28,6 +28,12 @@ services:
         class: 'PcmtCoreBundle\ArrayConverter\FlatToStandard\Attribute'
         arguments:
             - '@pim_connector.array_convertor.checker.fields_requirement'
+            - '@pim_connector.array_converter.flat_to_standard.attribute_base'
+
+    pim_connector.array_converter.flat_to_standard.attribute_base:
+        class: 'Akeneo\Pim\Structure\Component\ArrayConverter\FlatToStandard\Attribute'
+        arguments:
+            - '@pim_connector.array_convertor.checker.fields_requirement'
             -
                 - 'localizable'
                 - 'useable_as_grid_filter'
