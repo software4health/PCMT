@@ -15,7 +15,7 @@ use Akeneo\Tool\Component\Connector\ArrayConverter\FieldsRequirementChecker;
 /**
  * @override: Handle localizable attribute description in flat array to standard array conversion
  */
-class Attribute implements ArrayConverterInterface
+class AttributeConverter implements ArrayConverterInterface
 {
     /** @var FieldsRequirementChecker */
     protected $fieldChecker;

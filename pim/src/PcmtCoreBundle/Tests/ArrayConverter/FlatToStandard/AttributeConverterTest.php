@@ -13,11 +13,11 @@ use Akeneo\Tool\Component\Connector\ArrayConverter\ArrayConverterInterface;
 use Akeneo\Tool\Component\Connector\ArrayConverter\FieldsRequirementChecker;
 use Akeneo\Tool\Component\Connector\Exception\DataArrayConversionException;
 use Akeneo\Tool\Component\Connector\Exception\StructureArrayConversionException;
-use PcmtCoreBundle\ArrayConverter\FlatToStandard\Attribute as AttributeArrayConverter;
+use PcmtCoreBundle\ArrayConverter\FlatToStandard\AttributeConverter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class AttributeTest extends TestCase
+class AttributeConverterTest extends TestCase
 {
     /** @var FieldsRequirementChecker */
     private $fieldChecker;
@@ -32,7 +32,7 @@ class AttributeTest extends TestCase
     {
         $this->fieldChecker = new FieldsRequirementChecker();
         $this->baseAttributeConverterMock = $this->createMock(ArrayConverterInterface::class);
-        $this->attributeArrayConverter = new AttributeArrayConverter(
+        $this->attributeArrayConverter = new AttributeConverter(
             $this->fieldChecker,
             $this->baseAttributeConverterMock
         );
@@ -73,13 +73,13 @@ class AttributeTest extends TestCase
      * @dataProvider dataConvert
      * @params int|string|null
      */
-    public function testConvert(array $item, array $baseAttirubuteConverterResult, array $expectedResult): void
+    public function testConvert(array $item, array $baseAttributeConverterResult, array $expectedResult): void
     {
         $this->baseAttributeConverterMock
             ->expects($this->once())
             ->method('convert')
-            ->with($baseAttirubuteConverterResult)
-            ->willReturn($baseAttirubuteConverterResult);
+            ->with($baseAttributeConverterResult)
+            ->willReturn($baseAttributeConverterResult);
         $result = $this->attributeArrayConverter->convert($item);
         $this->assertSame($expectedResult, $result);
     }

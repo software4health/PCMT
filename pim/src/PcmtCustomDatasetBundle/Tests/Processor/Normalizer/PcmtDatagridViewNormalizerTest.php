@@ -11,7 +11,7 @@ namespace PcmtCustomDatasetBundle\Tests\Processor\Normalizer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithAssociationsInterface;
 use Oro\Bundle\PimDataGridBundle\Entity\DatagridView;
-use PcmtCoreBundle\ArrayConverter\StandardToFlat\Attribute;
+use PcmtCoreBundle\ArrayConverter\StandardToFlat\AttributeConverter;
 use PcmtCustomDatasetBundle\Processor\Normalizer\PcmtDatagridViewNormalizer;
 use PcmtCustomDatasetBundle\Tests\TestDataBuilder\DatagridViewBuilder;
 use PcmtCustomDatasetBundle\Tests\TestDataBuilder\UserBuilder;
@@ -101,7 +101,7 @@ class PcmtDatagridViewNormalizerTest extends TestCase
                 false,
             ],
             [
-                $this->createMock(Attribute::class),
+                $this->createMock(AttributeConverter::class),
                 'internal_api',
                 false,
             ],
