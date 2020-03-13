@@ -106,7 +106,7 @@ class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
         $values = $this->productValueConverter->convert($data['values']);
 
         $values = $this->localizedConverter->convertToDefaultFormats($values, [
-            'locale' => $this->userContext->getUiLocale()->getCode(),
+            'locale' => $this->userContext->getUiLocaleCode(),
         ]);
 
         $dataFiltered = $this->emptyValuesFilter->filter($entity, ['values' => $values]);

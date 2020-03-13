@@ -46,7 +46,7 @@ services:
             - '%e2Open_import_files_directory%'
             - '@monolog.logger'
         tags:
-            - { name: 'console.command', command: 'pcmt:e2Open:import_from_files' }
+            - { name: 'console.command', command: 'pim:pcmt:e2Open:import_from_files' }
 
     pcmt_core.service.esquery.product:
         class: PcmtCoreBundle\Service\Query\ESQuery

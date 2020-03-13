@@ -25,6 +25,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DraftSaver implements SaverInterface
 {
+    public const OPTION_NO_VALIDATION = 'no_validation';
+
     /** @var EntityManagerInterface */
     protected $entityManager;
 
@@ -64,7 +66,9 @@ class DraftSaver implements SaverInterface
      */
     public function save($draft, array $options = []): void
     {
-        $this->validateDraft($draft);
+        if (empty($options[self::OPTION_NO_VALIDATION])) {
+            $this->validateDraft($draft);
+        }
         $this->eventDispatcher->dispatch(StorageEvents::PRE_SAVE, new GenericEvent($draft, $options));
         $this->entityManager->persist($draft);
         $this->entityManager->flush();

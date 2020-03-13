@@ -83,7 +83,7 @@ class ProductThroughDraftUpsertSaver implements SaverInterface
             $draft->setProductData($data);
         }
 
-        $this->draftSaver->save($draft);
+        $this->draftSaver->save($draft, [DraftSaver::OPTION_NO_VALIDATION => true]);
     }
 
     private function getEntityOrCreateIfNotExists(ProductInterface $object): ProductInterface

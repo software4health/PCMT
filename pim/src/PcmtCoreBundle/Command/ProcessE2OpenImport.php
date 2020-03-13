@@ -16,12 +16,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * launching the job:
- * bin/console pcmt:e2Open:import_from_files
+ * bin/console pim:pcmt:e2Open:import_from_files
  */
 class ProcessE2OpenImport extends ContainerAwareCommand
 {
     /** @var string */
-    protected static $defaultName = 'pcmt:e2Open:import_from_files';
+    protected static $defaultName = 'pim:pcmt:e2Open:import_from_files';
 
     /** @var string */
     private $parentDirectory;
