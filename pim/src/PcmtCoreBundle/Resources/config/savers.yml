@@ -11,3 +11,8 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@event_dispatcher'
+
+    pcmt.saver.product_import:
+        class: PcmtCoreBundle\Saver\ProductImportSaver
+        arguments:
+            - '@pim_catalog.saver.product'

@@ -228,4 +228,23 @@ class DraftSaverTest extends TestCase
 
         $this->draftSaver->save($draft);
     }
+
+    public function testSaveWhenValidationIsTurnedOff(): void
+    {
+        $draft = (new NewProductDraftBuilder())->build();
+
+        $this->creatorMock
+            ->method('getObjectToSave')
+            ->willReturn((new ProductBuilder())->build());
+
+        $this->productValidatorMock
+            ->expects($this->never())
+            ->method('validate');
+
+        $this->entityManagerMock->expects($this->once())->method('persist');
+        $this->entityManagerMock->expects($this->once())->method('flush');
+        $this->eventDispatcherMock->expects($this->exactly(2))->method('dispatch');
+
+        $this->draftSaver->save($draft, [DraftSaver::OPTION_NO_VALIDATION => true]);
+    }
 }

@@ -16,8 +16,9 @@ services:
             - '@pim_catalog.validator.product_model'
             - '@pcmt.service.general_object_from_draft_creator'
 
-    pcmt.saver.product_through_draft_upsert:
-        class: 'PcmtDraftBundle\Saver\ProductThroughDraftUpsertSaver'
+    # This service is used in PCMT Core Bundle
+    pcmt.saver.product_import:
+        class: PcmtDraftBundle\Saver\ProductThroughDraftUpsertSaver
         arguments:
             - '@pim_catalog.saver.product'
             - '@pcmt_core.normalizer.standard.product'

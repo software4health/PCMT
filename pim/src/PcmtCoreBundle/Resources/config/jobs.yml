@@ -43,7 +43,7 @@ services:
         class: PcmtCoreBundle\Connector\Job\E2OpenFromXmlTasklet
         arguments:
             - '@pim_catalog.repository.product'
-            - '@pim_catalog.saver.product'
+            - '@pcmt.saver.product_import'
             - '@pim_catalog.builder.product'
             - '@pcmt_core.service.e2Open.trade_item_xml_processor'
             - '@pcmt_core.service.esquery.product'
