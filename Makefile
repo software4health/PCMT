@@ -79,6 +79,10 @@ dev-test-ecs-fix:
 dev-test-unit:
 	bin/test.sh
 
+.PHONY: dev-test-mutation
+dev-test-mutation:
+	bin/mutation.sh
+
 .PHONY: terraform
 terraform:
 	cd deploy/terraform && ./build.sh
