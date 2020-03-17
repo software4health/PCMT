@@ -6,11 +6,9 @@
 
 services:
     pcmt_connector.job.job_parameters.default_values_provider.pcmt_xlsx_product_export:
-        class: 'PcmtCoreBundle\Connector\Job\JobParameters\DefaultValueProvider\PcmtProductE2openExport'
+        class: 'PcmtCoreBundle\Connector\Job\JobParameters\DefaultValueProvider\ProductE2openExport'
         arguments:
-            - '@akeneo_pim_enrichment.job.job_parameters.default_values_provider.simple_xlsx_export'
-            - '@pim_catalog.repository.channel'
-            - '@pim_catalog.repository.locale'
+            - '@pim_connector.job.job_parameters.default_values_provider.product_xlsx_export'
             -
                 - 'pcmt_e2open_export'
                 - 'pcmt_mst_supplier_export'
