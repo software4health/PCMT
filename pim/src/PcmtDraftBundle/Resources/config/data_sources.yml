@@ -15,6 +15,7 @@ services:
             - '@pim_datagrid.event_subscriber.filter_entity_with_values_subscriber'
         calls:
             - [setCreator, ['@pcmt.service.general_object_from_draft_creator']]
+            - [setDraftRepository, ['@pcmt_catalog.repository.draft']]
         tags:
             - { name: oro_datagrid.datasource, type: pcmt_datasource_associated_product }
 
@@ -27,6 +28,7 @@ services:
             - '@pim_datagrid.event_subscriber.filter_entity_with_values_subscriber'
         calls:
             - [setCreator, ['@pcmt.service.general_object_from_draft_creator']]
+            - [setDraftRepository, ['@pcmt_catalog.repository.draft']]
         tags:
             - { name: oro_datagrid.datasource, type: pcmt_datasource_associated_product_model }
 

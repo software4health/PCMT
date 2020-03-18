@@ -18,6 +18,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
+use PcmtDraftBundle\Repository\DraftRepository;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 
 /**
@@ -32,9 +33,17 @@ class AssociatedProductModelDatasource extends OriginalAssociatedProductModelDat
     /** @var GeneralObjectFromDraftCreator */
     protected $creator;
 
+    /** @var DraftRepository */
+    protected $draftRepository;
+
     public function setCreator(GeneralObjectFromDraftCreator $creator): void
     {
         $this->creator = $creator;
+    }
+
+    public function setDraftRepository(DraftRepository $repository): void
+    {
+        $this->draftRepository = $repository;
     }
 
     /**
@@ -45,23 +54,10 @@ class AssociatedProductModelDatasource extends OriginalAssociatedProductModelDat
      */
     public function getResults()
     {
-        $sourceProduct = $this->getConfiguration('current_product', false);
-        if (!$sourceProduct instanceof ProductModelInterface) {
-            throw InvalidObjectException::objectExpected($sourceProduct, ProductModelInterface::class);
-        }
-
-        $repo = $this->om->getRepository(AbstractDraft::class);
-        $criteria = [
-            'status'       => AbstractDraft::STATUS_NEW,
-            'productModel' => $sourceProduct->getId(),
-        ];
-        $draft = $repo->findOneBy($criteria);
-
-        if (!$draft instanceof DraftInterface) {
-            throw InvalidObjectException::objectExpected($draft, DraftInterface::class);
-        }
-
+        $sourceProduct = $this->getSourceProduct();
+        $draft = $this->getDraft($sourceProduct);
         $sourceProduct = $this->creator->getObjectToSave($draft);
+
         if (!$sourceProduct) {
             return [
                 'totalRecords' => 0,
@@ -70,5 +66,32 @@ class AssociatedProductModelDatasource extends OriginalAssociatedProductModelDat
         }
 
         return $this->getResultsForProductModel($sourceProduct);
+    }
+
+    private function getSourceProduct(): ProductModelInterface
+    {
+        $sourceProduct = $this->getConfiguration('current_product', false);
+
+        if (!$sourceProduct instanceof ProductModelInterface) {
+            throw InvalidObjectException::objectExpected($sourceProduct, ProductModelInterface::class);
+        }
+
+        return $sourceProduct;
+    }
+
+    private function getDraft(ProductModelInterface $sourceProduct): DraftInterface
+    {
+        $criteria = [
+            'status'       => AbstractDraft::STATUS_NEW,
+            'productModel' => $sourceProduct->getId(),
+        ];
+
+        $draft = $this->draftRepository->findOneBy($criteria);
+
+        if (!$draft instanceof DraftInterface) {
+            throw InvalidObjectException::objectExpected($draft, DraftInterface::class);
+        }
+
+        return $draft;
     }
 }

@@ -13,6 +13,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
 use Akeneo\Pim\Structure\Component\Model\Family;
+use Doctrine\Common\Collections\Collection;
 
 class ProductBuilder
 {
@@ -45,6 +46,13 @@ class ProductBuilder
     public function withFamily(Family $family): self
     {
         $this->product->setFamily($family);
+
+        return $this;
+    }
+
+    public function withAssociations(Collection $collection): self
+    {
+        $this->product->setAssociations($collection);
 
         return $this;
     }
