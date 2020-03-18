@@ -11,6 +11,7 @@ namespace PcmtDraftBundle\Tests\TestDataBuilder;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
 use Akeneo\Pim\Structure\Component\Model\FamilyVariantInterface;
+use Doctrine\Common\Collections\Collection;
 
 class ProductModelBuilder
 {
@@ -39,6 +40,13 @@ class ProductModelBuilder
     public function withCode(string $code): self
     {
         $this->productModel->setCode($code);
+
+        return $this;
+    }
+
+    public function withAssociations(Collection $collection): self
+    {
+        $this->productModel->setAssociations($collection);
 
         return $this;
     }
