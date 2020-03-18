@@ -40,7 +40,8 @@
         "symfony/maker-bundle": "^1.12",
         "symfony/phpunit-bridge": "^4.3",
         "phpunit/phpunit": "^8",
-        "symplify/easy-coding-standard": "^6.1"
+        "symplify/easy-coding-standard": "^6.1",
+        "infection/infection": "^0.13"
     },
     "scripts": {
         "symfony-scripts": [
