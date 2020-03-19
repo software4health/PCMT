@@ -10,119 +10,88 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Tests\Normalizer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
-use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
-use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
-use Akeneo\Tool\Component\Localization\Presenter\PresenterInterface;
-use Akeneo\UserManagement\Component\Model\User;
-use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\AttributeChange;
-use PcmtDraftBundle\Entity\ExistingProductDraft;
-use PcmtDraftBundle\Entity\NewProductDraft;
-use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Normalizer\AttributeChangeNormalizer;
-use PcmtDraftBundle\Normalizer\DraftStatusNormalizer;
+use PcmtDraftBundle\Normalizer\GeneralDraftNormalizer;
 use PcmtDraftBundle\Normalizer\ProductDraftNormalizer;
 use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
-use PcmtDraftBundle\Service\Draft\DraftStatusTranslatorService;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
+use PcmtDraftBundle\Tests\TestDataBuilder\AttributeChangeBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\ExistingProductDraftBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\NewProductDraftBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\ProductBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ProductDraftNormalizerTest extends TestCase
 {
-    /** @var ProductDraftNormalizer */
-    private $productDraftNormalizer;
-
-    /** @var ProductInterface|MockObject */
-    private $productNew;
-
-    /** @var ProductInterface|MockObject */
-    private $productExisting;
-
-    /** @var DraftStatusNormalizer */
-    private $draftStatusNormalizer;
-
     /** @var AttributeChangeNormalizer */
     private $attributeChangeNormalizer;
 
     /** @var NormalizerInterface|MockObject */
-    private $productNormalizer;
+    private $productNormalizerMock;
 
     /** @var GeneralObjectFromDraftCreator|MockObject */
-    private $creator;
+    private $creatorMock;
 
-    /** @var AttributeChangeService */
-    private $attributeChangeService;
+    /** @var AttributeChangeService|MockObject */
+    private $attributeChangeServiceMock;
 
-    /** @var FormProviderInterface */
-    private $formProvider;
-
-    /** @var FamilyInterface|MockObject */
-    private $family;
+    /** @var FormProviderInterface|MockObject */
+    private $formProviderMock;
 
     /** @var NormalizerInterface|MockObject */
-    private $valuesNormalizer;
+    private $valuesNormalizerMock;
+
+    /** @var GeneralDraftNormalizer|MockObject */
+    private $generalDraftNormalizerMock;
 
     protected function setUp(): void
     {
-        $this->family = $this->createMock(FamilyInterface::class);
+        $this->generalDraftNormalizerMock = $this->createMock(GeneralDraftNormalizer::class);
 
-        $this->productNew = $this->createMock(Product::class);
-        $this->productNew->method('getFamily')->willReturn($this->family);
-        $valueCollection = new WriteValueCollection();
         $value = $this->createMock(ValueInterface::class);
-        $valueCollection->add($value);
-        $this->productNew->method('getValues')->willReturn($valueCollection);
-
-        $this->productExisting = $this->createMock(Product::class);
-        $this->productExisting->method('getFamily')->willReturn($this->family);
+        $productNew = (new ProductBuilder())->addValue($value)->build();
 
         $this->attributeChangeNormalizer = new AttributeChangeNormalizer();
-        $logger = $this->createMock(LoggerInterface::class);
-        $translator = $this->createMock(DraftStatusTranslatorService::class);
-        $this->draftStatusNormalizer = new DraftStatusNormalizer($logger, $translator);
 
-        $this->creator = $this->createMock(GeneralObjectFromDraftCreator::class);
-        $this->creator->method('getObjectToCompare')->willReturn($this->productNew);
+        $this->creatorMock = $this->createMock(GeneralObjectFromDraftCreator::class);
+        $this->creatorMock->method('getObjectToCompare')->willReturn($productNew);
 
-        $this->attributeChangeService = $this->createMock(AttributeChangeService::class);
-        $this->productNormalizer = $this->createMock(NormalizerInterface::class);
+        $this->attributeChangeServiceMock = $this->createMock(AttributeChangeService::class);
 
-        $this->formProvider = $this->createMock(FormProviderInterface::class);
+        $this->productNormalizerMock = $this->createMock(NormalizerInterface::class);
 
-        $this->valuesNormalizer = $this->createMock(NormalizerInterface::class);
-        $this->valuesNormalizer->method('normalize')->willReturn([]);
-        $this->valuesNormalizer->method('supportsNormalization')->willReturn(true);
+        $this->formProviderMock = $this->createMock(FormProviderInterface::class);
+
+        $this->valuesNormalizerMock = $this->createMock(NormalizerInterface::class);
+        $this->valuesNormalizerMock->method('normalize')->willReturn([]);
+        $this->valuesNormalizerMock->method('supportsNormalization')->willReturn(true);
 
         parent::setUp();
     }
 
     public function testNormalizeNoChangesNewProduct(): void
     {
-        $this->productDraftNormalizer = $this->getProductDraftNormalizerInstance();
+        $productDraftNormalizer = $this->getProductDraftNormalizerInstance();
 
-        $draft = $this->createMock(NewProductDraft::class);
-        $author = new User();
-        $author->setFirstName('Alfred');
-        $author->setLastName('Nobel');
-        $draft->method('getAuthor')->willReturn($author);
-        $draft->method('getProduct')->willReturn(null);
-        $draft->method('getStatus')->willReturn(AbstractDraft::STATUS_NEW);
-        $draft->method('getType')->willReturn(NewProductDraft::TYPE);
+        $draft = (new NewProductDraftBuilder())->build();
 
-        $array = $this->productDraftNormalizer->normalize($draft);
+        $array = $productDraftNormalizer->normalize($draft);
 
         $this->assertEmpty($array['changes']);
-        $this->assertSame('Alfred Nobel', $array['author']);
-        $this->assertIsArray($array['status']);
-        $this->assertArrayHasKey('id', $array['status']);
-        $this->assertArrayHasKey('name', $array['status']);
+        $this->assertArrayHasKey('label', $array);
+        $this->assertArrayHasKey('values', $array);
+        $this->assertIsArray($array['values']);
+
+        $this->assertArrayHasKey('draftId', $array['values']);
+        $this->assertArrayHasKey('identifier', $array['values']);
+        $this->assertArrayHasKey('family', $array['values']);
+        $this->assertArrayHasKey('parentId', $array['values']);
+        $this->assertArrayHasKey('parent', $array['values']);
     }
 
     public function testNormalizeChangesNewProduct(): void
@@ -130,15 +99,13 @@ class ProductDraftNormalizerTest extends TestCase
         $changes = [
             new AttributeChange('atName', null, 'newVal'),
         ];
-        $this->attributeChangeService->method('get')->willReturn($changes);
+        $this->attributeChangeServiceMock->method('get')->willReturn($changes);
 
-        $this->productDraftNormalizer = $this->getProductDraftNormalizerInstance();
+        $productDraftNormalizer = $this->getProductDraftNormalizerInstance();
 
-        $draft = $this->createMock(NewProductDraft::class);
-        $draft->method('getProduct')->willReturn(null);
-        $draft->method('getType')->willReturn(NewProductDraft::TYPE);
+        $draft = (new NewProductDraftBuilder())->build();
 
-        $array = $this->productDraftNormalizer->normalize($draft);
+        $array = $productDraftNormalizer->normalize($draft);
 
         $this->assertNotEmpty($array['changes']);
         $this->assertCount(1, $array['changes']);
@@ -147,17 +114,15 @@ class ProductDraftNormalizerTest extends TestCase
     public function testNormalizeChangesExistingProduct(): void
     {
         $changes = [
-            new AttributeChange('atName', null, 'newVal'),
+            (new AttributeChangeBuilder())->build(),
         ];
-        $this->attributeChangeService->method('get')->willReturn($changes);
+        $this->attributeChangeServiceMock->method('get')->willReturn($changes);
 
-        $this->productDraftNormalizer = $this->getProductDraftNormalizerInstance();
+        $productDraftNormalizer = $this->getProductDraftNormalizerInstance();
 
-        $draft = $this->createMock(ExistingProductDraft::class);
-        $draft->method('getProduct')->willReturn($this->productExisting);
-        $draft->method('getType')->willReturn(ExistingProductDraft::TYPE);
+        $draft = (new ExistingProductDraftBuilder())->build();
 
-        $array = $this->productDraftNormalizer->normalize($draft);
+        $array = $productDraftNormalizer->normalize($draft);
 
         $this->assertNotEmpty($array['changes']);
         $this->assertCount(1, $array['changes']);
@@ -166,13 +131,11 @@ class ProductDraftNormalizerTest extends TestCase
 
     public function testNormalizeWhenContextIsEmptyThenShouldNotReturnProduct(): void
     {
-        $this->productDraftNormalizer = $this->getProductDraftNormalizerInstance();
+        $productDraftNormalizer = $this->getProductDraftNormalizerInstance();
 
-        $draft = $this->createMock(ExistingProductDraft::class);
-        $draft->method('getProduct')->willReturn($this->productExisting);
-        $draft->method('getType')->willReturn(ExistingProductDraft::TYPE);
+        $draft = (new ExistingProductDraftBuilder())->build();
 
-        $array = $this->productDraftNormalizer->normalize($draft);
+        $array = $productDraftNormalizer->normalize($draft);
 
         $this->assertArrayNotHasKey('product', $array);
     }
@@ -180,15 +143,13 @@ class ProductDraftNormalizerTest extends TestCase
     public function testNormalizeWhenContextHasProductIncludedThenShouldReturnNormalizedProduct(): void
     {
         $formName = 'form-xxx';
-        $this->formProvider->method('getForm')->willReturn($formName);
+        $this->formProviderMock->method('getForm')->willReturn($formName);
 
-        $this->productDraftNormalizer = $this->getProductDraftNormalizerInstance();
+        $productDraftNormalizer = $this->getProductDraftNormalizerInstance();
 
-        $draft = $this->createMock(ExistingProductDraft::class);
-        $draft->method('getProduct')->willReturn($this->productExisting);
-        $draft->method('getType')->willReturn(ExistingProductDraft::TYPE);
+        $draft = (new ExistingProductDraftBuilder())->build();
 
-        $array = $this->productDraftNormalizer->normalize($draft, null, ['include_product' => true]);
+        $array = $productDraftNormalizer->normalize($draft, null, ['include_product' => true]);
 
         $this->assertArrayHasKey('product', $array);
         $this->assertSame($formName, $array['product']['meta']['form']);
@@ -196,15 +157,14 @@ class ProductDraftNormalizerTest extends TestCase
 
     public function testNormalizeWhenNoProductToCompare(): void
     {
-        $this->creator = $this->createMock(GeneralObjectFromDraftCreator::class);
-        $this->creator->method('getObjectToCompare')->willReturn(null);
+        $this->creatorMock = $this->createMock(GeneralObjectFromDraftCreator::class);
+        $this->creatorMock->method('getObjectToCompare')->willReturn(null);
 
-        $this->productDraftNormalizer = $this->getProductDraftNormalizerInstance();
+        $productDraftNormalizer = $this->getProductDraftNormalizerInstance();
 
-        $draft = $this->createMock(ExistingProductDraft::class);
-        $draft->method('getType')->willReturn(ExistingProductDraft::TYPE);
+        $draft = (new ExistingProductDraftBuilder())->build();
 
-        $array = $this->productDraftNormalizer->normalize($draft);
+        $array = $productDraftNormalizer->normalize($draft);
 
         $this->assertIsArray($array);
         $this->assertArrayNotHasKey('label', $array);
@@ -223,24 +183,22 @@ class ProductDraftNormalizerTest extends TestCase
     public function dataSupportsNormalization(): array
     {
         return [
-            [$this->createMock(ProductDraftInterface::class), true],
-            [$this->createMock(AttributeInterface::class), false],
+            [(new ExistingProductDraftBuilder())->build(), true],
+            [(new NewProductDraftBuilder())->build(), true],
+            [new Product(), false],
         ];
     }
 
     private function getProductDraftNormalizerInstance(): ProductDraftNormalizer
     {
-        $normalizer = new ProductDraftNormalizer(
-            $this->draftStatusNormalizer,
+        return new ProductDraftNormalizer(
+            $this->attributeChangeServiceMock,
             $this->attributeChangeNormalizer,
-            $this->formProvider,
-            $this->productNormalizer
+            $this->formProviderMock,
+            $this->productNormalizerMock,
+            $this->generalDraftNormalizerMock,
+            $this->creatorMock,
+            $this->valuesNormalizerMock
         );
-        $normalizer->setProductFromDraftCreator($this->creator);
-        $normalizer->setAttributeChangeService($this->attributeChangeService);
-        $normalizer->setValuesNormalizer($this->valuesNormalizer);
-        $normalizer->setDatetimePresenter($this->createMock(PresenterInterface::class));
-
-        return $normalizer;
     }
 }

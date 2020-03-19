@@ -19,40 +19,45 @@ use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 
-class ProductDraftNormalizer extends AbstractDraftNormalizer implements NormalizerInterface
+class ProductDraftNormalizer implements NormalizerInterface
 {
+    /** @var GeneralDraftNormalizer */
+    private $generalDraftNormalizer;
+
     /** @var GeneralObjectFromDraftCreator */
     private $productFromDraftCreator;
 
     /** @var AttributeChangeService */
-    protected $attributeChangeService;
+    private $attributeChangeService;
 
     /** @var NormalizerInterface */
     private $productNormalizer;
 
+    /** @var AttributeChangeNormalizer */
+    private $attributeChangeNormalizer;
+
+    /** @var FormProviderInterface */
+    private $formProvider;
+
+    /** @var NormalizerInterface */
+    private $valuesNormalizer;
+
     public function __construct(
-        DraftStatusNormalizer $statusNormalizer,
+        AttributeChangeService $attributeChangeService,
         AttributeChangeNormalizer $attributeChangeNormalizer,
         FormProviderInterface $formProvider,
-        NormalizerInterface $productNormalizer
+        NormalizerInterface $productNormalizer,
+        GeneralDraftNormalizer $generalDraftNormalizer,
+        GeneralObjectFromDraftCreator $productFromDraftCreator,
+        NormalizerInterface $valuesNormalizer
     ) {
-        parent::__construct(
-            $statusNormalizer,
-            $attributeChangeNormalizer,
-            $formProvider
-        );
-
-        $this->productNormalizer = $productNormalizer;
-    }
-
-    public function setProductFromDraftCreator(GeneralObjectFromDraftCreator $productFromDraftCreator): void
-    {
-        $this->productFromDraftCreator = $productFromDraftCreator;
-    }
-
-    public function setAttributeChangeService(AttributeChangeService $attributeChangeService): void
-    {
         $this->attributeChangeService = $attributeChangeService;
+        $this->attributeChangeNormalizer = $attributeChangeNormalizer;
+        $this->formProvider = $formProvider;
+        $this->productNormalizer = $productNormalizer;
+        $this->generalDraftNormalizer = $generalDraftNormalizer;
+        $this->productFromDraftCreator = $productFromDraftCreator;
+        $this->valuesNormalizer = $valuesNormalizer;
     }
 
     /**
@@ -61,7 +66,7 @@ class ProductDraftNormalizer extends AbstractDraftNormalizer implements Normaliz
     public function normalize($draft, $format = null, array $context = []): array
     {
         /** @var ProductDraftInterface $draft */
-        $data = parent::normalize($draft, $format, $context);
+        $data = $this->generalDraftNormalizer->normalize($draft, $format, $context);
 
         $newProduct = $this->productFromDraftCreator->getObjectToCompare($draft);
         if (!$newProduct) {

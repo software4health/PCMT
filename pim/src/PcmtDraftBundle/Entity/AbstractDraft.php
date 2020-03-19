@@ -11,7 +11,6 @@ namespace PcmtDraftBundle\Entity;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
-use Carbon\Carbon;
 
 abstract class AbstractDraft implements DraftInterface
 {
@@ -75,14 +74,9 @@ abstract class AbstractDraft implements DraftInterface
         return $this->created;
     }
 
-    public function getCreatedAtFormatted(): string
+    public function getUpdatedAt(): ?\DateTime
     {
-        return Carbon::parse($this->created)->isoFormat('LLLL');
-    }
-
-    public function getUpdatedAtFormatted(): string
-    {
-        return $this->updated ? Carbon::parse($this->updated)->isoFormat('LLLL') : '';
+        return $this->updated;
     }
 
     public function getAuthor(): ?UserInterface
