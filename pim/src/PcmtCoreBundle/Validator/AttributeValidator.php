@@ -26,17 +26,35 @@ class AttributeValidator
         }
 
         $properties = $object->getProperties();
-        if ($properties) {
-            if (!empty($properties['attributes'])) {
-                if (2 === count(explode(',', $properties['attributes']))) {
-                    if (!empty($properties['separators'])) {
-                        // additional properties filled.
-                        return;
-                    }
-                }
+        if (empty($properties) || empty($properties['attributes'])) {
+            self::addTypeSpecificFieldsViolation($context);
+
+            return;
+        }
+
+        $baseAttributes = explode(',', $properties['attributes']);
+        if (2 !== count($baseAttributes)) {
+            self::addTypeSpecificFieldsViolation($context);
+
+            return;
+        }
+        foreach ($baseAttributes as $baseAttribute) {
+            if (empty($baseAttribute)) {
+                self::addTypeSpecificFieldsViolation($context);
+
+                return;
             }
         }
 
+        if (empty($properties['separators'])) {
+            self::addTypeSpecificFieldsViolation($context);
+
+            return;
+        }
+    }
+
+    private static function addTypeSpecificFieldsViolation(ExecutionContextInterface $context): void
+    {
         $context->buildViolation('pcmt.attribute.concatenated.type_specific_fields.error')
             ->addViolation();
     }
