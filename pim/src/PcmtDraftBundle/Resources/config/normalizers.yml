@@ -20,35 +20,37 @@ services:
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 120 }
 
+    pcmt_draft.draft.general_normalizer:
+        class: PcmtDraftBundle\Normalizer\GeneralDraftNormalizer
+        arguments:
+            - '@pcmt_core.draft.status.normalizer'
+            - '@pim_catalog.localization.presenter.datetime'
+            - '@pim_user.context.user'
+            - '@translator'
+
     pcmt_draft.draft.product_normalizer:
         class: PcmtDraftBundle\Normalizer\ProductDraftNormalizer
-        autowire: true
-        calls:
-            - [setProductFromDraftCreator, ['@pcmt.service.general_object_from_draft_creator']]
-            - [setAttributeChangeService, ['@pcmt.service.attribute_change']]
-            - [setValuesNormalizer, ['@pim_catalog.normalizer.standard.product.product_value']]
-            - [setDatetimePresenter, ['@pim_catalog.localization.presenter.datetime']]
-            - [setTranslator, ['@translator']]
-            - [setUserContext, ['@pim_user.context.user']]
         arguments:
-            $productNormalizer: '@pcmt_core.normalizer.product'
-            $formProvider: '@pcmt.provider.form.draft'
+            - '@pcmt.service.attribute_change'
+            - '@pcmt_core.draft.attribute_change.normalizer'
+            - '@pcmt.provider.form.draft'
+            - '@pcmt_core.normalizer.product'
+            - '@pcmt_draft.draft.general_normalizer'
+            - '@pcmt.service.general_object_from_draft_creator'
+            - '@pim_catalog.normalizer.standard.product.product_value'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 110 }
 
     pcmt_core.draft.product_model_normalizer:
         class: PcmtDraftBundle\Normalizer\ProductModelDraftNormalizer
-        autowire: true
-        calls:
-            - [setProductModelFromDraftCreator, ['@pcmt.service.general_object_from_draft_creator']]
-            - [setAttributeChangeService, ['@pcmt.service.attribute_change']]
-            - [setValuesNormalizer, ['@pim_catalog.normalizer.standard.product.product_value']]
-            - [setDatetimePresenter, ['@pim_catalog.localization.presenter.datetime']]
-            - [setTranslator, ['@translator']]
-            - [setUserContext, ['@pim_user.context.user']]
         arguments:
-            $productModelNormalizer: '@pcmt_core.normalizer.product_model'
-            $formProvider: '@pcmt.provider.form.product-model-draft'
+            - '@pcmt.service.attribute_change'
+            - '@pcmt_core.draft.attribute_change.normalizer'
+            - '@pcmt.provider.form.product-model-draft'
+            - '@pcmt_core.normalizer.product_model'
+            - '@pcmt_draft.draft.general_normalizer'
+            - '@pcmt.service.general_object_from_draft_creator'
+            - '@pim_catalog.normalizer.standard.product.product_value'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 110 }
 

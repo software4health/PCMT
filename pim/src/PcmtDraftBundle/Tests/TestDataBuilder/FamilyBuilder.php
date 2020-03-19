@@ -13,12 +13,22 @@ use Akeneo\Pim\Structure\Component\Model\Family;
 
 class FamilyBuilder
 {
+    public const EXAMPLE_CODE = 'example_family_code';
+
     /** @var Family */
     private $family;
 
     public function __construct()
     {
         $this->family = new Family();
+        $this->family->setCode(self::EXAMPLE_CODE);
+    }
+
+    public function withCode(string $code): self
+    {
+        $this->family->setCode($code);
+
+        return $this;
     }
 
     public function build(): Family

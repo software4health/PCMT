@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Tests\TestDataBuilder;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Pim\Structure\Component\Model\FamilyVariantInterface;
 use Doctrine\Common\Collections\Collection;
 
@@ -21,6 +22,9 @@ class ProductModelBuilder
     public function __construct()
     {
         $this->productModel = new ProductModel();
+        $this->productModel->setFamilyVariant(
+            (new FamilyVariantBuilder())->build()
+        );
     }
 
     public function withId(int $id): self
@@ -54,6 +58,13 @@ class ProductModelBuilder
     public function withFamilyVariant(FamilyVariantInterface $familyVariant): self
     {
         $this->productModel->setFamilyVariant($familyVariant);
+
+        return $this;
+    }
+
+    public function addValue(ValueInterface $value): self
+    {
+        $this->productModel->getValues()->add($value);
 
         return $this;
     }

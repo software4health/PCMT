@@ -13,12 +13,18 @@ use Akeneo\UserManagement\Component\Model\User;
 
 class UserBuilder
 {
+    public const EXAMPLE_FIRST_NAME = 'first name';
+
+    public const EXAMPLE_LAST_NAME = 'last name';
+
     /** @var User */
     private $user;
 
     public function __construct()
     {
         $this->user = new User();
+        $this->user->setFirstName(self::EXAMPLE_FIRST_NAME);
+        $this->user->setLastName(self::EXAMPLE_LAST_NAME);
     }
 
     public function build(): User

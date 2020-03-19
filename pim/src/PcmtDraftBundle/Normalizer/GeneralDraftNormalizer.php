@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2019, VillageReach
+ * Copyright (c) 2020, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
  */
@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Normalizer;
 
-use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use Akeneo\Tool\Component\Localization\Presenter\PresenterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
 use Akeneo\UserManagement\Component\Model\User;
@@ -19,50 +18,32 @@ use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\NewProductDraft;
 use PcmtDraftBundle\Entity\NewProductModelDraft;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class AbstractDraftNormalizer
+class GeneralDraftNormalizer
 {
     /** @var DraftStatusNormalizer */
     private $statusNormalizer;
-
-    /** @var AttributeChangeNormalizer */
-    protected $attributeChangeNormalizer;
-
-    /** @var FormProviderInterface */
-    protected $formProvider;
-
-    /** @var NormalizerInterface */
-    protected $valuesNormalizer;
 
     /** @var PresenterInterface */
     private $datetimePresenter;
 
     /** @var UserContext */
-    protected $userContext;
+    private $userContext;
 
     /** @var TranslatorInterface */
-    protected $translator;
+    private $translator;
 
     public function __construct(
         DraftStatusNormalizer $statusNormalizer,
-        AttributeChangeNormalizer $attributeChangeNormalizer,
-        FormProviderInterface $formProvider
+        PresenterInterface $datetimePresenter,
+        UserContext $userContext,
+        TranslatorInterface $translator
     ) {
         $this->statusNormalizer = $statusNormalizer;
-        $this->attributeChangeNormalizer = $attributeChangeNormalizer;
-        $this->formProvider = $formProvider;
-    }
-
-    public function setValuesNormalizer(NormalizerInterface $valuesNormalizer): void
-    {
-        $this->valuesNormalizer = $valuesNormalizer;
-    }
-
-    public function setDatetimePresenter(PresenterInterface $datetimePresenter): void
-    {
         $this->datetimePresenter = $datetimePresenter;
+        $this->userContext = $userContext;
+        $this->translator = $translator;
     }
 
     public function normalize(DraftInterface $draft, ?string $format = null, array $context = []): array
@@ -85,8 +66,8 @@ class AbstractDraftNormalizer
         $data = [];
         $data['id'] = $draft->getId();
 
-        $data['createdAt'] = $this->datetimePresenter->present($draft->getCreatedAtFormatted(), $datetimeContext);
-        $data['updatedAt'] = $this->datetimePresenter->present($draft->getUpdatedAtFormatted(), $datetimeContext);
+        $data['createdAt'] = $this->datetimePresenter->present($draft->getCreatedAt(), $datetimeContext);
+        $data['updatedAt'] = $this->datetimePresenter->present($draft->getUpdatedAt(), $datetimeContext);
         $author = $draft->getAuthor();
         $data['author'] = $author ? $author->getFirstName() . ' ' . $author->getLastName() : User::SYSTEM_USER_NAME;
         $draftStatus = new DraftStatus($draft->getStatus());
@@ -102,7 +83,7 @@ class AbstractDraftNormalizer
         return $data;
     }
 
-    public function getTypeName(string $type): string
+    private function getTypeName(string $type): string
     {
         switch ($type) {
             case NewProductDraft::TYPE:
@@ -114,15 +95,6 @@ class AbstractDraftNormalizer
             case ExistingProductModelDraft::TYPE:
                 return 'pcmt.entity.draft.type.existing_product_model_draft';
         }
-    }
-
-    public function setUserContext(UserContext $userContext): void
-    {
-        $this->userContext = $userContext;
-    }
-
-    public function setTranslator(TranslatorInterface $translator): void
-    {
-        $this->translator = $translator;
+        throw new \InvalidArgumentException('Unknown draft type: '. $type);
     }
 }

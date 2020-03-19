@@ -31,4 +31,8 @@ interface DraftInterface
     public function setApprovedBy(UserInterface $approvedBy): void;
 
     public function getObject(): ?EntityWithAssociationsInterface;
+
+    public function getCreatedAt(): \DateTime;
+
+    public function getUpdatedAt(): ?\DateTime;
 }
