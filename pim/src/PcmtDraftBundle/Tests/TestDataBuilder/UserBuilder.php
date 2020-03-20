@@ -27,6 +27,13 @@ class UserBuilder
         $this->user->setLastName(self::EXAMPLE_LAST_NAME);
     }
 
+    public function withId(int $id): self
+    {
+        $this->user->setId($id);
+
+        return $this;
+    }
+
     public function build(): User
     {
         return $this->user;

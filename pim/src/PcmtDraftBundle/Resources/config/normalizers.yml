@@ -103,3 +103,8 @@ services:
         class: '%pim_catalog.normalizer.standard.product.associations.class%'
         tags:
             - { name: pim_standard_format_serializer.normalizer, priority: 40 }
+
+    pcmt_draft.normalizer.draft_violation:
+        class: PcmtDraftBundle\Normalizer\DraftViolationNormalizer
+        arguments:
+            $constraintViolationNormalizer: '@pcmt_draft.normalizer.product_violation_with_label'

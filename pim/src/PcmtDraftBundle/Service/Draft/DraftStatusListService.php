@@ -13,6 +13,14 @@ use PcmtDraftBundle\Entity\AbstractDraft;
 
 class DraftStatusListService
 {
+    /** @var DraftStatusTranslatorService */
+    private $statusTranslatorService;
+
+    public function __construct(DraftStatusTranslatorService $statusTranslatorService)
+    {
+        $this->statusTranslatorService = $statusTranslatorService;
+    }
+
     public function getAll(): array
     {
         return [
@@ -20,5 +28,18 @@ class DraftStatusListService
             AbstractDraft::STATUS_APPROVED,
             AbstractDraft::STATUS_REJECTED,
         ];
+    }
+
+    public function getTranslated(): array
+    {
+        return array_map(
+            function (int $statusId) {
+                return [
+                    'id'   => $statusId,
+                    'name' => $this->statusTranslatorService->getNameTranslated($statusId),
+                ];
+            },
+            $this->getAll()
+        );
     }
 }

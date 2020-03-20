@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Tests\TestDataBuilder;
 
+use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 
 class ExistingProductDraftBuilder extends AbstractDraftBuilder
@@ -29,11 +30,19 @@ class ExistingProductDraftBuilder extends AbstractDraftBuilder
         );
 
         $this->setDraftId($this->existingProductDraft, self::EXAMPLE_DRAFT_ID);
+        $this->existingProductDraft->setStatus(AbstractDraft::STATUS_NEW);
     }
 
     public function withId(int $id): self
     {
         $this->setDraftId($this->existingProductDraft, $id);
+
+        return $this;
+    }
+
+    public function withStatus(int $status): self
+    {
+        $this->existingProductDraft->setStatus($status);
 
         return $this;
     }

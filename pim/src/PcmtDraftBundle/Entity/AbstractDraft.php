@@ -9,8 +9,11 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Entity;
 
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
+use Carbon\Carbon;
+use DateTime;
+use PcmtDraftBundle\Exception\DraftApproveFailedException;
+use PcmtDraftBundle\Exception\DraftRejectFailedException;
 
 abstract class AbstractDraft implements DraftInterface
 {
@@ -26,13 +29,13 @@ abstract class AbstractDraft implements DraftInterface
     /** @var int */
     protected $id = 0;
 
-    /** @var \DateTime */
+    /** @var DateTime */
     protected $created;
 
-    /** @var \DateTime */
+    /** @var DateTime */
     protected $updated;
 
-    /** @var \DateTime */
+    /** @var ?DateTime */
     protected $approved;
 
     /** @var int */
@@ -69,12 +72,12 @@ abstract class AbstractDraft implements DraftInterface
         return $this->id;
     }
 
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): DateTime
     {
         return $this->created;
     }
 
-    public function getUpdatedAt(): ?\DateTime
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updated;
     }
@@ -94,14 +97,24 @@ abstract class AbstractDraft implements DraftInterface
         $this->status = $statusId;
     }
 
-    public function setApproved(\DateTime $approved): void
+    public function setApproved(DateTime $approved): void
     {
         $this->approved = $approved;
+    }
+
+    public function getApproved(): ?DateTime
+    {
+        return $this->approved;
     }
 
     public function setApprovedBy(UserInterface $approvedBy): void
     {
         $this->approvedBy = $approvedBy;
+    }
+
+    public function getApprovedBy(): ?UserInterface
+    {
+        return $this->approvedBy;
     }
 
     public function getType(): string
@@ -119,26 +132,46 @@ abstract class AbstractDraft implements DraftInterface
         $this->productData = $productData;
     }
 
-    public function setCreated(\DateTime $created): void
+    public function setCreated(DateTime $created): void
     {
         $this->created = $created;
     }
 
-    public function setUpdated(\DateTime $updated): void
+    public function setUpdated(DateTime $updated): void
     {
         $this->updated = $updated;
     }
 
-    public function getCreated(): \DateTime
+    public function getCreated(): DateTime
     {
         return $this->created;
     }
 
     public function updateTimestamps(): void
     {
-        $this->setUpdated(new \DateTime('now'));
+        $this->setUpdated(new DateTime('now'));
         if (null === $this->getCreated()) {
-            $this->setCreated(new \DateTime('now'));
+            $this->setCreated(new DateTime('now'));
         }
+    }
+
+    public function approve(UserInterface $approver): void
+    {
+        if (self::STATUS_NEW !== $this->getStatus()) {
+            throw DraftApproveFailedException::createWithDefaultMessage();
+        }
+
+        $this->setStatus(self::STATUS_APPROVED);
+        $this->setApproved(Carbon::now());
+        $this->setApprovedBy($approver);
+    }
+
+    public function reject(): void
+    {
+        if (self::STATUS_NEW !== $this->getStatus()) {
+            throw DraftRejectFailedException::createWithDefaultMessage();
+        }
+
+        $this->status = self::STATUS_REJECTED;
     }
 }

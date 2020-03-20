@@ -40,6 +40,13 @@ class ExistingProductModelDraftBuilder extends AbstractDraftBuilder
         return $this;
     }
 
+    public function withStatus(int $status): self
+    {
+        $this->existingProductModelDraft->setStatus($status);
+
+        return $this;
+    }
+
     public function build(): ExistingProductModelDraft
     {
         return $this->existingProductModelDraft;

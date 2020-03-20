@@ -11,9 +11,7 @@ namespace PcmtDraftBundle\Service\Draft;
 
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
-use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
-use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -50,17 +48,6 @@ class DraftApprover
         $this->creator = $creator;
     }
 
-    protected function updateDraftEntity(DraftInterface $draft): void
-    {
-        $draft->setStatus(AbstractDraft::STATUS_APPROVED);
-        $draft->setApproved(Carbon::now());
-        $user = $this->tokenStorage->getToken()->getUser();
-        /** @var UserInterface $user */
-        $draft->setApprovedBy($user);
-        $this->entityManager->persist($draft);
-        $this->entityManager->flush();
-    }
-
     public function approve(DraftInterface $draft): void
     {
         $objectToSave = $this->creator->getObjectToSave($draft);
@@ -76,6 +63,12 @@ class DraftApprover
             throw new DraftViolationException($violations, $objectToSave);
         }
 
-        $this->updateDraftEntity($draft);
+        /** @var UserInterface $user */
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        $draft->approve($user);
+
+        $this->entityManager->persist($draft);
+        $this->entityManager->flush();
     }
 }
