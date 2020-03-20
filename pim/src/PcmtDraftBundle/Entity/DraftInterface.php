@@ -11,6 +11,7 @@ namespace PcmtDraftBundle\Entity;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithAssociationsInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
+use DateTime;
 
 interface DraftInterface
 {
@@ -26,13 +27,21 @@ interface DraftInterface
 
     public function getStatus(): int;
 
-    public function setApproved(\DateTime $approved): void;
+    public function setApproved(DateTime $approved): void;
+
+    public function getApproved(): ?DateTime;
 
     public function setApprovedBy(UserInterface $approvedBy): void;
 
+    public function getApprovedBy(): ?UserInterface;
+
     public function getObject(): ?EntityWithAssociationsInterface;
 
-    public function getCreatedAt(): \DateTime;
+    public function getCreatedAt(): DateTime;
 
-    public function getUpdatedAt(): ?\DateTime;
+    public function getUpdatedAt(): ?DateTime;
+
+    public function approve(UserInterface $approver): void;
+
+    public function reject(): void;
 }

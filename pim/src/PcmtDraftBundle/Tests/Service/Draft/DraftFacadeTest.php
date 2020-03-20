@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Tests\Service\Draft;
 
 use Doctrine\ORM\EntityManagerInterface;
-use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
@@ -75,7 +74,7 @@ class DraftFacadeTest extends TestCase
         $this->entityManagerMock->expects($this->once())->method('persist');
         $this->entityManagerMock->expects($this->once())->method('flush');
         $draft = $this->createMock(DraftInterface::class);
-        $draft->expects($this->once())->method('setStatus')->with(AbstractDraft::STATUS_REJECTED);
+        $draft->expects($this->once())->method('reject');
         $facade->rejectDraft($draft);
     }
 

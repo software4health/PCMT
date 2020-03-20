@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Service\Draft;
 
 use Doctrine\ORM\EntityManagerInterface;
-use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
@@ -49,14 +48,13 @@ class DraftFacade
         } elseif ($draft instanceof ProductModelDraftInterface) {
             $this->productModelDraftApprover->approve($draft);
         } else {
-            $class = get_class($draft);
-            throw new \Exception('Unknown class: ' . $class);
+            throw new \Exception('Unknown class: '.get_class($draft));
         }
     }
 
     public function rejectDraft(DraftInterface $draft): void
     {
-        $draft->setStatus(AbstractDraft::STATUS_REJECTED);
+        $draft->reject();
         $this->entityManager->persist($draft);
         $this->entityManager->flush();
     }

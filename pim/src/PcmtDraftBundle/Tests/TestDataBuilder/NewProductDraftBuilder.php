@@ -37,6 +37,13 @@ class NewProductDraftBuilder extends AbstractDraftBuilder
         return $this;
     }
 
+    public function withStatus(int $status): self
+    {
+        $this->newProductDraft->setStatus($status);
+
+        return $this;
+    }
+
     public function build(): NewProductDraft
     {
         return $this->newProductDraft;

@@ -6,10 +6,10 @@
 
 services:
     pcmt_core.controller.rest.draft:
-        class: PcmtDraftBundle\Controller\PcmtDraftController
+        class: PcmtDraftBundle\Controller\DraftController
         autowire: true
         arguments:
-            $constraintViolationNormalizer: '@pcmt_draft.normalizer.product_violation_with_label'
+            $draftViolationNormalizer: '@pcmt_draft.normalizer.draft_violation'
 
     pcmt_core.controller.product:
         class: 'PcmtDraftBundle\Controller\PcmtUiProductController'
