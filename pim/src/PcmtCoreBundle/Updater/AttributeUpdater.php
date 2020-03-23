@@ -33,7 +33,7 @@ class AttributeUpdater implements ObjectUpdaterInterface
     protected $translatableUpdater;
 
     /** @var ConcatenatedAttributeUpdater */
-    protected $concatenatedAttributeCreator;
+    protected $concatenatedAttributeUpdater;
 
     /** @var BaseAttributeUpdater */
     private $baseAttributeUpdater;
@@ -41,9 +41,9 @@ class AttributeUpdater implements ObjectUpdaterInterface
     public function __construct(
         BaseAttributeUpdater $baseAttributeUpdater,
         TranslatableUpdater $translatableUpdater,
-        ConcatenatedAttributeUpdater $concatenatedAttributeCreator
+        ConcatenatedAttributeUpdater $concatenatedAttributeUpdater
     ) {
-        $this->concatenatedAttributeCreator = $concatenatedAttributeCreator;
+        $this->concatenatedAttributeUpdater = $concatenatedAttributeUpdater;
         $this->translatableUpdater = $translatableUpdater;
         $this->baseAttributeUpdater = $baseAttributeUpdater;
     }
@@ -113,7 +113,7 @@ class AttributeUpdater implements ObjectUpdaterInterface
                 $this->translatableUpdater->updateDescription($attribute, $data);
                 break;
             case 'concatenated':
-                $this->concatenatedAttributeCreator->update($attribute, $data);
+                $this->concatenatedAttributeUpdater->update($attribute, $data);
                 break;
         }
     }

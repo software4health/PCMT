@@ -17,6 +17,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
+use PcmtCoreBundle\Entity\ConcatenatedProperty;
 use PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -56,32 +57,20 @@ class ObjectUpdater implements ObjectUpdaterInterface
     {
         $this->validateData($object, $data);
 
+        /** @var AttributeInterface $concatenatedAttribute */
         $concatenatedAttribute = $data['concatenatedAttribute'];
-        $concatenatedValue = [];
         foreach ($data['memberAttributes'] as $memberAttribute) {
+            /** @var AttributeInterface $memberAttribute */
             if (!$memberAttribute instanceof AttributeInterface) {
                 throw new \InvalidArgumentException(
                     'Wrong type passed for update. ' . AttributeInterface::class . ' expected.'
                 );
-            }
-
-            if ($object->hasAttribute($memberAttribute->getCode())) {
-                $productValue = $object->getValue($memberAttribute->getCode());
-
-                if (!(null === $productValue || '' === $productValue || [] === $productValue)) {
-                    $concatenatedValue[] = $productValue->__toString();
-                } else {
-                    $concatenatedValue[] = $memberAttribute->getCode() . ' ' . self::IS_EMPTY;
-                }
-            } else {
-                $concatenatedValue[] = $memberAttribute->getCode() . ' ' . self::IS_MISSING;
             }
         }
 
         if ($concatenatedAttribute->isScopable()) {
             $scopes = $this->channelRepository->getChannelCodes();
         }
-
         if ($concatenatedAttribute->isLocalizable()) {
             $locales = $this->localeRepository->getActivatedLocaleCodes();
         }
@@ -91,7 +80,7 @@ class ObjectUpdater implements ObjectUpdaterInterface
 
         foreach ($scopes as $scope) {
             foreach ($locales as $locale) {
-                $this->updateWithSpecificScopeAndLocale($object, $concatenatedAttribute, $concatenatedValue, $scope, $locale);
+                $this->updateWithSpecificScopeAndLocale($object, $concatenatedAttribute, $scope, $locale);
             }
         }
 
@@ -138,22 +127,45 @@ class ObjectUpdater implements ObjectUpdaterInterface
     private function updateWithSpecificScopeAndLocale(
         EntityWithValuesInterface $objectToUpdate,
         AttributeInterface $concatenatedAttribute,
-        array $concatenatedValue,
         ?string $scope = null,
         ?string $locale = null
     ): void {
+        $property = new ConcatenatedProperty();
+        $property->updateFromAttribute($concatenatedAttribute);
+
+        $finalValue = '';
+
+        $separators = $property->getSeparators();
+        $attributeCodes = $property->getAttributeCodes();
+        foreach ($attributeCodes as $key => $attributeCode) {
+            $finalValue .= $this->getValue($objectToUpdate, $attributeCode, $locale, $scope);
+            if (!empty($separators[$key])) {
+                $finalValue .= $separators[$key];
+            }
+        }
+
         $valuesToUpdate[$concatenatedAttribute->getCode()]['data'] = [
-            'data' => array_reverse(
-                [
-                    implode(
-                        $concatenatedAttribute->getProperty('separators'),
-                        $concatenatedValue
-                    ),
-                ]
-            ),
+            'data'   => [$finalValue],
             'scope'  => $scope,
             'locale' => $locale,
         ];
         $this->entityWithValuesUpdater->update($objectToUpdate, $valuesToUpdate);
+    }
+
+    private function getValue(EntityWithValuesInterface $object, string $attributeCode, ?string $locale, ?string $scope): string
+    {
+        if (!$attributeCode) {
+            return '';
+        }
+        if (!$object->hasAttribute($attributeCode)) {
+            return $attributeCode . ' ' . self::IS_MISSING;
+        }
+        $productValue = $object->getValue($attributeCode, $locale, $scope);
+        $stringValue = $productValue->__toString();
+        if ($stringValue) {
+            return $stringValue;
+        }
+
+        return $attributeCode . ' ' . self::IS_EMPTY;
     }
 }

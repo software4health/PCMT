@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace PcmtCoreBundle\Validator;
 
 use PcmtCoreBundle\Entity\Attribute;
+use PcmtCoreBundle\Entity\ConcatenatedProperty;
 use PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -25,31 +26,34 @@ class AttributeValidator
             return;
         }
 
-        $properties = $object->getProperties();
-        if (empty($properties) || empty($properties['attributes'])) {
+        $concatenatedProperty = new ConcatenatedProperty();
+        $concatenatedProperty->updateFromAttribute($object);
+
+        if (2 > $concatenatedProperty->getAttributeCodesCount()) {
             self::addTypeSpecificFieldsViolation($context);
 
             return;
         }
-
-        $baseAttributes = explode(',', $properties['attributes']);
-        if (2 !== count($baseAttributes)) {
-            self::addTypeSpecificFieldsViolation($context);
-
-            return;
-        }
-        foreach ($baseAttributes as $baseAttribute) {
-            if (empty($baseAttribute)) {
+        foreach ($concatenatedProperty->getAttributeCodes() as $separator) {
+            if (empty($separator)) {
                 self::addTypeSpecificFieldsViolation($context);
 
                 return;
             }
         }
 
-        if (empty($properties['separators'])) {
+        if (1 > $concatenatedProperty->getSeparatorsCount()) {
             self::addTypeSpecificFieldsViolation($context);
 
             return;
+        }
+
+        foreach ($concatenatedProperty->getSeparators() as $separator) {
+            if (empty($separator)) {
+                self::addTypeSpecificFieldsViolation($context);
+
+                return;
+            }
         }
     }
 

@@ -11,7 +11,9 @@ namespace PcmtDraftBundle\Tests\Normalizer;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
+use PcmtCoreBundle\Entity\ConcatenatedProperty;
 use PcmtCoreBundle\Normalizer\Standard\ConcatenatedTypeNormalizer;
+use PcmtCoreBundle\Tests\TestDataBuilder\AttributeBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -25,7 +27,7 @@ class ConcatenatedTypeNormalizerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->attribute = $this->createMock(AttributeInterface::class);
+        $this->attribute = (new AttributeBuilder())->buildConcatenated();
         parent::setUp();
     }
 
@@ -34,11 +36,9 @@ class ConcatenatedTypeNormalizerTest extends TestCase
      */
     public function testNormalize(string $attributes, string $separators, array $result): void
     {
-        $map = [
-            ['attributes', $attributes],
-            ['separators', $separators],
-        ];
-        $this->attribute->method('getProperty')->willReturnMap($map);
+        $this->attribute->setProperty('attributes', $attributes);
+        $this->attribute->setProperty('separators', $separators);
+
         $this->concatenatedNormalizer = new ConcatenatedTypeNormalizer();
         $array = $this->concatenatedNormalizer->normalize($this->attribute);
 
@@ -59,10 +59,16 @@ class ConcatenatedTypeNormalizerTest extends TestCase
                 'attribute2' => 'bbb',
                 'separator1' => '|',
             ]],
-            ['aa,bbb', ',', [
+            ['aa,bbb', ConcatenatedProperty::SPECIAL_CODE_FOR_DELIMITER, [
                 'attribute1' => 'aa',
                 'attribute2' => 'bbb',
-                'separator1' => ',',
+                'separator1' => ConcatenatedProperty::DELIMITER,
+            ]],
+            ['aa,bbb', 'x,y', [
+                'attribute1' => 'aa',
+                'attribute2' => 'bbb',
+                'separator1' => 'x',
+                'separator2' => 'y',
             ]],
         ];
     }
