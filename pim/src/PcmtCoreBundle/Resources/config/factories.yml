@@ -14,8 +14,6 @@ services:
         class: PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\Factory\ConcatenatedValueFactory
         public: false
         arguments:
-            - '@pim_catalog.repository.attribute'
-            - '@pim_catalog.factory.value'
             - '%pcmt_concatenated_attribute.value.concatenated_value.class%'
             - 'pcmt_catalog_concatenated'
         tags:

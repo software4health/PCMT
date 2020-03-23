@@ -30,8 +30,8 @@ define([
         template: _.template(formTemplate),
         attributes: [],
         members : {
-            attributes : ['attribute1', 'attribute2'],
-            separators: ['separator1']
+            attributes : ['attribute1', 'attribute2', 'attribute3'],
+            separators: ['separator1', 'separator2']
         },
 
         initialize: function (config) {

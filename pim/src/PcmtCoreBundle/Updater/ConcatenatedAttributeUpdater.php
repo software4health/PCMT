@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PcmtCoreBundle\Updater;
 
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
+use PcmtCoreBundle\Entity\ConcatenatedProperty;
 use PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
 use Psr\Log\LoggerInterface;
 
@@ -18,39 +19,28 @@ class ConcatenatedAttributeUpdater
     /** @var LoggerInterface */
     private $logger;
 
-    /** @var string[] */
-    private $concatenatedAttributes = [];
+    /** @var ConcatenatedProperty */
+    private $property;
 
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
-        $this->concatenatedAttributes = [];
+        $this->property = new ConcatenatedProperty();
     }
 
-    public function update(AttributeInterface $attribute, array $data): AttributeInterface
+    public function update(AttributeInterface $attribute, array $concatenatedPropertyData): AttributeInterface
     {
         try {
             $this->validateAttribute($attribute);
-            foreach ($data as $field => $value) {
-                $this->updatePropertyValue($attribute, $field, $value);
+            foreach ($concatenatedPropertyData as $field => $value) {
+                $this->property->updatePropertyValue($field, $value);
             }
         } catch (\InvalidArgumentException $argumentException) {
             $this->logger->error($argumentException->getMessage());
         }
+        $this->property->setAttributeProperties($attribute);
 
         return $attribute;
-    }
-
-    private function updatePropertyValue(AttributeInterface $attribute, string $field, string $value): void
-    {
-        switch (true) {
-            case 0 === mb_strpos($field, 'separator'):
-                $attribute->setProperty('separators', $value);
-                break;
-            case 0 === mb_strpos($field, 'attribute'):
-                $this->updateConcatenatedAttributes($attribute, $value);
-                break;
-        }
     }
 
     private function validateAttribute(AttributeInterface $attribute): void
@@ -64,12 +54,5 @@ class ConcatenatedAttributeUpdater
 
             throw new \InvalidArgumentException($message);
         }
-    }
-
-    private function updateConcatenatedAttributes(AttributeInterface $attribute, string $value): void
-    {
-        $this->concatenatedAttributes[] = $value;
-        $serializedAttributes = implode(',', $this->concatenatedAttributes);
-        $attribute->setProperty('attributes', $serializedAttributes);
     }
 }
