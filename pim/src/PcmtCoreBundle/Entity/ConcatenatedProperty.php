@@ -67,8 +67,29 @@ class ConcatenatedProperty
     public function updateFromAttribute(AttributeInterface $attribute): void
     {
         $this->attributeCodes = explode(self::DELIMITER, (string) $attribute->getProperty('attributes'));
+        $this->removeEmptyAttributes();
         $this->separators = explode(self::DELIMITER, (string) $attribute->getProperty('separators'));
+        $this->removeUnnecessarySeparators();
         $this->decodeDelimiter();
+    }
+
+    private function removeEmptyAttributes(): void
+    {
+        while (count($this->attributeCodes) > 2) {
+            $lastAttributeCode = end($this->attributeCodes);
+            if (!$lastAttributeCode) {
+                array_pop($this->attributeCodes);
+            } else {
+                return;
+            }
+        }
+    }
+
+    private function removeUnnecessarySeparators(): void
+    {
+        while ($this->getSeparatorsCount() > $this->getAttributeCodesCount() - 1) {
+            array_pop($this->separators);
+        }
     }
 
     private function addAttributeCode(string $code): void

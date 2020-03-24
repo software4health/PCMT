@@ -29,18 +29,20 @@ define([
         },
         template: _.template(formTemplate),
         attributes: [],
-        members : {
-            attributes : ['attribute1', 'attribute2', 'attribute3'],
-            separators: ['separator1', 'separator2']
-        },
+        members : {},
 
         initialize: function (config) {
             this.config = config.config;
             BaseForm.prototype.initialize.apply(this, arguments);
+            this.members = {
+                attributes : ['attribute1', 'attribute2'],
+                separators: ['separator1']
+            };
         },
 
         configure: function() {
-
+            this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_fetch', this.updateMembersList);
+            this.listenTo(this.getRoot(), 'pcmt:attribute:members_changed', this.render);
             return $.when(
                 this.getAttributes()
                     .then(function (attributes) {
@@ -48,6 +50,49 @@ define([
                     }.bind(this)),
                 BaseForm.prototype.configure.apply(this, arguments)
             );
+
+        },
+        updateMembersList: function () {
+            if (!this.checkIfLastAttributeEmpty()) {
+                this.addBaseAttribute();
+                this.updateMembersList();
+            } else {
+                if (this.checkIfLastTwoAttributesAndSeparatorEmpty()) {
+                    this.removeBaseAttribute();
+                }
+            }
+        },
+        removeBaseAttribute: function() {
+            this.members.attributes.pop();
+            this.members.separators.pop();
+            this.getRoot().trigger('pcmt:attribute:members_changed');
+        },
+        addBaseAttribute: function() {
+            let attributeCount = this.members.attributes.length;
+            let keya = 'attribute' + (attributeCount + 1);
+            this.members.attributes.push(keya);
+            let keys = 'separator' + attributeCount;
+            this.members.separators.push(keys);
+            this.getRoot().trigger('pcmt:attribute:members_changed');
+        },
+        checkIfLastAttributeEmpty: function() {
+            let data = this.getFormData();
+            let lastA = _.last(this.members.attributes);
+            return !data.concatenated[lastA]
+        },
+        checkIfLastTwoAttributesAndSeparatorEmpty: function() {
+            let data = this.getFormData();
+            let lastS = _.last(this.members.separators);
+            let lastAs = _.last(this.members.attributes, 2);
+            if (data.concatenated[lastS]) {
+                 return false;
+            }
+            for (let i = 0; i < lastAs.length; i++) {
+                if (data.concatenated[lastAs[i]]) {
+                    return false;
+                }
+            }
+            return true;
         },
         updateModel: function (event) {
 
@@ -59,12 +104,12 @@ define([
 
             /** stringMember is the key, whether 'separators' or 'attributes' **/
             data.concatenated[event.target.name] = this.getFieldValue(event.target);
-
             this.setData(data);
+
+            this.updateMembersList();
         },
 
         render: function(templateContext) {
-
             this.$el.html(this.template({
                 value: "",
                 model: this.getFormData(),
