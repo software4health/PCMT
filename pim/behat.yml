@@ -1,0 +1,19 @@
+default:
+  suites:
+    default:
+      contexts:
+        - FeatureContext:
+        - behatch:context:rest
+        - behatch:context:json
+
+  extensions:
+    Behat\Symfony2Extension:
+      kernel:
+        bootstrap: features/bootstrap/bootstrap.php
+        env: test
+    Behatch\Extension: ~
+    Behat\MinkExtension:
+      base_url: http://localhost
+      sessions:
+        default:
+          symfony2: ~
