@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Tests\TestDataBuilder;
 
 use PcmtDraftBundle\Entity\NewProductDraft;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class NewProductDraftBuilder extends AbstractDraftBuilder
 {
@@ -40,6 +41,20 @@ class NewProductDraftBuilder extends AbstractDraftBuilder
     public function withStatus(int $status): self
     {
         $this->newProductDraft->setStatus($status);
+
+        return $this;
+    }
+
+    public function withOwner(UserInterface $user): self
+    {
+        $this->author = $user;
+
+        return $this;
+    }
+
+    public function withProductData(array $productData): self
+    {
+        $this->productData = $productData;
 
         return $this;
     }

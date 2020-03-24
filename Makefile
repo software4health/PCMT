@@ -122,3 +122,7 @@ dev-pcmt-migration-generate:
 .PHONY: dev-import-sql
 dev-import-sql:
 	bin/import-sql.sh
+
+.PHONY: test-behat
+test-behat:
+	docker exec pcmt_fpm_1 vendor/bin/behat

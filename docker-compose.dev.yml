@@ -13,6 +13,8 @@ services:
       - './pim/app:/tmp/pcmt/app:ro'
       - './pim/web:/tmp/pcmt/web:ro'
       - './pim/composer.json:/srv/pim/composer.json'
+      - './pim/features:/srv/pim/features:rw'
+      - './pim/behat.yml:/srv/pim/behat.yml'
       - './pim/composer.lock:/srv/pim/composer.lock'
       - './pim/crontab:/srv/pim/crontab'
       - './pim/ecs.yml:/srv/pim/ecs.yml'
