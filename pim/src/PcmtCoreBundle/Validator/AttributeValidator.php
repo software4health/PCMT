@@ -34,15 +34,15 @@ class AttributeValidator
 
             return;
         }
-        foreach ($concatenatedProperty->getAttributeCodes() as $separator) {
-            if (empty($separator)) {
+        foreach ($concatenatedProperty->getAttributeCodes() as $code) {
+            if (empty($code)) {
                 self::addTypeSpecificFieldsViolation($context);
 
                 return;
             }
         }
 
-        if (1 > $concatenatedProperty->getSeparatorsCount()) {
+        if ($concatenatedProperty->getSeparatorsCount() !== $concatenatedProperty->getAttributeCodesCount() - 1) {
             self::addTypeSpecificFieldsViolation($context);
 
             return;

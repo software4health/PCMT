@@ -80,6 +80,12 @@ class AttributeValidatorTest extends TestCase
                     'separators' => ':',
                 ])
                 ->buildConcatenated(), ],
+            [(new AttributeBuilder())
+                ->withProperties([
+                    'attributes' => 'A1,A2,A3',
+                    'separators' => ':',
+                ])
+                ->buildConcatenated(), ],
         ];
     }
 
@@ -109,7 +115,19 @@ class AttributeValidatorTest extends TestCase
             [(new AttributeBuilder())
                 ->withProperties([
                     'attributes' => 'A1,A2,A3',
+                    'separators' => ':,:',
+                ])
+                ->buildConcatenated(), ],
+            [(new AttributeBuilder())
+                ->withProperties([
+                    'attributes' => 'A1,A2,,',
                     'separators' => ':',
+                ])
+                ->buildConcatenated(), ],
+            [(new AttributeBuilder())
+                ->withProperties([
+                    'attributes' => 'A1,A2,,',
+                    'separators' => ':,*,&,(',
                 ])
                 ->buildConcatenated(), ],
         ];

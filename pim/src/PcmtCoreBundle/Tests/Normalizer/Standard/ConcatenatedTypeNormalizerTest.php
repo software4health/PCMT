@@ -64,9 +64,10 @@ class ConcatenatedTypeNormalizerTest extends TestCase
                 'attribute2' => 'bbb',
                 'separator1' => ConcatenatedProperty::DELIMITER,
             ]],
-            ['aa,bbb', 'x,y', [
+            ['aa,bbb,cc', 'x,y', [
                 'attribute1' => 'aa',
                 'attribute2' => 'bbb',
+                'attribute3' => 'cc',
                 'separator1' => 'x',
                 'separator2' => 'y',
             ]],
