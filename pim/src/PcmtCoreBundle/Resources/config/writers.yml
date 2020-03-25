@@ -12,10 +12,6 @@ services:
         calls:
           - [setFlatItemBufferFlusher, ["@pcmt_connector.job.writer.file.e2open_flat_item_buffer_flusher"]]
 
-    pcmt_connector.writer.file.mst_supplier:
-        class: 'PcmtCoreBundle\Connector\Job\Writer\MstSupplierExportWriter'
-        parent: 'pcmt_connector.writer.file.e2open'
-
     pcmt_connector.write.reference_data:
         class: PcmtCoreBundle\Writer\ReferenceDataWriter
         arguments:

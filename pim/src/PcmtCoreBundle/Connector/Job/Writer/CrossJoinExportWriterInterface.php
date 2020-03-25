@@ -9,7 +9,13 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Connector\Job\Writer;
 
-interface CrossJoinExportWriterInterface
+use Akeneo\Tool\Component\Batch\Item\InvalidItemException;
+use Akeneo\Tool\Component\Batch\Item\ItemWriterInterface;
+
+interface CrossJoinExportWriterInterface extends ItemWriterInterface
 {
+    /**
+     * @throws InvalidItemException
+     */
     public function writeCross(array $items, array $crossItems): void;
 }

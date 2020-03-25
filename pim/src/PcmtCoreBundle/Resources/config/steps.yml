@@ -33,7 +33,7 @@ services:
             - '@akeneo_batch.job_repository'
             - '@pcmt_connector.reader.database.mst_supplier_export'
             - '@pim_connector.processor.normalization.product'
-            - '@pcmt_connector.writer.file.mst_supplier'
+            - '@pcmt_connector.writer.file.e2open'
             - '1'
 
     pcmt_xml_connector.step.xml_reference_data_download:

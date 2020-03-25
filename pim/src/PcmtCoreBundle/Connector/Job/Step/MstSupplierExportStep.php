@@ -18,6 +18,8 @@ use PcmtCoreBundle\Connector\Job\Writer\CrossJoinExportWriterInterface;
 
 class MstSupplierExportStep extends ItemStep
 {
+    public const FAMILY_TO_CROSS_READ = 'MD_SUPPLIER_MASTER';
+
     /** @var CrossJoinExportWriterInterface */
     protected $writer = null;
 
@@ -42,7 +44,7 @@ class MstSupplierExportStep extends ItemStep
      */
     private function getCrossProducts(): array
     {
-        $this->reader->setFamilyToCrossRead('MD_SUPPLIER_MASTER');
+        $this->reader->setFamilyToCrossRead(self::FAMILY_TO_CROSS_READ);
         $itemsToWrite = [];
         while (true) {
             try {
