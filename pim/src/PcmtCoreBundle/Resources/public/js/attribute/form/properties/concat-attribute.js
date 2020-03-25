@@ -29,19 +29,15 @@ define([
         },
         template: _.template(formTemplate),
         attributes: [],
-        members : {},
+        attributeCount: 2,
 
         initialize: function (config) {
             this.config = config.config;
             BaseForm.prototype.initialize.apply(this, arguments);
-            this.members = {
-                attributes : ['attribute1', 'attribute2'],
-                separators: ['separator1']
-            };
         },
 
         configure: function() {
-            this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_fetch', this.updateMembersList);
+            this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_fetch', this.updateAttributeCount);
             this.listenTo(this.getRoot(), 'pcmt:attribute:members_changed', this.render);
             return $.when(
                 this.getAttributes()
@@ -52,10 +48,9 @@ define([
             );
 
         },
-        updateMembersList: function () {
+        updateAttributeCount: function () {
             if (!this.checkIfLastAttributeEmpty()) {
                 this.addBaseAttribute();
-                this.updateMembersList();
             } else {
                 if (this.checkIfLastTwoAttributesAndSeparatorEmpty()) {
                     this.removeBaseAttribute();
@@ -63,32 +58,30 @@ define([
             }
         },
         removeBaseAttribute: function() {
-            this.members.attributes.pop();
-            this.members.separators.pop();
-            this.getRoot().trigger('pcmt:attribute:members_changed');
+            if (this.attributeCount > 2) {
+                this.attributeCount--;
+                this.getRoot().trigger('pcmt:attribute:members_changed');
+                this.updateAttributeCount();
+            }
         },
         addBaseAttribute: function() {
-            let attributeCount = this.members.attributes.length;
-            let keya = 'attribute' + (attributeCount + 1);
-            this.members.attributes.push(keya);
-            let keys = 'separator' + attributeCount;
-            this.members.separators.push(keys);
+            this.attributeCount++;
             this.getRoot().trigger('pcmt:attribute:members_changed');
+            this.updateAttributeCount();
         },
         checkIfLastAttributeEmpty: function() {
             let data = this.getFormData();
-            let lastA = _.last(this.members.attributes);
-            return !data.concatenated[lastA]
+            return !data.concatenated['attribute' + this.attributeCount]
         },
         checkIfLastTwoAttributesAndSeparatorEmpty: function() {
             let data = this.getFormData();
-            let lastS = _.last(this.members.separators);
-            let lastAs = _.last(this.members.attributes, 2);
-            if (data.concatenated[lastS]) {
-                 return false;
-            }
-            for (let i = 0; i < lastAs.length; i++) {
-                if (data.concatenated[lastAs[i]]) {
+            let lastElements = [
+                'attribute' + this.attributeCount,
+                'attribute' + (this.attributeCount - 1),
+                'separator' + (this.attributeCount - 1)
+            ];
+            for (let i = 0; i < lastElements.length; i++) {
+                if (data.concatenated[lastElements[i]]) {
                     return false;
                 }
             }
@@ -102,18 +95,17 @@ define([
                 data.concatenated = {}
             }
 
-            /** stringMember is the key, whether 'separators' or 'attributes' **/
             data.concatenated[event.target.name] = this.getFieldValue(event.target);
             this.setData(data);
 
-            this.updateMembersList();
+            this.updateAttributeCount();
         },
 
         render: function(templateContext) {
             this.$el.html(this.template({
+                attributeCount: this.attributeCount,
                 value: "",
                 model: this.getFormData(),
-                members: this.members,
                 multiple: false,
                 choices: this.formatChoices(this.attributes),
                 readOnly: false,
