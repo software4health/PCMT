@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Connector\Job\Reader;
 
-use Akeneo\Pim\Enrichment\Component\Product\Exception\ObjectNotFoundException;
+use Akeneo\Tool\Component\Batch\Item\InvalidItemException;
 use Akeneo\Tool\Component\Batch\Item\ItemReaderInterface;
 
 interface CrossJoinExportReaderInterface extends ItemReaderInterface
@@ -17,7 +17,8 @@ interface CrossJoinExportReaderInterface extends ItemReaderInterface
     /**
      * @return mixed|null
      *
-     * @throws ObjectNotFoundException
+     * @throws InvalidItemException if there is a problem reading the current record
+     *                              (but the next one may still be valid)
      */
     public function readCross();
 
