@@ -1,10 +1,19 @@
 default:
   suites:
-    default:
+    api:
+      paths:
+        - %paths.base%/features/api
       contexts:
-        - FeatureContext:
+        - BaseApiContext:
+            draftFixture: '@pcmt_draft.fixture.new_draft_fixture'
         - behatch:context:rest
         - behatch:context:json
+
+    selenium:
+      paths:
+        - %paths.base%/features/selenium
+      contexts:
+        - SeleniumBaseContext: ~
 
   extensions:
     Behat\Symfony2Extension:
@@ -13,7 +22,14 @@ default:
         env: test
     Behatch\Extension: ~
     Behat\MinkExtension:
-      base_url: http://localhost
+      default_session: symfony2
+      javascript_session: selenium2
+      browser_name: chrome
       sessions:
-        default:
+        symfony2:
           symfony2: ~
+        selenium2:
+          selenium2:
+            wd_host: 'http://192.168.0.26:4444/wd/hub'
+            capabilities: { "browserName": "chrome", "browser": "chrome", "version": "*", 'chrome': {'switches':['--no-sandbox', '--test-type']}}
+      base_url: 'http://192.168.0.26/'

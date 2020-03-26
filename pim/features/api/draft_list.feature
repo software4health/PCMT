@@ -4,6 +4,14 @@ Feature: List Drafts
   I need to have a list of drafts
 
   Scenario: List Drafts
-    Given I am logged in as "admin" with password "Admin123"
+    Given There is a draft with status "New"
     When I send a "GET" request to "/rest/drafts/?status=1&page=1" endpoint
     Then The response status code should be 200
+    Then The response matches expected template:
+    """
+    {
+       "objects": [ "@json@" ],
+       "params":"@json@"
+    }
+    """
+

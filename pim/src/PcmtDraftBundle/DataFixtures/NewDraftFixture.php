@@ -13,31 +13,29 @@ namespace PcmtDraftBundle\DataFixtures;
 use Akeneo\UserManagement\Component\Model\User;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use PcmtDraftBundle\Tests\TestDataBuilder\NewProductDraftBuilder;
+use PcmtDraftBundle\Entity\NewProductDraft;
 
 class NewDraftFixture implements FixtureInterface
 {
     public function load(
         ObjectManager $manager
     ): void {
-        $draftBuilder = new NewProductDraftBuilder();
         $userRepository = $manager->getRepository(User::class);
 
-        $user = $userRepository->findOneBy([
-            'id' => 1,
-        ]);
+        $user = $userRepository->findOneBy(
+            [
+                'id' => 1,
+            ]
+        );
 
-        $manager->persist($user);
-        $manager->flush();
-
-        $draft = $draftBuilder
-            ->withOwner($user)
-            ->withId(1)
-            ->withProductData([
+        $draft = new NewProductDraft(
+            [
                 'identifier' => $this->generateTestIdentifier(),
                 'family'     => 'MD_HUB',
-            ])
-            ->build();
+            ],
+            new \DateTime(),
+            $user
+        );
 
         $manager->persist($draft);
         $manager->flush();
@@ -45,9 +43,6 @@ class NewDraftFixture implements FixtureInterface
 
     private function generateTestIdentifier(): string
     {
-        /*
-         * @todo - generate test data in other way
-         */
         return 'behat_unique_id_' . random_int(1, 100000);
     }
 }
