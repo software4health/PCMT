@@ -37,6 +37,11 @@ services:
             - '@pim_catalog.saver.product_model'
             - '@pcmt.service.general_object_from_draft_creator'
 
+    pcmt.service.draft_values_with_missing_attribute_filter:
+        class: PcmtDraftBundle\Service\Draft\DraftValuesWithMissingAttributeFilter
+        arguments:
+            - '@pim_catalog.repository.attribute'
+
     pcmt.service.product_from_draft_creator:
         class: PcmtDraftBundle\Service\Draft\ProductFromDraftCreator
         arguments:
@@ -47,6 +52,7 @@ services:
             - '@pim_catalog.comparator.filter.product'
             - '@pim_catalog.updater.product'
             - '@pim_enrich.filter.product_attribute_filter'
+            - '@pcmt.service.draft_values_with_missing_attribute_filter'
 
     pcmt.service.product_model_from_draft_creator:
         class: PcmtDraftBundle\Service\Draft\ProductModelFromDraftCreator
@@ -58,7 +64,8 @@ services:
             - '@pim_catalog.comparator.filter.product_model'
             - '@pim_catalog.updater.product_model'
             - '@pim_enrich.filter.product_model_attribute_filter'
-            -
+            - '@pcmt.service.draft_values_with_missing_attribute_filter'
+
     pcmt.service.general_object_from_draft_creator:
         class: PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator
         arguments:

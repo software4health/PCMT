@@ -42,6 +42,9 @@ class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
     /** @var ObjectUpdaterInterface */
     private $objectUpdater;
 
+    /** @var DraftValuesWithMissingAttributeFilter */
+    private $draftValuesWithMissingAttributeFilter;
+
     public function __construct(
         ProductBuilderInterface $productBuilder,
         ConverterInterface $productValueConverter,
@@ -49,7 +52,8 @@ class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
         UserContext $userContext,
         FilterInterface $emptyValuesFilter,
         ObjectUpdaterInterface $objectUpdater,
-        AttributeFilterInterface $productAttributeFilter
+        AttributeFilterInterface $productAttributeFilter,
+        DraftValuesWithMissingAttributeFilter $draftValuesWithMissingAttributeFilter
     ) {
         $this->productBuilder = $productBuilder;
         $this->productValueConverter = $productValueConverter;
@@ -58,10 +62,12 @@ class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
         $this->emptyValuesFilter = $emptyValuesFilter;
         $this->objectUpdater = $objectUpdater;
         $this->productAttributeFilter = $productAttributeFilter;
+        $this->draftValuesWithMissingAttributeFilter = $draftValuesWithMissingAttributeFilter;
     }
 
-    public function createForSaveForDraftForExistingObject(DraftInterface $draft): ?EntityWithAssociationsInterface
-    {
+    public function createForSaveForDraftForExistingObject(
+        DraftInterface $draft
+    ): ?EntityWithAssociationsInterface {
         $product = $draft->getProduct();
         if (!$product) {
             return null;
@@ -105,10 +111,14 @@ class ProductFromDraftCreator implements ObjectFromDraftCreatorInterface
     {
         $values = $this->productValueConverter->convert($data['values']);
 
-        $values = $this->localizedConverter->convertToDefaultFormats($values, [
-            'locale' => $this->userContext->getUiLocaleCode(),
-        ]);
+        $values = $this->localizedConverter->convertToDefaultFormats(
+            $values,
+            [
+                'locale' => $this->userContext->getUiLocaleCode(),
+            ]
+        );
 
+        $values = $this->draftValuesWithMissingAttributeFilter->filter($entity, $values);
         $dataFiltered = $this->emptyValuesFilter->filter($entity, ['values' => $values]);
 
         if (!empty($dataFiltered)) {
