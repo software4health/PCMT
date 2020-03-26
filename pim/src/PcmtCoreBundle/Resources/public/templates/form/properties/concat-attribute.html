@@ -3,9 +3,9 @@
   ~ Licensed under the Non-Profit Open Software License version 3.0.
   ~ SPDX-License-Identifier: NPOSL-3.0
   -->
+<% for (let index = 1; index <= attributeCount; index++) { %>
 
-<% _.each(members.attributes, function (member) { %>
-
+    <% let member = 'attribute' + index; %>
     <!-- attribute select -->
     <div class="AknFieldContainer">
 
@@ -46,9 +46,9 @@
 
     <!-- separators -->
 
-    <% let selectIndex = member.substr(-1);
-        _.each(members.separators, function (separator){
-            if(separator.substr(-1) == selectIndex){ %>
+    <%  let separator = 'separator' + index;
+        if (index < attributeCount) {
+    %>
 
     <div class="AknFieldContainer">
 
@@ -59,16 +59,19 @@
                     class="AknTextField separator-field"
                     type="text"
                     placeholder="<%- labels.defaultChooseSeparator %>"
-            <% let separatorValue = ""; if(typeof model.concatenated === 'object' && model.concatenated[separator] !== null) { separatorValue = model.concatenated[separator]; } %>
+            <% let separatorValue = "";
+            if(typeof model.concatenated === 'object' && model.concatenated[separator] !== null) {
+                separatorValue = model.concatenated[separator];
+            } %>
             value="<%- separatorValue %>"  <%- isReadOnly ? 'readonly disabled' : '' %>
             />
         </div>
 
     </div>
 
-    <% }}); %>
+    <% } %>
 
-<% }); %>
+<% } %>
 
 <div style="height: 100px;">
 
