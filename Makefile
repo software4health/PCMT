@@ -83,6 +83,14 @@ dev-test-unit:
 dev-test-mutation:
 	bin/mutation.sh
 
+.PHONY: dev-test-selenium
+dev-test-selenium:
+	./ddev.sh -f docker-compose.test.yml run --rm fpm /srv/pim/vendor/bin/behat --suite=selenium
+
+.PHONY: dev-test-api
+dev-test-api:
+	./ddev.sh run --rm fpm /srv/pim/vendor/bin/behat --suite=api
+
 .PHONY: terraform
 terraform:
 	cd deploy/terraform && ./build.sh
@@ -122,7 +130,3 @@ dev-pcmt-migration-generate:
 .PHONY: dev-import-sql
 dev-import-sql:
 	bin/import-sql.sh
-
-.PHONY: test-behat
-test-behat:
-	docker exec pcmt_fpm_1 vendor/bin/behat
