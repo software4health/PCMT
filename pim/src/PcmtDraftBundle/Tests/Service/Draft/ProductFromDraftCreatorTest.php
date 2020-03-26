@@ -24,7 +24,9 @@ use Akeneo\UserManagement\Bundle\Context\UserContext;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\NewProductDraft;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
+use PcmtDraftBundle\Service\Draft\DraftValuesWithMissingAttributeFilter;
 use PcmtDraftBundle\Service\Draft\ProductFromDraftCreator;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class ProductFromDraftCreatorTest extends TestCase
@@ -50,6 +52,9 @@ class ProductFromDraftCreatorTest extends TestCase
     /** @var AttributeFilterInterface */
     private $productAttributeFilterMock;
 
+    /** @var DraftValuesWithMissingAttributeFilter|MockObject */
+    private $draftValuesWithMissingAttributesFilterMock;
+
     protected function setUp(): void
     {
         $this->productBuilderMock = $this->createMock(ProductBuilderInterface::class);
@@ -61,6 +66,7 @@ class ProductFromDraftCreatorTest extends TestCase
         $this->emptyValuesFilterMock = $this->createMock(FilterInterface::class);
         $this->productUpdaterMock = $this->createMock(ObjectUpdaterInterface::class);
         $this->productAttributeFilterMock = $this->createMock(AttributeFilterInterface::class);
+        $this->draftValuesWithMissingAttributesFilterMock = $this->createMock(DraftValuesWithMissingAttributeFilter::class);
     }
 
     /**
@@ -95,6 +101,7 @@ class ProductFromDraftCreatorTest extends TestCase
     {
         $this->emptyValuesFilterMock->method('filter')->willReturn($dataFiltered);
         $this->productUpdaterMock->expects($this->once())->method('update');
+        $this->localizedConverterMock->method('convertToDefaultFormats')->willReturn([]);
         $service = $this->getServiceInstance();
         $product = $service->createForSaveForDraftForExistingObject($draft);
         $this->assertInstanceOf(ProductInterface::class, $product);
@@ -159,7 +166,8 @@ class ProductFromDraftCreatorTest extends TestCase
             $this->userContextMock,
             $this->emptyValuesFilterMock,
             $this->productUpdaterMock,
-            $this->productAttributeFilterMock
+            $this->productAttributeFilterMock,
+            $this->draftValuesWithMissingAttributesFilterMock
         );
     }
 }

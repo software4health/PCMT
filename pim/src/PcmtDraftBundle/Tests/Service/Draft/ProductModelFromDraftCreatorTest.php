@@ -24,7 +24,9 @@ use Akeneo\UserManagement\Bundle\Context\UserContext;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\NewProductModelDraft;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
+use PcmtDraftBundle\Service\Draft\DraftValuesWithMissingAttributeFilter;
 use PcmtDraftBundle\Service\Draft\ProductModelFromDraftCreator;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class ProductModelFromDraftCreatorTest extends TestCase
@@ -32,23 +34,26 @@ class ProductModelFromDraftCreatorTest extends TestCase
     /** @var SimpleFactoryInterface */
     private $productModelFactory;
 
-    /** @var ConverterInterface */
+    /** @var ConverterInterface|MockObject */
     private $productValueConverterMock;
 
-    /** @var AttributeConverterInterface */
+    /** @var AttributeConverterInterface|MockObject */
     private $localizedConverterMock;
 
-    /** @var UserContext */
+    /** @var UserContext|MockObject */
     private $userContextMock;
 
-    /** @var FilterInterface */
+    /** @var FilterInterface|MockObject */
     private $emptyValuesFilterMock;
 
-    /** @var ObjectUpdaterInterface */
+    /** @var ObjectUpdaterInterface|MockObject */
     private $productUpdaterMock;
 
-    /** @var AttributeFilterInterface */
+    /** @var AttributeFilterInterface|MockObject */
     private $productAttributeFilterMock;
+
+    /** @var DraftValuesWithMissingAttributeFilter|MockObject */
+    private $draftValuesWithMissingAttributeFilterMock;
 
     protected function setUp(): void
     {
@@ -61,6 +66,7 @@ class ProductModelFromDraftCreatorTest extends TestCase
         $this->emptyValuesFilterMock = $this->createMock(FilterInterface::class);
         $this->productUpdaterMock = $this->createMock(ObjectUpdaterInterface::class);
         $this->productAttributeFilterMock = $this->createMock(AttributeFilterInterface::class);
+        $this->draftValuesWithMissingAttributeFilterMock = $this->createMock(DraftValuesWithMissingAttributeFilter::class);
     }
 
     /**
@@ -96,6 +102,7 @@ class ProductModelFromDraftCreatorTest extends TestCase
     {
         $this->emptyValuesFilterMock->method('filter')->willReturn($dataFiltered);
         $this->productUpdaterMock->expects($this->once())->method('update');
+        $this->localizedConverterMock->method('convertToDefaultFormats')->willReturn([]);
         $service = $this->getServiceInstance();
         $product = $service->createForSaveForDraftForExistingObject($draft);
         $this->assertInstanceOf(ProductModelInterface::class, $product);
@@ -160,7 +167,8 @@ class ProductModelFromDraftCreatorTest extends TestCase
             $this->userContextMock,
             $this->emptyValuesFilterMock,
             $this->productUpdaterMock,
-            $this->productAttributeFilterMock
+            $this->productAttributeFilterMock,
+            $this->draftValuesWithMissingAttributeFilterMock
         );
     }
 }
