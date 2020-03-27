@@ -273,7 +273,8 @@ env-test-destroy:
   when: manual
   environment:
     name: gfpvan
-    url: http://gfpvan.productcatalog.io
+    url: http://gfpvan-prod.productcatalog.io
+    on_stop: env-gfpvan-destroy
 
 .env-gfpvan_script-deploy:
   script:
@@ -297,6 +298,15 @@ env-gfpvan (KEEP DB):
     PCMT_PROFILE: production
     PCMT_VER: '1.1.2'
     PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v1.1.2/pcmt-v1.1.2.tar.gz'
+
+env-gfpvan-destroy:
+  extends:
+    - .env-gfpvan
+  script: 
+    - ./deploy/terraform/run-docker.sh gfpvan destroy -auto-approve
+  environment:
+    name: gfpvan
+    action: stop
 
 ############### GFPVAN UAT Environment ###############
 
