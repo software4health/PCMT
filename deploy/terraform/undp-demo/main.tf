@@ -36,8 +36,13 @@ data "terraform_remote_state" "pcmt-hosted-zone" {
 
 module "undp-demo" {
   source = "../modules/pcmt"
+  providers = {
+    aws.compute = aws
+    aws.network = aws
+  }
 
   aws-region        = "${var.aws-region}"
+  ec2-key-pair      = "${var.ec2-key-pair}"
   tag-name          = "${var.tag-name}"
   tag-type          = "${var.tag-type}"
   tag-bill-to       = "${var.tag-bill-to}"

@@ -5,6 +5,7 @@
 ######################################################################
 
 resource "aws_instance" "app" {
+  provider               = aws.compute
   ami                    = "${data.aws_ami.ubuntu-latest.id}"
   instance_type          = "${var.instance-type}"
   key_name               = "${var.ec2-key-pair}"
@@ -28,9 +29,16 @@ resource "aws_instance" "app" {
     BillTo = "${var.tag-bill-to}"
     Type   = "${var.tag-type}"
   }
+
+  lifecycle {
+    ignore_changes = [
+      ami,
+    ]
+  }
 }
 
 data "aws_ami" "ubuntu-latest" {
+  provider    = aws.compute
   most_recent = true
   owners      = ["099720109477"]
 

@@ -5,16 +5,6 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
-if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
-    echo AWS Secret Access Key missing
-    exit 1
-fi
-
-if [ -z "$AWS_ACCESS_KEY_ID" ]; then
-    echo AWS Access Key Id missing
-    exit 1
-fi
-
 if [ -z "$PCMT_ASSET_URL" ]; then
     echo PCMT ASSET URL missing
     exit 1

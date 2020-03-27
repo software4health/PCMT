@@ -1,7 +1,8 @@
 resource "aws_s3_bucket" "backup" {
-  region = "${var.aws-region}"
-  bucket = "${var.domain-name}"
-  acl    = "private"
+  provider = aws.compute
+  region   = "${var.aws-region}"
+  bucket   = "${var.domain-name}"
+  acl      = "private"
 
   tags = {
     Name   = "${var.tag-name}"

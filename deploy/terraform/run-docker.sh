@@ -5,7 +5,8 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
-SSH_PRIV_KEY_PATH=${SSH_PRIV_KEY_PATH:-"$HOME/.ssh/id_rsa"}
+: ${AWS_SHARED_CREDENTIALS_FILE:="$HOME/.aws/credentials"}
+: ${SSH_PRIV_KEY_PATH:="$HOME/.ssh/id_rsa"}
 HELPER_CONTAINER="pcmt-tf-helper"
 
 function cleanup {
@@ -63,15 +64,16 @@ cpFileFromEnvIntoSecrets "$PCMT_MYSQL_PASSWORD_CONF" \
     "/conf/mysql-password.dist"
 cpFileFromEnvIntoSecrets "$PCMT_MYSQL_SSH_AUTHORIZED_KEY_CONF" \
     "/conf/ssh_authorized_key"
-
+cpFileFromEnvIntoSecrets "$AWS_SHARED_CREDENTIALS_FILE" \
+    "/conf/aws-credentials"
 
 docker run --rm \
-    -e AWS_ACCESS_KEY_ID \
-    -e AWS_SECRET_ACCESS_KEY \
+    -e AWS_SHARED_CREDENTIALS_FILE="/conf/aws-credentials" \
     -e PCMT_PROFILE \
     -e PCMT_VER \
     -e PCMT_ASSET_URL \
     -e PCMT_SECRETS_VOLUME='secrets' \
+    -v secrets:/conf \
     -v pcmt-ssh-key:/tmp/.ssh \
     -v "/var/run/docker.sock:/var/run/docker.sock" \
     pcmt/terraform "${@}"

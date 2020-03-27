@@ -1,3 +1,4 @@
+ec2-key-pair  = "pcmt-gfpvan"
 aws-region    = "us-east-2"
 instance-type = "t3a.medium"
 

@@ -4,11 +4,12 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
-resource "aws_route53_record" "main" {
-  provider = aws.network
-  zone_id  = "${var.route53-zone-id}"
-  name     = "${var.domain-name}"
-  type     = "A"
-  ttl      = 300
-  records  = ["${aws_instance.app.public_ip}"]
+output "vpc-subnet-id" {
+  value       = module.gfpvan-network-useast.vpc-subnet-id
+  description = "Id of the first subnet of the VPC"
+}
+
+output "security-group-id" {
+  value       = module.gfpvan-network-useast.security-group-id
+  description = "Id of the security group"
 }

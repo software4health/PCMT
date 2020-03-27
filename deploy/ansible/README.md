@@ -23,7 +23,7 @@ built, and pull it with `docker pull pcmt/ansible`.
     docker cp <PATH_TO_YOUR_SSH_KEY> helper:/tmp/.ssh/id_rsa
     docker rm helper
     ```
-1. Run `../terraform/script/pcmt-ansible.sh <IP of target>`
+1. Run `../terraform/script/pcmt-ansible.sh <IP of target> <hostname of target>`
 1. When done don't forget to remove the containers, including the one with your
   SSH key created in `pcmt-ssh-key`.
 

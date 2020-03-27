@@ -6,46 +6,62 @@
 
 terraform {
   backend "s3" {
-    bucket = "pcmt-terraform-states"
-    key    = "pcmt-gfpvan.tf"
-    region = "eu-west-1"
+    profile = "gfpvan"
+    bucket  = "gfpvan-terraform-states"
+    key     = "pcmt-gfpvan.tf"
+    region  = "us-east-2"
   }
 }
 
 provider "aws" {
-  region = "${var.aws-region}"
+  alias   = "villagereach"
+  profile = "villagereach"
+  region  = "${var.aws-region}"
+}
+
+provider "aws" {
+  alias   = "gfpvan"
+  profile = "gfpvan"
+  region  = "${var.aws-region}"
 }
 
 data "terraform_remote_state" "pcmt-network" {
   backend = "s3"
   config = {
-    bucket = "pcmt-terraform-states"
-    key    = "pcmt-network-useast.tf"
-    region = "eu-west-1"
+    profile = "gfpvan"
+    bucket  = "gfpvan-terraform-states"
+    key     = "gfpvan-network-useast.tf"
+    region  = "us-east-2"
   }
 }
 
 data "terraform_remote_state" "pcmt-hosted-zone" {
   backend = "s3"
   config = {
-    bucket = "pcmt-terraform-states"
-    key    = "pcmt-productcatalog-io.tf"
-    region = "eu-west-1"
+    profile = "villagereach"
+    bucket  = "pcmt-terraform-states"
+    key     = "pcmt-productcatalog-io.tf"
+    region  = "eu-west-1"
   }
 }
 
 module "gfpvan" {
   source = "../modules/pcmt"
+  providers = {
+    aws.compute = aws.gfpvan
+    aws.network = aws.villagereach
+  }
 
-  aws-region              = "${var.aws-region}"
-  tag-name                = "${var.tag-name}"
-  tag-type                = "${var.tag-type}"
-  tag-bill-to             = "${var.tag-bill-to}"
-  root-volume-size        = "${var.root-volume-size}"
-  instance-type           = "${var.instance-type}"
-  app-deploy-group        = "${var.app-deploy-group}"
-  domain-name             = "${var.domain-name}"
-  subnet-id               = "${data.terraform_remote_state.pcmt-network.outputs.vpc-subnet-id}"
-  security-group-id       = "${data.terraform_remote_state.pcmt-network.outputs.security-group-id}"
-  route53-zone-id         = "${data.terraform_remote_state.pcmt-hosted-zone.outputs.main-hosted-zone-id}"
+  aws-region        = "${var.aws-region}"
+  ec2-key-pair      = "${var.ec2-key-pair}"
+  tag-name          = "${var.tag-name}"
+  tag-type          = "${var.tag-type}"
+  tag-bill-to       = "${var.tag-bill-to}"
+  root-volume-size  = "${var.root-volume-size}"
+  instance-type     = "${var.instance-type}"
+  app-deploy-group  = "${var.app-deploy-group}"
+  domain-name       = "${var.domain-name}"
+  subnet-id         = "${data.terraform_remote_state.pcmt-network.outputs.vpc-subnet-id}"
+  security-group-id = "${data.terraform_remote_state.pcmt-network.outputs.security-group-id}"
+  route53-zone-id   = "${data.terraform_remote_state.pcmt-hosted-zone.outputs.main-hosted-zone-id}"
 }

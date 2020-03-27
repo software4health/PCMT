@@ -19,31 +19,19 @@ if [ -z "$2" ]; then
 fi
 HOSTNAME=$2
 
-if [ -z "$AWS_ACCESS_KEY_ID" ]; then
-    echo Environment variable AWS_ACCESS_KEY_ID Missing
-    exit 1
-fi
-
-if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
-    echo Environment variable AWS_SECRET_ACCESS_KEY Missing
-    exit 1
-fi
-
 if [ ! -z "$PCMT_SECRETS_VOLUME" ]; then
     PCMT_SECRETS_VOLUME="-v $PCMT_SECRETS_VOLUME:/tmp/secrets"
 fi
 
 docker run --rm \
-    -e AWS_ACCESS_KEY_ID \
-    -e AWS_SECRET_ACCESS_KEY \
     -e PCMT_PROFILE \
     -e PCMT_VER \
     -e PCMT_ASSET_URL \
     $PCMT_SECRETS_VOLUME \
     -v pcmt-ssh-key:/tmp/.ssh \
     pcmt/ansible ansible-playbook \
-        --limit "$TARGET_IP" \
         -v \
-        -i inventory playbook.yml \
+        -i "$TARGET_IP", \
         -e ansible_ssh_user=ubuntu \
-        -e pcmt_hostname="$HOSTNAME"
+        -e pcmt_hostname="$HOSTNAME" \
+        playbook.yml

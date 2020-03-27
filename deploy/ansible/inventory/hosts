@@ -1,4 +1,0 @@
-[tag_DeployGroup_docker_hosts]
-
-[docker-hosts:children]
-tag_DeployGroup_docker_hosts

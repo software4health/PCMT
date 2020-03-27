@@ -74,3 +74,9 @@ variable "backup-days-till-expire" {
   description = "Days until backups expire - are deleted"
   default     = 30
 }
+
+variable "route53-provider" {
+  type        = string
+  description = "AWS provider to use for the DNS entry, only needed when >1 aws provider is in use"
+  default     = "default"
+}
