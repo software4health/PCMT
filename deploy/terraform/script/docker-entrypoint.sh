@@ -9,7 +9,8 @@ TF_ENV=$1
 TF_CMD="${@:2}"
 
 if [ ! -r "$AWS_SHARED_CREDENTIALS_FILE" ]; then
-  echo "AWS_SHARED_CREDENTIALS_FILE not readable/present"
+  echo "AWS_SHARED_CREDENTIALS_FILE not readable/present: $AWS_SHARED_CREDENTIALS_FILE"
+  ls /tmp/.aws
   exit 1
 fi
 
@@ -23,12 +24,14 @@ if [ ! -d "$1" ]; then
     exit 1
 fi
 
-SSH_KEY="/tmp/.ssh/id_rsa"
+SSH_KEY="/tmp/.aws/id_rsa"
 if [ ! -r "$SSH_KEY" ] || [ ! -f "$SSH_KEY" ]; then
     echo "SSH Key $SSH_KEY not accessible"
     exit 1
 fi
-cp -R /tmp/.ssh /root/.ssh
+
+mkdir -p /root/.ssh
+cp "$SSH_KEY" /root/.ssh
 chmod 700 /root/.ssh
 chmod 400 /root/.ssh/*
 
@@ -41,4 +44,3 @@ cd "$TF_ENV" || exit 1
 
 terraform init
 terraform "${@:2}"
-

@@ -7,6 +7,11 @@
 
 # Usage:  inteded to be used from Terraform's local provisioner.
 
+if [ -z "$PCMT_AWS_CREDS_VOLUME" ]; then
+  echo "PCMT_AWS_CREDS_VOLUME not set"
+  exit 1
+fi
+
 if [ -z "$1" ]; then
     echo IP Argument Missing
     exit 1
@@ -28,7 +33,7 @@ docker run --rm \
     -e PCMT_VER \
     -e PCMT_ASSET_URL \
     $PCMT_SECRETS_VOLUME \
-    -v pcmt-ssh-key:/tmp/.ssh \
+    -v "$PCMT_AWS_CREDS_VOLUME":/tmp/.ssh \
     pcmt/ansible ansible-playbook \
         -v \
         -i "$TARGET_IP", \
