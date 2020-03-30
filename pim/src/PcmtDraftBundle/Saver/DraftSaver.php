@@ -14,8 +14,10 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\StorageEvents;
 use Doctrine\ORM\EntityManagerInterface;
+use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ExistingObjectDraftInterface;
+use PcmtDraftBundle\Exception\DraftSavingFailedException;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Service\Draft\DraftExistenceChecker;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
@@ -78,6 +80,7 @@ class DraftSaver implements SaverInterface
     protected function validateDraft(object $draft): void
     {
         $this->checkIfDraftIsInstanceOfDraftInterface($draft);
+        $this->checkIfDraftCouldBeSaved($draft);
         $this->validateObjectToSave($draft);
         $this->checkIfThereIsOtherDraftForThisObject($draft);
     }
@@ -95,11 +98,22 @@ class DraftSaver implements SaverInterface
         }
     }
 
+    private function checkIfDraftCouldBeSaved(DraftInterface $draft): void
+    {
+        if (AbstractDraft::STATUS_APPROVED === $draft->getStatus()) {
+            throw DraftSavingFailedException::draftAlreadyApproved();
+        }
+
+        if (AbstractDraft::STATUS_REJECTED === $draft->getStatus()) {
+            throw DraftSavingFailedException::draftAlreadyRejected();
+        }
+    }
+
     private function validateObjectToSave(DraftInterface $draft): void
     {
         $objectToSave = $this->creator->getObjectToSave($draft);
         if (!$objectToSave) {
-            throw new \Exception('pcmt.entity.draft.error.no_corresponding_object');
+            throw DraftSavingFailedException::noCorrespondingObject();
         }
 
         if ($objectToSave instanceof ProductInterface) {
