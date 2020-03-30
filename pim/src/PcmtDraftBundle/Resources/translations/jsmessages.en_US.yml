@@ -109,6 +109,8 @@ pcmt.entity.draft:
         no_corresponding_object: "There is not corresponding object for this draft. You can only reject it."
         cannot_approve_wrong_status: "You can't approve the draft when it has status different than 'new'."
         cannot_reject_wrong_status: "You can't reject the draft when it has status different than 'new'."
+        already_approved: "You can't save the draft. It has been already approved."
+        already_rejected: "You can't save the draft. It has been already rejected."
     confirm:
         approve:
             title: Draft approval

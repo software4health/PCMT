@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Tests\Saver;
 
 use Doctrine\ORM\EntityManagerInterface;
+use PcmtDraftBundle\Entity\AbstractDraft;
+use PcmtDraftBundle\Exception\DraftSavingFailedException;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Saver\DraftSaver;
 use PcmtDraftBundle\Service\Draft\DraftExistenceChecker;
@@ -167,7 +169,9 @@ class DraftSaverTest extends TestCase
             ->method('validate')
             ->willReturn((new ConstraintViolationListBuilder())->build());
 
-        $this->draftExistenceCheckerMock->method('checkIfDraftForObjectAlreadyExists')->willReturn(true);
+        $this->draftExistenceCheckerMock->method('checkIfDraftForObjectAlreadyExists')->willReturn(
+            true
+        );
 
         $this->entityManagerMock->expects($this->never())->method('persist')->with($draft);
         $this->entityManagerMock->expects($this->never())->method('flush');
@@ -201,10 +205,37 @@ class DraftSaverTest extends TestCase
         $this->entityManagerMock->expects($this->never())->method('flush');
         $this->eventDispatcherMock->expects($this->never())->method('dispatch');
 
-        $this->expectException(\Throwable::class);
-        $this->expectExceptionMessage('pcmt.entity.draft.error.no_corresponding_object');
+        $this->expectException(DraftSavingFailedException::class);
 
         $this->draftSaver->save((new ExistingProductDraftBuilder())->withId(112)->build());
+    }
+
+    public function dataSaveWhenDraftHasStatusOtherThanNew(): array
+    {
+        return [
+            'when_draft_is_already_approved' => [
+                'status' => AbstractDraft::STATUS_APPROVED,
+            ],
+            'when_draft_is_already_rejected' => [
+                'status' => AbstractDraft::STATUS_REJECTED,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataSaveWhenDraftHasStatusOtherThanNew
+     */
+    public function testSaveWhenDraftHasStatusOtherThanNew(int $draftStatus): void
+    {
+        $this->entityManagerMock->expects($this->never())->method('persist');
+        $this->entityManagerMock->expects($this->never())->method('flush');
+        $this->eventDispatcherMock->expects($this->never())->method('dispatch');
+
+        $this->expectException(DraftSavingFailedException::class);
+
+        $this->draftSaver->save(
+            (new ExistingProductDraftBuilder())->withId(112)->withStatus($draftStatus)->build()
+        );
     }
 
     public function testSaveWhenDraftDidNotPassValidation(): void
@@ -218,7 +249,11 @@ class DraftSaverTest extends TestCase
         $this->productValidatorMock
             ->expects($this->once())
             ->method('validate')
-            ->willReturn((new ConstraintViolationListBuilder())->withViolation((new ConstraintViolationBuilder())->build())->build());
+            ->willReturn(
+                (new ConstraintViolationListBuilder())->withViolation(
+                    (new ConstraintViolationBuilder())->build()
+                )->build()
+            );
 
         $this->entityManagerMock->expects($this->never())->method('persist');
         $this->entityManagerMock->expects($this->never())->method('flush');

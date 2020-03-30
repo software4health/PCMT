@@ -15,6 +15,7 @@ use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
+use PcmtDraftBundle\Exception\DraftSavingFailedException;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\MassActions\DraftsBulkApproveOperation;
 use PcmtDraftBundle\Normalizer\DraftViolationNormalizer;
@@ -132,6 +133,11 @@ class DraftController
         } catch (DraftViolationException $e) {
             return new JsonResponse(
                 ['values' => $this->draftViolationNormalizer->normalize($e)],
+                Response::HTTP_BAD_REQUEST
+            );
+        } catch (DraftSavingFailedException $e) {
+            return new JsonResponse(
+                ['message' => $e->getMessage()],
                 Response::HTTP_BAD_REQUEST
             );
         }
