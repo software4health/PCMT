@@ -1,7 +1,7 @@
 aws-region    = "us-east-2"
 instance-type = "t3a.small"
 
-tag-name    = "demo"
+tag-name    = "zambia-demo"
 tag-type    = "demo"
 tag-bill-to = "PCMT"
 
