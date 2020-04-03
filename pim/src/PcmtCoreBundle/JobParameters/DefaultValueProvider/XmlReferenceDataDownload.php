@@ -44,6 +44,7 @@ class XmlReferenceDataDownload implements DefaultValuesProviderInterface
                 'http://apps.gs1.org/GDD/Pages/CLXMLReport.aspx?semanticURN=urn:gs1:gdd:cl:MeasurementUnitCode_GDSN&release=7',
                 'http://apps.gs1.org/GDD/Pages/CLXMLReport.aspx?semanticURN=urn:gs1:gdd:cl:GS1TradeItemIdentificationKeyTypeCode&release=1',
                 'http://apps.gs1.org/GDD/Pages/CLXMLReport.aspx?semanticURN=urn:gs1:gdd:cl:ImportClassificationTypeCode&release=2',
+                'http://apps.gs1.org/GDD/Pages/CLXMLReport.aspx?semanticURN=urn:gs1:gdd:cl:LanguageCode&release=1',
                 'http://apps.gs1.org/GDD/Pages/CLXMLReport.aspx?semanticURN=urn:gs1:gdd:cl:NonfoodIngredientOfConcernCode&release=1',
                 'http://apps.gs1.org/GDD/Pages/CLXMLReport.aspx?semanticURN=urn:gs1:gdd:cl:PackageTypeCode&release=2',
                 'http://apps.gs1.org/GDD/Pages/CLXMLReport.aspx?semanticURN=urn:gs1:gdd:cl:PlatformTypeCode&release=1',
