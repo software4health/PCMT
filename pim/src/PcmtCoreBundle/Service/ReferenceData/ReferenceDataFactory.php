@@ -17,6 +17,7 @@ use PcmtCoreBundle\Entity\ReferenceData\DataCarrierTypeCode;
 use PcmtCoreBundle\Entity\ReferenceData\GDSNMeasurementUnitCode;
 use PcmtCoreBundle\Entity\ReferenceData\Gs1TradeItemIdentificationKeyCode;
 use PcmtCoreBundle\Entity\ReferenceData\ImportClassificationTypeCode;
+use PcmtCoreBundle\Entity\ReferenceData\LanguageCode;
 use PcmtCoreBundle\Entity\ReferenceData\NonfoodIngredientOfConcernCode;
 use PcmtCoreBundle\Entity\ReferenceData\PackageTypeCode;
 use PcmtCoreBundle\Entity\ReferenceData\PlatformTypeCode;
@@ -46,6 +47,8 @@ class ReferenceDataFactory
                 return Gs1TradeItemIdentificationKeyCode::class;
             case 'ImportClassificationTypeCode':
                 return ImportClassificationTypeCode::class;
+            case 'LanguageCode':
+                return LanguageCode::class;
             case 'MeasurementUnitCode_GDSN':
                 return GDSNMeasurementUnitCode::class;
             case 'NonfoodIngredientOfConcernCode':
