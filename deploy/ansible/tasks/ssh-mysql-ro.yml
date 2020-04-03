@@ -23,3 +23,10 @@
     key: "{{ ssh_auth_key_slurp.content | b64decode }}"
   when: ssh_authorized_key.stat.isreg is defined and ssh_authorized_key.stat.isreg 
 
+- name: Add crontab to copy exported files
+  cron:
+    name: "cp exported files"
+    user: "root"
+    minute: "*/2"
+    job: "docker cp app_fpm_1:/tmp/ /home/mysql_ssh/ && chown -R mysql_ssh:mysql_ssh /home/mysql_ssh/tmp"
+  when: ssh_authorized_key.stat.isreg is defined and ssh_authorized_key.stat.isreg 
