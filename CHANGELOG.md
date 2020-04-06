@@ -13,6 +13,8 @@ VER 1.1.3 / Unreleased
 * [#236](https://gitlab.com/pcmt/pcmt/-/issues/236): Phpunit tests code coverage report are automatically generated.
 
 **Changed**
+* [#385](https://gitlab.com/pcmt/pcmt/-/issues/385): Change GDSN language attributes to use language code reference data
+* [#384](https://gitlab.com/pcmt/pcmt/-/issues/384): Add Language Codes (ISO-639) to Reference Data pull
 * [#277](https://gitlab.com/pcmt/pcmt/-/issues/277): GDSN-Queue (e2open) Import goes through Drafts/Approvals.
 * [#314](https://gitlab.com/pcmt/pcmt/-/issues/314): Messages when draft is already approved or rejected.
 
