@@ -21,6 +21,12 @@ abstract class AbstractDraft implements DraftInterface
     public const STATUS_NEW = 1;
     public const STATUS_REJECTED = 4;
 
+    public const STATUSES = [
+        self::STATUS_NEW,
+        self::STATUS_APPROVED,
+        self::STATUS_REJECTED,
+    ];
+
     // keep product or product-model related data here.
     // like family, groups etc. all the fields. - it helps rebuild product from new draft.
     /** @var mixed[] */
