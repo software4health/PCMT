@@ -17,6 +17,9 @@ use PcmtDraftBundle\Entity\NewProductDraft;
 
 class NewDraftFixture implements FixtureInterface
 {
+    /** @var string */
+    private $draftIdentifier;
+
     public function load(
         ObjectManager $manager
     ): void {
@@ -41,8 +44,16 @@ class NewDraftFixture implements FixtureInterface
         $manager->flush();
     }
 
+    public function getDraftIdentifier(): string
+    {
+        return $this->draftIdentifier;
+    }
+
     private function generateTestIdentifier(): string
     {
-        return 'behat_unique_id_' . random_int(1, 100000);
+        $draftIdenfier = 'behat_unique_id_' . random_int(1, 100000);
+        $this->draftIdentifier = $draftIdenfier;
+
+        return $draftIdenfier;
     }
 }

@@ -13,7 +13,7 @@ default:
       paths:
         - %paths.base%/features/selenium
       contexts:
-        - SeleniumBaseContext: ~
+        - SeleniumDraftsContext: ~
 
   extensions:
     Behat\Symfony2Extension:

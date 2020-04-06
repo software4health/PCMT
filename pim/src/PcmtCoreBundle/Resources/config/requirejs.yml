@@ -23,6 +23,9 @@ config:
 
         pcmt_connector_button: pcmtcore/js/common/button
 
+        #overwritten, as it needs id field for automated tests
+        bootstrap-modal: pcmtcore/js/lib/bootstrap-modal
+
     config:
         pim/controller-registry:
             controllers:
