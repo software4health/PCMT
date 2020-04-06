@@ -252,7 +252,7 @@ extensions:
         position: 100
 
     pcmt-product-model-drafts-edit-form-attribute-filter-missing-required:
-        module: pim/product-edit-form/attribute-filter-missing-required
+        module: pcmt/draft/form/attribute-filter-missing-required
         parent: pcmt-product-model-drafts-edit-form-attribute-filter
         position: 110
 
