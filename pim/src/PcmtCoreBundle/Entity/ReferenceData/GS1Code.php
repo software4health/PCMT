@@ -128,6 +128,14 @@ abstract class GS1Code extends AbstractCustomEntity
         return static::getClass();
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public static function getLabelProperty(): string
+    {
+        return 'name';
+    }
+
     abstract public function getReferenceDataEntityType(): string;
 
     abstract protected static function getClass(): string;

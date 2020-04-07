@@ -37,7 +37,7 @@ class GS1CodesRepository extends CustomEntityRepository
                     $this->getAlias(),
                     $this->getAlias(),
                     $this->getAlias(),
-                    $labelProperty
+                    $identifierField
                 )
             );
     }
