@@ -24,7 +24,7 @@ class SeleniumDraftsContext extends SeleniumBaseContext
      */
     public function thereIsQuantityOfDraftsWithStatus(int $num, string $status): void
     {
-        $em = $this->getTestEntityManager();
+        $em = $this->getEntityManager();
         $draftFixture = (new DraftFixtureFactory())
             ->createDraft(self::DRAFT_STATUSES[$status]);
 

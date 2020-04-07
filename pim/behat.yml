@@ -9,11 +9,18 @@ default:
         - behatch:context:rest
         - behatch:context:json
 
-    selenium:
+    selenium-drafts:
       paths:
-        - %paths.base%/features/selenium
+        - %paths.base%/features/selenium/
       contexts:
         - SeleniumDraftsContext: ~
+
+    selenium-core:
+      paths:
+        - %paths.base%/src/PcmtCoreBundle/FunctionalTests/features/selenium/
+      contexts:
+        - PcmtCoreBundle\FunctionalTests\WebContext: ~
+
 
   extensions:
     Behat\Symfony2Extension:
@@ -30,6 +37,6 @@ default:
           symfony2: ~
         selenium2:
           selenium2:
-            wd_host: 'http://192.168.0.26:4444/wd/hub'
+            wd_host: 'http://192.168.1.111:4444/wd/hub'
             capabilities: { "browserName": "chrome", "browser": "chrome", "version": "*", 'chrome': {'switches':['--no-sandbox', '--test-type']}}
-      base_url: 'http://192.168.0.26/'
+      base_url: 'http://192.168.1.111/'

@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 use Behat\Behat\Context\Context;
 use Behat\MinkExtension\Context\MinkContext;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class SeleniumBaseContext extends MinkContext implements Context
 {
@@ -37,32 +37,14 @@ class SeleniumBaseContext extends MinkContext implements Context
     /**
      * @Then /^wait for the page to load$/
      */
-    public function waitForThePageToLoad()
+    public function waitForThePageToLoad(): void
     {
         $this->getSession()->wait('2000');
     }
 
-    protected function purgeDatabase(string $entityClassName): void
-    {
-        $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
-        $classMetaData = $em->getClassMetadata($entityClassName);
-        $connection = $em->getConnection();
-        $dbPlatform = $connection->getDatabasePlatform();
-        $connection->beginTransaction();
-        try {
-            $connection->query('SET FOREIGN_KEY_CHECKS=0');
-            $query = $dbPlatform->getTruncateTableSql($classMetaData->getTableName());
-            $connection->executeUpdate($query);
-            $connection->query('SET FOREIGN_KEY_CHECKS=1');
-            $connection->commit();
-        }
-        catch (\Exception $e) {
-            $connection->rollback();
-        }
-    }
-
-    protected function getTestEntityManager():EntityManager
+    protected function getEntityManager(): EntityManagerInterface
     {
         return $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
     }
+
 }
