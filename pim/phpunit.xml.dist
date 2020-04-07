@@ -27,6 +27,7 @@
                 <directory>./src/*/upgrades</directory>
                 <directory>./src/*/Exception</directory>
                 <directory>./src/*/Repository</directory>
+                <directory>./src/*/FunctionalTests</directory>
                 <file>./src/PcmtDraftBundle/Controller/DraftController.php</file>
             </exclude>
         </whitelist>

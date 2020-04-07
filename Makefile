@@ -85,7 +85,7 @@ dev-test-mutation:
 
 .PHONY: dev-test-selenium
 dev-test-selenium:
-	./ddev.sh -f docker-compose.test.yml run --rm fpm /srv/pim/vendor/bin/behat --suite=selenium
+	bin/selenium.sh
 
 .PHONY: dev-test-api
 dev-test-api:
