@@ -224,7 +224,7 @@ extensions:
 
     pcmt-product-drafts-edit-form-attribute-scope-switcher:
         module: pim/product-edit-form/scope-switcher
-        parent: pcmt-product-drafts-edit-form
+        parent: pcmt-product-drafts-edit
         targetZone: context
         position: 100
         config:
@@ -232,7 +232,7 @@ extensions:
 
     pcmt-product-drafts-edit-form-attribute-locale-switcher:
         module: pim/product-edit-form/locale-switcher
-        parent: pcmt-product-drafts-edit-form
+        parent: pcmt-product-drafts-edit
         targetZone: context
         position: 110
         config:
@@ -273,22 +273,6 @@ extensions:
         parent: pcmt-product-drafts-edit-form-attributes
         targetZone: self
         position: 90
-
-    pcmt-product-drafts-edit-form-copy-scope-switcher:
-        module: pim/product-edit-form/scope-switcher
-        parent: pcmt-product-drafts-edit-form-copy
-        targetZone: context-selectors
-        position: 100
-        config:
-            context: copy_product
-
-    pcmt-product-drafts-edit-form-copy-locale-switcher:
-        module: pim/product-edit-form/locale-switcher
-        parent: pcmt-product-drafts-edit-form-copy
-        targetZone: context-selectors
-        position: 110
-        config:
-            context: copy_product
 
     pcmt-product-drafts-edit-form-label:
         module: pcmt/draft/form/label

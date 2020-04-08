@@ -25,6 +25,7 @@ VER 1.1.3 / Unreleased
 * [#317](https://gitlab.com/pcmt/pcmt/-/issues/317): Connection between phpstorm and unit test code coverage report.
 
 **Fixed**
+* [#403](https://gitlab.com/pcmt/pcmt/-/issues/403): Only for the RH family it is possible to change the locale while editing the product
 * [#224](https://gitlab.com/pcmt/pcmt/-/issues/224): Displaying "missing required attributes" in a draft for a product model isn't working properly
 * [#350](https://gitlab.com/pcmt/pcmt/-/issues/350): TYPE SPECIFIC PARAMETERS are not saved in the Concatenated Attribute.
 * [#353](https://gitlab.com/pcmt/pcmt/-/issues/353): Draft list disappears when an attribute from family of the draft is removed.
