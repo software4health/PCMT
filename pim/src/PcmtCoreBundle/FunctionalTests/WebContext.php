@@ -82,14 +82,26 @@ class WebContext extends \SeleniumBaseContext implements Context
     }
 
     /**
-     * @Then the number of results should be lower by :quantity
+     * @Then the number of results should be lower by :quantity, try :attempts times
      */
-    public function theNumberOfResultsShouldBeLowerBy(int $quantity): void
+    public function theNumberOfResultsShouldBeLowerBy(int $quantity, int $attempts): void
     {
-        $previous = $this->numberOfResults;
-        $newNumber = $this->getNumberOfResultsFromResultsPage();
+        // we make a number of attempts, as the job in background may last for some time
+        for ($i = 0; $i < $attempts; $i++) {
+            $this->clickLink('Activity');
+            $this->waitForThePageToLoad();
+            $this->clickLink('Products');
+            $this->waitForThePageToLoad();
+
+            $previous = $this->numberOfResults;
+            $newNumber = $this->getNumberOfResultsFromResultsPage();
+            if ($previous - $quantity === $newNumber) {
+                break;
+            }
+        }
+
         if ($previous - $quantity !== $newNumber) {
-            throw new \Exception('Wrong number of results. Should be: '. round($previous - $quantity));
+            throw new \Exception('Wrong number of results. Should be: ' . round($previous - $quantity));
         }
     }
 

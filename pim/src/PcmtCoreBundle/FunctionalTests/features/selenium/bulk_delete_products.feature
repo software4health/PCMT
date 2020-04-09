@@ -14,8 +14,4 @@ Feature: Bulk delete of products
     And I click delete
     And I confirm delete
     And wait for the page to load
-    And I follow "Activity"
-    And wait for the page to load
-    And I follow "Products"
-    And wait for the page to load
-    Then the number of results should be lower by 2
+    Then the number of results should be lower by 2, try 3 times
