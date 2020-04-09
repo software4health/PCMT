@@ -16,7 +16,7 @@ class SeleniumDraftsContext extends SeleniumBaseContext
         'Rejected' => AbstractDraft::STATUS_REJECTED,
     ];
 
-    /** @var array[int]  */
+    /** @var array[int] */
     protected $draftIds = [];
 
     /**
@@ -39,8 +39,29 @@ class SeleniumDraftsContext extends SeleniumBaseContext
      */
     public function iConfirmApproval(): void
     {
-        $buttonDiv = $this->getSession()->getPage()->find('named_exact', ['id', 'Approve_pcmt_override']);
+        $buttonDiv = $this->getSession()->getPage()->find('css', 'div.AknButton.AknButtonList-item.AknButton--apply.ok.ok');
         $buttonDiv->click();
+    }
+
+    /**
+     * @When I select :num draft checkboxes for mass action
+     */
+    public function iSelectDraftCheckboxesForMassAction(int $num): void
+    {
+        $checkboxes = $this->getSession()->getPage()->findAll(
+            'css', 'td.AknGrid-bodyCell.input-cell.draft-checkbox-bodyCell.AknGrid-bodyCell--actions > label > input'
+        );
+
+        //always select last added drafts
+        for ($i = count($checkboxes) - 1; $i >= (count($checkboxes) - $num); $i--) {
+
+            $checkbox = $checkboxes[$i];
+            if ($checkbox instanceof \Behat\Mink\Element\NodeElement) {
+                $checkbox->check();
+            }
+        }
+
+        $this->getSession()->wait(1000);
     }
 
     /**
@@ -48,7 +69,6 @@ class SeleniumDraftsContext extends SeleniumBaseContext
      */
     public function iShouldSeeMyDraftBecomingTheLatestVersionOfTheProduct(): void
     {
-        $this->waitForThePageToLoad(1000);
         foreach ($this->draftIds as $draftIdentifier) {
             $this->assertPageContainsText($draftIdentifier);
         }

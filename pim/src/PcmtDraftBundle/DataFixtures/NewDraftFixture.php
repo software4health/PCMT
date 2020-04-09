@@ -51,7 +51,7 @@ class NewDraftFixture implements FixtureInterface
 
     private function generateTestIdentifier(): string
     {
-        $draftIdenfier = 'behat_unique_id_' . random_int(1, 100000);
+        $draftIdenfier = 'behat_unique_id_' . microtime();
         $this->draftIdentifier = $draftIdenfier;
 
         return $draftIdenfier;
