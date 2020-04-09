@@ -14,10 +14,11 @@ variables:
 
 default:
   image:
-    name: docker/compose:1.24.1
+    name: docker/compose:1.25.3
     entrypoint: ["/bin/sh", "-c"]
   services:
     - docker:dind
+    - selenium/standalone-chrome-debug
   before_script:
     - docker info
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
@@ -82,6 +83,12 @@ pim_erd:
 pim_erd (manual):
   extends:
     - .pim_erd_base
+  when: manual
+
+pim_behat_api (manual):
+  stage: build
+  script:
+    - bin/ci-behat.sh
   when: manual
 
 
