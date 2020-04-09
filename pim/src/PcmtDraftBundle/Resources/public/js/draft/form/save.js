@@ -100,7 +100,7 @@ define(
                             {'sentData': this.getFormData(), 'response': response.responseJSON}
                         );
 
-                        if (response.responseJSON.message.includes('pcmt.entity.draft.error')) {
+                        if (response.responseJSON.message && response.responseJSON.message.includes('pcmt.entity.draft.error')) {
                             this.updateFailureMessage = __(response.responseJSON.message);
                         }
 
