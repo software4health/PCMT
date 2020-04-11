@@ -46,7 +46,15 @@
     build: no
     pull: yes
     remove_orphans: yes
-    restarted: yes
     state: present
+- name: Restart fpm to wipe
+  docker_service:
+    project_src: /app
+    files:
+      - "docker-compose.yml"
+    services:
+      - "fpm"
+    restarted: yes
+  when: lookup('env', 'PCMT_PROFILE') == 'dev'
 - name: Prune docker system
   shell: docker system prune -af
