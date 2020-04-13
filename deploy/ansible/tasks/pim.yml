@@ -25,18 +25,6 @@
     dest: /app/conf
     mode: '0400'
 - name: Pull and Start PCMT images
-  vars:
-    pcmt_profile: "{{ lookup('env', 'PCMT_PROFILE') }}"
-    pcmt_ver: "{{ lookup('env', 'PCMT_VER') }}"
-    pcmt_secret_conf: "{{ lookup('env', 'PCMT_SECRET_CONF') }}"
-    pcmt_traefik_conf: "{{ lookup('env', 'PCMT_TRAEFIK_CONF') }}"
-  environment:
-    PCMT_PROFILE: "{{ pcmt_profile }}"
-    PCMT_VER: "{{ pcmt_ver }}"
-    PCMT_SECRET_CONF: "{{ pcmt_secret_conf }}"
-    PCMT_TRAEFIK_CONF: "{{ pcmt_traefik_conf }}"
-    PCMT_HOSTNAME: "{{ pcmt_hostname }}"
-    PCMT_S3_BUCKET: "s3://{{ pcmt_hostname }}"
   docker_service:
     project_src: /app
     files:
@@ -55,6 +43,6 @@
     services:
       - "fpm"
     restarted: yes
-  when: lookup('env', 'PCMT_PROFILE') == 'dev'
+  when: pcmt_profile == 'dev'
 - name: Prune docker system
   shell: docker system prune -af
