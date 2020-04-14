@@ -1,4 +1,16 @@
-VER 1.1.3 / Unreleased
+VER 1.1.4 / unreleased
+==================
+
+**Added**
+
+**Changed**
+
+**Removed**
+
+**Fixed**
+
+
+VER 1.1.3 / 2020-04-14
 ==================
 
 **Added**
