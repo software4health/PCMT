@@ -2,6 +2,7 @@ VER 1.1.3 / Unreleased
 ==================
 
 **Added**
+* [#323](https://gitlab.com/pcmt/pcmt/-/issues/323): Add a second locale to PCMTs demo dataset.
 * [#380](https://gitlab.com/pcmt/pcmt/-/issues/380): User get information about parallel changes in the same draft when trying to save outdated draft. 
 * [#113](https://gitlab.com/pcmt/pcmt/-/issues/113): Concatenated Attribute are available for many attributes.
 * [#334](https://gitlab.com/pcmt/pcmt/-/issues/334): List of GS1 ISO 3166 are available as reference data.
@@ -13,6 +14,7 @@ VER 1.1.3 / Unreleased
 * [#236](https://gitlab.com/pcmt/pcmt/-/issues/236): Phpunit tests code coverage report are automatically generated.
 
 **Changed**
+* [#381](https://gitlab.com/pcmt/pcmt/-/issues/381): Change GDSN country attributes to use country code reference data.
 * [#385](https://gitlab.com/pcmt/pcmt/-/issues/385): Change GDSN language attributes to use language code reference data
 * [#384](https://gitlab.com/pcmt/pcmt/-/issues/384): Add Language Codes (ISO-639) to Reference Data pull
 * [#277](https://gitlab.com/pcmt/pcmt/-/issues/277): GDSN-Queue (e2open) Import goes through Drafts/Approvals.
@@ -25,6 +27,8 @@ VER 1.1.3 / Unreleased
 * [#317](https://gitlab.com/pcmt/pcmt/-/issues/317): Connection between phpstorm and unit test code coverage report.
 
 **Fixed**
+* [#404](https://gitlab.com/pcmt/pcmt/-/issues/404): Search by names didn't work for attributes with ISO codes
+* [#406](https://gitlab.com/pcmt/pcmt/-/issues/406): When trying to save invalid values ​​the screen loads endlessly
 * [#403](https://gitlab.com/pcmt/pcmt/-/issues/403): Only for the RH family it is possible to change the locale while editing the product
 * [#224](https://gitlab.com/pcmt/pcmt/-/issues/224): Displaying "missing required attributes" in a draft for a product model isn't working properly
 * [#350](https://gitlab.com/pcmt/pcmt/-/issues/350): TYPE SPECIFIC PARAMETERS are not saved in the Concatenated Attribute.
