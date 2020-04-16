@@ -44,5 +44,14 @@
       - "fpm"
     restarted: yes
   when: pcmt_profile == 'dev'
+- name: Restart httpd for good measure
+  docker_service:
+    project_src: /app
+    files:
+      - "docker-compose.yml"
+      - "docker-compose.tls.yml"
+    services:
+      - "httpd"
+    restarted: yes
 - name: Prune docker system
   shell: docker system prune -af
