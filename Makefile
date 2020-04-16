@@ -71,13 +71,25 @@ dev-cp-tmp:
 dev-test-ecs:
 	./ddev.sh run --rm --no-deps fpm /srv/pim/vendor/bin/ecs check src
 
+.PHONY: fast-test-ecs
+fast-test-ecs:
+	./ddev.sh exec fpm /srv/pim/vendor/bin/ecs check src
+
 .PHONY: dev-test-ecs-fix
 dev-test-ecs-fix:
 	./ddev.sh run --rm --no-deps fpm /srv/pim/vendor/bin/ecs check src --fix
 
+.PHONY: fast-test-ecs-fix
+fast-test-ecs-fix:
+	./ddev.sh exec fpm /srv/pim/vendor/bin/ecs check src --fix
+
 .PHONY: dev-test-unit
 dev-test-unit:
 	bin/test.sh
+
+.PHONY: fast-test-unit
+fast-test-unit:
+	bin/fast-test.sh
 
 .PHONY: dev-test-mutation
 dev-test-mutation:
