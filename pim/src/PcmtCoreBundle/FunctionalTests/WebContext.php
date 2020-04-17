@@ -31,6 +31,84 @@ class WebContext extends \SeleniumBaseContext implements Context
     }
 
     /**
+     * @When I press the "Create Attribute" button
+     */
+    public function iPressTheButtonAndWaitForModalToAppear(): void
+    {
+        $settingsTab = $this->getSession()->getPage()->find('css', '#attribute-create-button');
+        $settingsTab->click();
+    }
+
+    /**
+     * @And I select :attributeType on modal
+     * @When I select :attributeType on modal
+     */
+    public function iChooseAttributeType(string $attributeType): void
+    {
+        $attributeTypeSpans = $this->getSession()->getPage()->findAll(
+            'css',
+            'body > div.modal.in > div.AknFullPage > div > div.modal-body > div > span'
+        );
+        foreach ($attributeTypeSpans as $attributeTypeSpan) {
+            if ($attributeTypeSpan->getText() === $attributeType) {
+                $attributeTypeSpan->click();
+                $this->getSession()->wait('1000');
+
+                return;
+            }
+        }
+        throw new \Exception('Did not find matching attribute type to ' . $attributeType);
+    }
+
+    /**
+     * @When I choose :group option
+     * @And I choose :group option
+     */
+    public function iChooseOption(string $option): void
+    {
+        $attributeGroupSelect = $this->getSession()->getPage()->findAll('css', '#select2-drop > ul > li');
+        foreach ($attributeGroupSelect as $selectOption) {
+            if ($selectOption->getText() === $option) {
+                $selectOption->click();
+                $this->getSession()->wait('1000');
+
+                return;
+            }
+        }
+        throw new \Exception('Did not find option matching to: ' . $option);
+    }
+
+    /**
+     * @When I choose :attribute1 :attribute2 :attribute3 attributes for concatenated fields
+     * @And I choose :attribute1 :attribute2 :attribute3 for concatenated fields
+     */
+    public function iChooseAttributesForConcatenatedFields(string $attribute1, string $attribute2, string $attribute3): void
+    {
+        $attributesSelect['#s2id_pcmt_enrich_form_attribute1 > a'] = $attribute1;
+        $attributesSelect['#s2id_pcmt_enrich_form_attribute2 > a'] = $attribute2;
+        $attributesSelect['#s2id_pcmt_enrich_form_attribute3 > a'] = $attribute3;
+
+        foreach ($attributesSelect as $selector => $option) {
+            $select = $this->getSession()->getPage()->find('css', $selector);
+            $select->click();
+            $this->iChooseOption($option);
+        }
+    }
+
+    /**
+     * @And I save
+     * @When I save
+     */
+    public function iSave(): void
+    {
+        $settingsTab = $this->getSession()->getPage()->find(
+            'css',
+            'div.AknTitleContainer-rightButton > button'
+        );
+        $settingsTab->click();
+    }
+
+    /**
      * @When I check :num products
      */
     public function iCheckProducts(int $num): void
@@ -123,5 +201,21 @@ class WebContext extends \SeleniumBaseContext implements Context
     public function iReadNumberOfProducts(): void
     {
         $this->numberOfResults = $this->getNumberOfResultsFromResultsPage();
+    }
+
+    /**
+     * @And I should delete created attribute
+     * @Then I should delete created attribute
+     */
+    public function iShouldDeleteCreatedAttribute(): void
+    {
+        $page = $this->getSession()->getPage();
+        $deleteSelector = $page->find('css', 'a.AknIconButton.AknIconButton--small.AknIconButton--trash.AknButtonList-item');
+        $deleteSelector->click();
+
+        // once modal appears
+        $deleteButton = $page->find('css', 'div.AknButton.AknButtonList-item.AknButton--apply.AknButton--important.ok');
+        $deleteButton->click();
+        $this->waitForThePageToLoad();
     }
 }

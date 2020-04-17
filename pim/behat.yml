@@ -21,7 +21,6 @@ default:
       contexts:
         - PcmtCoreBundle\FunctionalTests\WebContext: ~
 
-
   extensions:
     Behat\Symfony2Extension:
       kernel:
