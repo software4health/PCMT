@@ -24,6 +24,7 @@ These may be operated from the [Environments][gitlab-env] screen.
 | [rwanda-demo][rwanda-demo]     | Manually as desired          | 1.x demo for Ethiopia        |
 | [ethiopia-demo][ethiopia-demo] | Manually as desired          | 1.x demo for Ethiopia        |
 | [undp-demo][undp-demo]         | Manually as desired          | 1.x demo for Ethiopia        |
+| [covid-dev][covid-dev]         | Manually as desired          | 1.x dev for COVID products   |
 
 [gitlab-env]: https://gitlab.com/pcmt/pcmt/environments
 [demo]: https://demo.productcatalog.io
@@ -32,3 +33,4 @@ These may be operated from the [Environments][gitlab-env] screen.
 [beta]: http://beta.pcmt.villagereach.org
 [rwanda-demo]: https://rwanda-demo.productcatalog.io
 [ethiopia-demo]: https://ethiopia-demo.productcatalog.io
+[covid-dev]: https://covid-dev.productcatalog.io
