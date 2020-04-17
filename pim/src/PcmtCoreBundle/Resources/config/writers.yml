@@ -13,7 +13,7 @@ services:
           - [setFlatItemBufferFlusher, ["@pcmt_connector.job.writer.file.e2open_flat_item_buffer_flusher"]]
 
     pcmt_connector.write.reference_data:
-        class: PcmtCoreBundle\Writer\ReferenceDataWriter
+        class: PcmtCoreBundle\Connector\Job\Writer\ReferenceDataWriter
         arguments:
             - '@pcmt_connector.save.reference_data'
 

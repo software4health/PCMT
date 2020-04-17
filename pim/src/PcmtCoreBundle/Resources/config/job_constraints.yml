@@ -16,7 +16,7 @@ services:
             - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
 
     pcmt_connector.job.job_parameters.constraint_collection_provider.reference_data_download_xmls:
-        class: PcmtCoreBundle\JobParameters\ConstraintCollectionProvider\XmlReferenceDataDownload
+        class: PcmtCoreBundle\Connector\Job\JobParameters\ConstraintCollectionProvider\ReferenceDataXmlDownloadProvider
         arguments:
             -
                 - 'reference_data_download_xmls'
@@ -24,7 +24,7 @@ services:
             - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
 
     pcmt_connector.job.job_parameters.constraint_collection_provider.reference_data_import_xmls:
-        class: PcmtCoreBundle\JobParameters\ConstraintCollectionProvider\XmlReferenceDataImport
+        class: PcmtCoreBundle\Connector\Job\JobParameters\ConstraintCollectionProvider\ReferenceDataXmlImportProvider
         arguments:
             -
                 - 'reference_data_import_xml'

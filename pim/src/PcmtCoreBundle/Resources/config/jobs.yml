@@ -108,9 +108,9 @@ services:
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             -
-                - '@pcmt_xml_connector.step.xml_reference_data_download'
+                - '@pcmt_xml_connector.step.reference_data_xml_download'
         tags:
-            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: 'download' }
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.import_type%' }
 
 
     pcmt_connector.job.reference_data_import_xmls:
@@ -123,5 +123,5 @@ services:
                 - '@pcmt_xml_connector.step.xml_reference_data_import'
 
         tags:
-            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: 'import_hidden' }
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.import_type%' }
 

@@ -12,5 +12,7 @@ services:
             -
                 pcmt_e2open_export: pim-job-instance-pcmt-e2open-export
                 pcmt_mst_supplier_export: pim-job-instance-pcmt-mst-supplier-export
+                reference_data_import_xml: pcmt-reference-data-import
+                reference_data_download_xmls: pcmt-simple-job
         tags:
             - { name: pim_enrich.provider.form, priority: 110 }

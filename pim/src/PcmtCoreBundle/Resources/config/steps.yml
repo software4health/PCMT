@@ -36,15 +36,17 @@ services:
             - '@pcmt_connector.writer.file.e2open'
             - '1'
 
-    pcmt_xml_connector.step.xml_reference_data_download:
-        class: PcmtCoreBundle\Step\ImportRefDataFiles
+    pcmt_xml_connector.step.reference_data_xml_download:
+        class: PcmtCoreBundle\Connector\Job\Step\ReferenceDataXmlDownloadStep
         arguments:
-            - 'import_xml_data_files'
+            - 'reference_data_xml_download'
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
+            - '@pcmt_core.validator.directory.directory_path_validator'
+            - '@pcmt_core.service.builder.path_builder'
 
-    pcmt_xml_connector.step.xml_reference_data_import:     #one instance of a job will be responsible to parse one file, shell/python script will be instantiating jobs for several files
-        class: Akeneo\Tool\Component\Batch\Step\ItemStep          # and passing serialized filename as a parameter for each job
+    pcmt_xml_connector.step.xml_reference_data_import:
+        class: PcmtCoreBundle\Connector\Job\Step\ReferenceDataXmlImportStep
         arguments:
             - 'process'
             - '@event_dispatcher'
