@@ -68,3 +68,9 @@ services:
             - '@pim_storage_serializer'
             - '@pim_catalog.repository.channel'
             - '@pim_catalog.repository.locale'
+
+    pcmt_core.service.builder.path_builder:
+        class: PcmtCoreBundle\Service\Builder\PathBuilder
+
+    pcmt_core.validator.directory.directory_path_validator:
+        class: PcmtCoreBundle\Validator\Directory\DirectoryPathValidator

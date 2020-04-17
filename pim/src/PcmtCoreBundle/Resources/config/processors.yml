@@ -7,7 +7,7 @@
 services:
 
     pcmt_connector.processor.reference_data:
-        class: PcmtCoreBundle\Processor\PcmtReferenceDataProcessor
+        class: PcmtCoreBundle\Connector\Job\Processor\PcmtReferenceDataProcessor
         arguments:
             - '@pim_custom_entity.configuration.registry'
             - '@doctrine.orm.entity_manager'

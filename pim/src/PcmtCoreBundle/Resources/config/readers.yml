@@ -6,7 +6,7 @@
 
 services:
     pcmt_connector.reader.xml.reference_data_gs1:
-        class: PcmtCoreBundle\Reader\File\GS1ReferenceDataXmlReader
+        class: PcmtCoreBundle\Connector\Job\Reader\File\ReferenceDataXmlReader
         autowire: true
 
     pcmt_connector.reader.database.mst_supplier_export:

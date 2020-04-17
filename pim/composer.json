@@ -34,7 +34,8 @@
         "nesbot/carbon": "^2.25",
         "behat/mink-extension": "^2.3",
         "behat/mink-goutte-driver": "^1.2",
-        "behat/mink-selenium2-driver": "^1.4"
+        "behat/mink-selenium2-driver": "^1.4",
+        "symfony/yaml": "^5.0"
     },
     "require-dev": {
         "doctrine/migrations": "1.5.0",

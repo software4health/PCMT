@@ -14,6 +14,7 @@ VER 1.1.3 / 2020-04-14
 ==================
 
 **Added**
+* [#43](https://gitlab.com/pcmt/pcmt/-/issues/43): User can create Job Instances to download/import reference data. 
 * [#323](https://gitlab.com/pcmt/pcmt/-/issues/323): Add a second locale to PCMTs demo dataset.
 * [#380](https://gitlab.com/pcmt/pcmt/-/issues/380): User get information about parallel changes in the same draft when trying to save outdated draft. 
 * [#113](https://gitlab.com/pcmt/pcmt/-/issues/113): Concatenated Attribute are available for many attributes.

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Command;
 
-use PcmtCoreBundle\Helper\GsCodesHelper;
+use PcmtCoreBundle\Command\Helper\GsCodesHelper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\ArrayInput;

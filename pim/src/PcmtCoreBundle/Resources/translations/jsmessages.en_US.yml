@@ -7,11 +7,23 @@ batch_jobs:
 
     default_steps:
         hash_first_cell: Hash first cell
+        process: Process
+        reference_data_xml_download: Reference data xml download
 
     pcmt_mst_supplier_export:
         validation.label: Validation
         label: Pcmt mst supplier export
         export.label: Pcmt mst supplier export
+
+    reference_data_import_xml:
+        validation.label: Validation
+        label: Pcmt Reference data xml import
+        import.label: Pcmt Reference data xml import
+
+    reference_data_download_xmls:
+        validation.label: Validation
+        label: Pcmt Reference data xml download
+        import.label: Pcmt Reference data xml download
 
 pim_enrich.entity.attribute:
     property:
@@ -317,3 +329,11 @@ pim_measure:
         SHEET: Sheet
         SQUARE YARD: Square Yard
         YARD: Yard
+
+
+pcmt_simple_job:
+    form:
+        job_instance:
+            button:
+                job.switcher: Simple launch
+                job.launch: Launch now
