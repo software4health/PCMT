@@ -1,6 +1,24 @@
 job_execution.summary:
     read_cross: read cross
     hashed_files: hashed files
+    AdditionalTradeItemClassificationCodeListCode: AdditionalTradeItemClassificationCodeListCode
+    AdditionalTradeItemIdentificationTypeCode: AdditionalTradeItemIdentificationTypeCode
+    ColourCodeListCode: ColourCodeListCode
+    CountryCode: CountryCode
+    DataCarrierTypeCode: DataCarrierTypeCode
+    MeasurementUnitCode_GDSN: MeasurementUnitCode_GDSN
+    GS1TradeItemIdentificationKeyTypeCode: GS1TradeItemIdentificationKeyTypeCode
+    ImportClassificationTypeCode: ImportClassificationTypeCode
+    LanguageCode: LanguageCode
+    NonfoodIngredientOfConcernCode: NonfoodIngredientOfConcernCode
+    PackageTypeCode: PackageTypeCode
+    PlatformTypeCode: PlatformTypeCode
+    ReferencedFileTypeCode: ReferencedFileTypeCode
+    RegulationTypeCode: RegulationTypeCode
+    ShippingContainerTypeCode: ShippingContainerTypeCode
+    SizeCodeListCode: SizeCodeListCode
+    TemperatureQualifierCode: TemperatureQualifierCode
+    TradeItemUnitDescriptorCode: TradeItemUnitDescriptorCode
 
 pim_measure:
     families:

@@ -26,6 +26,12 @@ class ReferenceDataXmlImportProvider implements DefaultValuesProviderInterface
 
     public const DIR_PATH = 'src/PcmtCoreBundle/Resources/reference_data/gs1Codes/';
 
+    public const WORK_DIR = 'tmp/';
+
+    public const OLD_DIR = 'old/';
+
+    public const FAILED_DIR = 'failed/';
+
     public function __construct(
         array $supportedJobNames
     ) {
