@@ -36,6 +36,6 @@ default:
           symfony2: ~
         selenium2:
           selenium2:
-            wd_host: 'http://docker:4444/wd/hub'
-            capabilities: { "browserName": "chrome", "browser": "chrome", "version": "*", 'chrome': {'switches':['--no-sandbox', '--test-type']}}
-      base_url: 'http://docker:80/'
+            wd_host: 'http://selenium:4444/wd/hub'
+            capabilities: { "browserName": "chrome", "browser": "chrome", "version": "*", 'chrome': {'switches':['--no-sandbox', '--test-type', '--disable-dev-shm-usage']}}
+      base_url: 'http://httpd/'

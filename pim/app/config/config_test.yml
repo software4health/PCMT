@@ -6,5 +6,5 @@ framework:
   test: ~
 
 parameters:
-  database_name: akeneo_pim_behat
+  database_name: akeneo_pim
   installer_data: PcmtCustomDatasetBundle:pcmt_global

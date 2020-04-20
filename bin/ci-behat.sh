@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
-set -e
+#set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
@@ -16,5 +16,5 @@ export DOCKER_CLIENT_TIMEOUT=120
 export COMPOSE_HTTP_TIMEOUT=120
 
 source $DIR/ci-up.sh
-./ddev.sh exec -T fpm bin/console --env=test pim:install --force --symlink --clean
 ./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --suite=api
+source $DIR/selenium.sh

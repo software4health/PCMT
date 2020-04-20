@@ -17,7 +17,7 @@ class SeleniumBaseContext extends MinkContext implements Context
 
     public function __construct()
     {
-        $this->kernel = new AppKernel('dev', true);
+        $this->kernel = new AppKernel('test', true);
         $this->kernel->boot();
     }
 

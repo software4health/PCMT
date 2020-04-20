@@ -5,5 +5,9 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
-./ddev.sh -f docker-compose.test.yml run --rm fpm /srv/pim/vendor/bin/behat --suite=selenium-core
-./ddev.sh -f docker-compose.test.yml run --rm fpm /srv/pim/vendor/bin/behat --suite=selenium-drafts
+echo "STARTING SELENIUM TESTS..."
+
+./ddev.sh exec -T -d fpm bin/console --env=test akeneo:batch:job-queue-consumer-daemon
+
+./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --suite=selenium-core
+./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --suite=selenium-drafts

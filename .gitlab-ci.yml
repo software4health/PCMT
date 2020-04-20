@@ -18,7 +18,6 @@ default:
     entrypoint: ["/bin/sh", "-c"]
   services:
     - docker:dind
-    - selenium/standalone-chrome-debug
   before_script:
     - docker info
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS

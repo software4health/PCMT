@@ -13,6 +13,8 @@ services:
   selenium:
     image: selenium/standalone-chrome-debug
     container_name: selenium
+    networks:
+      - akeneo
     volumes:
       - /dev/shm:/dev/shm
     ports:
