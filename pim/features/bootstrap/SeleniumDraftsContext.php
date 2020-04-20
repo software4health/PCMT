@@ -39,6 +39,8 @@ class SeleniumDraftsContext extends SeleniumBaseContext
      */
     public function iConfirmApproval(): void
     {
+        $this->getSession()->wait(2000);
+
         $buttonDiv = $this->getSession()->getPage()->find('css', 'div.AknButton.AknButtonList-item.AknButton--apply.ok.ok');
         $buttonDiv->click();
     }
@@ -69,6 +71,8 @@ class SeleniumDraftsContext extends SeleniumBaseContext
      */
     public function iShouldSeeMyDraftBecomingTheLatestVersionOfTheProduct(): void
     {
+        $this->getSession()->wait(2000);
+
         foreach ($this->draftIds as $draftIdentifier) {
             $this->assertPageContainsText($draftIdentifier);
         }

@@ -9,4 +9,5 @@ PCMT_VER=$(bin/pcmt-ver-sha.sh)
 
 PCMT_VER=$PCMT_VER docker-compose -f docker-compose.yml \
     -f docker-compose.dev.yml \
+    -f docker-compose.test.yml \
     ${@}
