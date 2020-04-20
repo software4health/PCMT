@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Command\Handler;
 
+use DirectoryIterator;
+use PcmtCoreBundle\Service\Builder\PathBuilder;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,11 +21,11 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
 {
     protected const DEFAULT_JOB_CODE = 'reference_data_import_xml';
 
-    /** @var \RegexIterator */
-    protected $fileIterator;
-
     /** @var string */
     protected $dir;
+
+    /** @var PathBuilder */
+    private $pathBuilder;
 
     /** @var string */
     protected static $defaultName = 'pcmt:handler:import_reference_data';
@@ -31,9 +33,7 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
     public function __construct()
     {
         $this->dir = 'src/PcmtCoreBundle/Resources/reference_data/gs1Codes/';
-        $directory = new \RecursiveDirectoryIterator($this->dir);
-        $iterator = new \RecursiveIteratorIterator($directory);
-        $this->fileIterator = new \RegexIterator($iterator, '/^.+\.xml$/i', \RecursiveRegexIterator::ALL_MATCHES);
+        $this->pathBuilder = new PathBuilder();
 
         parent::__construct();
     }
@@ -47,22 +47,23 @@ class PcmtReferenceDataImportHandler extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        try {
-            $this->fileIterator->rewind();
-            while ($this->fileIterator->current()) {
-                $currentFile = $this->fileIterator->key();
+        foreach (new DirectoryIterator($this->dir) as $fileInfo) {
+            if ($fileInfo->isDot() || $fileInfo->isDir() || '.gitignore' === $fileInfo->getFilename()) {
+                continue;
+            }
+
+            $currentFile = $fileInfo->getPath() . '/' . $fileInfo->getFilename();
+            $this->pathBuilder->setPath($currentFile);
+            try {
                 $totalPath = str_replace('/', '\/', $currentFile);
                 $arguments['code'] = $input->getArgument('code') ?? self::DEFAULT_JOB_CODE;
                 $arguments['--config'] = sprintf('{"filePath": "%s"}', $totalPath);
-                $returnCode = $this->executeCommand($output, $arguments);
-
-                if (0 === $returnCode) {
-                    $this->fileIterator->next();
-                }
+                $this->executeCommand($output, $arguments);
+            } catch (\Throwable $exception) {
+                $output->writeln($exception->getMessage());
+                continue;
             }
-        } catch (\Throwable $exception) {
-            $output->writeln($exception->getMessage());
-            die;
+            $output->writeln($this->pathBuilder->getFileName(false));
         }
     }
 

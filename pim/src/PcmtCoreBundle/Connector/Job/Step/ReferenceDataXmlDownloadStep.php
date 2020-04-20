@@ -17,6 +17,7 @@ use GuzzleHttp\ClientInterface;
 use PcmtCoreBundle\Connector\Job\InvalidItems\SimpleInvalidItem;
 use PcmtCoreBundle\Connector\Job\InvalidItems\UrlInvalidItem;
 use PcmtCoreBundle\Connector\Job\JobParameters\DefaultValueProvider\ReferenceDataXmlDownloadProvider;
+use PcmtCoreBundle\Connector\Job\JobParameters\DefaultValueProvider\ReferenceDataXmlImportProvider;
 use PcmtCoreBundle\Service\Builder\PathBuilder;
 use PcmtCoreBundle\Util\Adapter\DirectoryCreator;
 use PcmtCoreBundle\Validator\Directory\DirectoryPathValidator;
@@ -30,9 +31,6 @@ class ReferenceDataXmlDownloadStep extends AbstractStep
 
     /** @var string */
     private $tmpDirectory;
-
-    /** @var string */
-    private $oldDirectory;
 
     /** @var string */
     private $failedDirectory;
@@ -71,9 +69,8 @@ class ReferenceDataXmlDownloadStep extends AbstractStep
         $dirPath = $jobParameters->get('dirPath');
         if ($dirPath) {
             $this->rootDirectory = $dirPath;
-            $this->oldDirectory = $this->rootDirectory . 'old/';
-            $this->tmpDirectory = $this->rootDirectory . 'tmp/';
-            $this->failedDirectory = $this->rootDirectory . 'failed/';
+            $this->tmpDirectory = $this->rootDirectory . ReferenceDataXmlImportProvider::WORK_DIR;
+            $this->failedDirectory = $this->rootDirectory . ReferenceDataXmlImportProvider::FAILED_DIR;
             $this->configDirectory = $this->rootDirectory . 'config/';
             $this->pathBuilder->setPath($this->rootDirectory);
         }
@@ -105,7 +102,6 @@ class ReferenceDataXmlDownloadStep extends AbstractStep
             preg_match('/cl:(.*?)&/', $url, $matches) . '.xml';
             $className = $matches[1];
             $fileName = $className . '.xml';
-            $filePath = $this->rootDirectory . $fileName;
             try {
                 $tmpFilePath = $this->tmpDirectory . $fileName;
                 $tmpFile = fopen($tmpFilePath, 'w');
@@ -113,11 +109,6 @@ class ReferenceDataXmlDownloadStep extends AbstractStep
                 fclose($tmpFile);
 
                 $stepExecution->incrementSummaryInfo($response->getStatusCode());
-                try {
-                    rename($filePath, $this->oldDirectory . $this->pathBuilder->getFileNameWithTime($fileName));
-                } catch (\Throwable $exception) {
-                }
-                rename($tmpFilePath, $filePath);
                 $stepExecution->incrementSummaryInfo($className);
             } catch (\Throwable $exception) {
                 $invalidItem = new UrlInvalidItem($url);
