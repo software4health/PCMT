@@ -129,7 +129,11 @@ class DraftController
         }
 
         try {
-            $this->draftFacade->updateDraft($draft);
+            $options = [];
+            if (isset($data['lastUpdatedAtTimestamp'])) {
+                $options['lastUpdatedAt'] = $data['lastUpdatedAtTimestamp'];
+            }
+            $this->draftFacade->updateDraft($draft, $options);
         } catch (DraftViolationException $e) {
             return new JsonResponse(
                 ['values' => $this->draftViolationNormalizer->normalize($e)],

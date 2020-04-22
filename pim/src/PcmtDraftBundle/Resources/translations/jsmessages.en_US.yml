@@ -111,6 +111,8 @@ pcmt.entity.draft:
         cannot_reject_wrong_status: "You can't reject the draft when it has status different than 'new'."
         already_approved: "You can't save the draft. It has been already approved."
         already_rejected: "You can't save the draft. It has been already rejected."
+        draft_already_edited: "You can't save the draft. Someone edited it."
+
     confirm:
         approve:
             title: Draft approval

@@ -68,6 +68,7 @@ class GeneralDraftNormalizer
 
         $data['createdAt'] = $this->datetimePresenter->present($draft->getCreatedAt(), $datetimeContext);
         $data['updatedAt'] = $this->datetimePresenter->present($draft->getUpdatedAt(), $datetimeContext);
+        $data['lastUpdatedAtTimestamp'] = $draft->getUpdatedAt() ? $draft->getUpdatedAt()->getTimestamp() : 0;
         $author = $draft->getAuthor();
         $data['author'] = $author ? $author->getFirstName() . ' ' . $author->getLastName() : User::SYSTEM_USER_NAME;
         $draftStatus = new DraftStatus($draft->getStatus());

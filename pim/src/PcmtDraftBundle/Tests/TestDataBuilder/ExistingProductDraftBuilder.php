@@ -47,6 +47,13 @@ class ExistingProductDraftBuilder extends AbstractDraftBuilder
         return $this;
     }
 
+    public function withUpdatedAt(\DateTime $updatedAt): self
+    {
+        $this->existingProductDraft->setUpdated($updatedAt);
+
+        return $this;
+    }
+
     public function build(): ExistingProductDraft
     {
         return $this->existingProductDraft;
