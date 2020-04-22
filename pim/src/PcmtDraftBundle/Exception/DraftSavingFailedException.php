@@ -27,4 +27,9 @@ class DraftSavingFailedException extends RuntimeException
     {
         return new self('pcmt.entity.draft.error.no_corresponding_object');
     }
+
+    public static function draftHasBeenEditedInTheMeantime(): self
+    {
+        return new self('pcmt.entity.draft.error.draft_already_edited');
+    }
 }
