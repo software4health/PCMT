@@ -14,6 +14,12 @@ use Behat\Behat\Context\Context;
 
 class WebContext extends \SeleniumBaseContext implements Context
 {
+    public const WAIT_TIME_LONG = 8000;
+
+    public const WAIT_TIME_MEDIUM = 4000;
+
+    public const WAIT_TIME_SHORT = 1000;
+
     /** @var int */
     private $numberOfResults = 0;
 
@@ -52,7 +58,7 @@ class WebContext extends \SeleniumBaseContext implements Context
         foreach ($attributeTypeSpans as $attributeTypeSpan) {
             if ($attributeTypeSpan->getText() === $attributeType) {
                 $attributeTypeSpan->click();
-                $this->getSession()->wait('1000');
+                $this->getSession()->wait(self::WAIT_TIME_MEDIUM);
 
                 return;
             }
@@ -70,7 +76,7 @@ class WebContext extends \SeleniumBaseContext implements Context
         foreach ($attributeGroupSelect as $selectOption) {
             if ($selectOption->getText() === $option) {
                 $selectOption->click();
-                $this->getSession()->wait('1000');
+                $this->getSession()->wait(self::WAIT_TIME_MEDIUM);
 
                 return;
             }
@@ -127,7 +133,7 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iClickDelete(): void
     {
-        $this->getSession()->wait('200');
+        $this->getSession()->wait(self::WAIT_TIME_SHORT);
         $buttons = $this->getSession()->getPage()
             ->findAll('css', 'a.AknButton--important');
         foreach ($buttons as $button) {
@@ -146,7 +152,7 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iConfirmDelete(): void
     {
-        $this->getSession()->wait('2000');
+        $this->getSession()->wait(self::WAIT_TIME_LONG);
         $buttons = $this->getSession()->getPage()
             ->findAll('css', 'div.AknButton--important');
         foreach ($buttons as $button) {
