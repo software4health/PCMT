@@ -47,6 +47,9 @@ include:
     - bin/ci-build.sh
     - bin/ci-parse-coverage.sh $CODE_COVERAGE_THRESHOLD
     - bin/ci-push.sh
+  except:
+    variables:
+      - $CI_SELENIUM == "true"
   artifacts:
     reports:
       junit: build/unit-results.xml
@@ -75,6 +78,9 @@ pim_erd:
   extends:
     - .pim_only_changes
     - .pim_erd_base
+  except:
+    variables:
+      - $CI_SELENIUM == "true"
   only:
     refs:
       - master@pcmt/pcmt
@@ -88,8 +94,21 @@ pim_behat_api (manual):
   stage: build
   script:
     - bin/ci-behat.sh
+  except:
+    variables:
+      - $CI_SELENIUM == "true"
   when: manual
 
+pim_behat_api (scheduled):
+  stage: build
+  only:
+    refs:
+      - master
+      - schedules
+    variables:
+      - $CI_SELENIUM == "true"
+  script:
+    - bin/ci-behat.sh
 
 ############### IoC ###############
 
@@ -100,6 +119,9 @@ ansible docker build:
       - master@pcmt/pcmt
     changes:
       - deploy/ansible/**/*
+  except:
+    variables:
+    - $CI_SELENIUM == "true"
   script:
     - make ansible
     - docker push pcmt/ansible:latest
@@ -111,6 +133,9 @@ terraform docker build:
       - master@pcmt/pcmt
     changes:
       - deploy/terraform/**/*
+  except:
+    variables:
+      - $CI_SELENIUM == "true"
   script:
     - make terraform
     - docker push pcmt/terraform:latest
@@ -137,6 +162,9 @@ mysql-backup docker build:
     changes:
       - deploy/mysql-backup/**/*
       - deploy/cron/**/*
+  except:
+    variables:
+      - $CI_SELENIUM == "true"
   script:
     - make mysql-backup
     - docker push pcmt/cron:latest
@@ -150,6 +178,9 @@ s3 docker build:
     changes:
       - deploy/s3/**/*
       - deploy/cron/**/*
+  except:
+    variables:
+      - $CI_SELENIUM == "true"
   script:
     - make s3
     - docker push pcmt/cron:latest
@@ -163,6 +194,9 @@ ftp-get docker build:
     changes:
       - deploy/ftp-get/**/*
       - deploy/cron/**/*
+  except:
+    variables:
+      - $CI_SELENIUM == "true"
   script:
     - make ftp-get
     - docker push pcmt/cron:latest
@@ -175,6 +209,9 @@ scalyr docker build:
       - master@pcmt/pcmt
     changes:
       - deploy/scalyr/**/*
+  except:
+    variables:
+      - $CI_SELENIUM == "true"
   script:
     - make scalyr
     - docker push pcmt/scalyr:latest
@@ -231,6 +268,9 @@ env-showcase-destroy:
   stage: deploy
   variables:
     PCMT_PROFILE: dev
+  except:
+    variables:
+      - $CI_SELENIUM == "true"
   environment:
     name: test
     url: http://test.pcmt.villagereach.org
