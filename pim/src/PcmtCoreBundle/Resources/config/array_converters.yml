@@ -75,3 +75,20 @@ services:
             - ['pim_catalog_metric']
         tags:
             - { name: 'pim_connector.array_converter.flat_to_standard.product.value_converter' }
+
+    pim_connector.array_converter.flat_to_standard.product_association:
+        class: 'Akeneo\Pim\Enrichment\Component\Product\Connector\ArrayConverter\FlatToStandard\ProductAssociation'
+        arguments:
+            - '@pcmt_connector.array_converter.flat_to_standard.product'
+
+    pim_connector.array_converter.flat_to_standard.product_delocalized:
+        class: 'Akeneo\Pim\Enrichment\Component\Product\Connector\ArrayConverter\FlatToStandard\EntityWithValuesDelocalized'
+        arguments:
+            - '@pcmt_connector.array_converter.flat_to_standard.product'
+            - '@pim_catalog.localization.localizer.converter'
+
+    pcmt_connector.array_converter.flat_to_standard.product:
+        class: 'PcmtCoreBundle\ArrayConverter\FlatToStandard\Product'
+        arguments:
+            - '@pim_connector.array_converter.flat_to_standard.product'
+            - '@pim_catalog.repository.attribute'
