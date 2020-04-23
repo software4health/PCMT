@@ -9,7 +9,7 @@ Feature: Approving Drafts
     And I log in as a test user
     When I follow "Drafts"
     And wait for the page to load
-    And I follow "Approve draft"
+    And I click approve on last draft
     When I confirm approval
     And wait for the page to load
     And I follow "Products"

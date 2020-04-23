@@ -13,7 +13,7 @@ default:
       paths:
         - %paths.base%/src/PcmtDraftBundle/FunctionalTests/features/selenium/
       contexts:
-        - SeleniumDraftsContext: ~
+        - PcmtDraftBundle\FunctionalTests\WebContext: ~
 
     selenium-core:
       paths:
