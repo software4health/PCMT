@@ -69,7 +69,7 @@ class DraftSaver implements SaverInterface
     public function save($draft, array $options = []): void
     {
         if (empty($options[self::OPTION_NO_VALIDATION])) {
-            $this->validateDraft($draft);
+            $this->validateDraft($draft, $options);
         }
         $this->eventDispatcher->dispatch(StorageEvents::PRE_SAVE, new GenericEvent($draft, $options));
         $this->entityManager->persist($draft);
@@ -77,9 +77,12 @@ class DraftSaver implements SaverInterface
         $this->eventDispatcher->dispatch(StorageEvents::POST_SAVE, new GenericEvent($draft, $options));
     }
 
-    protected function validateDraft(object $draft): void
+    protected function validateDraft(object $draft, array $options = []): void
     {
         $this->checkIfDraftIsInstanceOfDraftInterface($draft);
+        if (isset($options['lastUpdatedAt'])) {
+            $this->checkIfDraftHasNotBeenEditedWhileCurrentSessionActive($draft, $options['lastUpdatedAt']);
+        }
         $this->checkIfDraftCouldBeSaved($draft);
         $this->validateObjectToSave($draft);
         $this->checkIfThereIsOtherDraftForThisObject($draft);
@@ -141,6 +144,17 @@ class DraftSaver implements SaverInterface
                     'There is already a draft for this object'
                 );
             }
+        }
+    }
+
+    private function checkIfDraftHasNotBeenEditedWhileCurrentSessionActive(DraftInterface $draft, int $lastEditedDateTimestamp): void
+    {
+        if (!$draft->getUpdatedAt()) {
+            return;
+        }
+
+        if ($draft->getUpdatedAt()->getTimestamp() !== $lastEditedDateTimestamp) {
+            throw DraftSavingFailedException::draftHasBeenEditedInTheMeantime();
         }
     }
 }

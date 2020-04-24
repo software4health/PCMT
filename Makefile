@@ -101,7 +101,7 @@ dev-test-selenium:
 
 .PHONY: dev-test-api
 dev-test-api:
-	./ddev.sh run --rm fpm /srv/pim/vendor/bin/behat --suite=api
+	./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --suite=api
 
 .PHONY: terraform
 terraform:

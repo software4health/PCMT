@@ -15,6 +15,7 @@ use DirectoryIterator;
 use PcmtCoreBundle\Connector\Job\InvalidItems\XmlInvalidItem;
 use PcmtCoreBundle\Connector\Job\JobParameters\DefaultValueProvider\ReferenceDataXmlImportProvider;
 use PcmtCoreBundle\Connector\Job\Reader\File\ReferenceDataXmlReaderInterface;
+use PcmtCoreBundle\Service\Builder\PathBuilder;
 
 class ReferenceDataXmlImportStep extends ItemStep
 {
@@ -23,6 +24,9 @@ class ReferenceDataXmlImportStep extends ItemStep
 
     /** @var \RegexIterator */
     protected $fileIterator;
+
+    /** @var PathBuilder */
+    private $pathBuilder;
 
     /**
      * {@inheritdoc}
@@ -35,16 +39,22 @@ class ReferenceDataXmlImportStep extends ItemStep
 
             return;
         }
-        $dirPath = $stepExecution->getJobParameters()->get('dirPath');
+        $dirPath = $stepExecution->getJobParameters()->get('dirPath') . ReferenceDataXmlImportProvider::WORK_DIR;
         foreach (new DirectoryIterator($dirPath) as $fileInfo) {
-            if ($fileInfo->isDot() || $fileInfo->isDir()) {
+            if ($fileInfo->isDot() || $fileInfo->isDir() || '.gitignore' === $fileInfo->getFilename()) {
                 continue;
             }
 
             $currentFile = $fileInfo->getPath() . '/' . $fileInfo->getFilename();
+            $this->pathBuilder->setPath($currentFile);
+            $oldDirectory = $stepExecution->getJobParameters()->get('dirPath') . ReferenceDataXmlImportProvider::OLD_DIR;
             try {
                 $this->reader->setFilePath($currentFile);
                 parent::doExecute($stepExecution);
+                rename(
+                    $currentFile,
+                    $oldDirectory . $this->pathBuilder->getFileNameWithTime($fileInfo->getFilename())
+                );
             } catch (\Throwable $exception) {
                 $invalidItem = new XmlInvalidItem($currentFile);
                 $stepExecution->addWarning(
@@ -54,7 +64,12 @@ class ReferenceDataXmlImportStep extends ItemStep
                 );
                 $stepExecution->incrementSummaryInfo('failed');
             }
-            $stepExecution->incrementSummaryInfo($fileInfo->getFilename());
+            $stepExecution->incrementSummaryInfo($this->pathBuilder->getFileName(false));
         }
+    }
+
+    public function setPathBuilder(PathBuilder $pathBuilder): void
+    {
+        $this->pathBuilder = $pathBuilder;
     }
 }

@@ -15,7 +15,7 @@ use PcmtDraftBundle\Entity\AbstractDraft;
 
 class DraftFixtureFactory
 {
-    public function createDraft(string $status): FixtureInterface
+    public function createDraft(int $status): FixtureInterface
     {
         if (!in_array($status, AbstractDraft::STATUSES)) {
             throw new \InvalidArgumentException('Unknown status, cannot create draft.');

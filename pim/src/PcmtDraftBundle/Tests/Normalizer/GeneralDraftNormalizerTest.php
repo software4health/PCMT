@@ -49,9 +49,9 @@ class GeneralDraftNormalizerTest extends TestCase
     public function dataNormalize(): array
     {
         return [
-            [(new ExistingProductDraftBuilder())->build()],
+            [(new ExistingProductDraftBuilder())->withUpdatedAt(new \DateTime())->build()],
             [(new NewProductDraftBuilder())->build()],
-            [(new ExistingProductModelDraftBuilder())->build()],
+            [(new ExistingProductModelDraftBuilder())->withUpdatedAt(new \DateTime())->build()],
             [(new NewProductModelDraftBuilder())->build()],
         ];
     }
@@ -81,6 +81,8 @@ class GeneralDraftNormalizerTest extends TestCase
     {
         $draftMock = $this->createMock(DraftInterface::class);
         $draftMock->method('getType')->willReturn('xxxxxxx');
+        $draftMock->method('getUpdatedAt')->willReturn(new \DateTime());
+
         $normalizer = $this->getGeneralDraftNormalizerInstance();
 
         $this->expectException(\InvalidArgumentException::class);

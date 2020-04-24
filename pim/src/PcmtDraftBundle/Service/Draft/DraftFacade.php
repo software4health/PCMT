@@ -59,8 +59,8 @@ class DraftFacade
         $this->entityManager->flush();
     }
 
-    public function updateDraft(DraftInterface $draft): void
+    public function updateDraft(DraftInterface $draft, array $options = []): void
     {
-        $this->draftSaver->save($draft);
+        $this->draftSaver->save($draft, $options);
     }
 }

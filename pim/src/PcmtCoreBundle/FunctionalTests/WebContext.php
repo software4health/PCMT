@@ -113,6 +113,7 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iCheckProducts(int $num): void
     {
+        $this->waitForThePageToLoad();
         $checkboxes = $this->getSession()->getPage()
             ->findAll('css', 'td.AknGrid-bodyCell > input[type=checkbox]');
         for ($i = 0; $i < $num; $i++) {
@@ -145,7 +146,7 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iConfirmDelete(): void
     {
-        $this->getSession()->wait('200');
+        $this->getSession()->wait('2000');
         $buttons = $this->getSession()->getPage()
             ->findAll('css', 'div.AknButton--important');
         foreach ($buttons as $button) {
