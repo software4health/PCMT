@@ -1,0 +1,23 @@
+######################################################################
+# Copyright (c) 2019, VillageReach
+# Licensed under the Non-Profit Open Software License version 3.0.
+# SPDX-License-Identifier: NPOSL-3.0
+######################################################################
+
+services:
+
+  ### overrides category-tree controller
+  pim_enrich.controller.category_tree.product:
+    class: PcmtPermissionsBundle\Controller\CategoryTreeController
+    arguments:
+      - '@event_dispatcher'
+      - '@pim_user.context.user'
+      - '@pim_catalog.saver.category'
+      - '@pim_catalog.remover.category'
+      - '@pim_catalog.factory.category'
+      - '@pim_catalog.repository.category'
+      - '@oro_security.security_facade'
+      - { related_entity: product, form_type: 'Akeneo\Pim\Enrichment\Bundle\Form\Type\CategoryType', acl: pim_enrich_product, route: pim_enrich }
+    calls:
+      - [ setContainer, [ '@service_container' ] ]
+

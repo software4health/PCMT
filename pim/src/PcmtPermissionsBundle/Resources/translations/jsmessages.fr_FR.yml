@@ -1,0 +1,5 @@
+pim_enrich:
+  category:
+    tab:
+      permissions.title: l'Autorisations
+      allowed.to.view.label: Autorisé à voir les produits

@@ -1,0 +1,5 @@
+config:
+    paths:
+        pcmt/permissions/permissions : pcmtpermissions/js/form/permissions # form
+        pcmt/permissions/template: pcmtpermissions/templates/multiselect.html #form template
+

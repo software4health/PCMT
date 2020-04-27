@@ -88,6 +88,7 @@ class AppKernel extends Kernel
             new PcmtCoreBundle\PcmtCoreBundle(),
             new PcmtDraftBundle\PcmtDraftBundle(),
             new PcmtPreReleaseBundle\PcmtPreReleaseBundle(),
+            new PcmtPermissionsBundle\PcmtPermissionsBundle()
         ];
     }
 
