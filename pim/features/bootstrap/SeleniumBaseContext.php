@@ -15,6 +15,10 @@ class SeleniumBaseContext extends MinkContext implements Context
     /** @var AppKernel  */
     private $kernel;
 
+    public const WAIT_TIME_LONG = 5000;
+
+    public const WAIT_TIME_MEDIUM = 4000;
+
     public function __construct()
     {
         $this->kernel = new AppKernel('test', true);
@@ -31,7 +35,7 @@ class SeleniumBaseContext extends MinkContext implements Context
         $this->fillField('_password', 'Admin123');
         $this->pressButton('_submit');
 
-        $this->getSession()->wait('5000');
+        $this->getSession()->wait(self::WAIT_TIME_LONG);
     }
 
     /**
@@ -39,7 +43,7 @@ class SeleniumBaseContext extends MinkContext implements Context
      */
     public function waitForThePageToLoad(): void
     {
-        $this->getSession()->wait('2000');
+        $this->getSession()->wait(self::WAIT_TIME_MEDIUM);
     }
 
     protected function getEntityManager(): EntityManagerInterface

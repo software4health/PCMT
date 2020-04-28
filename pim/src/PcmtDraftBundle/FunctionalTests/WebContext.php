@@ -16,6 +16,10 @@ use PcmtDraftBundle\Entity\AbstractDraft;
 
 class WebContext extends \SeleniumBaseContext
 {
+    public const WAIT_TIME_LONG = 4000;
+
+    public const WAIT_TIME_MEDIUM = 2000;
+
     protected const DRAFT_STATUSES = [
         'New'      => AbstractDraft::STATUS_NEW,
         'Approved' => AbstractDraft::STATUS_APPROVED,
@@ -58,7 +62,7 @@ class WebContext extends \SeleniumBaseContext
      */
     public function iConfirmApproval(): void
     {
-        $this->getSession()->wait(2000);
+        $this->getSession()->wait(self::WAIT_TIME_LONG);
 
         $buttonDiv = $this->getSession()->getPage()->find('css', 'div.AknButton.AknButtonList-item.AknButton--apply.ok.ok');
         $buttonDiv->click();
@@ -82,7 +86,7 @@ class WebContext extends \SeleniumBaseContext
             }
         }
 
-        $this->getSession()->wait(1000);
+        $this->getSession()->wait(self::WAIT_TIME_MEDIUM);
     }
 
     /**
@@ -108,7 +112,7 @@ class WebContext extends \SeleniumBaseContext
                 return;
             } catch (ExpectationException $e) {
                 $this->getSession()->reload();
-                $this->getSession()->wait(2000);
+                $this->getSession()->wait(self::WAIT_TIME_LONG);
             }
         }
         $this->iShouldSeeMyDraftBecomingTheLatestVersionOfTheProduct();
