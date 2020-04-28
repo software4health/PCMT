@@ -34,6 +34,10 @@ class ConcatenatedComparator implements ComparatorInterface
      */
     public function compare($data, $originals): ?array
     {
+        if (empty($originals)) {
+            return null;
+        }
+
         $default = [
             'locale' => null,
             'scope'  => null,
