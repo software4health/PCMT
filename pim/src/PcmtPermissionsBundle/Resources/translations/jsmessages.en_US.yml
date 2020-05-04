@@ -1,6 +1,9 @@
 pim_enrich:
-  #Category
-  category:
-    tab:
-      permissions.title: Permissions
-      allowed.to.view.label: Alowed to view products
+    #Category
+    category:
+        tab:
+            allowed_to:
+                view.label: Alowed to view products
+                own.label: Alowed to own products
+                edit.label: Alowed to edit products
+            apply.to.children: Apply to children

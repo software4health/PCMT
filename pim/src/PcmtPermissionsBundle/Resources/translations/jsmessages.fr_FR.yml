@@ -1,5 +1,9 @@
 pim_enrich:
-  category:
-    tab:
-      permissions.title: l'Autorisations
-      allowed.to.view.label: Autorisé à voir les produits
+    #Category
+    category:
+        tab:
+            allowed_to:
+                view.label: Autorisé à voir les produits
+                own.label: Autorisé à posséder les produits
+                edit.label: Autorisé à éditer les produits
+            apply.to.children: Appliquer aux descendants

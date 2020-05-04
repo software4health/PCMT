@@ -45,14 +45,17 @@ define([
             },
 
             setInitialGroups: function(categoryId) {
-                console.log('update groups on select' + categoryId);
+                console.log('permissions for category: ' + categoryId);
             },
 
             render: function () {
                 FetcherRegistry.getFetcher('user-group').fetchAll().then(function (groups) {
                     this.groups = groups;
                     this.$el.html(this.template({
-                        label: 'Allowed to view products',
+                        label_allowed_to_own: __('pim_enrich.category.tab.allowed_to.own.label'),
+                        label_allowed_to_edit: __('pim_enrich.category.tab.allowed_to.edit.label'),
+                        label_allowed_to_view: __('pim_enrich.category.tab.allowed_to.view.label'),
+                        label_apply_to_children: __('pim_enrich.category.tab.apply.to.children'),
                         userGroups: groups,
                         requiredLabel: __('pim_common.required_label'),
                     }));

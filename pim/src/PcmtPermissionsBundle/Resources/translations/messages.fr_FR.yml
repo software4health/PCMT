@@ -2,4 +2,4 @@ pim_enrich:
     #Category
     category:
         tab:
-            permissions.title: Permissions
+            permissions.title: l'Autorisations
