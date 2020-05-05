@@ -12,12 +12,25 @@ namespace PcmtPermissionsBundle\Controller;
 
 use Akeneo\Pim\Enrichment\Bundle\Controller\Ui\CategoryTreeController as OriginalCategoryTreeController;
 use Akeneo\Platform\Bundle\UIBundle\Flash\Message;
+use Akeneo\UserManagement\Bundle\Doctrine\ORM\Repository\GroupRepository;
+use PcmtPermissionsBundle\Entity\CategoryAccess;
+use PcmtPermissionsBundle\Repository\CategoryAccessRepository;
+use PcmtPermissionsBundle\Saver\CategoryAccessSaver;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CategoryTreeController extends OriginalCategoryTreeController
 {
+    /** @var CategoryAccessRepository */
+    private $accessRepository;
+
+    /** @var CategoryAccessSaver */
+    private $accessSaver;
+
+    /** @var GroupRepository */
+    private $userGroupRepository;
+
     /**
      * {@inheritdoc}
      */
@@ -26,7 +39,26 @@ class CategoryTreeController extends OriginalCategoryTreeController
         if (false === $this->securityFacade->isGranted($this->buildAclName('category_edit'))) {
             throw new AccessDeniedException();
         }
+
         $category = $this->findCategory($id);
+
+        // @todo remove this id before end of task
+        if (0) {
+            $userGroup = $this->userGroupRepository->find(2);
+            $accesses = $this->accessRepository->findBy([
+                'userGroup' => $userGroup,
+                'category'  => $category,
+            ]);
+            if (empty($accesses)) {
+                $categoryAccess = new CategoryAccess($category, $userGroup, CategoryAccess::VIEW_LEVEL);
+                $this->accessSaver->save($categoryAccess);
+                $this->accessRepository->findBy([
+                    'userGroup' => $userGroup,
+                    'category'  => $category,
+                ]);
+            }
+        }
+
         $form = $this->createForm($this->rawConfiguration['form_type'], $category, $this->getFormOptions($category));
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -47,5 +79,20 @@ class CategoryTreeController extends OriginalCategoryTreeController
                 'route'          => $this->rawConfiguration['route'],
             ]
         );
+    }
+
+    public function setAccessRepository(CategoryAccessRepository $accessRepository): void
+    {
+        $this->accessRepository = $accessRepository;
+    }
+
+    public function setUserGroupRepository(GroupRepository $userGroupRepository): void
+    {
+        $this->userGroupRepository = $userGroupRepository;
+    }
+
+    public function setAccessSaver(CategoryAccessSaver $accessSaver): void
+    {
+        $this->accessSaver = $accessSaver;
     }
 }

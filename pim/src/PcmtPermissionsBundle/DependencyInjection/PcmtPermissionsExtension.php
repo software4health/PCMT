@@ -21,6 +21,7 @@ class PcmtPermissionsExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('controllers.yml');
+        $loader->load('services.yml');
         $loader->load('view_elements.yml');
     }
 }
