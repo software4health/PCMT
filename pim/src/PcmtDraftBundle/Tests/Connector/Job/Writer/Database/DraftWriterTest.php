@@ -16,6 +16,7 @@ use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use PcmtDraftBundle\Connector\Job\Writer\Database\DraftWriter;
+use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Service\Draft\BaseEntityCreatorInterface;
 use PcmtDraftBundle\Service\Draft\DraftCreatorInterface;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductBuilder;
@@ -23,6 +24,8 @@ use PcmtDraftBundle\Tests\TestDataBuilder\ProductModelBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class DraftWriterTest extends TestCase
 {
@@ -210,6 +213,37 @@ class DraftWriterTest extends TestCase
         $this->draftSaverMock
             ->method('save')
             ->willThrowException($exception);
+
+        $this->stepExecutionMock
+            ->expects($this->exactly(count($items)))
+            ->method('addWarning');
+
+        $this->draftWriter->write($items);
+    }
+
+    public function testWriteWhenDraftSaverThrowsDraftViolationException(): void
+    {
+        $items = [
+            (new ProductModelBuilder())->build(),
+            (new ProductModelBuilder())->build(),
+            (new ProductModelBuilder())->build(),
+        ];
+
+        $constraintViolationMock = $this->createMock(ConstraintViolation::class);
+        $constraintViolationMock->expects($this->atLeastOnce())->method('getMessage');
+
+        $constraintViolationList = new ConstraintViolationList([$constraintViolationMock]);
+
+        $exceptionMock = $this->createMock(DraftViolationException::class);
+        $exceptionMock->method('getViolations')->willReturn($constraintViolationList);
+
+        $this->baseEntityCreatorMock
+            ->method('create')
+            ->willReturnOnConsecutiveCalls(...$items);
+
+        $this->draftSaverMock
+            ->method('save')
+            ->willThrowException($exceptionMock);
 
         $this->stepExecutionMock
             ->expects($this->exactly(count($items)))
