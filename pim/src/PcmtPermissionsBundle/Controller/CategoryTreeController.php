@@ -14,8 +14,10 @@ use Akeneo\Pim\Enrichment\Bundle\Controller\Ui\CategoryTreeController as Origina
 use Akeneo\Platform\Bundle\UIBundle\Flash\Message;
 use Akeneo\UserManagement\Bundle\Doctrine\ORM\Repository\GroupRepository;
 use PcmtPermissionsBundle\Entity\CategoryAccess;
+use PcmtPermissionsBundle\Entity\CategoryWithAccess;
 use PcmtPermissionsBundle\Repository\CategoryAccessRepository;
 use PcmtPermissionsBundle\Saver\CategoryAccessSaver;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -42,7 +44,7 @@ class CategoryTreeController extends OriginalCategoryTreeController
 
         $category = $this->findCategory($id);
 
-        // @todo remove this id before end of task
+        // @todo remove this if before end of task
         if (0) {
             $userGroup = $this->userGroupRepository->find(2);
             $accesses = $this->accessRepository->findBy([
@@ -59,21 +61,81 @@ class CategoryTreeController extends OriginalCategoryTreeController
             }
         }
 
-        $form = $this->createForm($this->rawConfiguration['form_type'], $category, $this->getFormOptions($category));
+        $categoryWithAccess = new CategoryWithAccess($category);
+        $accesses = $this->accessRepository->findBy([
+            'category'  => $category,
+        ]);
+        foreach ($accesses as $access) {
+            $categoryWithAccess->addAccess($access);
+        }
+
+        $form = $this->createForm($this->rawConfiguration['form_type'], $categoryWithAccess, $this->getFormOptions($category));
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->categorySaver->save($category);
+                $this->categorySaver->save($categoryWithAccess->getCategory());
                 $message = new Message(sprintf('flash.%s.updated', $category->getParent() ? 'category' : 'tree'));
                 $this->addFlash('success', $message);
+            }
+        }
+
+        $template = 'PcmtPermissionsBundle:CategoryTree:%s.html.twig';
+
+        return $this->render(
+            sprintf($template, $request->get('content', 'edit')),
+            [
+                'form'           => $form->createView(), //@todo - override the form so it contains permission handling
+                'related_entity' => $this->rawConfiguration['related_entity'],
+                'acl'            => $this->rawConfiguration['acl'],
+                'route'          => $this->rawConfiguration['route'],
+            ]
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createAction(Request $request, $parent = null): Response
+    {
+        if (false === $this->securityFacade->isGranted($this->buildAclName('category_create'))) {
+            throw new AccessDeniedException();
+        }
+
+        $category = $this->categoryFactory->create();
+        if ($parent) {
+            $parent = $this->findCategory($parent);
+            $category->setParent($parent);
+        }
+
+        $category->setCode($request->get('label'));
+
+        $categoryWithAccess = new CategoryWithAccess($category);
+        $form = $this->createForm($this->rawConfiguration['form_type'], $categoryWithAccess, $this->getFormOptions($category));
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $this->categorySaver->save($categoryWithAccess->getCategory());
+                $message = new Message(sprintf('flash.%s.created', $category->getParent() ? 'category' : 'tree'));
+                $this->addFlash('success', $message);
+
+                return new JsonResponse(
+                    [
+                        'route'  => $this->buildRouteName('categorytree_edit'),
+                        'params' => [
+                            'id' => $category->getId(),
+                        ],
+                    ]
+                );
             }
         }
 
         return $this->render(
             sprintf('AkeneoPimEnrichmentBundle:CategoryTree:%s.html.twig', $request->get('content', 'edit')),
             [
-                'form'           => $form->createView(), //@todo - override the form so it contains permission handling
+                'form'           => $form->createView(),
                 'related_entity' => $this->rawConfiguration['related_entity'],
                 'acl'            => $this->rawConfiguration['acl'],
                 'route'          => $this->rawConfiguration['route'],

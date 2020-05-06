@@ -17,3 +17,20 @@ services:
         class: PcmtPermissionsBundle\Saver\CategoryAccessSaver
         arguments:
             - '@doctrine.orm.entity_manager'
+
+    pcmt_permissions.form.category:
+        class: 'PcmtPermissionsBundle\Form\CategoryType'
+        arguments:
+            - 'PcmtPermissionsBundle\Entity\CategoryWithAccess'
+            - '%pim_catalog.entity.category_translation.class%'
+        tags:
+            - { name: form.type, alias: pim_category }
+
+    pim_enrich.doctrine.counter.category_product:
+        class: 'PcmtPermissionsBundle\Counter\CategoryProductsCounter'
+        arguments:
+            - '@pim_catalog.query.product_query_builder_factory'
+            - '@pim_catalog.repository.category'
+        tags:
+            - { name: pim_enrich.doctrine.counter.category_item, type: product }
+
