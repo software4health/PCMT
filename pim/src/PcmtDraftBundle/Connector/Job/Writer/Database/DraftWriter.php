@@ -21,9 +21,11 @@ use Akeneo\Tool\Component\Batch\Step\StepExecutionAwareInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\Versioning\Model\VersionableInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
+use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Service\Draft\BaseEntityCreatorInterface;
 use PcmtDraftBundle\Service\Draft\DraftCreatorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Validator\ConstraintViolation;
 
 class DraftWriter implements PcmtDraftWriterInterface, InitializableInterface, StepExecutionAwareInterface
 {
@@ -99,6 +101,13 @@ class DraftWriter implements PcmtDraftWriterInterface, InitializableInterface, S
                 try {
                     $draft = $this->draftCreator->create($baseProductModel, $data, $this->user);
                     $this->draftSaver->save($draft);
+                } catch (DraftViolationException $exception) {
+                    $message = $exception->getMessage();
+                    foreach ($exception->getViolations() as $violation) {
+                        /** @var ConstraintViolation $violation */
+                        $message .= "\n" . $violation->getMessage();
+                    }
+                    throw $this->skipItemAndReturnException($data, $message, $exception);
                 } catch (\InvalidArgumentException $exception) {
                     throw $this->skipItemAndReturnException($data, $exception->getMessage(), $exception);
                 }
