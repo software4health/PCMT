@@ -105,6 +105,8 @@ services:
     pcmt.service.draft.base_entity_creator.product:
         class: 'PcmtDraftBundle\Service\Draft\BaseProductCreatorForDraft'
         arguments:
+            - '@pim_catalog.updater.product'
+            - '@pim_standard_format_serializer'
             - '@pim_catalog.builder.product'
 
     pcmt.service.creator.product_model:
