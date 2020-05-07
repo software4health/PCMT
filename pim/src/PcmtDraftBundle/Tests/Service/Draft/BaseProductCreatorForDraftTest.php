@@ -11,11 +11,13 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Tests\Service\Draft;
 
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Updater\ProductUpdater;
 use PcmtDraftBundle\Service\Draft\BaseProductCreatorForDraft;
 use PcmtDraftBundle\Tests\TestDataBuilder\FamilyBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class BaseProductCreatorForDraftTest extends TestCase
 {
@@ -23,13 +25,25 @@ class BaseProductCreatorForDraftTest extends TestCase
     private $baseProductCreator;
 
     /** @var ProductBuilderInterface|MockObject */
-    private $productBuilder;
+    private $productBuilderMock;
+
+    /** @var ProductUpdater|MockObject */
+    private $productUpdaterMock;
+
+    /** @var NormalizerInterface|MockObject */
+    private $standardNormalizerMock;
 
     protected function setUp(): void
     {
-        $this->productBuilder = $this->createMock(ProductBuilderInterface::class);
+        $this->productBuilderMock = $this->createMock(ProductBuilderInterface::class);
+        $this->productUpdaterMock = $this->createMock(ProductUpdater::class);
+        $this->standardNormalizerMock = $this->createMock(NormalizerInterface::class);
 
-        $this->baseProductCreator = new BaseProductCreatorForDraft($this->productBuilder);
+        $this->baseProductCreator = new BaseProductCreatorForDraft(
+            $this->productUpdaterMock,
+            $this->standardNormalizerMock,
+            $this->productBuilderMock
+        );
     }
 
     public function testCreateFromProcessedProduct(): void
@@ -38,7 +52,7 @@ class BaseProductCreatorForDraftTest extends TestCase
             ->withFamily((new FamilyBuilder())->build())
             ->build();
 
-        $this->productBuilder
+        $this->productBuilderMock
             ->expects($this->once())
             ->method('createProduct')
             ->with($product->getIdentifier(), $product->getFamily()->getCode());

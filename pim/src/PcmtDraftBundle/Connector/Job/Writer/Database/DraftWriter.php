@@ -22,6 +22,7 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\Versioning\Model\VersionableInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
+use PcmtDraftBundle\Saver\DraftSaver;
 use PcmtDraftBundle\Service\Draft\BaseEntityCreatorInterface;
 use PcmtDraftBundle\Service\Draft\DraftCreatorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -100,7 +101,7 @@ class DraftWriter implements PcmtDraftWriterInterface, InitializableInterface, S
                 $data = $this->standardNormalizer->normalize($entity, 'standard', ['import_via_drafts']);
                 try {
                     $draft = $this->draftCreator->create($baseProductModel, $data, $this->user);
-                    $this->draftSaver->save($draft);
+                    $this->draftSaver->save($draft, [DraftSaver::OPTION_NO_VALIDATION => true]);
                 } catch (DraftViolationException $exception) {
                     $message = $exception->getMessage();
                     foreach ($exception->getViolations() as $violation) {
