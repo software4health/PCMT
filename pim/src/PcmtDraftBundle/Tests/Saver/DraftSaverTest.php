@@ -164,11 +164,6 @@ class DraftSaverTest extends TestCase
             ->method('getObjectToSave')
             ->willReturn((new ProductBuilder())->build());
 
-        $this->productValidatorMock
-            ->expects($this->once())
-            ->method('validate')
-            ->willReturn((new ConstraintViolationListBuilder())->build());
-
         $this->draftExistenceCheckerMock->method('checkIfDraftForObjectAlreadyExists')->willReturn(
             true
         );

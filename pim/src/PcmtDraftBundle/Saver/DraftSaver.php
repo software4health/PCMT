@@ -28,6 +28,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class DraftSaver implements SaverInterface
 {
     public const OPTION_NO_VALIDATION = 'no_validation';
+    public const OPTION_LAST_UPDATED_AT = 'lastUpdatedAt';
 
     /** @var EntityManagerInterface */
     protected $entityManager;
@@ -68,9 +69,7 @@ class DraftSaver implements SaverInterface
      */
     public function save($draft, array $options = []): void
     {
-        if (empty($options[self::OPTION_NO_VALIDATION])) {
-            $this->validateDraft($draft, $options);
-        }
+        $this->validateDraft($draft, $options);
         $this->eventDispatcher->dispatch(StorageEvents::PRE_SAVE, new GenericEvent($draft, $options));
         $this->entityManager->persist($draft);
         $this->entityManager->flush();
@@ -80,12 +79,14 @@ class DraftSaver implements SaverInterface
     protected function validateDraft(object $draft, array $options = []): void
     {
         $this->checkIfDraftIsInstanceOfDraftInterface($draft);
-        if (isset($options['lastUpdatedAt'])) {
-            $this->checkIfDraftHasNotBeenEditedWhileCurrentSessionActive($draft, $options['lastUpdatedAt']);
-        }
-        $this->checkIfDraftCouldBeSaved($draft);
-        $this->validateObjectToSave($draft);
         $this->checkIfThereIsOtherDraftForThisObject($draft);
+        $this->checkIfDraftCouldBeSaved($draft);
+        if (empty($options[self::OPTION_NO_VALIDATION])) {
+            if (isset($options[self::OPTION_LAST_UPDATED_AT])) {
+                $this->checkIfDraftHasNotBeenEditedWhileCurrentSessionActive($draft, $options[self::OPTION_LAST_UPDATED_AT]);
+            }
+            $this->validateObjectToSave($draft);
+        }
     }
 
     private function checkIfDraftIsInstanceOfDraftInterface(object $draft): void
