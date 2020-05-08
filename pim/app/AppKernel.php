@@ -2,7 +2,7 @@
 /*******************************************************************************
  * Copyright (c) 2013, Akeneo SAS
  * Copyright (c) 2019, VillageReach
- * Licensed under the Open Software License version 3.0 AND Non-Profit Open 
+ * Licensed under the Open Software License version 3.0 AND Non-Profit Open
  * Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0 AND OSL-3.0
 *******************************************************************************/
@@ -27,7 +27,7 @@ class AppKernel extends Kernel
     protected function registerProjectBundles()
     {
         return [
-            // your app bundles should be registered here
+            new \Flagbit\Bundle\TableAttributeBundle\FlagbitTableAttributeBundle()
         ];
     }
 
@@ -73,7 +73,7 @@ class AppKernel extends Kernel
             $loader->load($file);
         }
     }
-    
+
     public function getPimExtensionBundles(): array
     {
         return [

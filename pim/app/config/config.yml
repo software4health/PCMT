@@ -1,7 +1,7 @@
 ################################################################################
 # Copyright (c) 2013, Akeneo SAS
 # Copyright (c) 2019, VillageReach
-# Licensed under the Open Software License version 3.0 AND Non-Profit Open 
+# Licensed under the Open Software License version 3.0 AND Non-Profit Open
 # Software License version 3.0.
 # SPDX-License-Identifier: NPOSL-3.0 AND OSL-3.0
 ################################################################################
@@ -137,3 +137,6 @@ akeneo_storage_utils:
         -
             original: Akeneo\Pim\Structure\Component\Model\AttributeTranslation
             override: PcmtCoreBundle\Entity\AttributeTranslation
+        -
+            original: Akeneo\Pim\Structure\Component\Model\AttributeOption
+            override: Flagbit\Bundle\TableAttributeBundle\Entity\AttributeOption
