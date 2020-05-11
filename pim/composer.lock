@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "42f289dcf7cf7318d5150b4a1ab23182",
+    "content-hash": "45121f7c95e42eedd3be2f2e9e2ca849",
     "packages": [
         {
             "name": "akeneo-labs/custom-entity-bundle",
@@ -61,12 +61,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/akeneo/pim-community-dev.git",
-                "reference": "240fb0939bf2f5a25989b0ab8f14cd66f9bb39b7"
+                "reference": "7c500ec5ffdae862b4401ef550d677793bf1e77d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/akeneo/pim-community-dev/zipball/240fb0939bf2f5a25989b0ab8f14cd66f9bb39b7",
-                "reference": "240fb0939bf2f5a25989b0ab8f14cd66f9bb39b7",
+                "url": "https://api.github.com/repos/akeneo/pim-community-dev/zipball/7c500ec5ffdae862b4401ef550d677793bf1e77d",
+                "reference": "7c500ec5ffdae862b4401ef550d677793bf1e77d",
                 "shasum": ""
             },
             "require": {
@@ -210,7 +210,7 @@
                 }
             ],
             "description": "Akeneo PIM, the future of catalog management is open!",
-            "time": "2020-04-30T08:35:56+00:00"
+            "time": "2020-05-06T06:29:55+00:00"
         },
         {
             "name": "ass/xmlsecurity",
@@ -905,6 +905,22 @@
             "homepage": "https://github.com/container-interop/container-interop",
             "abandoned": "psr/container",
             "time": "2017-02-14T19:40:03+00:00"
+        },
+        {
+            "name": "damiankryger/akeneo-table-attribute-bundle",
+            "version": "dev-add-support-for-disable-option",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/damiankryger/akeneo-table-attribute-bundle.git",
+                "reference": "add-support-for-disable-option"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Flagbit\\Bundle\\TableAttributeBundle\\": "src/"
+                }
+            },
+            "time": "2020-05-06T19:33:56+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -9409,16 +9425,16 @@
         },
         {
             "name": "symfony/maker-bundle",
-            "version": "v1.15.1",
+            "version": "v1.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/maker-bundle.git",
-                "reference": "ae95a2b7fa8272e75630c273396097074f23e03f"
+                "reference": "c8b36ce2aac3635603b4ffc58fbc26717e0a7317"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/ae95a2b7fa8272e75630c273396097074f23e03f",
-                "reference": "ae95a2b7fa8272e75630c273396097074f23e03f",
+                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/c8b36ce2aac3635603b4ffc58fbc26717e0a7317",
+                "reference": "c8b36ce2aac3635603b4ffc58fbc26717e0a7317",
                 "shasum": ""
             },
             "require": {
@@ -9473,7 +9489,21 @@
                 "scaffold",
                 "scaffolding"
             ],
-            "time": "2020-04-21T19:17:25+00:00"
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-05-05T14:21:24+00:00"
         },
         {
             "name": "symfony/phpunit-bridge",
@@ -9771,12 +9801,14 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "akeneo/pim-community-dev": 20
+        "akeneo/pim-community-dev": 20,
+        "damiankryger/akeneo-table-attribute-bundle": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.2.0"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
