@@ -5,8 +5,7 @@ Feature: Approving Drafts
 
   @javascript
   Scenario:
-    Given There is 1 quantity of drafts with status "New"
-    And I log in as a test user
+    Given I log in as a test user
     When I follow "Drafts"
     And wait for the page to load
     And I click approve on last draft

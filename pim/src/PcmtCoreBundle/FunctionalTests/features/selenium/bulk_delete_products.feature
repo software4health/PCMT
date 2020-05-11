@@ -5,8 +5,7 @@ Feature: Bulk delete of products
 
   @javascript
   Scenario:
-    Given There are 2 products
-    And I log in as a test user
+    Given I log in as a test user
     And I follow "Products"
     And wait for the page to load
     And I read number of products
