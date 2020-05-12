@@ -26,14 +26,25 @@ class CategoryType extends BaseCategoryType
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('viewAccess', EntityType::class, [
+        $this->addAccessField($builder, 'viewAccess', 'Allowed to view products');
+
+        $this->addAccessField($builder, 'editAccess', 'Allowed to edit products');
+
+        $this->addAccessField($builder, 'ownAccess', 'Allowed to own products');
+    }
+
+    private function addAccessField(FormBuilderInterface $builder, string $name, string $label): void
+    {
+        $builder->add($name, EntityType::class, [
             'class'        => Group::class,
             'choice_label' => function (Group $group) {
                 return $group ? $group->getName() : '';
             },
+            'label'    => $label,
             'help'     => 'Attention! The changes introduced cause no effect. This is a draft version of functionality',
             'expanded' => false,
             'multiple' => true,
+            'required' => false,
         ]);
     }
 }

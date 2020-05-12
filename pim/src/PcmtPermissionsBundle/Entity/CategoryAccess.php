@@ -18,6 +18,10 @@ class CategoryAccess
 {
     public const VIEW_LEVEL = 'VIEW';
 
+    public const EDIT_LEVEL = 'EDIT';
+
+    public const OWN_LEVEL = 'OWN';
+
     /** @var int */
     private $id;
 

@@ -207,12 +207,12 @@ class CategoryWithAccess implements \Akeneo\Tool\Component\Classification\Model\
         return $this->category->getChildren();
     }
 
-    public function getViewAccess(): array
+    private function getAccessesOfLevel(string $level): array
     {
         $accesses = [];
         foreach ($this->accesses as $access) {
             /** @var CategoryAccess $access */
-            if (CategoryAccess::VIEW_LEVEL === $access->getLevel()) {
+            if ($level === $access->getLevel()) {
                 $accesses[] = $access->getUserGroup();
             }
         }
@@ -220,14 +220,44 @@ class CategoryWithAccess implements \Akeneo\Tool\Component\Classification\Model\
         return $accesses;
     }
 
-    public function setViewAccess(array $userGroups): void
+    public function getViewAccess(): array
+    {
+        return $this->getAccessesOfLevel(CategoryAccess::VIEW_LEVEL);
+    }
+
+    public function getEditAccess(): array
+    {
+        return $this->getAccessesOfLevel(CategoryAccess::EDIT_LEVEL);
+    }
+
+    public function getOwnAccess(): array
+    {
+        return $this->getAccessesOfLevel(CategoryAccess::OWN_LEVEL);
+    }
+
+    private function setAccessesByUserGroups(array $userGroups, string $level): void
     {
         foreach ($userGroups as $userGroup) {
-            if (!$this->checkIfAccessExists($userGroup, CategoryAccess::VIEW_LEVEL)) {
-                $categoryAccess = new CategoryAccess($this->getCategory(), $userGroup, CategoryAccess::VIEW_LEVEL);
+            if (!$this->checkIfAccessExists($userGroup, $level)) {
+                $categoryAccess = new CategoryAccess($this->getCategory(), $userGroup, $level);
                 $this->accesses->add($categoryAccess);
             }
         }
+    }
+
+    public function setViewAccess(array $userGroups): void
+    {
+        $this->setAccessesByUserGroups($userGroups, CategoryAccess::VIEW_LEVEL);
+    }
+
+    public function setEditAccess(array $userGroups): void
+    {
+        $this->setAccessesByUserGroups($userGroups, CategoryAccess::EDIT_LEVEL);
+    }
+
+    public function setOwnAccess(array $userGroups): void
+    {
+        $this->setAccessesByUserGroups($userGroups, CategoryAccess::OWN_LEVEL);
     }
 
     public function checkIfAccessExists(Group $userGroup, string $level): bool
