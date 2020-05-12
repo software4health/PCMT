@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 parameters:
+    pim_enrich.view_element.category.tab.property.template: 'PcmtPermissionsBundle:CategoryTree:Tab/property.html.twig'
 
 services:
     pcmt_permissions.repository.category_access:
@@ -17,6 +18,14 @@ services:
         class: PcmtPermissionsBundle\Saver\CategoryAccessSaver
         arguments:
             - '@doctrine.orm.entity_manager'
+
+    pcmt_permissions.saver.category_with_access:
+        class: PcmtPermissionsBundle\Saver\CategoryWithAccessSaver
+        arguments:
+            - '@pim_catalog.saver.category'
+            - '@pcmt_permissions.saver.category_access'
+            - '@doctrine.orm.entity_manager'
+            - '@pcmt_permissions.repository.category_access'
 
     pcmt_permissions.form.category:
         class: 'PcmtPermissionsBundle\Form\CategoryType'

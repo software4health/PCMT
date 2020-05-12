@@ -12,6 +12,7 @@ namespace PcmtPermissionsBundle\Entity;
 
 use Akeneo\Pim\Enrichment\Component\Category\Model\CategoryInterface;
 use Akeneo\Tool\Component\Localization\Model\TranslationInterface;
+use Akeneo\UserManagement\Component\Model\Group;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class CategoryWithAccess implements \Akeneo\Tool\Component\Classification\Model\CategoryInterface
@@ -204,5 +205,50 @@ class CategoryWithAccess implements \Akeneo\Tool\Component\Classification\Model\
     public function getChildren()
     {
         return $this->category->getChildren();
+    }
+
+    public function getViewAccess(): array
+    {
+        $accesses = [];
+        foreach ($this->accesses as $access) {
+            /** @var CategoryAccess $access */
+            if (CategoryAccess::VIEW_LEVEL === $access->getLevel()) {
+                $accesses[] = $access->getUserGroup();
+            }
+        }
+
+        return $accesses;
+    }
+
+    public function setViewAccess(array $userGroups): void
+    {
+        foreach ($userGroups as $userGroup) {
+            if (!$this->checkIfAccessExists($userGroup, CategoryAccess::VIEW_LEVEL)) {
+                $categoryAccess = new CategoryAccess($this->getCategory(), $userGroup, CategoryAccess::VIEW_LEVEL);
+                $this->accesses->add($categoryAccess);
+            }
+        }
+    }
+
+    public function checkIfAccessExists(Group $userGroup, string $level): bool
+    {
+        foreach ($this->accesses as $access) {
+            /** @var CategoryAccess $access */
+            if ($access->getUserGroup()->getId() === $userGroup->getId() && $level === $access->getLevel()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getAccesses(): ArrayCollection
+    {
+        return $this->accesses;
+    }
+
+    public function clearAccesses(): void
+    {
+        $this->accesses = new ArrayCollection();
     }
 }

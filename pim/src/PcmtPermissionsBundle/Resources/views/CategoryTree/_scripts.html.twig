@@ -18,6 +18,8 @@
                     }).tooltip());
                 {% endif %}
                 new TreeManage('#tree', '{{ route }}');
+                
+                $('#pim_category_viewAccess').select2();
             });
         }
     );

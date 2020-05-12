@@ -20,5 +20,4 @@ services:
         calls:
             - [ setContainer, [ '@service_container' ] ]
             - [ setAccessRepository, ['@pcmt_permissions.repository.category_access']]
-            - [ setAccessSaver, ['@pcmt_permissions.saver.category_access']]
-            - [ setUserGroupRepository, ['@pim_user.repository.group']]
+            - [ setCategoryWithAccessSaver, ['@pcmt_permissions.saver.category_with_access']]
