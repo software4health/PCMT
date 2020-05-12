@@ -12,11 +12,9 @@ namespace PcmtPermissionsBundle\Controller;
 
 use Akeneo\Pim\Enrichment\Bundle\Controller\Ui\CategoryTreeController as OriginalCategoryTreeController;
 use Akeneo\Platform\Bundle\UIBundle\Flash\Message;
-use Akeneo\UserManagement\Bundle\Doctrine\ORM\Repository\GroupRepository;
-use PcmtPermissionsBundle\Entity\CategoryAccess;
+use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtPermissionsBundle\Entity\CategoryWithAccess;
 use PcmtPermissionsBundle\Repository\CategoryAccessRepository;
-use PcmtPermissionsBundle\Saver\CategoryAccessSaver;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,11 +25,8 @@ class CategoryTreeController extends OriginalCategoryTreeController
     /** @var CategoryAccessRepository */
     private $accessRepository;
 
-    /** @var CategoryAccessSaver */
-    private $accessSaver;
-
-    /** @var GroupRepository */
-    private $userGroupRepository;
+    /** @var SaverInterface */
+    private $categoryWithAccessSaver;
 
     /**
      * {@inheritdoc}
@@ -44,23 +39,6 @@ class CategoryTreeController extends OriginalCategoryTreeController
 
         $category = $this->findCategory($id);
 
-        // @todo remove this if before end of task
-        if (0) {
-            $userGroup = $this->userGroupRepository->find(2);
-            $accesses = $this->accessRepository->findBy([
-                'userGroup' => $userGroup,
-                'category'  => $category,
-            ]);
-            if (empty($accesses)) {
-                $categoryAccess = new CategoryAccess($category, $userGroup, CategoryAccess::VIEW_LEVEL);
-                $this->accessSaver->save($categoryAccess);
-                $this->accessRepository->findBy([
-                    'userGroup' => $userGroup,
-                    'category'  => $category,
-                ]);
-            }
-        }
-
         $categoryWithAccess = new CategoryWithAccess($category);
         $accesses = $this->accessRepository->findBy([
             'category'  => $category,
@@ -71,10 +49,11 @@ class CategoryTreeController extends OriginalCategoryTreeController
 
         $form = $this->createForm($this->rawConfiguration['form_type'], $categoryWithAccess, $this->getFormOptions($category));
         if ($request->isMethod('POST')) {
+            $categoryWithAccess->clearAccesses();
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->categorySaver->save($categoryWithAccess->getCategory());
+                $this->categoryWithAccessSaver->save($categoryWithAccess);
                 $message = new Message(sprintf('flash.%s.updated', $category->getParent() ? 'category' : 'tree'));
                 $this->addFlash('success', $message);
             }
@@ -148,13 +127,8 @@ class CategoryTreeController extends OriginalCategoryTreeController
         $this->accessRepository = $accessRepository;
     }
 
-    public function setUserGroupRepository(GroupRepository $userGroupRepository): void
+    public function setCategoryWithAccessSaver(SaverInterface $categoryWithAccessSaver): void
     {
-        $this->userGroupRepository = $userGroupRepository;
-    }
-
-    public function setAccessSaver(CategoryAccessSaver $accessSaver): void
-    {
-        $this->accessSaver = $accessSaver;
+        $this->categoryWithAccessSaver = $categoryWithAccessSaver;
     }
 }
