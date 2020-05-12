@@ -16,8 +16,6 @@ class WebContext extends \SeleniumBaseContext implements Context
 {
     public const WAIT_TIME_LONG = 8000;
 
-    public const WAIT_TIME_MEDIUM = 4000;
-
     public const WAIT_TIME_SHORT = 1000;
 
     /** @var int */
@@ -41,7 +39,9 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iPressTheButtonAndWaitForModalToAppear(): void
     {
-        $settingsTab = $this->getSession()->getPage()->find('css', '#attribute-create-button');
+        $id = 'attribute-create-button';
+        $this->waitUntil(\WebContentFinder::ELEMENT_WITH_ID_EXISTS, $id);
+        $settingsTab = $this->getSession()->getPage()->find('css', '#' . $id);
         $settingsTab->click();
     }
 
@@ -51,6 +51,7 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iChooseAttributeType(string $attributeType): void
     {
+        $this->waitUntil(\WebContentFinder::ATTRIBUTE_TYPE_EXISTS, $attributeType);
         $attributeTypeSpans = $this->getSession()->getPage()->findAll(
             'css',
             'body > div.modal.in > div.AknFullPage > div > div.modal-body > div > span'
@@ -58,7 +59,7 @@ class WebContext extends \SeleniumBaseContext implements Context
         foreach ($attributeTypeSpans as $attributeTypeSpan) {
             if ($attributeTypeSpan->getText() === $attributeType) {
                 $attributeTypeSpan->click();
-                $this->getSession()->wait(self::WAIT_TIME_MEDIUM);
+                $this->waitUntil(\WebContentFinder::ATTRIBUTE_EDIT_PAGE);
 
                 return;
             }
@@ -76,7 +77,6 @@ class WebContext extends \SeleniumBaseContext implements Context
         foreach ($attributeGroupSelect as $selectOption) {
             if ($selectOption->getText() === $option) {
                 $selectOption->click();
-                $this->getSession()->wait(self::WAIT_TIME_MEDIUM);
 
                 return;
             }
@@ -107,11 +107,11 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iSave(): void
     {
-        $settingsTab = $this->getSession()->getPage()->find(
-            'css',
-            'div.AknTitleContainer-rightButton > button'
-        );
+        $locator = 'div.AknTitleContainer-rightButton > button';
+        $this->waitUntil(\WebContentFinder::SAVE_BUTTON_EXISTS, $locator);
+        $settingsTab = $this->getSession()->getPage()->find('css', $locator);
         $settingsTab->click();
+        $this->waitUntil(\WebContentFinder::MESSAGE_EXISTS);
     }
 
     /**
@@ -216,13 +216,16 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iShouldDeleteCreatedAttribute(): void
     {
+        $locator = 'a.AknIconButton.AknIconButton--small.AknIconButton--trash.AknButtonList-item';
+        $this->waitUntil(\WebContentFinder::LOCATOR_EXISTS, $locator);
         $page = $this->getSession()->getPage();
-        $deleteSelector = $page->find('css', 'a.AknIconButton.AknIconButton--small.AknIconButton--trash.AknButtonList-item');
+        $deleteSelector = $page->find('css', $locator);
         $deleteSelector->click();
 
         // once modal appears
-        $deleteButton = $page->find('css', 'div.AknButton.AknButtonList-item.AknButton--apply.AknButton--important.ok');
+        $moduleLocator = 'div.AknButton.AknButtonList-item.AknButton--apply.AknButton--important.ok';
+        $this->waitUntil(\WebContentFinder::LOCATOR_EXISTS, $moduleLocator);
+        $deleteButton = $page->find('css', $moduleLocator);
         $deleteButton->click();
-        $this->waitForThePageToLoad();
     }
 }

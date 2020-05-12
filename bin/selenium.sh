@@ -14,3 +14,5 @@ echo "STARTING SELENIUM TESTS..."
 
 # to run specific test, comment above lines and uncomment below:
 #./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat src/PcmtDraftBundle/FunctionalTests/features/selenium/approve_draft.feature
+#./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtCoreBundle/FunctionalTests/features/selenium/create_reference_data_county_code.feature
+#./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtCoreBundle/FunctionalTests/features/selenium/create_reference_data_language_code.feature
