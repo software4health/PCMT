@@ -3,3 +3,6 @@ pim_enrich:
     category:
         tab:
             permissions.title: Permissions
+
+pane.accordion:
+    permissions: Permissions

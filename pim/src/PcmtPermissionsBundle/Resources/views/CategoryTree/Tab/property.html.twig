@@ -1,9 +1,6 @@
 <div class="tab-pane tab-property {{ viewElement.loop.first ? 'active' : '' }}" id="{{ viewElement.alias|replace({' ': '-', '.': '-'})|lower }}">
     {% set generalProperties %}
         {{ form_row(form.code) }}
-        {{ form_row(form.viewAccess) }}
-        {{ form_row(form.editAccess) }}
-        {{ form_row(form.ownAccess) }}
     {% endset %}
 
     {% set nodeValues %}
