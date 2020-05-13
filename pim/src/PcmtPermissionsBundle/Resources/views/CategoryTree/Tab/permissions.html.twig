@@ -1,40 +1,13 @@
 <div class="tab-pane tab-property {{ viewElement.loop.first ? 'active' : '' }}" id="{{ viewElement.alias|replace({' ': '-', '.': '-'})|lower }}">
 
-    {% set generalProperties %}
-        {{ form_row(form.code) }}
+    {% set permissions %}
+        {{ form_row(form.viewAccess) }}
+        {{ form_row(form.editAccess) }}
+        {{ form_row(form.ownAccess) }}
     {% endset %}
 
     {{ elements.tabSections({
-        'pane.accordion.general_properties': elements.form_container(generalProperties),
+        'pane.accordion.permissions': elements.form_container(permissions),
     }) }}
 
-    <!-- rendered dynamically below -->
-    <div id="render-form-dynamicaly-inside">
-    </div>
-
 </div>
-
-
- <script>
- require(
-     [
-         'pim/fetcher-registry',
-         'pim/form-builder',
-     ],
-     function(
-         FetcherRegistry,
-         FormBuilder,
-     ) {
-         $(function() {
-
-             FetcherRegistry.initialize().done(function () {
-                 FormBuilder.build('pim-categorytree-edit-permissions-form').then(function (form) {
-                     form.setInitialGroups(1); //set initial groups based on category id (to be implemented)
-                     $('#render-form-dynamicaly-inside').append(form.el);
-                     form.render();
-                 }.bind(this));
-             });
-         });
-     }
- );
-</script>
