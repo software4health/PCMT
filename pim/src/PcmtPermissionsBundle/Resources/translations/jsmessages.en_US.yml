@@ -7,3 +7,12 @@ pim_enrich:
                 own.label: Alowed to own products
                 edit.label: Alowed to edit products
             apply.to.children: Apply to children
+
+    #Attribute group
+    attribute_group:
+        tab:
+            label: Permissions
+            allowed_to:
+                view.label: Alowed to view products
+                own.label: Alowed to own products
+                edit.label: Alowed to edit products
