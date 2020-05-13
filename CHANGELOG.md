@@ -8,7 +8,10 @@ VER 1.1.4 / unreleased
 **Removed**
 
 **Fixed**
-
+* [#471](https://gitlab.com/pcmt/pcmt/-/issues/471): Product import generic validation error
+* [#463](https://gitlab.com/pcmt/pcmt/-/issues/463): Fix problem with `make`
+* [#448](https://gitlab.com/pcmt/pcmt/-/issues/448): Empty drafts are created when importing products with concatenated attribute
+* [#462](https://gitlab.com/pcmt/pcmt/-/issues/462): Fix table attribute plugin to work with PCMT Drafts 
 
 VER 1.1.3 / 2020-04-14
 ==================
