@@ -15,6 +15,7 @@ use Akeneo\Platform\Bundle\UIBundle\Flash\Message;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtPermissionsBundle\Entity\CategoryWithAccess;
 use PcmtPermissionsBundle\Repository\CategoryAccessRepository;
+use PcmtPermissionsBundle\Updater\CategoryChildrenPermissionsUpdater;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +28,9 @@ class CategoryTreeController extends OriginalCategoryTreeController
 
     /** @var SaverInterface */
     private $categoryWithAccessSaver;
+
+    /** @var CategoryChildrenPermissionsUpdater */
+    private $categoryChildrenPermissionsUpdater;
 
     /**
      * {@inheritdoc}
@@ -51,11 +55,14 @@ class CategoryTreeController extends OriginalCategoryTreeController
         if ($request->isMethod('POST')) {
             $categoryWithAccess->clearAccesses();
             $form->handleRequest($request);
-
             if ($form->isValid()) {
                 $this->categoryWithAccessSaver->save($categoryWithAccess);
                 $message = new Message(sprintf('flash.%s.updated', $category->getParent() ? 'category' : 'tree'));
                 $this->addFlash('success', $message);
+                $applyOnChildren = $form->get('applyOnChildren')->getData();
+                if ($applyOnChildren) {
+                    $this->categoryChildrenPermissionsUpdater->update($categoryWithAccess);
+                }
             }
         }
 
@@ -64,7 +71,7 @@ class CategoryTreeController extends OriginalCategoryTreeController
         return $this->render(
             sprintf($template, $request->get('content', 'edit')),
             [
-                'form'           => $form->createView(), //@todo - override the form so it contains permission handling
+                'form'           => $form->createView(),
                 'related_entity' => $this->rawConfiguration['related_entity'],
                 'acl'            => $this->rawConfiguration['acl'],
                 'route'          => $this->rawConfiguration['route'],
@@ -130,5 +137,10 @@ class CategoryTreeController extends OriginalCategoryTreeController
     public function setCategoryWithAccessSaver(SaverInterface $categoryWithAccessSaver): void
     {
         $this->categoryWithAccessSaver = $categoryWithAccessSaver;
+    }
+
+    public function setCategoryChildrenPermissionsUpdater(CategoryChildrenPermissionsUpdater $categoryChildrenPermissionsUpdater): void
+    {
+        $this->categoryChildrenPermissionsUpdater = $categoryChildrenPermissionsUpdater;
     }
 }
