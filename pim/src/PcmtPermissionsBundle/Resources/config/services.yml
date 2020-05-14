@@ -43,3 +43,8 @@ services:
         tags:
             - { name: pim_enrich.doctrine.counter.category_item, type: product }
 
+    pcmt_permissions.updater.category_children_permissions:
+        class: PcmtPermissionsBundle\Updater\CategoryChildrenPermissionsUpdater
+        arguments:
+            - '@pcmt_permissions.repository.category_access'
+            - '@pcmt_permissions.saver.category_with_access'

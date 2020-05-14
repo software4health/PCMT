@@ -4,5 +4,12 @@ pim_enrich:
         tab:
             permissions.title: Permissions
 
+pcmt_permissions:
+    form:
+        apply_changes_on_children: Apply changes on children
+        allowed_to_view_products: Allowed to view products
+        allowed_to_edit_products: Allowed to edit products
+        allowed_to_own_products: Allowed to own products
+
 pane.accordion:
     permissions: Permissions

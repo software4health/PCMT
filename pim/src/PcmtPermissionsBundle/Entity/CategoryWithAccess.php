@@ -10,12 +10,12 @@ declare(strict_types=1);
 
 namespace PcmtPermissionsBundle\Entity;
 
-use Akeneo\Pim\Enrichment\Component\Category\Model\CategoryInterface;
+use Akeneo\Tool\Component\Classification\Model\CategoryInterface;
 use Akeneo\Tool\Component\Localization\Model\TranslationInterface;
 use Akeneo\UserManagement\Component\Model\Group;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class CategoryWithAccess implements \Akeneo\Tool\Component\Classification\Model\CategoryInterface
+class CategoryWithAccess implements CategoryInterface
 {
     /** @var CategoryInterface */
     private $category;
@@ -154,7 +154,7 @@ class CategoryWithAccess implements \Akeneo\Tool\Component\Classification\Model\
     /**
      * {@inheritdoc}
      */
-    public function setParent(?\Akeneo\Tool\Component\Classification\Model\CategoryInterface $parent = null)
+    public function setParent(?CategoryInterface $parent = null)
     {
         return $this->category->setParent($parent);
     }
@@ -178,7 +178,7 @@ class CategoryWithAccess implements \Akeneo\Tool\Component\Classification\Model\
     /**
      * {@inheritdoc}
      */
-    public function addChild(\Akeneo\Tool\Component\Classification\Model\CategoryInterface $child)
+    public function addChild(CategoryInterface $child)
     {
         return $this->category->addChild($child);
     }
@@ -186,7 +186,7 @@ class CategoryWithAccess implements \Akeneo\Tool\Component\Classification\Model\
     /**
      * {@inheritdoc}
      */
-    public function removeChild(\Akeneo\Tool\Component\Classification\Model\CategoryInterface $child)
+    public function removeChild(CategoryInterface $child)
     {
         return $this->category->removeChild($child);
     }
