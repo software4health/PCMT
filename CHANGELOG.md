@@ -1,4 +1,4 @@
-VER 1.1.4 / unreleased
+VER 1.1.5 / unreleased
 ==================
 
 **Added**
@@ -6,6 +6,11 @@ VER 1.1.4 / unreleased
 **Changed**
 
 **Removed**
+
+**Fixed**
+
+VER 1.1.4 / 2020-05-14
+==================
 
 **Fixed**
 * [#471](https://gitlab.com/pcmt/pcmt/-/issues/471): Product import generic validation error
