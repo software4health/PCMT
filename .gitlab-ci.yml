@@ -442,3 +442,89 @@ env-covid-ref-destroy:
   environment:
     name: covid-ref
     action: stop
+
+
+############### CHAI Cameroon COVID Environment ###############
+
+.env-cameroon-covid:
+  stage: deploy
+  when: manual
+  environment:
+    name: cameroon-covid
+    url: http://cameroon-covid.productcatalog.io
+    on_stop: env-cameroon-covid-destroy
+
+.env-cameroon-covid_script-deploy:
+  script:
+    - source .ci-chai.env
+    - ./bin/ci-deploy.sh cameroon-covid
+    
+env-cameroon-covid (WIPE DB):
+  extends:
+    - .env-cameroon-covid
+    - .env-cameroon-covid_script-deploy
+  variables:
+    PCMT_PROFILE: dev
+    PCMT_VER: '1.1.4'
+    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v1.1.4/pcmt-v1.1.4.tar.gz'
+
+env-cameroon-covid (KEEP DB):
+  extends:
+    - .env-cameroon-covid
+    - .env-cameroon-covid_script-deploy
+  variables:
+    PCMT_PROFILE: production
+    PCMT_VER: '1.1.4'
+    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v1.1.4/pcmt-v1.1.4.tar.gz'
+
+env-cameroon-covid-destroy:
+  extends:
+    - .env-cameroon-covid
+  script: 
+    - ./deploy/terraform/run-docker.sh cameroon-covid destroy -auto-approve
+  environment:
+    name: cameroon-covid
+    action: stop
+
+
+############### CHAI Zimbabwe COVID Environment ###############
+
+.env-zimbabwe-covid:
+  stage: deploy
+  when: manual
+  environment:
+    name: zimbabwe-covid
+    url: http://zimbabwe-covid.productcatalog.io
+    on_stop: env-zimbabwe-covid-destroy
+
+.env-zimbabwe-covid_script-deploy:
+  script:
+    - source .ci-chai.env
+    - ./bin/ci-deploy.sh zimbabwe-covid
+    
+env-zimbabwe-covid (WIPE DB):
+  extends:
+    - .env-zimbabwe-covid
+    - .env-zimbabwe-covid_script-deploy
+  variables:
+    PCMT_PROFILE: dev
+    PCMT_VER: '1.1.4'
+    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v1.1.4/pcmt-v1.1.4.tar.gz'
+
+env-zimbabwe-covid (KEEP DB):
+  extends:
+    - .env-zimbabwe-covid
+    - .env-zimbabwe-covid_script-deploy
+  variables:
+    PCMT_PROFILE: production
+    PCMT_VER: '1.1.4'
+    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v1.1.4/pcmt-v1.1.4.tar.gz'
+
+env-zimbabwe-covid-destroy:
+  extends:
+    - .env-zimbabwe-covid
+  script: 
+    - ./deploy/terraform/run-docker.sh zimbabwe-covid destroy -auto-approve
+  environment:
+    name: zimbabwe-covid
+    action: stop
