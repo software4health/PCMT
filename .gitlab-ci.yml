@@ -422,8 +422,8 @@ env-covid-ref (WIPE DB):
     - .env-covid-ref_script-deploy
   variables:
     PCMT_PROFILE: dev
-    PCMT_VER: '1.1.2'
-    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v1.1.2/pcmt-v1.1.2.tar.gz'
+    PCMT_VER: '1.1.4'
+    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v1.1.4/pcmt-v1.1.4.tar.gz'
 
 env-covid-ref (KEEP DB):
   extends:
@@ -431,8 +431,8 @@ env-covid-ref (KEEP DB):
     - .env-covid-ref_script-deploy
   variables:
     PCMT_PROFILE: production
-    PCMT_VER: '1.1.2'
-    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v1.1.2/pcmt-v1.1.2.tar.gz'
+    PCMT_VER: '1.1.4'
+    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v1.1.4/pcmt-v1.1.4.tar.gz'
 
 env-covid-ref-destroy:
   extends:
