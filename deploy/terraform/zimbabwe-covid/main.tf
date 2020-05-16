@@ -8,7 +8,7 @@ terraform {
   backend "s3" {
     profile = "chai"
     bucket  = "chai-pcmt-terraform-states"
-    key     = "pcmt-covid-ref.tf"
+    key     = "pcmt-zimbabwe-covid.tf"
     region  = "us-east-1"
   }
 }
