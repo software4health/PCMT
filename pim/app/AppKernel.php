@@ -84,6 +84,7 @@ class AppKernel extends Kernel
     public function getPcmtBundles(): array
     {
         return [
+            new PcmtSharedBundle\PcmtSharedBundle(),
             new PcmtCustomDatasetBundle\PcmtCustomDatasetBundle(),
             new PcmtCoreBundle\PcmtCoreBundle(),
             new PcmtDraftBundle\PcmtDraftBundle(),

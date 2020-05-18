@@ -1,0 +1,41 @@
+<?php
+/**
+ * Copyright (c) 2020, VillageReach
+ * Licensed under the Non-Profit Open Software License version 3.0.
+ * SPDX-License-Identifier: NPOSL-3.0
+ */
+
+declare(strict_types=1);
+
+namespace PcmtPermissionsBundle\Tests\TestDataBuilder;
+
+use Akeneo\UserManagement\Component\Model\Group;
+
+class UserGroupBuilder
+{
+    /** @var Group */
+    private $userGroup;
+
+    public const DEFAULT_ID = 33;
+
+    public function __construct()
+    {
+        $this->userGroup = new Group();
+        $this->withId(self::DEFAULT_ID);
+    }
+
+    public function withId(int $id): self
+    {
+        $reflection = new \ReflectionClass(get_class($this->userGroup));
+        $property = $reflection->getProperty('id');
+        $property->setAccessible(true);
+        $property->setValue($this->userGroup, $id);
+
+        return $this;
+    }
+
+    public function build(): Group
+    {
+        return $this->userGroup;
+    }
+}

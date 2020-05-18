@@ -25,6 +25,7 @@ use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Saver\DraftSaver;
 use PcmtDraftBundle\Service\Draft\BaseEntityCreatorInterface;
 use PcmtDraftBundle\Service\Draft\DraftCreatorInterface;
+use PcmtSharedBundle\Service\Access\ProductAccessCheckerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
@@ -54,13 +55,17 @@ class DraftWriter implements PcmtDraftWriterInterface, InitializableInterface, S
     /** @var DraftCreatorInterface */
     protected $draftCreator;
 
+    /** @var ProductAccessCheckerInterface */
+    private $accessChecker;
+
     public function __construct(
         VersionManager $versionManager,
         SaverInterface $entitySaver,
         NormalizerInterface $standardNormalizer,
         SaverInterface $draftSaver,
         BaseEntityCreatorInterface $baseEntityCreator,
-        DraftCreatorInterface $draftCreator
+        DraftCreatorInterface $draftCreator,
+        ProductAccessCheckerInterface $accessChecker
     ) {
         $this->versionManager = $versionManager;
         $this->entitySaver = $entitySaver;
@@ -68,6 +73,7 @@ class DraftWriter implements PcmtDraftWriterInterface, InitializableInterface, S
         $this->draftSaver = $draftSaver;
         $this->baseEntityCreator = $baseEntityCreator;
         $this->draftCreator = $draftCreator;
+        $this->accessChecker = $accessChecker;
     }
 
     public function setUser(UserInterface $user): void
@@ -97,8 +103,13 @@ class DraftWriter implements PcmtDraftWriterInterface, InitializableInterface, S
                 // following is needed, as normalizer will throw an exception otherwise
                 $entity->setCreated(new \DateTime());
                 $entity->setUpdated(new \DateTime());
-                $baseProductModel = $this->getEntityOrCreateIfNotExists($entity);
                 $data = $this->standardNormalizer->normalize($entity, 'standard', ['import_via_drafts']);
+
+                if (!$this->accessChecker->checkForUser($entity, $this->user)) {
+                    throw $this->skipItemAndReturnException($data, 'No edit or own access to entity category');
+                }
+
+                $baseProductModel = $this->getEntityOrCreateIfNotExists($entity);
                 try {
                     $draft = $this->draftCreator->create($baseProductModel, $data, $this->user);
                     $this->draftSaver->save($draft, [DraftSaver::OPTION_NO_VALIDATION => true]);
