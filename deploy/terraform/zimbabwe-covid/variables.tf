@@ -32,13 +32,13 @@ variable "instance-type" {
 }
 
 variable "app-deploy-group" {
-  type        = "string"
+  type        = string
   description = "Tags ec2 app instance for use by Ansible Playbooks."
   default     = "docker-hosts"
 }
 
 variable "ec2-key-pair" {
-  type        = "string"
+  type        = string
   description = "Name of EC2 key-pair for instance"
   default     = "pcmt-ec2"
 }

@@ -1,5 +1,5 @@
 resource "aws_route53_zone" "main" {
-  name = "${var.hosted-zone-domain-name}"
+  name = var.hosted-zone-domain-name
 
   tags = {
     BillTo = "${var.tag-bill-to}"
@@ -7,15 +7,15 @@ resource "aws_route53_zone" "main" {
 }
 
 resource "aws_route53_record" "main" {
-  zone_id = "${aws_route53_zone.main.id}"
-  name    = "${var.hosted-zone-domain-name}"
+  zone_id = aws_route53_zone.main.id
+  name    = var.hosted-zone-domain-name
   type    = "A"
   ttl     = 300
   records = ["35.185.44.232"]
 }
 
 resource "aws_route53_record" "www" {
-  zone_id = "${aws_route53_zone.main.id}"
+  zone_id = aws_route53_zone.main.id
   name    = "www"
   type    = "CNAME"
   ttl     = 300
@@ -23,7 +23,7 @@ resource "aws_route53_record" "www" {
 }
 
 resource "aws_route53_record" "main-verify" {
-  zone_id = "${aws_route53_zone.main.id}"
+  zone_id = aws_route53_zone.main.id
   name    = "_gitlab-pages-verification-code.productcatalog.io"
   type    = "TXT"
   ttl     = 300
@@ -31,7 +31,7 @@ resource "aws_route53_record" "main-verify" {
 }
 
 resource "aws_route53_record" "www-verify" {
-  zone_id = "${aws_route53_zone.main.id}"
+  zone_id = aws_route53_zone.main.id
   name    = "_gitlab-pages-verification-code.www.productcatalog.io"
   type    = "TXT"
   ttl     = 300

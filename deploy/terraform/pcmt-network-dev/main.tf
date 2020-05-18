@@ -13,13 +13,13 @@ terraform {
 }
 
 provider "aws" {
-  region = "${var.aws-region}"
+  region = var.aws-region
 }
 
 module "pcmt-network-dev" {
   source = "../modules/pcmt-network"
 
-  aws-region  = "${var.aws-region}"
-  tag-type    = "${var.tag-type}"
-  tag-bill-to = "${var.tag-bill-to}"
+  aws-region  = var.aws-region
+  tag-type    = var.tag-type
+  tag-bill-to = var.tag-bill-to
 }

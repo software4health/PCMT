@@ -13,7 +13,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "${var.aws-region}"
+  region = var.aws-region
 }
 
 data "terraform_remote_state" "pcmt-network-dev" {
@@ -36,8 +36,8 @@ data "terraform_remote_state" "pcmt-hosted-zone" {
 
 # s3 bucket to serve http redirect
 resource "aws_s3_bucket" "redirect" {
-  region = "${var.aws-region}"
-  bucket = "${var.domain-name}"
+  region = var.aws-region
+  bucket = var.domain-name
   acl    = "public-read"
 
   tags = {
@@ -57,13 +57,13 @@ resource "aws_s3_bucket" "redirect" {
 
 #route 53 to s3 bucket
 resource "aws_route53_record" "main" {
-  zone_id = "${data.terraform_remote_state.pcmt-hosted-zone.outputs.main-hosted-zone-id}"
-  name    = "${var.domain-name}"
+  zone_id = data.terraform_remote_state.pcmt-hosted-zone.outputs.main-hosted-zone-id
+  name    = var.domain-name
   type    = "A"
 
   alias {
-    name                   = "${aws_s3_bucket.redirect.website_domain}"
-    zone_id                = "${aws_s3_bucket.redirect.hosted_zone_id}"
+    name                   = aws_s3_bucket.redirect.website_domain
+    zone_id                = aws_s3_bucket.redirect.hosted_zone_id
     evaluate_target_health = false
   }
 }

@@ -1,7 +1,7 @@
 resource "aws_s3_bucket" "backup" {
   provider = aws.compute
-  region   = "${var.aws-region}"
-  bucket   = "${var.domain-name}"
+  region   = var.aws-region
+  bucket   = var.domain-name
   acl      = "private"
 
   tags = {
@@ -17,12 +17,12 @@ resource "aws_s3_bucket" "backup" {
   lifecycle_rule {
     enabled = true
     noncurrent_version_transition {
-      days          = "${var.backup-days-till-glacier}"
+      days          = var.backup-days-till-glacier
       storage_class = "GLACIER"
     }
 
     noncurrent_version_expiration {
-      days = "${var.backup-days-till-expire}"
+      days = var.backup-days-till-expire
     }
   }
 }

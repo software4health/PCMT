@@ -6,22 +6,22 @@
 
 terraform {
   backend "s3" {
-    bucket = "chai-pcmt-terraform-states"
-    key    = "chai-network-useast.tf"
-    region = "us-east-1"
+    bucket  = "chai-pcmt-terraform-states"
+    key     = "chai-network-useast.tf"
+    region  = "us-east-1"
     profile = "chai"
   }
 }
 
 provider "aws" {
-  region = "${var.aws-region}"
+  region  = var.aws-region
   profile = "chai"
 }
 
 module "chai-network-useast" {
   source = "../modules/pcmt-network"
 
-  aws-region  = "${var.aws-region}"
-  tag-type    = "${var.tag-type}"
-  tag-bill-to = "${var.tag-bill-to}"
+  aws-region  = var.aws-region
+  tag-type    = var.tag-type
+  tag-bill-to = var.tag-bill-to
 }

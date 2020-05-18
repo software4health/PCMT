@@ -6,15 +6,15 @@
 
 resource "aws_instance" "app" {
   provider               = aws.compute
-  ami                    = "${data.aws_ami.ubuntu-latest.id}"
-  instance_type          = "${var.instance-type}"
-  key_name               = "${var.ec2-key-pair}"
-  subnet_id              = "${var.subnet-id}"
+  ami                    = data.aws_ami.ubuntu-latest.id
+  instance_type          = var.instance-type
+  key_name               = var.ec2-key-pair
+  subnet_id              = var.subnet-id
   vpc_security_group_ids = ["${var.security-group-id}"]
 
   root_block_device {
     volume_type           = "gp2"
-    volume_size           = "${var.root-volume-size}"
+    volume_size           = var.root-volume-size
     delete_on_termination = "true"
   }
 
@@ -54,14 +54,14 @@ data "aws_ami" "ubuntu-latest" {
 }
 
 resource "null_resource" "deploy-docker" {
-  depends_on = ["aws_instance.app"]
+  depends_on = [aws_instance.app]
   triggers = {
     build_number = "${timestamp()}"
   }
 
   connection {
     user = "ubuntu"
-    host = "${aws_instance.app.public_ip}"
+    host = aws_instance.app.public_ip
   }
 
   provisioner "remote-exec" {

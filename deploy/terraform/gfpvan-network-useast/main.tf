@@ -6,22 +6,22 @@
 
 terraform {
   backend "s3" {
-    bucket = "gfpvan-terraform-states"
-    key    = "gfpvan-network-useast.tf"
-    region = "us-east-2"
+    bucket  = "gfpvan-terraform-states"
+    key     = "gfpvan-network-useast.tf"
+    region  = "us-east-2"
     profile = "gfpvan"
   }
 }
 
 provider "aws" {
-  region = "${var.aws-region}"
+  region  = var.aws-region
   profile = "gfpvan"
 }
 
 module "gfpvan-network-useast" {
   source = "../modules/pcmt-network"
 
-  aws-region  = "${var.aws-region}"
-  tag-type    = "${var.tag-type}"
-  tag-bill-to = "${var.tag-bill-to}"
+  aws-region  = var.aws-region
+  tag-type    = var.tag-type
+  tag-bill-to = var.tag-bill-to
 }
