@@ -21,6 +21,7 @@ use PcmtDraftBundle\Service\Draft\BaseEntityCreatorInterface;
 use PcmtDraftBundle\Service\Draft\DraftCreatorInterface;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductModelBuilder;
+use PcmtSharedBundle\Service\Access\ProductAccessCheckerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -59,6 +60,9 @@ class DraftWriterTest extends TestCase
     /** @var JobParameters|MockObject */
     private $jobParametersMock;
 
+    /** @var MockObject */
+    private $accessCheckerMock;
+
     protected function setUp(): void
     {
         $this->versionManagerMock = $this->createMock(VersionManager::class);
@@ -67,6 +71,8 @@ class DraftWriterTest extends TestCase
         $this->draftSaverMock = $this->createMock(SaverInterface::class);
         $this->baseEntityCreatorMock = $this->createMock(BaseEntityCreatorInterface::class);
         $this->draftCreatorMock = $this->createMock(DraftCreatorInterface::class);
+        $this->accessCheckerMock = $this->createMock(ProductAccessCheckerInterface::class);
+        $this->accessCheckerMock->method('checkForUser')->willReturn(true);
 
         $this->userMock = $this->createMock(UserInterface::class);
         $this->stepExecutionMock = $this->createMock(StepExecution::class);
@@ -83,7 +89,8 @@ class DraftWriterTest extends TestCase
             $this->standardNormalizerMock,
             $this->draftSaverMock,
             $this->baseEntityCreatorMock,
-            $this->draftCreatorMock
+            $this->draftCreatorMock,
+            $this->accessCheckerMock
         );
 
         $this->draftWriter->setStepExecution($this->stepExecutionMock);

@@ -11,7 +11,7 @@ class Version20200427124655 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql('DROP TABLE pcmt_catalog_category_access;');
+        $this->addSql('DROP TABLE IF EXISTS pcmt_catalog_category_access;');
 
         $sql = <<<SQL
 CREATE TABLE pcmt_catalog_category_access (id INT AUTO_INCREMENT NOT NULL, category_id INT DEFAULT NULL, user_group_id SMALLINT DEFAULT NULL, level VARCHAR(255) NOT NULL, INDEX IDX_65E0860212469DE2 (category_id), INDEX IDX_65E086021ED93D47 (user_group_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB ROW_FORMAT = DYNAMIC;
@@ -23,6 +23,6 @@ SQL;
 
     public function down(Schema $schema): void
     {
-        $this->addSql('DROP TABLE pcmt_catalog_category_access;');
+        $this->addSql('DROP TABLE IF EXISTS pcmt_catalog_category_access;');
     }
 }
