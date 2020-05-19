@@ -103,7 +103,7 @@ class CategoryTreeController extends OriginalCategoryTreeController
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->categorySaver->save($categoryWithAccess->getCategory());
+                $this->categoryWithAccessSaver->save($categoryWithAccess);
                 $message = new Message(sprintf('flash.%s.created', $category->getParent() ? 'category' : 'tree'));
                 $this->addFlash('success', $message);
 
@@ -118,8 +118,10 @@ class CategoryTreeController extends OriginalCategoryTreeController
             }
         }
 
+        $template = 'PcmtPermissionsBundle:CategoryTree:%s.html.twig';
+
         return $this->render(
-            sprintf('AkeneoPimEnrichmentBundle:CategoryTree:%s.html.twig', $request->get('content', 'edit')),
+            sprintf($template, $request->get('content', 'edit')),
             [
                 'form'           => $form->createView(),
                 'related_entity' => $this->rawConfiguration['related_entity'],
