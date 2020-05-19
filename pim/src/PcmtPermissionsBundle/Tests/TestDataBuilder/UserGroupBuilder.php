@@ -18,6 +18,8 @@ class UserGroupBuilder
 
     public const DEFAULT_ID = 33;
 
+    public const ANOTHER_ID = 35;
+
     public function __construct()
     {
         $this->userGroup = new Group();
@@ -32,6 +34,13 @@ class UserGroupBuilder
         $property->setValue($this->userGroup, $id);
 
         return $this;
+    }
+
+    public function buildWithAnotherId(): Group
+    {
+        $this->withId(self::ANOTHER_ID);
+
+        return $this->userGroup;
     }
 
     public function build(): Group
