@@ -29,6 +29,11 @@ class CategoryWithAccess implements CategoryInterface
         $this->accesses = new ArrayCollection();
     }
 
+    public function removeAccess(CategoryAccess $access): void
+    {
+        $this->accesses->removeElement($access);
+    }
+
     /**
      * {@inheritdoc}
      */

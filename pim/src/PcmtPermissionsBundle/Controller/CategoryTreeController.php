@@ -42,14 +42,7 @@ class CategoryTreeController extends OriginalCategoryTreeController
         }
 
         $category = $this->findCategory($id);
-
-        $categoryWithAccess = new CategoryWithAccess($category);
-        $accesses = $this->accessRepository->findBy([
-            'category'  => $category,
-        ]);
-        foreach ($accesses as $access) {
-            $categoryWithAccess->addAccess($access);
-        }
+        $categoryWithAccess = $this->accessRepository->getCategoryWithAccess($category);
 
         $form = $this->createForm($this->rawConfiguration['form_type'], $categoryWithAccess, $this->getFormOptions($category));
         if ($request->isMethod('POST')) {

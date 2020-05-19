@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace PcmtPermissionsBundle\Tests\TestDataBuilder;
 
 use Akeneo\Pim\Enrichment\Component\Category\Model\Category;
+use Akeneo\UserManagement\Component\Model\Group;
+use PcmtPermissionsBundle\Entity\CategoryAccess;
 use PcmtPermissionsBundle\Entity\CategoryWithAccess;
 
 class CategoryWithAccessBuilder
@@ -43,6 +45,20 @@ class CategoryWithAccessBuilder
         return $this;
     }
 
+    public function clearAccesses(): self
+    {
+        $this->categoryWithAccess->clearAccesses();
+
+        return $this;
+    }
+
+    public function withAccess(CategoryAccess $access): self
+    {
+        $this->categoryWithAccess->addAccess($access);
+
+        return $this;
+    }
+
     public function withTwoChildren(): self
     {
         $children = [];
@@ -60,6 +76,19 @@ class CategoryWithAccessBuilder
         }
         foreach ($children as $child) {
             $this->categoryWithAccess->addChild($child);
+        }
+
+        return $this;
+    }
+
+    public function withAccessesForGroup(array $accessesLevels, Group $group): self
+    {
+        foreach ($accessesLevels as $accessesLevel) {
+            $access = (new CategoryAccessBuilder())
+                ->withAccessLevel($accessesLevel)
+                ->withUserGroup($group)
+                ->build();
+            $this->withAccess($access);
         }
 
         return $this;
