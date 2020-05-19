@@ -17,10 +17,12 @@ PcmtPermissionsBundle\Entity\CategoryAccess:
             joinColumn:
                 name: category_id
                 referencedColumnName: id
+                onDelete: CASCADE
         userGroup:
             targetEntity: Akeneo\UserManagement\Component\Model\Group
             joinColumn:
                 name: user_group_id
                 referencedColumnName: id
+                onDelete: CASCADE
 
 
