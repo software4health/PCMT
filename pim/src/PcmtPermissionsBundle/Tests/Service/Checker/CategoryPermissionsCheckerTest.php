@@ -9,17 +9,17 @@ declare(strict_types=1);
 
 namespace PcmtPermissionsBundle\Tests\Service\Checker;
 
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Tool\Component\Classification\CategoryAwareInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use PcmtPermissionsBundle\Entity\CategoryAccess;
 use PcmtPermissionsBundle\Entity\CategoryWithAccess;
 use PcmtPermissionsBundle\Repository\CategoryAccessRepositoryInterface;
 use PcmtPermissionsBundle\Service\Checker\CategoryPermissionsChecker;
-use PcmtPermissionsBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use PcmtPermissionsBundle\Tests\TestDataBuilder\CategoryBuilder;
 use PcmtPermissionsBundle\Tests\TestDataBuilder\CategoryWithAccessBuilder;
 use PcmtPermissionsBundle\Tests\TestDataBuilder\UserBuilder;
 use PcmtPermissionsBundle\Tests\TestDataBuilder\UserGroupBuilder;
+use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
@@ -72,11 +72,11 @@ class CategoryPermissionsCheckerTest extends TestCase
                 ->build();
 
         $this->accessRepositoryMock->method('getCategoryWithAccess')->willReturn($categoryWithAccess);
-        $productMock = $this->createMock(ProductInterface::class);
-        $productMock->method('getCategories')->willReturn($productCategoriesCollection);
+        $entityMock = $this->createMock(CategoryAwareInterface::class);
+        $entityMock->method('getCategories')->willReturn($productCategoriesCollection);
 
         $this->expectException(ParameterNotFoundException::class);
-        $this->categoryPermissionsChecker->hasAccessToProduct('unhandle_sad_type', $productMock, $user);
+        $this->categoryPermissionsChecker->hasAccessToProduct('unhandle_sad_type', $entityMock, $user);
     }
 
     public function testUserIsTakenFromTokenStorageWhenCheckingAccessRights(): void
@@ -96,10 +96,10 @@ class CategoryPermissionsCheckerTest extends TestCase
             ->method('getToken')
             ->willReturn($tokenMock);
         $this->accessRepositoryMock->method('getCategoryWithAccess')->willReturn($categoryWithAccess);
-        $productMock = $this->createMock(ProductInterface::class);
-        $productMock->method('getCategories')->willReturn($productCategoriesCollection);
+        $entityMock = $this->createMock(CategoryAwareInterface::class);
+        $entityMock->method('getCategories')->willReturn($productCategoriesCollection);
 
-        $this->categoryPermissionsChecker->hasAccessToProduct(CategoryAccess::VIEW_LEVEL, $productMock);
+        $this->categoryPermissionsChecker->hasAccessToProduct(CategoryAccess::VIEW_LEVEL, $entityMock);
     }
 
     /**
@@ -110,12 +110,12 @@ class CategoryPermissionsCheckerTest extends TestCase
         ?CategoryWithAccess $categoryWithAccess
     ): void {
         $this->accessRepositoryMock->method('getCategoryWithAccess')->willReturn($categoryWithAccess);
-        $productMock = $this->createMock(ProductInterface::class);
-        $productMock->method('getCategories')->willReturn($productCategories);
+        $entityMock = $this->createMock(CategoryAwareInterface::class);
+        $entityMock->method('getCategories')->willReturn($productCategories);
         $user = (new UserBuilder())->build();
 
         foreach ($this->accessesToTest as $accessType) {
-            $result = $this->categoryPermissionsChecker->hasAccessToProduct($accessType, $productMock, $user);
+            $result = $this->categoryPermissionsChecker->hasAccessToProduct($accessType, $entityMock, $user);
             $this->assertTrue($result);
         }
     }
@@ -148,12 +148,12 @@ class CategoryPermissionsCheckerTest extends TestCase
         array $accessTypesWithPermissions
     ): void {
         $this->accessRepositoryMock->method('getCategoryWithAccess')->willReturn($categoryWithAccess);
-        $productMock = $this->createMock(ProductInterface::class);
-        $productMock->method('getCategories')->willReturn($productCategories);
+        $entityMock = $this->createMock(CategoryAwareInterface::class);
+        $entityMock->method('getCategories')->willReturn($productCategories);
         $user = (new UserBuilder())->build();
 
         foreach ($this->accessesToTest as $accessType) {
-            $result = $this->categoryPermissionsChecker->hasAccessToProduct($accessType, $productMock, $user);
+            $result = $this->categoryPermissionsChecker->hasAccessToProduct($accessType, $entityMock, $user);
             $expectedResult = in_array($accessType, $accessTypesWithPermissions);
             $this->assertSame($expectedResult, $result);
         }

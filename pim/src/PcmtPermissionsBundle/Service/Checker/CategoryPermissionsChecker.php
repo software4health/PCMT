@@ -10,11 +10,12 @@ declare(strict_types=1);
 namespace PcmtPermissionsBundle\Service\Checker;
 
 use Akeneo\Pim\Enrichment\Component\Category\Model\CategoryInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Tool\Component\Classification\CategoryAwareInterface;
 use Akeneo\UserManagement\Component\Model\Group;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use PcmtPermissionsBundle\Entity\CategoryAccess;
 use PcmtPermissionsBundle\Repository\CategoryAccessRepositoryInterface;
+use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -34,13 +35,13 @@ class CategoryPermissionsChecker implements CategoryPermissionsCheckerInterface
         $this->accessRepository = $accessRepository;
     }
 
-    public function hasAccessToProduct(string $type, ProductInterface $product, ?UserInterface $user = null): bool
+    public function hasAccessToProduct(string $type, CategoryAwareInterface $entity, ?UserInterface $user = null): bool
     {
         /* product without category has always access issue #438 */
-        if (!$product->getCategories()) {
+        if (!$entity->getCategories()) {
             return true;
         }
-        foreach ($product->getCategories()->getIterator() as $category) {
+        foreach ($entity->getCategories()->getIterator() as $category) {
             if ($this->isGranted($type, $category, $user)) {
                 return true;
             }

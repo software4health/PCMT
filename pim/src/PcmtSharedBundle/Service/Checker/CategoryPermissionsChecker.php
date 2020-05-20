@@ -7,12 +7,15 @@
 
 declare(strict_types=1);
 
-namespace PcmtSharedBundle\Service\Access;
+namespace PcmtSharedBundle\Service\Checker;
 
 use Akeneo\Tool\Component\Classification\CategoryAwareInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 
-interface ProductAccessCheckerInterface
+class CategoryPermissionsChecker implements CategoryPermissionsCheckerInterface
 {
-    public function checkForUser(CategoryAwareInterface $product, UserInterface $user): bool;
+    public function hasAccessToProduct(string $type, CategoryAwareInterface $entity, ?UserInterface $user = null): bool
+    {
+        return true;
+    }
 }

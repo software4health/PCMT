@@ -6,5 +6,5 @@
 
 services:
 
-    pcmt.service.access.product_access_checker:
-        class: PcmtSharedBundle\Service\Access\ProductAccessChecker
+    pcmt.service.checker.category_permissions_checker:
+        class: PcmtSharedBundle\Service\Checker\CategoryPermissionsChecker
