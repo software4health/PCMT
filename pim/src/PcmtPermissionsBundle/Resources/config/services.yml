@@ -49,11 +49,6 @@ services:
             - '@pcmt_permissions.repository.category_access'
             - '@pcmt_permissions.saver.category_with_access'
 
-    pcmt_permissions.service.checker.category_permissions_checker:
-        class: 'PcmtPermissionsBundle\Service\Checker\CategoryPermissionsChecker'
+    pcmt.service.checker.category_permissions_checker:
+        class: PcmtPermissionsBundle\Service\Checker\CategoryPermissionsChecker
         autowire: true
-
-    pcmt.service.access.product_access_checker:
-        class: PcmtPermissionsBundle\Service\Access\ProductAccessChecker
-        arguments:
-            - '@pcmt_permissions.repository.category_access'

@@ -21,7 +21,7 @@ use PcmtDraftBundle\Service\Draft\BaseEntityCreatorInterface;
 use PcmtDraftBundle\Service\Draft\DraftCreatorInterface;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductModelBuilder;
-use PcmtSharedBundle\Service\Access\ProductAccessCheckerInterface;
+use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -60,7 +60,7 @@ class DraftWriterTest extends TestCase
     /** @var JobParameters|MockObject */
     private $jobParametersMock;
 
-    /** @var MockObject */
+    /** @var CategoryPermissionsCheckerInterface|MockObject */
     private $accessCheckerMock;
 
     protected function setUp(): void
@@ -71,8 +71,7 @@ class DraftWriterTest extends TestCase
         $this->draftSaverMock = $this->createMock(SaverInterface::class);
         $this->baseEntityCreatorMock = $this->createMock(BaseEntityCreatorInterface::class);
         $this->draftCreatorMock = $this->createMock(DraftCreatorInterface::class);
-        $this->accessCheckerMock = $this->createMock(ProductAccessCheckerInterface::class);
-        $this->accessCheckerMock->method('checkForUser')->willReturn(true);
+        $this->accessCheckerMock = $this->createMock(CategoryPermissionsCheckerInterface::class);
 
         $this->userMock = $this->createMock(UserInterface::class);
         $this->stepExecutionMock = $this->createMock(StepExecution::class);
@@ -183,6 +182,8 @@ class DraftWriterTest extends TestCase
      */
     public function testWrite(array $items): void
     {
+        $this->accessCheckerMock->method('hasAccessToProduct')->willReturn(true);
+
         $this->baseEntityCreatorMock
             ->method('create')
             ->willReturnOnConsecutiveCalls(...$items);
@@ -190,6 +191,20 @@ class DraftWriterTest extends TestCase
         $this->draftSaverMock
             ->expects($this->exactly(count($items)))
             ->method('save');
+
+        $this->draftWriter->write($items);
+    }
+
+    /**
+     * @dataProvider dataWrite
+     */
+    public function testWriteThrowsExceptionWhenNoAccess(array $items): void
+    {
+        $this->accessCheckerMock->method('hasAccessToProduct')->willReturn(false);
+
+        $this->stepExecutionMock
+            ->expects($this->exactly(count($items)))
+            ->method('addWarning');
 
         $this->draftWriter->write($items);
     }
@@ -205,6 +220,8 @@ class DraftWriterTest extends TestCase
 
     public function testWriteWhenDraftSaverThrowsInvalidArgumentException(): void
     {
+        $this->accessCheckerMock->method('hasAccessToProduct')->willReturn(true);
+
         $items = [
             (new ProductModelBuilder())->build(),
             (new ProductModelBuilder())->build(),
@@ -230,6 +247,8 @@ class DraftWriterTest extends TestCase
 
     public function testWriteWhenDraftSaverThrowsDraftViolationException(): void
     {
+        $this->accessCheckerMock->method('hasAccessToProduct')->willReturn(true);
+
         $items = [
             (new ProductModelBuilder())->build(),
             (new ProductModelBuilder())->build(),
