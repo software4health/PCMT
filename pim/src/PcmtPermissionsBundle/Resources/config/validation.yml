@@ -1,0 +1,4 @@
+PcmtPermissionsBundle\Entity\CategoryWithAccess:
+    properties:
+        code:
+            - NotBlank: ~
