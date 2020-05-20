@@ -17,6 +17,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class CategoryWithAccess implements CategoryInterface
 {
+    /** @var string */
+    private $code;
+
     /** @var CategoryInterface */
     private $category;
 
@@ -25,6 +28,7 @@ class CategoryWithAccess implements CategoryInterface
 
     public function __construct(CategoryInterface $category)
     {
+        $this->code = $category->getCode();
         $this->category = $category;
         $this->accesses = new ArrayCollection();
     }
@@ -55,7 +59,7 @@ class CategoryWithAccess implements CategoryInterface
      */
     public function getCode()
     {
-        return $this->category->getCode();
+        return $this->code;
     }
 
     /**
@@ -89,6 +93,8 @@ class CategoryWithAccess implements CategoryInterface
      */
     public function setCode($code)
     {
+        $this->code = $code;
+
         return $this->category->setCode($code);
     }
 
