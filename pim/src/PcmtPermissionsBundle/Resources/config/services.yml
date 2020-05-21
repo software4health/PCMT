@@ -52,3 +52,9 @@ services:
     pcmt.service.checker.category_permissions_checker:
         class: PcmtPermissionsBundle\Service\Checker\CategoryPermissionsChecker
         autowire: true
+
+    PcmtPermissionsBundle\Validator\Constraints\UniqueEntityValidator:
+        class: PcmtPermissionsBundle\Validator\Constraints\UniqueEntityValidator
+        autowire: true
+        tags:
+            - { name: validator.constraint_validator, alias: pcmt_permissions_unique_entity_validator }

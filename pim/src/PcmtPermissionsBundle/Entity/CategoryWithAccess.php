@@ -20,6 +20,9 @@ class CategoryWithAccess implements CategoryInterface
     /** @var string */
     private $code;
 
+    /** @var ArrayCollection of CategoryTranslation */
+    protected $translations;
+
     /** @var CategoryInterface */
     private $category;
 
@@ -29,6 +32,7 @@ class CategoryWithAccess implements CategoryInterface
     public function __construct(CategoryInterface $category)
     {
         $this->code = $category->getCode();
+        $this->translations = $category->getTranslations();
         $this->category = $category;
         $this->accesses = new ArrayCollection();
     }
