@@ -27,6 +27,7 @@ services:
             - '@pim_catalog.validator.product'
             - '@pim_catalog.saver.product'
             - '@pcmt.service.general_object_from_draft_creator'
+            - '@pcmt.service.checker.category_permissions_checker'
 
     pcmt.service.product_model_draft_approver:
         class: PcmtDraftBundle\Service\Draft\DraftApprover
@@ -36,6 +37,7 @@ services:
             - '@pim_catalog.validator.product'
             - '@pim_catalog.saver.product_model'
             - '@pcmt.service.general_object_from_draft_creator'
+            - '@pcmt.service.checker.category_permissions_checker'
 
     pcmt.service.draft_values_with_missing_attribute_filter:
         class: PcmtDraftBundle\Service\Draft\DraftValuesWithMissingAttributeFilter

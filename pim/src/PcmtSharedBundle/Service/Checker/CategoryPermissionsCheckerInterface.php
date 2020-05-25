@@ -14,5 +14,11 @@ use Akeneo\UserManagement\Component\Model\UserInterface;
 
 interface CategoryPermissionsCheckerInterface
 {
+    public const VIEW_LEVEL = 'VIEW';
+
+    public const EDIT_LEVEL = 'EDIT';
+
+    public const OWN_LEVEL = 'OWN';
+
     public function hasAccessToProduct(string $type, CategoryAwareInterface $entity, ?UserInterface $user): bool;
 }

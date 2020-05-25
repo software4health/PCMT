@@ -79,20 +79,20 @@ class CategoryPermissionsChecker implements CategoryPermissionsCheckerInterface
     private function getAccessLevels(string $type): array
     {
         switch ($type) {
-            case CategoryAccess::VIEW_LEVEL:
+            case CategoryPermissionsCheckerInterface::VIEW_LEVEL:
                 return [
-                    CategoryAccess::VIEW_LEVEL,
-                    CategoryAccess::EDIT_LEVEL,
-                    CategoryAccess::OWN_LEVEL,
+                    CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+                    CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+                    CategoryPermissionsCheckerInterface::OWN_LEVEL,
                 ];
-            case CategoryAccess::EDIT_LEVEL:
+            case CategoryPermissionsCheckerInterface::EDIT_LEVEL:
                 return [
-                    CategoryAccess::EDIT_LEVEL,
-                    CategoryAccess::OWN_LEVEL,
+                    CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+                    CategoryPermissionsCheckerInterface::OWN_LEVEL,
                 ];
-            case CategoryAccess::OWN_LEVEL:
+            case CategoryPermissionsCheckerInterface::OWN_LEVEL:
                 return [
-                    CategoryAccess::OWN_LEVEL,
+                    CategoryPermissionsCheckerInterface::OWN_LEVEL,
                 ];
             default:
                 throw new ParameterNotFoundException($type);
