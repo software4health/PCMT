@@ -25,7 +25,6 @@ use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Saver\DraftSaver;
 use PcmtDraftBundle\Service\Draft\BaseEntityCreatorInterface;
 use PcmtDraftBundle\Service\Draft\DraftCreatorInterface;
-use PcmtPermissionsBundle\Entity\CategoryAccess;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\ConstraintViolation;
@@ -106,7 +105,7 @@ class DraftWriter implements PcmtDraftWriterInterface, InitializableInterface, S
                 $entity->setUpdated(new \DateTime());
                 $data = $this->standardNormalizer->normalize($entity, 'standard', ['import_via_drafts']);
 
-                if (!$this->accessChecker->hasAccessToProduct(CategoryAccess::EDIT_LEVEL, $entity, $this->user)) {
+                if (!$this->accessChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::EDIT_LEVEL, $entity, $this->user)) {
                     throw $this->skipItemAndReturnException($data, 'No edit access to entity category');
                 }
 

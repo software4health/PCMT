@@ -14,7 +14,9 @@ use Akeneo\UserManagement\Component\Model\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
+use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DraftApprover
@@ -34,18 +36,23 @@ class DraftApprover
     /** @var ValidatorInterface */
     private $validator;
 
+    /** @var CategoryPermissionsCheckerInterface */
+    private $categoryPermissionsChecker;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         TokenStorageInterface $tokenStorage,
         ValidatorInterface $validator,
         SaverInterface $saver,
-        GeneralObjectFromDraftCreator $creator
+        GeneralObjectFromDraftCreator $creator,
+        CategoryPermissionsCheckerInterface $categoryPermissionsChecker
     ) {
         $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;
         $this->validator = $validator;
         $this->saver = $saver;
         $this->creator = $creator;
+        $this->categoryPermissionsChecker = $categoryPermissionsChecker;
     }
 
     public function approve(DraftInterface $draft): void
@@ -57,14 +64,27 @@ class DraftApprover
 
         $violations = $this->validator->validate($objectToSave, null, ['Default', 'creation']);
 
+        /** @var UserInterface $user */
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if (!$this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::EDIT_LEVEL, $objectToSave, $user)) {
+            $violations->add(
+                new ConstraintViolation(
+                    'No edit access to product basing on category.',
+                    '',
+                    [],
+                    '',
+                    '',
+                    ''
+                )
+            );
+        }
+
         if (0 === $violations->count()) {
             $this->saver->save($objectToSave);
         } else {
             throw new DraftViolationException($violations, $objectToSave);
         }
-
-        /** @var UserInterface $user */
-        $user = $this->tokenStorage->getToken()->getUser();
 
         $draft->approve($user);
 

@@ -14,6 +14,7 @@ use Akeneo\Tool\Component\Classification\Model\CategoryInterface;
 use Akeneo\Tool\Component\Localization\Model\TranslationInterface;
 use Akeneo\UserManagement\Component\Model\Group;
 use Doctrine\Common\Collections\ArrayCollection;
+use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 
 class CategoryWithAccess implements CategoryInterface
 {
@@ -237,17 +238,17 @@ class CategoryWithAccess implements CategoryInterface
 
     public function getViewAccess(): array
     {
-        return $this->getAccessesOfLevel(CategoryAccess::VIEW_LEVEL);
+        return $this->getAccessesOfLevel(CategoryPermissionsCheckerInterface::VIEW_LEVEL);
     }
 
     public function getEditAccess(): array
     {
-        return $this->getAccessesOfLevel(CategoryAccess::EDIT_LEVEL);
+        return $this->getAccessesOfLevel(CategoryPermissionsCheckerInterface::EDIT_LEVEL);
     }
 
     public function getOwnAccess(): array
     {
-        return $this->getAccessesOfLevel(CategoryAccess::OWN_LEVEL);
+        return $this->getAccessesOfLevel(CategoryPermissionsCheckerInterface::OWN_LEVEL);
     }
 
     private function setAccessesByUserGroups(array $userGroups, string $level): void
@@ -262,17 +263,17 @@ class CategoryWithAccess implements CategoryInterface
 
     public function setViewAccess(array $userGroups): void
     {
-        $this->setAccessesByUserGroups($userGroups, CategoryAccess::VIEW_LEVEL);
+        $this->setAccessesByUserGroups($userGroups, CategoryPermissionsCheckerInterface::VIEW_LEVEL);
     }
 
     public function setEditAccess(array $userGroups): void
     {
-        $this->setAccessesByUserGroups($userGroups, CategoryAccess::EDIT_LEVEL);
+        $this->setAccessesByUserGroups($userGroups, CategoryPermissionsCheckerInterface::EDIT_LEVEL);
     }
 
     public function setOwnAccess(array $userGroups): void
     {
-        $this->setAccessesByUserGroups($userGroups, CategoryAccess::OWN_LEVEL);
+        $this->setAccessesByUserGroups($userGroups, CategoryPermissionsCheckerInterface::OWN_LEVEL);
     }
 
     public function checkIfAccessExists(Group $userGroup, string $level): bool

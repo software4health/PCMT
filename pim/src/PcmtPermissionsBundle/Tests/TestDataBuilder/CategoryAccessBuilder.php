@@ -13,6 +13,7 @@ namespace PcmtPermissionsBundle\Tests\TestDataBuilder;
 use Akeneo\Pim\Enrichment\Component\Category\Model\CategoryInterface;
 use Akeneo\UserManagement\Component\Model\Group;
 use PcmtPermissionsBundle\Entity\CategoryAccess;
+use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 
 class CategoryAccessBuilder
 {
@@ -29,7 +30,7 @@ class CategoryAccessBuilder
     {
         $this->category = (new CategoryBuilder())->build();
         $this->userGroup = new Group();
-        $this->accessLevel = CategoryAccess::VIEW_LEVEL;
+        $this->accessLevel = CategoryPermissionsCheckerInterface::VIEW_LEVEL;
     }
 
     public function withCategory(CategoryInterface $category): self

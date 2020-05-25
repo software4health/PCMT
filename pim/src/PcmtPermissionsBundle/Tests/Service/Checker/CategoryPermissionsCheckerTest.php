@@ -11,7 +11,6 @@ namespace PcmtPermissionsBundle\Tests\Service\Checker;
 
 use Akeneo\Tool\Component\Classification\CategoryAwareInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use PcmtPermissionsBundle\Entity\CategoryAccess;
 use PcmtPermissionsBundle\Entity\CategoryWithAccess;
 use PcmtPermissionsBundle\Repository\CategoryAccessRepositoryInterface;
 use PcmtPermissionsBundle\Service\Checker\CategoryPermissionsChecker;
@@ -43,9 +42,9 @@ class CategoryPermissionsCheckerTest extends TestCase
     protected function setUp(): void
     {
         $this->accessesToTest = [
-            CategoryAccess::VIEW_LEVEL,
-            CategoryAccess::EDIT_LEVEL,
-            CategoryAccess::OWN_LEVEL,
+            CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+            CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+            CategoryPermissionsCheckerInterface::OWN_LEVEL,
         ];
         $this->tokenStorageMock = $this->createMock(TokenStorageInterface::class);
         $this->accessRepositoryMock = $this->createMock(CategoryAccessRepositoryInterface::class);
@@ -64,8 +63,8 @@ class CategoryPermissionsCheckerTest extends TestCase
             (new CategoryWithAccessBuilder())
                 ->withAccessesForGroup(
                     [
-                        CategoryAccess::VIEW_LEVEL,
-                        CategoryAccess::OWN_LEVEL,
+                        CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+                        CategoryPermissionsCheckerInterface::OWN_LEVEL,
                     ],
                     (new UserGroupBuilder())->build()
                 )
@@ -99,7 +98,7 @@ class CategoryPermissionsCheckerTest extends TestCase
         $entityMock = $this->createMock(CategoryAwareInterface::class);
         $entityMock->method('getCategories')->willReturn($productCategoriesCollection);
 
-        $this->categoryPermissionsChecker->hasAccessToProduct(CategoryAccess::VIEW_LEVEL, $entityMock);
+        $this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::VIEW_LEVEL, $entityMock);
     }
 
     /**
@@ -171,22 +170,22 @@ class CategoryPermissionsCheckerTest extends TestCase
                     ->clearAccesses()
                     ->withAccessesForGroup(
                         [
-                            CategoryAccess::EDIT_LEVEL,
+                            CategoryPermissionsCheckerInterface::EDIT_LEVEL,
                         ],
                         (new UserGroupBuilder())->buildWithAnotherId()
                     )
                     ->withAccessesForGroup(
                         [
-                            CategoryAccess::VIEW_LEVEL,
-                            CategoryAccess::OWN_LEVEL,
+                            CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+                            CategoryPermissionsCheckerInterface::OWN_LEVEL,
                         ],
                         (new UserGroupBuilder())->build()
                     )
                     ->build(),
                 [
-                    CategoryAccess::VIEW_LEVEL,
-                    CategoryAccess::EDIT_LEVEL,
-                    CategoryAccess::OWN_LEVEL,
+                    CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+                    CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+                    CategoryPermissionsCheckerInterface::OWN_LEVEL,
                 ],
             ],
             'Own rights'  => [
@@ -195,21 +194,21 @@ class CategoryPermissionsCheckerTest extends TestCase
                     ->clearAccesses()
                     ->withAccessesForGroup(
                         [
-                            CategoryAccess::EDIT_LEVEL,
+                            CategoryPermissionsCheckerInterface::EDIT_LEVEL,
                         ],
                         (new UserGroupBuilder())->buildWithAnotherId()
                     )
                     ->withAccessesForGroup(
                         [
-                            CategoryAccess::OWN_LEVEL,
+                            CategoryPermissionsCheckerInterface::OWN_LEVEL,
                         ],
                         (new UserGroupBuilder())->build()
                     )
                     ->build(),
                 [
-                    CategoryAccess::VIEW_LEVEL,
-                    CategoryAccess::EDIT_LEVEL,
-                    CategoryAccess::OWN_LEVEL,
+                    CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+                    CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+                    CategoryPermissionsCheckerInterface::OWN_LEVEL,
                 ],
             ],
             'View and Edit rights'  => [
@@ -218,21 +217,21 @@ class CategoryPermissionsCheckerTest extends TestCase
                     ->clearAccesses()
                     ->withAccessesForGroup(
                         [
-                            CategoryAccess::EDIT_LEVEL,
+                            CategoryPermissionsCheckerInterface::EDIT_LEVEL,
                         ],
                         (new UserGroupBuilder())->buildWithAnotherId()
                     )
                     ->withAccessesForGroup(
                         [
-                            CategoryAccess::VIEW_LEVEL,
-                            CategoryAccess::EDIT_LEVEL,
+                            CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+                            CategoryPermissionsCheckerInterface::EDIT_LEVEL,
                         ],
                         (new UserGroupBuilder())->build()
                     )
                     ->build(),
                 [
-                    CategoryAccess::VIEW_LEVEL,
-                    CategoryAccess::EDIT_LEVEL,
+                    CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+                    CategoryPermissionsCheckerInterface::EDIT_LEVEL,
                 ],
             ],
             'Edit rights'  => [
@@ -241,20 +240,20 @@ class CategoryPermissionsCheckerTest extends TestCase
                     ->clearAccesses()
                     ->withAccessesForGroup(
                         [
-                            CategoryAccess::EDIT_LEVEL,
+                            CategoryPermissionsCheckerInterface::EDIT_LEVEL,
                         ],
                         (new UserGroupBuilder())->buildWithAnotherId()
                     )
                     ->withAccessesForGroup(
                         [
-                            CategoryAccess::EDIT_LEVEL,
+                            CategoryPermissionsCheckerInterface::EDIT_LEVEL,
                         ],
                         (new UserGroupBuilder())->build()
                     )
                     ->build(),
                 [
-                    CategoryAccess::VIEW_LEVEL,
-                    CategoryAccess::EDIT_LEVEL,
+                    CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+                    CategoryPermissionsCheckerInterface::EDIT_LEVEL,
                 ],
             ],
             'View rights'  => [
@@ -263,19 +262,19 @@ class CategoryPermissionsCheckerTest extends TestCase
                     ->clearAccesses()
                     ->withAccessesForGroup(
                         [
-                            CategoryAccess::EDIT_LEVEL,
+                            CategoryPermissionsCheckerInterface::EDIT_LEVEL,
                         ],
                         (new UserGroupBuilder())->buildWithAnotherId()
                     )
                     ->withAccessesForGroup(
                         [
-                            CategoryAccess::VIEW_LEVEL,
+                            CategoryPermissionsCheckerInterface::VIEW_LEVEL,
                         ],
                         (new UserGroupBuilder())->build()
                     )
                     ->build(),
                 [
-                    CategoryAccess::VIEW_LEVEL,
+                    CategoryPermissionsCheckerInterface::VIEW_LEVEL,
                 ],
             ],
             'No rights'  => [
@@ -284,7 +283,7 @@ class CategoryPermissionsCheckerTest extends TestCase
                     ->clearAccesses()
                     ->withAccessesForGroup(
                         [
-                            CategoryAccess::EDIT_LEVEL,
+                            CategoryPermissionsCheckerInterface::EDIT_LEVEL,
                         ],
                         (new UserGroupBuilder())->buildWithAnotherId()
                     )
