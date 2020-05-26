@@ -14,7 +14,7 @@ use Akeneo\UserManagement\Component\Model\UserInterface;
 
 class CategoryPermissionsChecker implements CategoryPermissionsCheckerInterface
 {
-    public function hasAccessToProduct(string $type, CategoryAwareInterface $entity, ?UserInterface $user = null): bool
+    public function hasAccessToProduct(string $type, ?CategoryAwareInterface $entity, ?UserInterface $user = null): bool
     {
         return true;
     }

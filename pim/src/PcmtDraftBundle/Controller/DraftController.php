@@ -23,6 +23,8 @@ use PcmtDraftBundle\Repository\DraftRepository;
 use PcmtDraftBundle\Service\Builder\ResponseBuilder;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
 use PcmtDraftBundle\Service\Draft\DraftStatusListService;
+use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
+use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,13 +50,21 @@ class DraftController
     /** @var DraftViolationNormalizer */
     private $draftViolationNormalizer;
 
+    /** @var GeneralObjectFromDraftCreator */
+    private $creator;
+
+    /** @var CategoryPermissionsCheckerInterface */
+    private $categoryPermissionsChecker;
+
     public function __construct(
         DraftStatusListService $draftStatusListService,
         DraftFacade $draftFacade,
         ResponseBuilder $responseBuilder,
         OperationJobLauncher $operationJobLauncher,
         DraftRepository $draftRepository,
-        DraftViolationNormalizer $draftViolationNormalizer
+        DraftViolationNormalizer $draftViolationNormalizer,
+        GeneralObjectFromDraftCreator $creator,
+        CategoryPermissionsCheckerInterface $categoryPermissionsChecker
     ) {
         $this->draftStatusListService = $draftStatusListService;
         $this->draftFacade = $draftFacade;
@@ -62,6 +72,8 @@ class DraftController
         $this->operationJobLauncher = $operationJobLauncher;
         $this->draftRepository = $draftRepository;
         $this->draftViolationNormalizer = $draftViolationNormalizer;
+        $this->creator = $creator;
+        $this->categoryPermissionsChecker = $categoryPermissionsChecker;
     }
 
     /**
@@ -170,6 +182,10 @@ class DraftController
     public function rejectDraft(AbstractDraft $draft): JsonResponse
     {
         try {
+            $objectToSave = $this->creator->getObjectToSave($draft);
+            if (!$this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::OWN_LEVEL, $objectToSave)) {
+                throw new \Exception('pcmt.exception.permission.denied.own');
+            }
             $this->draftFacade->rejectDraft($draft);
         } catch (\Throwable $e) {
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
