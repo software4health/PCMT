@@ -126,7 +126,7 @@ class CategoryPermissionsCheckerTest extends TestCase
 
         return [
             'product without categories' => [
-                null,
+                new ArrayCollection(),
                 null,
             ],
             'category without set accesses' => [

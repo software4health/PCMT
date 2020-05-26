@@ -35,10 +35,10 @@ class CategoryPermissionsChecker implements CategoryPermissionsCheckerInterface
         $this->accessRepository = $accessRepository;
     }
 
-    public function hasAccessToProduct(string $type, CategoryAwareInterface $entity, ?UserInterface $user = null): bool
+    public function hasAccessToProduct(string $type, ?CategoryAwareInterface $entity, ?UserInterface $user = null): bool
     {
         /* product without category has always access issue #438 */
-        if (!$entity->getCategories()) {
+        if (null === $entity || 0 === $entity->getCategories()->count()) {
             return true;
         }
         foreach ($entity->getCategories()->getIterator() as $category) {

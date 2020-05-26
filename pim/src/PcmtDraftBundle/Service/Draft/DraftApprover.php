@@ -67,7 +67,7 @@ class DraftApprover
         /** @var UserInterface $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if (!$this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::EDIT_LEVEL, $objectToSave, $user)) {
+        if (!$this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::OWN_LEVEL, $objectToSave, $user)) {
             $violations->add(
                 new ConstraintViolation(
                     'No edit access to product basing on category.',
