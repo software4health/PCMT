@@ -116,6 +116,10 @@ class DraftController
      */
     public function updateDraft(AbstractDraft $draft, Request $request): Response
     {
+        $objectToSave = $this->creator->getObjectToSave($draft);
+        if (!$this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::EDIT_LEVEL, $objectToSave)) {
+            throw new \Exception('pcmt.exception.permission.denied.edit');
+        }
         $data = json_decode($request->getContent(), true);
         if (($draft instanceof ExistingProductDraft || $draft instanceof ExistingProductModelDraft) && !isset($data['product'])) {
             throw new BadRequestHttpException('There is no product values');
