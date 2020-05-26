@@ -58,3 +58,12 @@ services:
         autowire: true
         tags:
             - { name: validator.constraint_validator, alias: pcmt_permissions_unique_entity_validator }
+
+    pim_catalog.updater.attribute_group:
+        class: 'PcmtPermissionsBundle\Updater\AttributeGroupUpdater'
+        arguments:
+            - '@pim_catalog.repository.attribute'
+            - '@pim_catalog.repository.attribute_group'
+            - '@pim_structure.updater.translatable'
+        calls:
+            - [ setUserGroupRepository, ['@pim_user.repository.group']]

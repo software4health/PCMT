@@ -12,11 +12,19 @@ namespace PcmtPermissionsBundle\Entity;
 use Akeneo\Pim\Structure\Component\Model\AttributeGroup;
 use Akeneo\UserManagement\Component\Model\Group;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 class AttributeGroupWithAccess extends AttributeGroup
 {
-    /** @var ArrayCollection */
+    /** @var Collection */
     private $accesses;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->accesses = new ArrayCollection();
+    }
 
     /**
      * {@inheritdoc}
