@@ -10,5 +10,3 @@ PcmtPermissionsBundle\Entity\AttributeGroupWithAccess:
             cascade:
                 - persist
                 - detach
-            orderBy:
-                sortOrder: ASC
