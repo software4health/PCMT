@@ -8,6 +8,7 @@ VER 1.1.5 / unreleased
 **Removed**
 
 **Fixed**
+* [#495](https://gitlab.com/pcmt/pcmt/-/issues/495): Fox for migrations error
 
 VER 1.1.4 / 2020-05-14
 ==================
