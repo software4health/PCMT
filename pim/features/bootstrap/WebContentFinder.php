@@ -13,7 +13,7 @@ class WebContentFinder implements WebContentFinderInterface
 
     public const BREADCRUMB_EXISTS = "breadcrumb-exists";
 
-    public const BREADCRUMB_CONTAINS = "breadcrumb-contains";
+    public const BREADCRUMB_ENDS_WITH = "breadcrumb-ends-with";
 
     public const LINK_TO_FOLLOW_EXISTS = "link-to-follow-exists";
 
@@ -36,7 +36,7 @@ class WebContentFinder implements WebContentFinderInterface
                 return "document.querySelector('.AknLogin-form').children.length >= 2";
             case self::BREADCRUMB_EXISTS:
                 return "document.querySelector('.AknBreadcrumb') != null";
-            case self::BREADCRUMB_CONTAINS:
+            case self::BREADCRUMB_ENDS_WITH:
                 return "document.querySelector('.AknBreadcrumb').innerText.endsWith('". $extraData ."')";
             case self::LINK_TO_FOLLOW_EXISTS:
                 return "[...document.querySelectorAll('a')].filter(a => a.textContent.includes('" . $extraData . "')).length > 0";

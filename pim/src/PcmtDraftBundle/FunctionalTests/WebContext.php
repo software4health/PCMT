@@ -10,9 +10,7 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\FunctionalTests;
 
-use Behat\Mink\Exception\ExpectationException;
-use PcmtDraftBundle\DataFixtures\DraftFixtureFactory;
-use PcmtDraftBundle\Entity\AbstractDraft;
+use WebContentFinder;
 
 class WebContext extends \SeleniumBaseContext
 {
@@ -20,41 +18,56 @@ class WebContext extends \SeleniumBaseContext
 
     public const WAIT_TIME_MEDIUM = 2000;
 
-    protected const DRAFT_STATUSES = [
-        'New'      => AbstractDraft::STATUS_NEW,
-        'Approved' => AbstractDraft::STATUS_APPROVED,
-        'Rejected' => AbstractDraft::STATUS_REJECTED,
-    ];
-
-    /** @var int[] */
-    protected $draftIds = [];
+    /** @var int */
+    private $numberOfResults;
 
     /**
-     * @When I click approve on last draft
+     * @When I wait and click edit on first product
      */
-    public function iClickApproveOnLastDraft(): void
+    public function iWaitAndClickEditOnFirstProduct(): void
     {
-        $links = $this->getSession()->getPage()->findAll(
-            'css',
-            'a.AknIconButton.draft-approve'
-        );
-        $lastLink = end($links);
-        $lastLink->click();
+        $cssLocator = 'a.AknIconButton.AknIconButton--small.AknIconButton--edit.AknButtonList-item';
+        $this->waitToLoadPage('PRODUCTS');
+        if (!$this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $cssLocator)) {
+            throw new \Exception('No product to edit found.');
+        }
+        $link = $this->getSession()->getPage()->find('css', $cssLocator);
+        $link->mouseOver();
+        $this->iWaitSecond(1);
+        // find again to avoid error: stale element reference: element is not attached to the page document
+        $link = $this->getSession()->getPage()->find('css', $cssLocator);
+        $link->click();
     }
 
     /**
-     * @Given There is :num quantity of drafts with status :status
+     * @When I wait and click button "Edit as a draft"
      */
-    public function thereIsQuantityOfDraftsWithStatus(int $num, string $status): void
+    public function iWaitAndClickButton(): void
     {
-        $em = $this->getEntityManager();
-        $draftFixture = (new DraftFixtureFactory())
-            ->createDraft(self::DRAFT_STATUSES[$status]);
-
-        for ($i = 0; $i < $num; $i++) {
-            $draftFixture->load($em);
-            $this->draftIds[] = $draftFixture->getDraftIdentifier();
+        $cssLocator = 'div.AknTitleContainer-rightButton button.AknButton.AknButton--apply.save';
+        $result = $this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $cssLocator);
+        if (!$result) {
+            throw new \Exception('No button "Edit as a draft" found');
         }
+
+        $link = $this->getSession()->getPage()->find('css', $cssLocator);
+        $link->click();
+    }
+
+    /**
+     * @When I wait and click approve on last draft
+     */
+    public function iWaitAndClickApproveOnLastDraft(): void
+    {
+        $locator = 'a.AknIconButton.draft-approve';
+        $result = $this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $locator);
+        if (!$result) {
+            throw new \Exception('No draft to approve found.');
+        }
+
+        $links = $this->getSession()->getPage()->findAll('css', $locator);
+        $lastLink = end($links);
+        $lastLink->click();
     }
 
     /**
@@ -62,9 +75,11 @@ class WebContext extends \SeleniumBaseContext
      */
     public function iConfirmApproval(): void
     {
-        $this->getSession()->wait(self::WAIT_TIME_LONG);
-
-        $buttonDiv = $this->getSession()->getPage()->find('css', 'div.AknButton.AknButtonList-item.AknButton--apply.ok.ok');
+        $cssLocator = 'div.AknButton.AknButtonList-item.AknButton--apply.ok.ok';
+        if (!$this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $cssLocator)) {
+            throw new \Exception('Approval button not found.');
+        }
+        $buttonDiv = $this->getSession()->getPage()->find('css', $cssLocator);
         $buttonDiv->click();
     }
 
@@ -90,31 +105,61 @@ class WebContext extends \SeleniumBaseContext
     }
 
     /**
-     * @Then I should see my draft becoming the latest version of the product
+     * @Given I read number of drafts
      */
-    public function iShouldSeeMyDraftBecomingTheLatestVersionOfTheProduct(): void
+    public function iReadNumberOfDrafts(): void
     {
-        foreach ($this->draftIds as $draftIdentifier) {
-            $this->assertPageContainsText($draftIdentifier);
+        $this->waitToLoadPage('DRAFTS');
+        $this->numberOfResults = $this->getNumberOfResultsFromDraftsPage();
+    }
+
+    public function getNumberOfResultsFromDraftsPage(): int
+    {
+        $locator = 'div.AknTitleContainer-title > div';
+        $this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $locator);
+
+        $resultsText = $this->getSession()
+            ->getPage()
+            ->find('css', $locator)
+            ->getText();
+
+        $resultsCount = explode(' ', $resultsText);
+
+        return (int) $resultsCount[0];
+    }
+
+    /**
+     * @Then the number of drafts should be lower by :quantity, try :attempts times
+     */
+    public function theNumberOfResultsShouldBeLowerBy(int $quantity, int $attempts): void
+    {
+        $previous = $this->numberOfResults;
+
+        // we make a number of attempts, as the job in background may last for some time
+        for ($i = 0; $i < $attempts; $i++) {
+            $this->waitAndFollowLink('Activity');
+            $this->waitToLoadPage('DASHBOARD');
+            $this->waitAndFollowLink('Drafts');
+            $this->waitToLoadPage('DRAFTS');
+
+            $newNumber = $this->getNumberOfResultsFromDraftsPage();
+            if ($previous - $quantity === $newNumber) {
+                break;
+            }
+        }
+
+        if ($previous - $quantity !== $newNumber) {
+            throw new \Exception(
+                'Wrong number of drafts. Should be: ' . round($previous - $quantity) . ', is: ' . $newNumber
+            );
         }
     }
 
     /**
-     * @Then I should see my draft becoming the latest version of the product, try :attempts times
+     * @Given I wait :arg1 seconds
      */
-    public function iShouldSeeMyDraftBecomingTheLatestVersionOfTheProductManyTryTimes(int $attempts): void
+    public function iWaitSecond(int $arg1): void
     {
-        // we make a number of attempts, as the job in background may last for some time
-        for ($i = 1; $i < $attempts; $i++) {
-            try {
-                $this->iShouldSeeMyDraftBecomingTheLatestVersionOfTheProduct();
-
-                return;
-            } catch (ExpectationException $e) {
-                $this->getSession()->reload();
-                $this->getSession()->wait(self::WAIT_TIME_LONG);
-            }
-        }
-        $this->iShouldSeeMyDraftBecomingTheLatestVersionOfTheProduct();
+        $this->getSession()->wait($arg1 * 1000);
     }
 }
