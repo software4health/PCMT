@@ -20,6 +20,8 @@ class SeleniumBaseContext extends MinkContext implements Context
 
     public const WAIT_TIME_MEDIUM = 4000;
 
+    public const WAIT_TIME_SHORT = 1000;
+
     public function __construct()
     {
         $this->kernel = new AppKernel('test', true);
@@ -44,8 +46,19 @@ class SeleniumBaseContext extends MinkContext implements Context
      */
     public function waitAndFollowLink(string $link)
     {
+        $tries = 4;
         $this->waitUntil(WebContentFinder::LINK_TO_FOLLOW_EXISTS, $link);
-        $this->clickLink($link);
+        for ($i = 1; $i <= $tries; $i++) {
+            try {
+                $this->clickLink($link);
+                return;
+            } catch (\Exception $e) {
+                if ($i === $tries) {
+                    throw $e;
+                }
+                $this->getSession()->wait(self::WAIT_TIME_SHORT);
+            }
+        }
     }
 
     /**
@@ -53,8 +66,12 @@ class SeleniumBaseContext extends MinkContext implements Context
      */
     public function waitToLoadPage(string $page)
     {
-        $this->waitUntil(WebContentFinder::BREADCRUMB_EXISTS);
-        $this->waitUntil(WebContentFinder::BREADCRUMB_CONTAINS, $page);
+        if (!$this->waitUntil(WebContentFinder::BREADCRUMB_EXISTS)) {
+            throw new Exception("Page not loaded (breadcrumb not found).");
+        }
+        if ($page && !$this->waitUntil(WebContentFinder::BREADCRUMB_ENDS_WITH, $page)) {
+            throw new Exception("Page not loaded (wrong breadcrumb)");
+        }
     }
 
     /**
@@ -63,11 +80,6 @@ class SeleniumBaseContext extends MinkContext implements Context
     public function waitForThePageToLoad(): void
     {
         $this->getSession()->wait(self::WAIT_TIME_MEDIUM);
-    }
-
-    protected function getEntityManager(): EntityManagerInterface
-    {
-        return $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
     }
 
     protected function waitUntil(string $condition, string $extraData = ""): bool

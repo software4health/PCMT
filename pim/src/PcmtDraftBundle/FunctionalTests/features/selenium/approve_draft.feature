@@ -6,11 +6,15 @@ Feature: Approving Drafts
   @javascript
   Scenario:
     Given I log in as a test user
+    And I wait and follow link "Products"
+    And I wait and click edit on first product
+    And I wait and click button "Edit as a draft"
+    And I wait to load page ""
+    And I wait 1 seconds
+    And I wait and follow link "Activity"
+    And I wait to load page "DASHBOARD"
     When I follow "Drafts"
-    And wait for the page to load
-    And I click approve on last draft
-    When I confirm approval
-    And wait for the page to load
-    And I follow "Products"
-    And wait for the page to load
-    Then I should see my draft becoming the latest version of the product
+    And I read number of drafts
+    And I wait and click approve on last draft
+    And I confirm approval
+    Then the number of drafts should be lower by 1, try 2 times

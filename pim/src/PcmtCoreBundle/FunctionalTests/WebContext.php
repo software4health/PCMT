@@ -22,19 +22,6 @@ class WebContext extends \SeleniumBaseContext implements Context
     private $numberOfResults = 0;
 
     /**
-     * @Given There are :num products
-     */
-    public function thereIsQuantityOfProducts(int $quantity): void
-    {
-        $em = $this->getEntityManager();
-        $repo = $em->getRepository(\Akeneo\Pim\Enrichment\Component\Product\Model\Product::class);
-        $products = $repo->findBy([], null, $quantity);
-        if (count($products) < $quantity) {
-            throw new \Exception('Too few products on the list.');
-        }
-    }
-
-    /**
      * @When I press the "Create Attribute" button
      */
     public function iPressTheButtonAndWaitForModalToAppear(): void
