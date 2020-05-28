@@ -1,4 +1,4 @@
-VER 1.1.5 / unreleased
+VER 1.2.0 / unreleased
 ==================
 
 **Added**
@@ -6,6 +6,11 @@ VER 1.1.5 / unreleased
 **Changed**
 
 **Removed**
+
+**Fixed**
+
+VER 1.1.5 / 2020-05-28
+==================
 
 **Fixed**
 * [#495](https://gitlab.com/pcmt/pcmt/-/issues/495): Fix for migrations error
