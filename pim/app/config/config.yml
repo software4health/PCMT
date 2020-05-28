@@ -140,6 +140,6 @@ akeneo_storage_utils:
         -
             original: Akeneo\Pim\Structure\Component\Model\AttributeOption
             override: Flagbit\Bundle\TableAttributeBundle\Entity\AttributeOption
-#        -
-#            original: Akeneo\Pim\Structure\Component\Model\AttributeGroup
-#            override: PcmtPermissionsBundle\Entity\AttributeGroupWithAccess
+        -
+            original: Akeneo\Pim\Structure\Component\Model\AttributeGroup
+            override: PcmtPermissionsBundle\Entity\AttributeGroupWithAccess
