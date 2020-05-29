@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace PcmtPermissionsBundle\Saver;
 
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
+use Akeneo\UserManagement\Component\Model\User;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtPermissionsBundle\Entity\CategoryWithAccess;
 use PcmtPermissionsBundle\Repository\CategoryAccessRepository;
@@ -55,7 +56,10 @@ class CategoryWithAccessSaver implements SaverInterface
 
         $this->categorySaver->save($object->getCategory());
         foreach ($object->getAccesses() as $access) {
-            $this->categoryAccessSaver->save($access);
+            /** @var \PcmtPermissionsBundle\Entity\CategoryAccess $access */
+            if (User::GROUP_DEFAULT !== $access->getUserGroup()->getName()) {
+                $this->categoryAccessSaver->save($access);
+            }
         }
     }
 }

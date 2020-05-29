@@ -6,6 +6,11 @@ PcmtPermissionsBundle\Entity\CategoryWithAccess:
         - Akeneo\Tool\Component\StorageUtils\Validator\Constraints\Immutable:
             properties:
                 - code
+        - PcmtPermissionsBundle\Validator\Constraints\AllGroupAccess:
+              fields:
+                  - viewAccess
+                  - editAccess
+                  - ownAccess
     properties:
         code:
             - NotBlank: ~

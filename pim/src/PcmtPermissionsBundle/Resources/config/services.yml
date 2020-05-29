@@ -11,6 +11,8 @@ services:
         class: PcmtPermissionsBundle\Repository\CategoryAccessRepository
         factory: 'doctrine.orm.entity_manager:getRepository'
         arguments: ['PcmtPermissionsBundle\Entity\CategoryAccess']
+        calls:
+            - [ setUserGroupRepository, ['@pim_user.repository.group']]
         tags:
             - { name: 'pcmt_repository' }
 
