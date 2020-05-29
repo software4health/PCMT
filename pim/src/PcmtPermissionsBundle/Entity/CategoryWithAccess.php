@@ -223,7 +223,7 @@ class CategoryWithAccess implements CategoryInterface
         return $this->category->getChildren();
     }
 
-    private function getAccessesOfLevel(string $level): array
+    public function getAccessesOfLevel(string $level): array
     {
         $accesses = [];
         foreach ($this->accesses as $access) {
