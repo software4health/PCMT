@@ -38,7 +38,9 @@ class AttributeGroupWithAccess extends AttributeGroup
     {
         foreach ($this->accesses as $access) {
             /** @var AttributeGroupAccess $access */
-            if ($access->getUserGroup()->getId() === $userGroup->getId() && $level === $access->getLevel()) {
+            if ($access->getUserGroup()->getId() === $userGroup->getId()
+                && $level === $access->getLevel()
+            ) {
                 return true;
             }
         }
@@ -46,7 +48,7 @@ class AttributeGroupWithAccess extends AttributeGroup
         return false;
     }
 
-    public function getAccesses(): ArrayCollection
+    public function getAccesses(): Collection
     {
         return $this->accesses;
     }
@@ -54,5 +56,10 @@ class AttributeGroupWithAccess extends AttributeGroup
     public function clearAccesses(): void
     {
         $this->accesses = new ArrayCollection();
+    }
+
+    public function removeAccess(AttributeGroupAccess $accessesToRemove): void
+    {
+        $this->accesses->removeElement($accessesToRemove);
     }
 }
