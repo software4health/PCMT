@@ -33,9 +33,12 @@ class AttributeGroupAccess
     /**
      * AttributeGroupAccess constructor.
      */
-    public function __construct(AttributeGroupInterface $category, GroupInterface $userGroup, string $level)
-    {
-        $this->attributeGroup = $category;
+    public function __construct(
+        AttributeGroupInterface $attributeGroup,
+        GroupInterface $userGroup,
+        string $level
+    ) {
+        $this->attributeGroup = $attributeGroup;
         $this->userGroup = $userGroup;
         $this->level = $level;
     }
@@ -43,6 +46,11 @@ class AttributeGroupAccess
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getAttributeGroup(): AttributeGroupInterface
@@ -58,5 +66,15 @@ class AttributeGroupAccess
     public function getLevel(): string
     {
         return $this->level;
+    }
+
+    public function setLevel(string $level): void
+    {
+        $this->level = $level;
+    }
+
+    public function setUserGroup(GroupInterface $userGroup): void
+    {
+        $this->userGroup = $userGroup;
     }
 }

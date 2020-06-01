@@ -7,6 +7,7 @@ PcmtPermissionsBundle\Entity\AttributeGroupWithAccess:
         accesses:
             targetEntity: PcmtPermissionsBundle\Entity\AttributeGroupAccess
             mappedBy: attributeGroup
+            orphanRemoval: true
             cascade:
                 - persist
                 - detach
