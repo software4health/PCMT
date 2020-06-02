@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace PcmtPermissionsBundle\Tests\TestDataBuilder;
 
-use Akeneo\Pim\Enrichment\Component\Category\Model\Category;
 use Akeneo\UserManagement\Component\Model\Group;
 use PcmtPermissionsBundle\Entity\CategoryAccess;
 use PcmtPermissionsBundle\Entity\CategoryWithAccess;
@@ -22,15 +21,13 @@ class CategoryWithAccessBuilder
 
     public function __construct()
     {
-        $category = new Category();
-
-        $this->categoryWithAccess = new CategoryWithAccess($category);
+        $this->categoryWithAccess = new CategoryWithAccess();
         $this->withDefaultAccesses();
     }
 
     public function withDefaultAccesses(): self
     {
-        $access = (new CategoryAccessBuilder())->build();
+        $access = (new CategoryAccessBuilder())->withCategory($this->categoryWithAccess)->build();
 
         return $this->withAccesses([$access]);
     }

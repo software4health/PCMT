@@ -2,7 +2,7 @@ PcmtPermissionsBundle\Entity\CategoryWithAccess:
     constraints:
         - PcmtPermissionsBundle\Validator\Constraints\UniqueEntity:
             fields: code
-            entityClass: Akeneo\Pim\Enrichment\Component\Category\Model\Category
+            entityClass: Akeneo\Pim\Enrichment\Component\Category\Model\CategoryInterface
         - Akeneo\Tool\Component\StorageUtils\Validator\Constraints\Immutable:
             properties:
                 - code
@@ -11,6 +11,9 @@ PcmtPermissionsBundle\Entity\CategoryWithAccess:
                   - viewAccess
                   - editAccess
                   - ownAccess
+              groups:
+                  - uiForm
+
     properties:
         code:
             - NotBlank: ~

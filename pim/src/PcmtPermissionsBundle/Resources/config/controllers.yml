@@ -18,6 +18,5 @@ services:
             - '@oro_security.security_facade'
             - { related_entity: product, form_type: 'PcmtPermissionsBundle\Form\CategoryType', acl: pim_enrich_product, route: pim_enrich }
         calls:
-            - [ setAccessRepository, ['@pcmt_permissions.repository.category_access']]
-            - [ setCategoryWithAccessSaver, ['@pcmt_permissions.saver.category_with_access']]
             - [ setCategoryChildrenPermissionsUpdater, ['@pcmt_permissions.updater.category_children_permissions']]
+            - [ setCategoryPermissionsDefaultProvider, ['@pcmt.service.category_permissions_default_provider']]

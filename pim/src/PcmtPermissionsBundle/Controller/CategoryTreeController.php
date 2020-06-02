@@ -12,9 +12,8 @@ namespace PcmtPermissionsBundle\Controller;
 
 use Akeneo\Pim\Enrichment\Bundle\Controller\Ui\CategoryTreeController as OriginalCategoryTreeController;
 use Akeneo\Platform\Bundle\UIBundle\Flash\Message;
-use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
-use PcmtPermissionsBundle\Entity\CategoryWithAccess;
-use PcmtPermissionsBundle\Repository\CategoryAccessRepository;
+use Akeneo\Tool\Component\Classification\Model\CategoryInterface;
+use PcmtPermissionsBundle\Service\CategoryPermissionsDefaultProvider;
 use PcmtPermissionsBundle\Updater\CategoryChildrenPermissionsUpdater;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,14 +22,16 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CategoryTreeController extends OriginalCategoryTreeController
 {
-    /** @var CategoryAccessRepository */
-    private $accessRepository;
-
-    /** @var SaverInterface */
-    private $categoryWithAccessSaver;
-
     /** @var CategoryChildrenPermissionsUpdater */
     private $categoryChildrenPermissionsUpdater;
+
+    /** @var CategoryPermissionsDefaultProvider */
+    private $categoryPermissionsDefaultProvider;
+
+    public function setCategoryPermissionsDefaultProvider(CategoryPermissionsDefaultProvider $provider): void
+    {
+        $this->categoryPermissionsDefaultProvider = $provider;
+    }
 
     /**
      * {@inheritdoc}
@@ -42,19 +43,20 @@ class CategoryTreeController extends OriginalCategoryTreeController
         }
 
         $category = $this->findCategory($id);
-        $categoryWithAccess = $this->accessRepository->getCategoryWithAccess($category);
+        $this->categoryPermissionsDefaultProvider->fill($category);
 
-        $form = $this->createForm($this->rawConfiguration['form_type'], $categoryWithAccess, $this->getFormOptions($category));
+        $form = $this->createForm($this->rawConfiguration['form_type'], $category, $this->getFormOptions($category));
         if ($request->isMethod('POST')) {
-            $categoryWithAccess->clearAccesses();
+            $category->clearAccesses();
             $form->handleRequest($request);
             if ($form->isValid()) {
-                $this->categoryWithAccessSaver->save($categoryWithAccess);
+                $this->categoryPermissionsDefaultProvider->remove($category);
+                $this->categorySaver->save($category);
                 $message = new Message(sprintf('flash.%s.updated', $category->getParent() ? 'category' : 'tree'));
                 $this->addFlash('success', $message);
                 $applyOnChildren = $form->get('applyOnChildren')->getData();
                 if ($applyOnChildren) {
-                    $this->categoryChildrenPermissionsUpdater->update($categoryWithAccess);
+                    $this->categoryChildrenPermissionsUpdater->update($category);
                 }
             }
         }
@@ -88,15 +90,15 @@ class CategoryTreeController extends OriginalCategoryTreeController
         }
 
         $category->setCode($request->get('label'));
+        $this->categoryPermissionsDefaultProvider->fill($category);
 
-        $categoryWithAccess = new CategoryWithAccess($category);
-        $form = $this->createForm($this->rawConfiguration['form_type'], $categoryWithAccess, $this->getFormOptions($category));
+        $form = $this->createForm($this->rawConfiguration['form_type'], $category, $this->getFormOptions($category));
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->categoryWithAccessSaver->save($categoryWithAccess);
+                $this->categorySaver->save($category);
                 $message = new Message(sprintf('flash.%s.created', $category->getParent() ? 'category' : 'tree'));
                 $this->addFlash('success', $message);
 
@@ -124,18 +126,15 @@ class CategoryTreeController extends OriginalCategoryTreeController
         );
     }
 
-    public function setAccessRepository(CategoryAccessRepository $accessRepository): void
-    {
-        $this->accessRepository = $accessRepository;
-    }
-
-    public function setCategoryWithAccessSaver(SaverInterface $categoryWithAccessSaver): void
-    {
-        $this->categoryWithAccessSaver = $categoryWithAccessSaver;
-    }
-
     public function setCategoryChildrenPermissionsUpdater(CategoryChildrenPermissionsUpdater $categoryChildrenPermissionsUpdater): void
     {
         $this->categoryChildrenPermissionsUpdater = $categoryChildrenPermissionsUpdater;
+    }
+
+    protected function getFormOptions(CategoryInterface $category): array
+    {
+        return [
+            'validation_groups' => ['Default', 'uiForm'],
+        ];
     }
 }

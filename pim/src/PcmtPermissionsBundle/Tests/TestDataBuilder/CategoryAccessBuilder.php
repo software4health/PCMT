@@ -29,7 +29,7 @@ class CategoryAccessBuilder
     public function __construct()
     {
         $this->category = (new CategoryBuilder())->build();
-        $this->userGroup = new Group();
+        $this->userGroup = (new UserGroupBuilder())->build();
         $this->accessLevel = CategoryPermissionsCheckerInterface::VIEW_LEVEL;
     }
 
