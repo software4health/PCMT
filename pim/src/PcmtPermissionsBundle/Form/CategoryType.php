@@ -48,10 +48,9 @@ class CategoryType extends BaseCategoryType
                 return $group ? $group->getName() : '';
             },
             'label'    => $label,
-            'help'     => 'Attention! The changes introduced cause no effect. This is a draft version of functionality',
             'expanded' => false,
             'multiple' => true,
-            'required' => false,
+            'required' => true,
         ]);
     }
 }
