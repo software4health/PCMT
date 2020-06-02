@@ -20,5 +20,11 @@ interface CategoryPermissionsCheckerInterface
 
     public const OWN_LEVEL = 'OWN';
 
+    public const ALL_LEVELS = [
+        self::VIEW_LEVEL,
+        self::EDIT_LEVEL,
+        self::OWN_LEVEL,
+    ];
+
     public function hasAccessToProduct(string $type, ?CategoryAwareInterface $entity, ?UserInterface $user = null): bool;
 }

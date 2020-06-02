@@ -143,3 +143,6 @@ akeneo_storage_utils:
         -
             original: Akeneo\Pim\Structure\Component\Model\AttributeGroup
             override: PcmtPermissionsBundle\Entity\AttributeGroupWithAccess
+        -
+            original: Akeneo\Pim\Enrichment\Component\Category\Model\Category
+            override: PcmtPermissionsBundle\Entity\CategoryWithAccess

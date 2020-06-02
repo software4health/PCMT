@@ -9,52 +9,42 @@ declare(strict_types=1);
 
 namespace PcmtPermissionsBundle\Updater;
 
-use Akeneo\Tool\Component\Classification\Model\CategoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use PcmtPermissionsBundle\Entity\CategoryAccess;
 use PcmtPermissionsBundle\Entity\CategoryWithAccess;
-use PcmtPermissionsBundle\Repository\CategoryAccessRepository;
 
 class CategoryChildrenPermissionsUpdater
 {
-    /** @var CategoryAccessRepository */
-    private $accessRepository;
-
     /** @var ArrayCollection */
     private $accesses;
 
     /** @var SaverInterface */
-    private $categoryWithAccessSaver;
+    private $categorySaver;
 
-    public function __construct(CategoryAccessRepository $accessRepository, SaverInterface $categoryWithAccessSaver)
+    public function __construct(SaverInterface $categorySaver)
     {
-        $this->accessRepository = $accessRepository;
-        $this->categoryWithAccessSaver = $categoryWithAccessSaver;
+        $this->categorySaver = $categorySaver;
     }
 
-    public function update(CategoryWithAccess $categoryWithAccess): void
+    public function update(CategoryWithAccess $category): void
     {
-        $this->accesses = $categoryWithAccess->getAccesses();
-        $children = $categoryWithAccess->getChildren();
+        $this->accesses = $category->getAccesses();
+        $children = $category->getChildren();
         foreach ($children as $child) {
             $this->updateCategory($child);
         }
     }
 
-    private function updateCategory(CategoryInterface $category): void
+    private function updateCategory(CategoryWithAccess $category): void
     {
-        $accesses = $this->accessRepository->findBy([
-            'category' => $category,
-        ]);
-
-        if ($this->areAccessesDifferent($accesses)) {
-            $categoryWithAccess = new CategoryWithAccess($category);
+        if ($this->areAccessesDifferent($category->getAccesses())) {
+            $category->clearAccesses();
             foreach ($this->accesses as $access) {
                 $newAccess = new CategoryAccess($category, $access->getUserGroup(), $access->getLevel());
-                $categoryWithAccess->addAccess($newAccess);
+                $category->addAccess($newAccess);
             }
-            $this->categoryWithAccessSaver->save($categoryWithAccess);
+            $this->categorySaver->save($category);
         }
         $children = $category->getChildren();
         foreach ($children as $child) {

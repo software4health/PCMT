@@ -10,31 +10,21 @@ declare(strict_types=1);
 
 namespace PcmtPermissionsBundle\Entity;
 
-use Akeneo\Tool\Component\Classification\Model\CategoryInterface;
-use Akeneo\Tool\Component\Localization\Model\TranslationInterface;
+use Akeneo\Pim\Enrichment\Component\Category\Model\Category;
 use Akeneo\UserManagement\Component\Model\Group;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 
-class CategoryWithAccess implements CategoryInterface
+class CategoryWithAccess extends Category
 {
-    /** @var string */
-    private $code;
-
-    /** @var ArrayCollection of CategoryTranslation */
-    protected $translations;
-
-    /** @var CategoryInterface */
-    private $category;
-
-    /** @var ArrayCollection */
+    /** @var Collection */
     private $accesses;
 
-    public function __construct(CategoryInterface $category)
+    public function __construct()
     {
-        $this->code = $category->getCode();
-        $this->translations = $category->getTranslations();
-        $this->category = $category;
+        parent::__construct();
+
         $this->accesses = new ArrayCollection();
     }
 
@@ -46,181 +36,9 @@ class CategoryWithAccess implements CategoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getCategory(): CategoryInterface
-    {
-        return $this->category;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function addAccess(CategoryAccess $access): void
     {
         $this->accesses->add($access);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCode()
-    {
-        return $this->code;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTranslations()
-    {
-        return $this->category->getTranslations();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addTranslation(TranslationInterface $translation)
-    {
-        $translation->setForeignKey($this->category);
-
-        return $this->category->addTranslation($translation);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->category->getId();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-
-        return $this->category->setCode($code);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setLeft($left)
-    {
-        return $this->category->setLeft($left);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLeft()
-    {
-        return $this->category->getLeft();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setLevel($level)
-    {
-        return $this->category->setLevel($level);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLevel()
-    {
-        return $this->category->getLevel();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setRight($right)
-    {
-        return $this->category->setRight($right);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRight()
-    {
-        return $this->category->getRight();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setRoot($root)
-    {
-        return $this->category->setRoot($root);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRoot()
-    {
-        return $this->category->getRoot();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setParent(?CategoryInterface $parent = null)
-    {
-        return $this->category->setParent($parent);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return $this->category->getParent();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isRoot()
-    {
-        return $this->category->isRoot();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addChild(CategoryInterface $child)
-    {
-        return $this->category->addChild($child);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function removeChild(CategoryInterface $child)
-    {
-        return $this->category->removeChild($child);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasChildren()
-    {
-        return $this->category->hasChildren();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChildren()
-    {
-        return $this->category->getChildren();
     }
 
     public function getAccessesOfLevel(string $level): array
@@ -255,7 +73,7 @@ class CategoryWithAccess implements CategoryInterface
     {
         foreach ($userGroups as $userGroup) {
             if (!$this->checkIfAccessExists($userGroup, $level)) {
-                $categoryAccess = new CategoryAccess($this->getCategory(), $userGroup, $level);
+                $categoryAccess = new CategoryAccess($this, $userGroup, $level);
                 $this->accesses->add($categoryAccess);
             }
         }
@@ -288,13 +106,15 @@ class CategoryWithAccess implements CategoryInterface
         return false;
     }
 
-    public function getAccesses(): ArrayCollection
+    public function getAccesses(): Collection
     {
         return $this->accesses;
     }
 
     public function clearAccesses(): void
     {
-        $this->accesses = new ArrayCollection();
+        foreach ($this->accesses->getKeys() as $key) {
+            $this->accesses->remove($key);
+        }
     }
 }

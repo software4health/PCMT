@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PcmtPermissionsBundle\Tests\TestDataBuilder;
 
 use Akeneo\UserManagement\Component\Model\Group;
+use Akeneo\UserManagement\Component\Model\User;
 
 class UserGroupBuilder
 {
@@ -24,6 +25,14 @@ class UserGroupBuilder
     {
         $this->userGroup = new Group();
         $this->withId(self::DEFAULT_ID);
+        $this->withName(User::GROUP_DEFAULT);
+    }
+
+    public function withName(string $name): self
+    {
+        $this->userGroup->setName($name);
+
+        return $this;
     }
 
     public function withId(int $id): self

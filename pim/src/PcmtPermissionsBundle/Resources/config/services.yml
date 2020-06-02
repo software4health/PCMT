@@ -21,14 +21,6 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
 
-    pcmt_permissions.saver.category_with_access:
-        class: PcmtPermissionsBundle\Saver\CategoryWithAccessSaver
-        arguments:
-            - '@pim_catalog.saver.category'
-            - '@pcmt_permissions.saver.category_access'
-            - '@doctrine.orm.entity_manager'
-            - '@pcmt_permissions.repository.category_access'
-
     pcmt_permissions.form.category:
         class: 'PcmtPermissionsBundle\Form\CategoryType'
         arguments:
@@ -37,19 +29,15 @@ services:
         tags:
             - { name: form.type, alias: pim_category }
 
-    pim_enrich.doctrine.counter.category_product:
-        class: 'PcmtPermissionsBundle\Counter\CategoryProductsCounter'
-        arguments:
-            - '@pim_catalog.query.product_query_builder_factory'
-            - '@pim_catalog.repository.category'
-        tags:
-            - { name: pim_enrich.doctrine.counter.category_item, type: product }
-
     pcmt_permissions.updater.category_children_permissions:
         class: PcmtPermissionsBundle\Updater\CategoryChildrenPermissionsUpdater
         arguments:
-            - '@pcmt_permissions.repository.category_access'
-            - '@pcmt_permissions.saver.category_with_access'
+            - '@pim_catalog.saver.category'
+
+    pcmt.service.category_permissions_default_provider:
+        class: PcmtPermissionsBundle\Service\CategoryPermissionsDefaultProvider
+        arguments:
+            - '@pim_user.repository.group'
 
     pcmt.service.checker.category_permissions_checker:
         class: PcmtPermissionsBundle\Service\Checker\CategoryPermissionsChecker

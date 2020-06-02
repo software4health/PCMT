@@ -19,6 +19,6 @@ class UniqueEntityValidator extends \Symfony\Bridge\Doctrine\Validator\Constrain
      */
     public function validate($entity, Constraint $constraint): void
     {
-        parent::validate($entity->getCategory(), $constraint);
+        parent::validate($entity, $constraint);
     }
 }
