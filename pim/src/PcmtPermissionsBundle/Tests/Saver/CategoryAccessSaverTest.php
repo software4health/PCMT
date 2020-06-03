@@ -13,6 +13,7 @@ namespace PcmtPermissionsBundle\Tests\Saver;
 use Doctrine\ORM\EntityManager;
 use PcmtPermissionsBundle\Saver\CategoryAccessSaver;
 use PcmtPermissionsBundle\Tests\TestDataBuilder\CategoryAccessBuilder;
+use PcmtPermissionsBundle\Tests\TestDataBuilder\CategoryWithAccessBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -35,14 +36,16 @@ class CategoryAccessSaverTest extends TestCase
         $this->entityManagerMock->expects($this->once())->method('flush');
         $this->entityManagerMock->expects($this->once())->method('persist');
 
-        $this->categoryAccessSaver->save((new CategoryAccessBuilder())->build());
+        $category = (new CategoryWithAccessBuilder())->build();
+        $this->categoryAccessSaver->save((new CategoryAccessBuilder($category))->build());
     }
 
     public function testSaveAll(): void
     {
+        $category = (new CategoryWithAccessBuilder())->build();
         $objects = [
-            (new CategoryAccessBuilder())->build(),
-            (new CategoryAccessBuilder())->build(),
+            (new CategoryAccessBuilder($category))->build(),
+            (new CategoryAccessBuilder($category))->build(),
         ];
 
         $this->entityManagerMock->expects($this->once())->method('flush');

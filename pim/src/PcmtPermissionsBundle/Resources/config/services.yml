@@ -7,15 +7,6 @@ parameters:
     pim_enrich.view_element.category.tab.property.template: 'PcmtPermissionsBundle:CategoryTree:Tab/property.html.twig'
 
 services:
-    pcmt_permissions.repository.category_access:
-        class: PcmtPermissionsBundle\Repository\CategoryAccessRepository
-        factory: 'doctrine.orm.entity_manager:getRepository'
-        arguments: ['PcmtPermissionsBundle\Entity\CategoryAccess']
-        calls:
-            - [ setUserGroupRepository, ['@pim_user.repository.group']]
-        tags:
-            - { name: 'pcmt_repository' }
-
     pcmt_permissions.saver.category_access:
         class: PcmtPermissionsBundle\Saver\CategoryAccessSaver
         arguments:
@@ -39,8 +30,12 @@ services:
         arguments:
             - '@pim_user.repository.group'
 
-    pcmt.service.checker.category_permissions_checker:
-        class: PcmtPermissionsBundle\Service\Checker\CategoryPermissionsChecker
+    pcmt.service.category_permissions_checker:
+        class: PcmtPermissionsBundle\Service\CategoryPermissionsChecker
+        autowire: true
+
+    pcmt.service.category_with_permissions_repository:
+        class: PcmtPermissionsBundle\Service\CategoryWithPermissionsRepository
         autowire: true
 
     PcmtPermissionsBundle\Validator\Constraints\UniqueEntityValidator:
@@ -48,6 +43,20 @@ services:
         autowire: true
         tags:
             - { name: validator.constraint_validator, alias: pcmt_permissions_unique_entity_validator }
+
+    pim_datagrid.datasource.product_and_product_model:
+        class: PcmtPermissionsBundle\Service\ProductAndProductModelDatasource
+        arguments:
+            - '@pim_catalog.object_manager.product'
+            - '@akeneo.pim.enrichment.query.product_and_product_model_query_builder_from_size_factory.with_product_identifier_cursor'
+            - '@pim_datagrid_serializer'
+            - '@validator'
+            - '@akeneo.pim.enrichment.product.grid.query.fetch_product_and_product_model_rows'
+        calls:
+            - [ setMassActionRepository, ['@pim_catalog.repository.product_mass_action'] ]
+            - [ setCategoryWithPermissionsRepository, ['@pcmt.service.category_with_permissions_repository'] ]
+        tags:
+            - { name: oro_datagrid.datasource, type: pim_datasource_product }
 
     pim_catalog.updater.attribute_group:
         class: 'PcmtPermissionsBundle\Updater\AttributeGroupUpdater'
@@ -57,3 +66,4 @@ services:
             - '@pim_structure.updater.translatable'
         calls:
             - [ setUserGroupRepository, ['@pim_user.repository.group']]
+

@@ -27,7 +27,7 @@ class CategoryWithAccessBuilder
 
     public function withDefaultAccesses(): self
     {
-        $access = (new CategoryAccessBuilder())->withCategory($this->categoryWithAccess)->build();
+        $access = (new CategoryAccessBuilder($this->categoryWithAccess))->build();
 
         return $this->withAccesses([$access]);
     }
@@ -78,14 +78,22 @@ class CategoryWithAccessBuilder
         return $this;
     }
 
-    public function withAccessesForGroup(array $accessesLevels, Group $group): self
+    public function withAccessesForGroup(array $accessLevels, Group $group): self
     {
-        foreach ($accessesLevels as $accessesLevel) {
-            $access = (new CategoryAccessBuilder())
-                ->withAccessLevel($accessesLevel)
+        foreach ($accessLevels as $accessLevel) {
+            $access = (new CategoryAccessBuilder($this->categoryWithAccess, $accessLevel))
                 ->withUserGroup($group)
                 ->build();
             $this->withAccess($access);
+        }
+
+        return $this;
+    }
+
+    public function withAccessesForGroups(array $accessesLevels, array $groups): self
+    {
+        foreach ($groups as $group) {
+            $this->withAccessesForGroup($accessesLevels, $group);
         }
 
         return $this;

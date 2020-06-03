@@ -16,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 
-class CategoryWithAccess extends Category
+class CategoryWithAccess extends Category implements CategoryWithAccessInterface
 {
     /** @var Collection */
     private $accesses;
