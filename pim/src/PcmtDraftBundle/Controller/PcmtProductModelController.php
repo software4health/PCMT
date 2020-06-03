@@ -19,6 +19,7 @@ use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterI
 use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductModelRepositoryInterface;
 use Akeneo\Pim\Structure\Component\Repository\FamilyVariantRepositoryInterface;
 use Akeneo\Tool\Bundle\ElasticsearchBundle\Client;
+use Akeneo\Tool\Component\Classification\CategoryAwareInterface;
 use Akeneo\Tool\Component\StorageUtils\Factory\SimpleFactoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Remover\RemoverInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
@@ -27,10 +28,12 @@ use Akeneo\UserManagement\Bundle\Context\UserContext;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\NewProductModelDraft;
 use PcmtDraftBundle\Service\Builder\ResponseBuilder;
+use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -70,6 +73,9 @@ class PcmtProductModelController extends ProductModelController
 
     /** @var NormalizerInterface */
     private $violationNormalizer;
+
+    /** @var CategoryPermissionsCheckerInterface */
+    private $categoryPermissionsChecker;
 
     public function __construct(
         ProductModelRepositoryInterface $productModelRepository,
@@ -233,6 +239,8 @@ class PcmtProductModelController extends ProductModelController
     {
         $productModel = $this->findProductModelOr404($id);
 
+        $this->hasAccessOr403($productModel);
+
         return $this->responseBuilder->setData($productModel)
             ->setFormat('internal_api')
             ->setContext($this->getNormalizationContext() + ['include_draft_id' => true])
@@ -244,5 +252,20 @@ class PcmtProductModelController extends ProductModelController
         return $this->userContext->toArray() + [
             'filter_types' => [],
         ];
+    }
+
+    protected function hasAccessOr403(CategoryAwareInterface $entity): void
+    {
+        if (!$this->categoryPermissionsChecker->hasAccessToProduct(
+            CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+            $entity
+        )) {
+            throw new AccessDeniedHttpException('Access denied basing on categories');
+        }
+    }
+
+    public function setCategoryPermissionsChecker(CategoryPermissionsCheckerInterface $categoryPermissionsChecker): void
+    {
+        $this->categoryPermissionsChecker = $categoryPermissionsChecker;
     }
 }
