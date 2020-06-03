@@ -11,11 +11,13 @@ namespace PcmtDraftBundle\Controller;
 
 use Akeneo\Pim\Enrichment\Bundle\Controller\InternalApi\ProductController;
 use Akeneo\Pim\Enrichment\Component\Product\Exception\ObjectNotFoundException;
+use Akeneo\Tool\Component\Classification\CategoryAwareInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\NewProductDraft;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Service\Builder\ResponseBuilder;
+use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -41,6 +43,9 @@ class PcmtProductController extends ProductController
 
     /** @var ResponseBuilder */
     private $responseBuilder;
+
+    /** @var CategoryPermissionsCheckerInterface */
+    private $categoryPermissionsChecker;
 
     public function createAction(Request $request): Response
     {
@@ -85,6 +90,8 @@ class PcmtProductController extends ProductController
     public function getAction($id)
     {
         $product = $this->findProductOr404($id);
+
+        $this->hasAccessOr403($product);
 
         return $this->responseBuilder->setData($product)
             ->setContext($this->getNormalizationContext() + ['include_draft_id' => true])
@@ -150,5 +157,20 @@ class PcmtProductController extends ProductController
     public function setResponseBuilder(ResponseBuilder $responseBuilder): void
     {
         $this->responseBuilder = $responseBuilder;
+    }
+
+    public function setCategoryPermissionsChecker(CategoryPermissionsCheckerInterface $categoryPermissionsChecker): void
+    {
+        $this->categoryPermissionsChecker = $categoryPermissionsChecker;
+    }
+
+    protected function hasAccessOr403(CategoryAwareInterface $entity): void
+    {
+        if (!$this->categoryPermissionsChecker->hasAccessToProduct(
+            CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+            $entity
+        )) {
+            throw new AccessDeniedHttpException('Access denied basing on categories');
+        }
     }
 }

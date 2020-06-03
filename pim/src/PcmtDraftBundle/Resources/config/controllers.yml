@@ -11,7 +11,7 @@ services:
         arguments:
             $draftViolationNormalizer: '@pcmt_draft.normalizer.draft_violation'
             $creator: '@pcmt.service.general_object_from_draft_creator'
-            $categoryPermissionsChecker: '@pcmt.service.checker.category_permissions_checker'
+            $categoryPermissionsChecker: '@pcmt.service.category_permissions_checker'
 
     pcmt_core.controller.product:
         class: 'PcmtDraftBundle\Controller\PcmtUiProductController'
@@ -45,6 +45,7 @@ services:
             - [setEventDispatcher, ['@event_dispatcher']]
             - [setDraftSaver, ['@pcmt.saver.draft']]
             - [setResponseBuilder, ['@pcmt.service.builder.response_builder']]
+            - [setCategoryPermissionsChecker, ['@pcmt.service.category_permissions_checker']]
 
     ### overrides product model controller
     pim_enrich.controller.rest.product_model:
@@ -72,6 +73,7 @@ services:
         calls:
             - [setDraftSaver, ['@pcmt.saver.draft']]
             - [setResponseBuilder, ['@pcmt.service.builder.response_builder']]
+            - [setCategoryPermissionsChecker, ['@pcmt.service.category_permissions_checker']]
 
     pcmt.draft.controller.product_category:
         class: 'PcmtDraftBundle\Controller\PcmtProductCategoryController'
