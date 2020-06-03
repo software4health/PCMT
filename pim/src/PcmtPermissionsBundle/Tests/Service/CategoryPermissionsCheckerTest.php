@@ -170,6 +170,7 @@ class CategoryPermissionsCheckerTest extends TestCase
             ->withAccessesForGroup(
                 [
                     CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+                    CategoryPermissionsCheckerInterface::OWN_LEVEL,
                 ],
                 (new UserGroupBuilder())->buildWithAnotherId()
             )
@@ -186,7 +187,9 @@ class CategoryPermissionsCheckerTest extends TestCase
             ->clearAccesses()
             ->withAccessesForGroup(
                 [
+                    CategoryPermissionsCheckerInterface::VIEW_LEVEL,
                     CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+                    CategoryPermissionsCheckerInterface::OWN_LEVEL,
                 ],
                 (new UserGroupBuilder())->buildWithAnotherId()
             )
@@ -202,7 +205,9 @@ class CategoryPermissionsCheckerTest extends TestCase
             ->clearAccesses()
             ->withAccessesForGroup(
                 [
+                    CategoryPermissionsCheckerInterface::VIEW_LEVEL,
                     CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+                    CategoryPermissionsCheckerInterface::OWN_LEVEL,
                 ],
                 (new UserGroupBuilder())->buildWithAnotherId()
             )
@@ -214,11 +219,24 @@ class CategoryPermissionsCheckerTest extends TestCase
             )
             ->build();
 
-        $categoryWithNoRights = (new CategoryWithAccessBuilder())
+        $categoryWithAllRightsForOtherGroup = (new CategoryWithAccessBuilder())
+            ->clearAccesses()
+            ->withAccessesForGroup(
+                [
+                    CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+                    CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+                    CategoryPermissionsCheckerInterface::OWN_LEVEL,
+                ],
+                (new UserGroupBuilder())->buildWithAnotherId()
+            )
+            ->build();
+
+        $categoryWithEditAndOwnRightsForOtherGroup = (new CategoryWithAccessBuilder())
             ->clearAccesses()
             ->withAccessesForGroup(
                 [
                     CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+                    CategoryPermissionsCheckerInterface::OWN_LEVEL,
                 ],
                 (new UserGroupBuilder())->buildWithAnotherId()
             )
@@ -261,9 +279,15 @@ class CategoryPermissionsCheckerTest extends TestCase
                     CategoryPermissionsCheckerInterface::VIEW_LEVEL,
                 ],
             ],
-            'No rights'  => [
-                new ArrayCollection([$categoryWithNoRights]),
+            'All rights for other group'  => [
+                new ArrayCollection([$categoryWithAllRightsForOtherGroup]),
                 [],
+            ],
+            'Edit and own rights for other group'  => [
+                new ArrayCollection([$categoryWithEditAndOwnRightsForOtherGroup]),
+                [
+                    CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+                ],
             ],
         ];
     }

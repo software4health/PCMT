@@ -45,8 +45,11 @@ class CategoryPermissionsChecker implements CategoryPermissionsCheckerInterface
 
     public function isGranted(string $type, CategoryWithAccessInterface $category, ?UserInterface $user = null): bool
     {
+        if (!in_array($type, CategoryPermissionsCheckerInterface::ALL_LEVELS)) {
+            throw new ParameterNotFoundException($type);
+        }
         /* category without set permissions has always access issue #438 */
-        if (0 === $category->getAccesses()->count()) {
+        if (0 === count($category->getAccessesOfLevel($type))) {
             return true;
         }
         $user = $user ?? $this->tokenStorage->getToken()->getUser();
@@ -59,7 +62,6 @@ class CategoryPermissionsChecker implements CategoryPermissionsCheckerInterface
                     if (in_array($access->getLevel(), $this->getAccessLevels($type))) {
                         return true;
                     }
-//                    $category->removeAccess($access);
                 }
             }
         }
@@ -85,8 +87,6 @@ class CategoryPermissionsChecker implements CategoryPermissionsCheckerInterface
                 return [
                     CategoryPermissionsCheckerInterface::OWN_LEVEL,
                 ];
-            default:
-                throw new ParameterNotFoundException($type);
         }
     }
 }
