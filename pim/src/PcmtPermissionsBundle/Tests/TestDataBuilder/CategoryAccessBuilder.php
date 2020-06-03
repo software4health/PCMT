@@ -10,14 +10,14 @@ declare(strict_types=1);
 
 namespace PcmtPermissionsBundle\Tests\TestDataBuilder;
 
-use Akeneo\Pim\Enrichment\Component\Category\Model\CategoryInterface;
 use Akeneo\UserManagement\Component\Model\Group;
 use PcmtPermissionsBundle\Entity\CategoryAccess;
+use PcmtPermissionsBundle\Entity\CategoryWithAccessInterface;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 
 class CategoryAccessBuilder
 {
-    /** @var CategoryInterface */
+    /** @var CategoryWithAccessInterface */
     private $category;
 
     /** @var Group */
@@ -26,30 +26,16 @@ class CategoryAccessBuilder
     /** @var string */
     private $accessLevel;
 
-    public function __construct()
+    public function __construct(CategoryWithAccessInterface $category, string $accessLevel = CategoryPermissionsCheckerInterface::VIEW_LEVEL)
     {
-        $this->category = (new CategoryBuilder())->build();
         $this->userGroup = (new UserGroupBuilder())->build();
-        $this->accessLevel = CategoryPermissionsCheckerInterface::VIEW_LEVEL;
-    }
-
-    public function withCategory(CategoryInterface $category): self
-    {
+        $this->accessLevel = $accessLevel;
         $this->category = $category;
-
-        return $this;
     }
 
     public function withUserGroup(Group $group): self
     {
         $this->userGroup = $group;
-
-        return $this;
-    }
-
-    public function withAccessLevel(string $level): self
-    {
-        $this->accessLevel = $level;
 
         return $this;
     }

@@ -13,9 +13,9 @@ namespace PcmtPermissionsBundle\Tests\Service;
 use Akeneo\UserManagement\Bundle\Doctrine\ORM\Repository\GroupRepository;
 use PcmtPermissionsBundle\Entity\CategoryWithAccess;
 use PcmtPermissionsBundle\Service\CategoryPermissionsDefaultProvider;
-use PcmtPermissionsBundle\Tests\TestDataBuilder\CategoryAccessBuilder;
 use PcmtPermissionsBundle\Tests\TestDataBuilder\CategoryWithAccessBuilder;
 use PcmtPermissionsBundle\Tests\TestDataBuilder\UserGroupBuilder;
+use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -39,14 +39,28 @@ class CategoryPermissionsDefaultProviderTest extends TestCase
 
     public function dataRemove(): array
     {
+        $userGroupAll = (new UserGroupBuilder())->build();
         $userGroupDifferent = (new UserGroupBuilder())->withName('Other name')->build();
-        $accessGroupAll = (new CategoryAccessBuilder())->build();
-        $accessGroupDifferent = (new CategoryAccessBuilder())->withUserGroup($userGroupDifferent)->build();
 
         return [
-            [(new CategoryWithAccessBuilder())->withAccesses([])->build(), 0],
-            [(new CategoryWithAccessBuilder())->withAccesses([$accessGroupAll])->build(), 0],
-            [(new CategoryWithAccessBuilder())->withAccesses([$accessGroupDifferent])->build(), 1],
+            [
+                (new CategoryWithAccessBuilder())
+                    ->withAccesses([])
+                    ->build(),
+                0,
+            ],
+            [
+                (new CategoryWithAccessBuilder())
+                    ->withAccessesForGroup([CategoryPermissionsCheckerInterface::VIEW_LEVEL], $userGroupAll)
+                    ->build(),
+                0,
+            ],
+            [
+                (new CategoryWithAccessBuilder())
+                    ->withAccessesForGroup([CategoryPermissionsCheckerInterface::VIEW_LEVEL], $userGroupDifferent)
+                    ->build(),
+                1,
+            ],
         ];
     }
 
@@ -65,8 +79,6 @@ class CategoryPermissionsDefaultProviderTest extends TestCase
     {
         $userGroupDifferent1 = (new UserGroupBuilder())->withName('Other name')->build();
         $userGroupDifferent2 = (new UserGroupBuilder())->withName('Other name 2')->build();
-        $accessGroupDifferent1 = (new CategoryAccessBuilder())->withUserGroup($userGroupDifferent1)->build();
-        $accessGroupDifferent2 = (new CategoryAccessBuilder())->withUserGroup($userGroupDifferent2)->build();
 
         return [
             'default accesses' => [
@@ -78,7 +90,10 @@ class CategoryPermissionsDefaultProviderTest extends TestCase
                 3,
             ],
             'existing accesses' => [
-                (new CategoryWithAccessBuilder())->withAccesses([$accessGroupDifferent1, $accessGroupDifferent2])->build(),
+                (new CategoryWithAccessBuilder())
+                    ->clearAccesses()
+                    ->withAccessesForGroups([CategoryPermissionsCheckerInterface::VIEW_LEVEL], [$userGroupDifferent1, $userGroupDifferent2])
+                    ->build(),
                 4,
             ],
         ];

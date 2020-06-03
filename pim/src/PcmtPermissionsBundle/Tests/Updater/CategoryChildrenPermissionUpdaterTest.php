@@ -12,8 +12,8 @@ namespace PcmtPermissionsBundle\Tests\Updater;
 
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtPermissionsBundle\Entity\CategoryWithAccess;
-use PcmtPermissionsBundle\Tests\TestDataBuilder\CategoryAccessBuilder;
 use PcmtPermissionsBundle\Tests\TestDataBuilder\CategoryWithAccessBuilder;
+use PcmtPermissionsBundle\Tests\TestDataBuilder\UserGroupBuilder;
 use PcmtPermissionsBundle\Updater\CategoryChildrenPermissionsUpdater;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -37,7 +37,6 @@ class CategoryChildrenPermissionUpdaterTest extends TestCase
     public function dataUpdate(): array
     {
         $categoryWithAccess = (new CategoryWithAccessBuilder())->withTwoChildren()->build();
-        $access = (new CategoryAccessBuilder())->withAccessLevel(CategoryPermissionsCheckerInterface::EDIT_LEVEL)->build();
 
         return [
             'two children, same access' => [
@@ -49,11 +48,17 @@ class CategoryChildrenPermissionUpdaterTest extends TestCase
                 0,
             ],
             'children, different access' => [
-                (new CategoryWithAccessBuilder())->withTwoChildren()->withAccesses([$access])->build(),
+                (new CategoryWithAccessBuilder())
+                    ->withTwoChildren()
+                    ->withAccessesForGroup([CategoryPermissionsCheckerInterface::EDIT_LEVEL], (new UserGroupBuilder())->build())
+                    ->build(),
                 2,
             ],
             'one child, two grand, different access' => [
-                (new CategoryWithAccessBuilder())->withChildren([$categoryWithAccess])->withAccesses([$access])->build(),
+                (new CategoryWithAccessBuilder())
+                    ->withChildren([$categoryWithAccess])
+                    ->withAccessesForGroup([CategoryPermissionsCheckerInterface::EDIT_LEVEL], (new UserGroupBuilder())->build())
+                    ->build(),
                 3,
             ],
         ];

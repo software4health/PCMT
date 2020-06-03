@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace PcmtPermissionsBundle\Entity;
 
-use Akeneo\Tool\Component\Classification\Model\CategoryInterface;
 use Akeneo\UserManagement\Component\Model\Group;
 use Akeneo\UserManagement\Component\Model\GroupInterface;
 
@@ -19,7 +18,7 @@ class CategoryAccess
     /** @var int */
     private $id;
 
-    /** @var CategoryInterface */
+    /** @var CategoryWithAccessInterface */
     private $category;
 
     /** @var Group */
@@ -31,7 +30,7 @@ class CategoryAccess
     /**
      * CategoryAccess constructor.
      */
-    public function __construct(CategoryInterface $category, GroupInterface $userGroup, string $level)
+    public function __construct(CategoryWithAccessInterface $category, GroupInterface $userGroup, string $level)
     {
         $this->category = $category;
         $this->userGroup = $userGroup;
@@ -43,7 +42,7 @@ class CategoryAccess
         return $this->id;
     }
 
-    public function getCategory(): CategoryInterface
+    public function getCategory(): CategoryWithAccessInterface
     {
         return $this->category;
     }

@@ -7,14 +7,13 @@
 
 declare(strict_types=1);
 
-namespace PcmtPermissionsBundle\Service\Checker;
+namespace PcmtPermissionsBundle\Service;
 
-use Akeneo\Pim\Enrichment\Component\Category\Model\CategoryInterface;
 use Akeneo\Tool\Component\Classification\CategoryAwareInterface;
 use Akeneo\UserManagement\Component\Model\Group;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use PcmtPermissionsBundle\Entity\CategoryAccess;
-use PcmtPermissionsBundle\Repository\CategoryAccessRepositoryInterface;
+use PcmtPermissionsBundle\Entity\CategoryWithAccessInterface;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -24,15 +23,9 @@ class CategoryPermissionsChecker implements CategoryPermissionsCheckerInterface
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var CategoryAccessRepositoryInterface */
-    private $accessRepository;
-
-    public function __construct(
-        TokenStorageInterface $tokenStorage,
-        CategoryAccessRepositoryInterface $accessRepository
-    ) {
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
         $this->tokenStorage = $tokenStorage;
-        $this->accessRepository = $accessRepository;
     }
 
     public function hasAccessToProduct(string $type, ?CategoryAwareInterface $entity, ?UserInterface $user = null): bool
@@ -50,12 +43,10 @@ class CategoryPermissionsChecker implements CategoryPermissionsCheckerInterface
         return false;
     }
 
-    private function isGranted(string $type, CategoryInterface $category, ?UserInterface $user = null): bool
+    public function isGranted(string $type, CategoryWithAccessInterface $category, ?UserInterface $user = null): bool
     {
-        $categoryWithAccess = $this->accessRepository->getCategoryWithAccess($category);
-
         /* category without set permissions has always access issue #438 */
-        if (0 === $categoryWithAccess->getAccesses()->count()) {
+        if (0 === $category->getAccesses()->count()) {
             return true;
         }
         $user = $user ?? $this->tokenStorage->getToken()->getUser();
@@ -63,12 +54,12 @@ class CategoryPermissionsChecker implements CategoryPermissionsCheckerInterface
         /** @var Group $group */
         foreach ($user->getGroups() as $group) {
             /** @var CategoryAccess $access */
-            foreach ($categoryWithAccess->getAccesses()->getIterator() as $access) {
+            foreach ($category->getAccesses()->getIterator() as $access) {
                 if ($group->getId() === $access->getUserGroup()->getId()) {
                     if (in_array($access->getLevel(), $this->getAccessLevels($type))) {
                         return true;
                     }
-                    $categoryWithAccess->removeAccess($access);
+//                    $category->removeAccess($access);
                 }
             }
         }
