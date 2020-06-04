@@ -13,10 +13,13 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Service\Helper\UnexpectedAttributesFilter;
+use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class PcmtProductModelNormalizer implements NormalizerInterface
 {
+    public const INCLUDE_CATEGORY_PERMISSIONS = 'include_category_permissions';
+
     /** @var NormalizerInterface */
     private $productModelNormalizer;
 
@@ -26,14 +29,19 @@ class PcmtProductModelNormalizer implements NormalizerInterface
     /** @var UnexpectedAttributesFilter */
     private $attributesFilter;
 
+    /** @var CategoryPermissionsCheckerInterface */
+    private $categoryPermissionsChecker;
+
     public function __construct(
         NormalizerInterface $productModelNormalizer,
         EntityManagerInterface $entityManager,
-        UnexpectedAttributesFilter $attributesFilter
+        UnexpectedAttributesFilter $attributesFilter,
+        CategoryPermissionsCheckerInterface $categoryPermissionsChecker
     ) {
         $this->productModelNormalizer = $productModelNormalizer;
         $this->entityManager = $entityManager;
         $this->attributesFilter = $attributesFilter;
+        $this->categoryPermissionsChecker = $categoryPermissionsChecker;
     }
 
     /**
@@ -53,6 +61,13 @@ class PcmtProductModelNormalizer implements NormalizerInterface
             );
 
             $data['draftId'] = $draft ? $draft->getId() : 0;
+        }
+
+        if ($context[self::INCLUDE_CATEGORY_PERMISSIONS] ?? false) {
+            $data['permissionToEdit'] = $this->categoryPermissionsChecker->hasAccessToProduct(
+                CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+                $productModel
+            );
         }
 
         if ($this->hasToFilterUnexpectedValues($context, $productModel, $data)) {

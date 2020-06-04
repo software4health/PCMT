@@ -16,6 +16,7 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\NewProductDraft;
 use PcmtDraftBundle\Exception\DraftViolationException;
+use PcmtDraftBundle\Normalizer\PcmtProductNormalizer;
 use PcmtDraftBundle\Service\Builder\ResponseBuilder;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -91,10 +92,13 @@ class PcmtProductController extends ProductController
     {
         $product = $this->findProductOr404($id);
 
-        $this->hasAccessOr403($product);
+        $this->hasAccessOr403($product, CategoryPermissionsCheckerInterface::VIEW_LEVEL);
 
         return $this->responseBuilder->setData($product)
-            ->setContext($this->getNormalizationContext() + ['include_draft_id' => true])
+            ->setContext($this->getNormalizationContext() + [
+                'include_draft_id'                                  => true,
+                PcmtProductNormalizer::INCLUDE_CATEGORY_PERMISSIONS => true,
+            ])
             ->setFormat('internal_api')
             ->build();
     }
@@ -109,6 +113,9 @@ class PcmtProductController extends ProductController
         }
 
         $product = $this->findProductOr404($id);
+
+        $this->hasAccessOr403($product, CategoryPermissionsCheckerInterface::EDIT_LEVEL);
+
         if ($this->objectFilter->filterObject($product, 'pim.internal_api.product.edit')) {
             throw new AccessDeniedHttpException();
         }
@@ -164,12 +171,9 @@ class PcmtProductController extends ProductController
         $this->categoryPermissionsChecker = $categoryPermissionsChecker;
     }
 
-    protected function hasAccessOr403(CategoryAwareInterface $entity): void
+    protected function hasAccessOr403(CategoryAwareInterface $entity, string $level): void
     {
-        if (!$this->categoryPermissionsChecker->hasAccessToProduct(
-            CategoryPermissionsCheckerInterface::VIEW_LEVEL,
-            $entity
-        )) {
+        if (!$this->categoryPermissionsChecker->hasAccessToProduct($level, $entity)) {
             throw new AccessDeniedHttpException('Access denied basing on categories');
         }
     }

@@ -27,6 +27,7 @@ use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\NewProductModelDraft;
+use PcmtDraftBundle\Normalizer\PcmtProductModelNormalizer;
 use PcmtDraftBundle\Service\Builder\ResponseBuilder;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -198,6 +199,9 @@ class PcmtProductModelController extends ProductModelController
 
         /** @var ProductModel $productModel */
         $productModel = $this->productModelRepository->find($id);
+
+        $this->hasAccessOr403($productModel, CategoryPermissionsCheckerInterface::EDIT_LEVEL);
+
         $productModel = $this->objectFilter->filterObject($productModel, 'pim.internal_api.product.view') ?
             null :
             $productModel;
@@ -239,11 +243,14 @@ class PcmtProductModelController extends ProductModelController
     {
         $productModel = $this->findProductModelOr404($id);
 
-        $this->hasAccessOr403($productModel);
+        $this->hasAccessOr403($productModel, CategoryPermissionsCheckerInterface::VIEW_LEVEL);
 
         return $this->responseBuilder->setData($productModel)
             ->setFormat('internal_api')
-            ->setContext($this->getNormalizationContext() + ['include_draft_id' => true])
+            ->setContext($this->getNormalizationContext() + [
+                'include_draft_id'                                       => true,
+                PcmtProductModelNormalizer::INCLUDE_CATEGORY_PERMISSIONS => true,
+            ])
             ->build();
     }
 
@@ -254,12 +261,9 @@ class PcmtProductModelController extends ProductModelController
         ];
     }
 
-    protected function hasAccessOr403(CategoryAwareInterface $entity): void
+    protected function hasAccessOr403(CategoryAwareInterface $entity, string $level): void
     {
-        if (!$this->categoryPermissionsChecker->hasAccessToProduct(
-            CategoryPermissionsCheckerInterface::VIEW_LEVEL,
-            $entity
-        )) {
+        if (!$this->categoryPermissionsChecker->hasAccessToProduct($level, $entity)) {
             throw new AccessDeniedHttpException('Access denied basing on categories');
         }
     }

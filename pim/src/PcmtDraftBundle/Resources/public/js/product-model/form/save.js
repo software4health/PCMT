@@ -50,6 +50,10 @@ define(
             changeSaveButton: function (product) {
                 const draftId = product.draftId;
 
+                if (!product.permissionToEdit) {
+                    return;
+                }
+
                 if (draftId) {
                     this.trigger('save-buttons:register-button', {
                         className: 'save',

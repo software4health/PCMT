@@ -17,6 +17,9 @@ use Doctrine\ORM\EntityManager;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Normalizer\PcmtProductNormalizer;
 use PcmtDraftBundle\Service\Helper\UnexpectedAttributesFilter;
+use PcmtDraftBundle\Tests\TestDataBuilder\ProductBuilder;
+use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -37,8 +40,12 @@ class PcmtProductNormalizerTest extends TestCase
     /** @var UnexpectedAttributesFilter */
     private $unexpectedAttributesFilterMock;
 
+    /** @var CategoryPermissionsCheckerInterface|MockObject */
+    private $categoryPermissionsCheckerMock;
+
     protected function setUp(): void
     {
+        $this->categoryPermissionsCheckerMock = $this->createMock(CategoryPermissionsCheckerInterface::class);
         $this->repositoryMock = $this->createMock(ObjectRepository::class);
         $this->productNormalizerMock = $this->createMock(ProductNormalizer::class);
         $this->entityManagerMock = $this->createMock(EntityManager::class);
@@ -47,43 +54,50 @@ class PcmtProductNormalizerTest extends TestCase
         $this->unexpectedAttributesFilterMock = $this->createMock(UnexpectedAttributesFilter::class);
     }
 
+    private function getProductNormalizer(): PcmtProductNormalizer
+    {
+        return new PcmtProductNormalizer(
+            $this->productNormalizerMock,
+            $this->entityManagerMock,
+            $this->unexpectedAttributesFilterMock,
+            $this->categoryPermissionsCheckerMock
+        );
+    }
+
     /**
-     * @dataProvider dataNormalizeDifferentContext
+     * @dataProvider dataNormalizeIncludeDraftContext
      */
-    public function testNormalizeDifferentContext(array $context, bool $expectedDraftIdSet): void
+    public function testNormalizeIncludeDraftContext(array $context, bool $expectedDraftIdSet): void
     {
         $this->productNormalizerMock
             ->expects($this->once())
             ->method('normalize')
             ->willReturn([]);
 
-        $normalizer = new PcmtProductNormalizer(
-            $this->productNormalizerMock,
-            $this->entityManagerMock,
-            $this->unexpectedAttributesFilterMock
-        );
+        $normalizer = $this->getProductNormalizer();
 
-        $array = $normalizer->normalize($this->productMock, 'internal_api', $context);
+        $product = (new ProductBuilder())->build();
+        $array = $normalizer->normalize($product, 'internal_api', $context);
 
         $this->assertSame($expectedDraftIdSet, isset($array['draftId']));
     }
 
-    public function dataNormalizeDifferentContext(): array
+    public function dataNormalizeIncludeDraftContext(): array
     {
         return [
-            'empty context'                           => [
+            'empty context' => [
                 [],
                 false,
             ],
-            'not empty context'                       => [
+            'not empty context' => [
                 ['xxx' => 1],
                 false,
             ],
-            'context with include draft'              => [
+            'context with include draft' => [
                 ['include_draft_id' => true],
                 true,
             ],
-            'context with include draft 2'            => [
+            'context with include draft 2' => [
                 [
                     'xxx'              => 'yyy',
                     'include_draft_id' => 1,
@@ -92,6 +106,57 @@ class PcmtProductNormalizerTest extends TestCase
             ],
             'context with include draft set to false' => [
                 ['include_draft_id' => false],
+                false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataNormalizeIncludePermissionsContext
+     */
+    public function testNormalizeIncludePermissionsContext(array $context, bool $isPermissionSet): void
+    {
+        $this->productNormalizerMock
+            ->expects($this->once())
+            ->method('normalize')
+            ->willReturn([]);
+
+        $this->categoryPermissionsCheckerMock
+            ->expects($this->exactly($isPermissionSet ? 1 : 0))
+            ->method('hasAccessToProduct');
+
+        $normalizer = $this->getProductNormalizer();
+
+        $product = (new ProductBuilder())->build();
+        $array = $normalizer->normalize($product, 'internal_api', $context);
+
+        $this->assertSame($isPermissionSet, isset($array['permissionToEdit']));
+    }
+
+    public function dataNormalizeIncludePermissionsContext(): array
+    {
+        return [
+            'empty context' => [
+                [],
+                false,
+            ],
+            'not empty context' => [
+                ['xxx' => 1],
+                false,
+            ],
+            'context with include permissions' => [
+                [PcmtProductNormalizer::INCLUDE_CATEGORY_PERMISSIONS => true],
+                true,
+            ],
+            'context with include permissions 2' => [
+                [
+                    'xxx'                                               => 'yyy',
+                    PcmtProductNormalizer::INCLUDE_CATEGORY_PERMISSIONS => 1,
+                ],
+                true,
+            ],
+            'context with include permissions set to false' => [
+                [PcmtProductNormalizer::INCLUDE_CATEGORY_PERMISSIONS => false],
                 false,
             ],
         ];
@@ -109,13 +174,10 @@ class PcmtProductNormalizerTest extends TestCase
 
         $this->repositoryMock->method('findOneBy')->willReturn($draft);
 
-        $normalizer = new PcmtProductNormalizer(
-            $this->productNormalizerMock,
-            $this->entityManagerMock,
-            $this->unexpectedAttributesFilterMock
-        );
+        $normalizer = $this->getProductNormalizer();
 
-        $array = $normalizer->normalize($this->productMock, 'internal_api', ['include_draft_id' => true]);
+        $product = (new ProductBuilder())->build();
+        $array = $normalizer->normalize($product, 'internal_api', ['include_draft_id' => true]);
 
         $this->assertSame($expectedDraftId, $array['draftId']);
     }
@@ -148,13 +210,10 @@ class PcmtProductNormalizerTest extends TestCase
             ->method('supportsNormalization')
             ->willReturn($value);
 
-        $normalizer = new PcmtProductNormalizer(
-            $this->productNormalizerMock,
-            $this->entityManagerMock,
-            $this->unexpectedAttributesFilterMock
-        );
+        $normalizer = $this->getProductNormalizer();
 
-        $result = $normalizer->supportsNormalization($this->productMock, 'internal_api');
+        $product = (new ProductBuilder())->build();
+        $result = $normalizer->supportsNormalization($product, 'internal_api');
         $this->assertSame($result, $value);
     }
 
@@ -185,11 +244,7 @@ class PcmtProductNormalizerTest extends TestCase
             ->method('isVariant')
             ->willReturn(true);
 
-        $normalizer = new PcmtProductNormalizer(
-            $this->productNormalizerMock,
-            $this->entityManagerMock,
-            $this->unexpectedAttributesFilterMock
-        );
+        $normalizer = $this->getProductNormalizer();
 
         $normalizer->normalize($this->productMock, 'standard', ['import_via_drafts' => true]);
     }
@@ -209,11 +264,7 @@ class PcmtProductNormalizerTest extends TestCase
             ->method('isVariant')
             ->willReturn(false);
 
-        $normalizer = new PcmtProductNormalizer(
-            $this->productNormalizerMock,
-            $this->entityManagerMock,
-            $this->unexpectedAttributesFilterMock
-        );
+        $normalizer = $this->getProductNormalizer();
 
         $normalizer->normalize($this->productMock, 'standard', ['import_via_drafts' => true]);
     }
@@ -233,11 +284,7 @@ class PcmtProductNormalizerTest extends TestCase
             ->method('isVariant')
             ->willReturn(false);
 
-        $normalizer = new PcmtProductNormalizer(
-            $this->productNormalizerMock,
-            $this->entityManagerMock,
-            $this->unexpectedAttributesFilterMock
-        );
+        $normalizer = $this->getProductNormalizer();
 
         $normalizer->normalize($this->productMock, 'standard', ['import_via_drafts' => true]);
     }
