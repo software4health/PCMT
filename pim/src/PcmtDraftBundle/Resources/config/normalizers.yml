@@ -60,6 +60,7 @@ services:
             - '@pim_enrich.normalizer.product'
             - '@doctrine.orm.entity_manager'
             - '@pcmt.service.helper.unexpected_attributes_filter'
+            - '@pcmt.service.category_permissions_checker'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 200 }
 
@@ -69,6 +70,7 @@ services:
             - '@pim_catalog.normalizer.standard.product'
             - '@doctrine.orm.entity_manager'
             - '@pcmt.service.helper.unexpected_attributes_filter'
+            - '@pcmt.service.category_permissions_checker'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 200 }
 
@@ -78,6 +80,7 @@ services:
             - '@pim_enrich.normalizer.product_model'
             - '@doctrine.orm.entity_manager'
             - '@pcmt.service.helper.unexpected_attributes_filter'
+            - '@pcmt.service.category_permissions_checker'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 200 }
 
@@ -87,6 +90,7 @@ services:
             - '@pim_catalog.normalizer.standard.product_model'
             - '@doctrine.orm.entity_manager'
             - '@pcmt.service.helper.unexpected_attributes_filter'
+            - '@pcmt.service.category_permissions_checker'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 200 }
 
