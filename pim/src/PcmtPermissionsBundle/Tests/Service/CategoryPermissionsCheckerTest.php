@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PcmtPermissionsBundle\Service\CategoryPermissionsChecker;
 use PcmtPermissionsBundle\Tests\TestDataBuilder\CategoryWithAccessBuilder;
+use PcmtPermissionsBundle\Tests\TestDataBuilder\ProductBuilder;
 use PcmtPermissionsBundle\Tests\TestDataBuilder\UserBuilder;
 use PcmtPermissionsBundle\Tests\TestDataBuilder\UserGroupBuilder;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
@@ -59,8 +60,6 @@ class CategoryPermissionsCheckerTest extends TestCase
     public function testUserIsTakenFromTokenStorageWhenCheckingAccessRights(): void
     {
         $user = (new UserBuilder())->build();
-        $productCategoriesCollection = new ArrayCollection();
-        $productCategoriesCollection->add((new CategoryWithAccessBuilder())->build());
 
         $tokenMock = $this->createMock(TokenInterface::class);
         $tokenMock
@@ -72,10 +71,13 @@ class CategoryPermissionsCheckerTest extends TestCase
             ->method('getToken')
             ->willReturn($tokenMock);
 
-        $entityMock = $this->createMock(CategoryAwareInterface::class);
-        $entityMock->method('getCategories')->willReturn($productCategoriesCollection);
+        $category = (new CategoryWithAccessBuilder())->withAccessesForGroup(
+            CategoryPermissionsCheckerInterface::ALL_LEVELS,
+            (new UserGroupBuilder())->build()
+        )->build();
+        $entity = (new ProductBuilder())->addCategory($category)->build();
 
-        $this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::VIEW_LEVEL, $entityMock);
+        $this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::VIEW_LEVEL, $entity);
     }
 
     /**
@@ -242,8 +244,18 @@ class CategoryPermissionsCheckerTest extends TestCase
             )
             ->build();
 
+        $categoryWithViewRightsForOtherGroup = (new CategoryWithAccessBuilder())
+            ->clearAccesses()
+            ->withAccessesForGroup(
+                [
+                    CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+                ],
+                (new UserGroupBuilder())->buildWithAnotherId()
+            )
+            ->build();
+
         return [
-            'View and Own rights'  => [
+            'View and Own rights' => [
                 new ArrayCollection([$categoryWithViewAndOwnRights]),
                 [
                     CategoryPermissionsCheckerInterface::VIEW_LEVEL,
@@ -251,7 +263,7 @@ class CategoryPermissionsCheckerTest extends TestCase
                     CategoryPermissionsCheckerInterface::OWN_LEVEL,
                 ],
             ],
-            'Own rights'  => [
+            'Own rights' => [
                 new ArrayCollection([$categoryWithOwnRights]),
                 [
                     CategoryPermissionsCheckerInterface::VIEW_LEVEL,
@@ -259,34 +271,42 @@ class CategoryPermissionsCheckerTest extends TestCase
                     CategoryPermissionsCheckerInterface::OWN_LEVEL,
                 ],
             ],
-            'View and Edit rights'  => [
+            'View and Edit rights' => [
                 new ArrayCollection([$categoryWithViewAndEditRights]),
                 [
                     CategoryPermissionsCheckerInterface::VIEW_LEVEL,
                     CategoryPermissionsCheckerInterface::EDIT_LEVEL,
                 ],
             ],
-            'Edit rights'  => [
+            'Edit rights' => [
                 new ArrayCollection([$categoryWithEditRights]),
                 [
                     CategoryPermissionsCheckerInterface::VIEW_LEVEL,
                     CategoryPermissionsCheckerInterface::EDIT_LEVEL,
                 ],
             ],
-            'View rights'  => [
+            'View rights' => [
                 new ArrayCollection([$categoryWithViewRights]),
                 [
                     CategoryPermissionsCheckerInterface::VIEW_LEVEL,
                 ],
             ],
-            'All rights for other group'  => [
+            'All rights for other group' => [
                 new ArrayCollection([$categoryWithAllRightsForOtherGroup]),
                 [],
             ],
-            'Edit and own rights for other group'  => [
+            'Edit and own rights for other group' => [
                 new ArrayCollection([$categoryWithEditAndOwnRightsForOtherGroup]),
                 [
                     CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+                ],
+            ],
+            'View rights for other group' => [
+                new ArrayCollection([$categoryWithViewRightsForOtherGroup]),
+                [
+                    CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+                    CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+                    CategoryPermissionsCheckerInterface::OWN_LEVEL,
                 ],
             ],
         ];

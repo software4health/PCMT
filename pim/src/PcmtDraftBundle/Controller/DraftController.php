@@ -28,6 +28,7 @@ use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class DraftController
@@ -105,6 +106,12 @@ class DraftController
      */
     public function getDraft(AbstractDraft $draft): Response
     {
+        $this->hasAccessOr403(
+            $draft,
+            CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+            'pcmt.exception.permission.denied.edit'
+        );
+
         return $this->responseBuilder
             ->setData($draft)
             ->setContext(['include_product' => true])
@@ -116,10 +123,12 @@ class DraftController
      */
     public function updateDraft(AbstractDraft $draft, Request $request): Response
     {
-        $objectToSave = $this->creator->getObjectToSave($draft);
-        if (!$this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::EDIT_LEVEL, $objectToSave)) {
-            throw new \Exception('pcmt.exception.permission.denied.edit');
-        }
+        $this->hasAccessOr403(
+            $draft,
+            CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+            'pcmt.exception.permission.denied.edit'
+        );
+
         $data = json_decode($request->getContent(), true);
         if (($draft instanceof ExistingProductDraft || $draft instanceof ExistingProductModelDraft) && !isset($data['product'])) {
             throw new BadRequestHttpException('There is no product values');
@@ -186,10 +195,12 @@ class DraftController
     public function rejectDraft(AbstractDraft $draft): JsonResponse
     {
         try {
-            $objectToSave = $this->creator->getObjectToSave($draft);
-            if (!$this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::OWN_LEVEL, $objectToSave)) {
-                throw new \Exception('pcmt.exception.permission.denied.own');
-            }
+            $this->hasAccessOr403(
+                $draft,
+                CategoryPermissionsCheckerInterface::OWN_LEVEL,
+                'pcmt.exception.permission.denied.own'
+            );
+
             $this->draftFacade->rejectDraft($draft);
         } catch (\Throwable $e) {
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
@@ -204,6 +215,12 @@ class DraftController
     public function approveDraft(AbstractDraft $draft): JsonResponse
     {
         try {
+            $this->hasAccessOr403(
+                $draft,
+                CategoryPermissionsCheckerInterface::OWN_LEVEL,
+                'pcmt.exception.permission.denied.own'
+            );
+
             $this->draftFacade->approveDraft($draft);
         } catch (DraftViolationException $e) {
             return new JsonResponse(
@@ -233,5 +250,13 @@ class DraftController
         $this->operationJobLauncher->launch($operation);
 
         return new JsonResponse();
+    }
+
+    protected function hasAccessOr403(AbstractDraft $draft, string $level, string $message): void
+    {
+        $objectToSave = $this->creator->getObjectToSave($draft);
+        if (!$this->categoryPermissionsChecker->hasAccessToProduct($level, $objectToSave)) {
+            throw new AccessDeniedHttpException($message);
+        }
     }
 }

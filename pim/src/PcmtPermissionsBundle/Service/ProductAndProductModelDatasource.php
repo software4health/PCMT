@@ -31,7 +31,7 @@ class ProductAndProductModelDatasource extends ProductAndProductModelDatasourceB
     {
         $this->pqb->addFilter(
             'categories',
-            'IN',
+            'IN OR UNCLASSIFIED',
             $this->categoryWithPermissionsRepository->getCategoryCodes(CategoryPermissionsCheckerInterface::VIEW_LEVEL)
         );
 

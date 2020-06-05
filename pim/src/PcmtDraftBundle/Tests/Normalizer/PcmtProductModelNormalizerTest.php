@@ -129,7 +129,7 @@ class PcmtProductModelNormalizerTest extends TestCase
         $productModel = (new ProductModelBuilder())->build();
         $array = $normalizer->normalize($productModel, 'internal_api', $context);
 
-        $this->assertSame($isPermissionSet, isset($array['permissionToEdit']));
+        $this->assertSame($isPermissionSet, isset($array[PcmtProductModelNormalizer::PERMISSION_TO_EDIT]));
     }
 
     public function dataNormalizeIncludePermissionsContext(): array
