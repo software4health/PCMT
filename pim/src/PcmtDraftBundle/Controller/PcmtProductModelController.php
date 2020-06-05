@@ -217,6 +217,7 @@ class PcmtProductModelController extends ProductModelController
         $fields = [
             'created',
             'updated',
+            PcmtProductModelNormalizer::PERMISSION_TO_EDIT,
         ];
         foreach ($fields as $field) {
             if (isset($data[$field])) {

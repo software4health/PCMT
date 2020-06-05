@@ -20,6 +20,8 @@ class PcmtProductNormalizer implements NormalizerInterface
 {
     public const INCLUDE_CATEGORY_PERMISSIONS = 'include_category_permissions';
 
+    public const PERMISSION_TO_EDIT = 'permissionToEdit';
+
     /** @var NormalizerInterface */
     private $productNormalizer;
 
@@ -64,7 +66,7 @@ class PcmtProductNormalizer implements NormalizerInterface
         }
 
         if ($context[self::INCLUDE_CATEGORY_PERMISSIONS] ?? false) {
-            $data['permissionToEdit'] = $this->categoryPermissionsChecker->hasAccessToProduct(
+            $data[self::PERMISSION_TO_EDIT] = $this->categoryPermissionsChecker->hasAccessToProduct(
                 CategoryPermissionsCheckerInterface::EDIT_LEVEL,
                 $product
             );

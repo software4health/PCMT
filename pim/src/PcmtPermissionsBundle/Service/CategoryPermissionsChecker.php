@@ -30,7 +30,7 @@ class CategoryPermissionsChecker implements CategoryPermissionsCheckerInterface
 
     public function hasAccessToProduct(string $type, ?CategoryAwareInterface $entity, ?UserInterface $user = null): bool
     {
-        /* product without category has always access issue #438 */
+        /* Access to product without category is always granted */
         if (null === $entity || 0 === $entity->getCategories()->count()) {
             return true;
         }
@@ -48,16 +48,20 @@ class CategoryPermissionsChecker implements CategoryPermissionsCheckerInterface
         if (!in_array($type, CategoryPermissionsCheckerInterface::ALL_LEVELS)) {
             throw new ParameterNotFoundException($type);
         }
-        /* category without set permissions has always access issue #438 */
-        if (0 === count($category->getAccessesOfLevel($type))) {
-            return true;
+
+        /* Access to category without any group is always granted ("All" default group) */
+        foreach ($this->getAccessLevels($type) as $level) {
+            if (0 === count($category->getAccessesOfLevel($level))) {
+                return true;
+            }
         }
+
         $user = $user ?? $this->tokenStorage->getToken()->getUser();
 
-        /** @var Group $group */
         foreach ($user->getGroups() as $group) {
-            /** @var CategoryAccess $access */
+            /** @var Group $group */
             foreach ($category->getAccesses()->getIterator() as $access) {
+                /** @var CategoryAccess $access */
                 if ($group->getId() === $access->getUserGroup()->getId()) {
                     if (in_array($access->getLevel(), $this->getAccessLevels($type))) {
                         return true;
