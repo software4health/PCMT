@@ -13,3 +13,7 @@ pcmt_permissions:
 
 pane.accordion:
     permissions: Autorisations
+
+job_execution:
+    summary:
+        products_and_product_models_without_access: FR Products and product models skipped in case of no access

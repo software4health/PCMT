@@ -16,6 +16,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterfac
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Classification\CategoryAwareInterface;
 use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
+use PcmtPermissionsBundle\Connector\Job\InvalidItem\CategoryAwareInvalidItem;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 
 class CheckUserAccessToTheCategoryTasklet implements TaskletInterface
@@ -110,13 +111,19 @@ class CheckUserAccessToTheCategoryTasklet implements TaskletInterface
         foreach ($categoryAwareEntities as $categoryAwareEntity) {
             /** @var CategoryAwareInterface $categoryAwareEntity */
             if (!$this->categoryPermissionsChecker->hasAccessToProduct(
-                CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+                CategoryPermissionsCheckerInterface::OWN_LEVEL,
                 $categoryAwareEntity
             )) {
                 $this->stepExecution->incrementSummaryInfo(
                     'products_and_product_models_without_access'
                 );
+
                 $this->stepExecution->incrementReadCount();
+                $this->stepExecution->addWarning(
+                    'User does not have access to any of the categories of the entity',
+                    [],
+                    new CategoryAwareInvalidItem($categoryAwareEntity)
+                );
                 continue;
             }
 
