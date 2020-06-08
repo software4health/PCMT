@@ -42,6 +42,9 @@ class ProductModelDraftNormalizer implements NormalizerInterface
     /** @var NormalizerInterface */
     private $valuesNormalizer;
 
+    /** @var PermissionsHelper */
+    private $permissionsHelper;
+
     public function __construct(
         AttributeChangeService $attributeChangeService,
         AttributeChangeNormalizer $attributeChangeNormalizer,
@@ -49,7 +52,8 @@ class ProductModelDraftNormalizer implements NormalizerInterface
         NormalizerInterface $productModelNormalizer,
         GeneralDraftNormalizer $generalDraftNormalizer,
         GeneralObjectFromDraftCreator $productModelFromDraftCreator,
-        NormalizerInterface $valuesNormalizer
+        NormalizerInterface $valuesNormalizer,
+        PermissionsHelper $permissionsHelper
     ) {
         $this->attributeChangeService = $attributeChangeService;
         $this->attributeChangeNormalizer = $attributeChangeNormalizer;
@@ -58,6 +62,7 @@ class ProductModelDraftNormalizer implements NormalizerInterface
         $this->generalDraftNormalizer = $generalDraftNormalizer;
         $this->productModelFromDraftCreator = $productModelFromDraftCreator;
         $this->valuesNormalizer = $valuesNormalizer;
+        $this->permissionsHelper = $permissionsHelper;
     }
 
     /**
@@ -69,6 +74,8 @@ class ProductModelDraftNormalizer implements NormalizerInterface
         $data = $this->generalDraftNormalizer->normalize($draft, $format, $context);
 
         $newProductModel = $this->productModelFromDraftCreator->getObjectToCompare($draft);
+
+        $data['categoryPermissions'] = $this->permissionsHelper->normalizeCategoryPermissions($draft->getProductModel());
 
         if (!$newProductModel) {
             // that's a special case when a original product has been removed after creating a draft.

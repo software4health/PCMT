@@ -129,25 +129,48 @@
             <td class="AknGrid-bodyCell AknGrid-bodyCell--actions action-cell">
                 <% if (draft.status.id === 1) { %>
                 <div class="AknButtonList AknButtonList--right AknButtonList--expanded">
-                    <% if (editPermission && draft.values) { %>
+                    <% if (editPermission && draft.values && draft.categoryPermissions.edit) { %>
                     <a href="javascript:void(0);"
                        class="AknIconButton AknIconButton--small AknIconButton--edit AknButtonList-item draft-edit"
                        title="<%- __('pcmt.entity.draft.actions.edit') %>" data-draft-id="<%- draft.id %>">
                         <%- __('pcmt.entity.draft.actions.edit') %>
                     </a>
+                    <% } else {  %>
+                    <a href="javascript:void(0);"
+                       class="AknIconButton AknIconButton--small AknIconButton--edit AknButtonList-item"
+                       style="cursor: not-allowed"
+                       title="<%- __('pcmt.entity.draft.actions-no-permission.edit') %>">
+                        <%- __('pcmt.entity.draft.actions-no-permission.edit') %>
+                    </a>
                     <% } %>
-                    <% if (approvePermission) { %>
+
+                    <% if (approvePermission && draft.categoryPermissions.own) { %>
                     <a href="javascript:void(0);"
                        class="AknIconButton AknIconButton--small AknIconButton--play AknButtonList-item draft-approve"
                        title="<%- __('pcmt.entity.draft.actions.approve') %>" data-draft-id="<%- draft.id %>">
                         <%- __('pcmt.entity.draft.actions.approve') %>
                     </a>
+                    <% } else {  %>
+                    <a href="javascript:void(0);"
+                       class="AknIconButton AknIconButton--small AknIconButton--play AknButtonList-item"
+                       style="cursor: not-allowed"
+                       title="<%- __('pcmt.entity.draft.actions-no-permission.approve') %>">
+                        <%- __('pcmt.entity.draft.actions-no-permission.approve') %>
+                    </a>
+
                     <% } %>
-                    <% if (rejectPermission) { %>
+                    <% if (rejectPermission && draft.categoryPermissions.own) { %>
                     <a href="javascript:void(0);"
                        class="AknIconButton AknIconButton--small AknIconButton--trash AknButtonList-item draft-reject"
                        title="<%- __('pcmt.entity.draft.actions.reject') %>" data-draft-id="<%- draft.id %>">
                         <%- __('pcmt.entity.draft.actions.reject') %>
+                    </a>
+                    <% } else {  %>
+                    <a href="javascript:void(0);"
+                       class="AknIconButton AknIconButton--small AknIconButton--trash AknButtonList-item"
+                       style="cursor: not-allowed"
+                       title="<%- __('pcmt.entity.draft.actions-no-permission.reject') %>">
+                        <%- __('pcmt.entity.draft.actions-no-permission.reject') %>
                     </a>
                     <% } %>
                 </div>

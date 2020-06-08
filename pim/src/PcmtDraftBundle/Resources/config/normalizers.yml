@@ -38,6 +38,7 @@ services:
             - '@pcmt_draft.draft.general_normalizer'
             - '@pcmt.service.general_object_from_draft_creator'
             - '@pim_catalog.normalizer.standard.product.product_value'
+            - '@pcmt_draft.normalizer.permissions_helper'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 110 }
 
@@ -51,6 +52,7 @@ services:
             - '@pcmt_draft.draft.general_normalizer'
             - '@pcmt.service.general_object_from_draft_creator'
             - '@pim_catalog.normalizer.standard.product.product_value'
+            - '@pcmt_draft.normalizer.permissions_helper'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 110 }
 
@@ -112,3 +114,8 @@ services:
         class: PcmtDraftBundle\Normalizer\DraftViolationNormalizer
         arguments:
             $constraintViolationNormalizer: '@pcmt_draft.normalizer.product_violation_with_label'
+
+    pcmt_draft.normalizer.permissions_helper:
+        class: PcmtDraftBundle\Normalizer\PermissionsHelper
+        arguments:
+            - '@pcmt.service.category_permissions_checker'

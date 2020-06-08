@@ -15,6 +15,7 @@ use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
 use PcmtDraftBundle\Entity\AttributeChange;
 use PcmtDraftBundle\Normalizer\AttributeChangeNormalizer;
 use PcmtDraftBundle\Normalizer\GeneralDraftNormalizer;
+use PcmtDraftBundle\Normalizer\PermissionsHelper;
 use PcmtDraftBundle\Normalizer\ProductDraftNormalizer;
 use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
@@ -49,6 +50,9 @@ class ProductDraftNormalizerTest extends TestCase
     /** @var GeneralDraftNormalizer|MockObject */
     private $generalDraftNormalizerMock;
 
+    /** @var PermissionsHelper|MockObject */
+    private $permissionsHelperMock;
+
     protected function setUp(): void
     {
         $this->generalDraftNormalizerMock = $this->createMock(GeneralDraftNormalizer::class);
@@ -70,6 +74,8 @@ class ProductDraftNormalizerTest extends TestCase
         $this->valuesNormalizerMock = $this->createMock(NormalizerInterface::class);
         $this->valuesNormalizerMock->method('normalize')->willReturn([]);
         $this->valuesNormalizerMock->method('supportsNormalization')->willReturn(true);
+
+        $this->permissionsHelperMock = $this->createMock(PermissionsHelper::class);
 
         parent::setUp();
     }
@@ -198,7 +204,8 @@ class ProductDraftNormalizerTest extends TestCase
             $this->productNormalizerMock,
             $this->generalDraftNormalizerMock,
             $this->creatorMock,
-            $this->valuesNormalizerMock
+            $this->valuesNormalizerMock,
+            $this->permissionsHelperMock
         );
     }
 }

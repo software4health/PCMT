@@ -42,6 +42,9 @@ class ProductDraftNormalizer implements NormalizerInterface
     /** @var NormalizerInterface */
     private $valuesNormalizer;
 
+    /** @var PermissionsHelper */
+    private $permissionsHelper;
+
     public function __construct(
         AttributeChangeService $attributeChangeService,
         AttributeChangeNormalizer $attributeChangeNormalizer,
@@ -49,7 +52,8 @@ class ProductDraftNormalizer implements NormalizerInterface
         NormalizerInterface $productNormalizer,
         GeneralDraftNormalizer $generalDraftNormalizer,
         GeneralObjectFromDraftCreator $productFromDraftCreator,
-        NormalizerInterface $valuesNormalizer
+        NormalizerInterface $valuesNormalizer,
+        PermissionsHelper $permissionsHelper
     ) {
         $this->attributeChangeService = $attributeChangeService;
         $this->attributeChangeNormalizer = $attributeChangeNormalizer;
@@ -58,6 +62,7 @@ class ProductDraftNormalizer implements NormalizerInterface
         $this->generalDraftNormalizer = $generalDraftNormalizer;
         $this->productFromDraftCreator = $productFromDraftCreator;
         $this->valuesNormalizer = $valuesNormalizer;
+        $this->permissionsHelper = $permissionsHelper;
     }
 
     /**
@@ -67,6 +72,8 @@ class ProductDraftNormalizer implements NormalizerInterface
     {
         /** @var ProductDraftInterface $draft */
         $data = $this->generalDraftNormalizer->normalize($draft, $format, $context);
+
+        $data['categoryPermissions'] = $this->permissionsHelper->normalizeCategoryPermissions($draft->getProduct());
 
         $newProduct = $this->productFromDraftCreator->getObjectToCompare($draft);
         if (!$newProduct) {
