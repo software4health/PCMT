@@ -21,6 +21,12 @@ default:
       contexts:
         - PcmtCoreBundle\FunctionalTests\WebContext: ~
 
+    selenium-permissions:
+      paths:
+        - %paths.base%/src/PcmtPermissionsBundle/FunctionalTests/features/selenium/
+      contexts:
+        - PcmtPermissionsBundle\FunctionalTests\WebContext: ~
+
   extensions:
     Behat\Symfony2Extension:
       kernel:
