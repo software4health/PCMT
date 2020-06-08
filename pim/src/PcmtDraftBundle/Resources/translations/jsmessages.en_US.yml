@@ -135,5 +135,9 @@ pcmt.entity.draft:
         edit: Edit draft
         approve: Approve draft
         reject: Reject draft
+    actions-no-permission:
+        edit: No permission to edit draft
+        approve: No permission to approve draft
+        reject: No permission to reject draft
     bulk_actions:
         approve: Bulk approve
