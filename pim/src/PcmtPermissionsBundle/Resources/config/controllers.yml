@@ -20,3 +20,12 @@ services:
         calls:
             - [ setCategoryChildrenPermissionsUpdater, ['@pcmt_permissions.updater.category_children_permissions']]
             - [ setCategoryPermissionsDefaultProvider, ['@pcmt.service.category_permissions_default_provider']]
+
+    pcmt_permissions.controller.internal_api.product:
+        class: PcmtPermissionsBundle\Controller\ProductController
+        arguments:
+            - '@pim_catalog.repository.product'
+            - '@pim_catalog.remover.product'
+            - '@akeneo_elasticsearch.client.product'
+            - '@akeneo_elasticsearch.client.product_and_product_model'
+
