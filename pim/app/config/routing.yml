@@ -1,7 +1,7 @@
 ################################################################################
 # Copyright (c) 2013, Akeneo SAS
 # Copyright (c) 2019, VillageReach
-# Licensed under the Open Software License version 3.0 AND Non-Profit Open 
+# Licensed under the Open Software License version 3.0 AND Non-Profit Open
 # Software License version 3.0.
 # SPDX-License-Identifier: NPOSL-3.0 AND OSL-3.0
 ################################################################################
@@ -75,3 +75,6 @@ pim_customentity:
 
 pcmt_draft:
     resource: "@PcmtDraftBundle/Resources/config/routing.yml"
+
+pcmt_permissions:
+    resource: "@PcmtPermissionsBundle/Resources/config/routing.yml"

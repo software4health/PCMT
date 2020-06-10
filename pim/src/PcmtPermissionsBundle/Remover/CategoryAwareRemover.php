@@ -34,10 +34,10 @@ class CategoryAwareRemover extends BaseRemover
         parent::validateObject($object);
 
         if (!$this->permissionsChecker->hasAccessToProduct(
-            CategoryPermissionsCheckerInterface::EDIT_LEVEL,
+            CategoryPermissionsCheckerInterface::OWN_LEVEL,
             $object
         )) {
-            throw new NoCategoryAccessException('User has not permissions to delete this product.');
+            throw new NoCategoryAccessException('User does not have permissions to delete this entity.');
         }
     }
 }

@@ -7,3 +7,5 @@ config:
         pcmt/permissions/permissions : pcmtpermissions/js/form/permissions # form
         pcmt/permissions/template: pcmtpermissions/templates/multiselect.html #form template
 
+        oro/datagrid/delete-action: pcmtpermissions/js/datagrid/action/delete-action
+
