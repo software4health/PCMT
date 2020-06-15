@@ -8,16 +8,16 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Connector\Job;
 
+use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductQueryBuilderFactory;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtCoreBundle\Service\E2Open\E2OpenAttributesService;
 use PcmtCoreBundle\Service\E2Open\TradeItemXmlProcessor;
-use PcmtCoreBundle\Service\Query\ESQuery;
 use PcmtCoreBundle\Util\Adapter\FileGetContentsWrapper;
+use Psr\Log\LoggerInterface;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Service;
 
@@ -32,34 +32,34 @@ class E2OpenFromXmlTasklet implements TaskletInterface
     /** @var mixed */
     private $item;
 
-    /** @var ProductRepositoryInterface */
-    private $productRepository;
-
     /** @var SaverInterface */
     private $productSaver;
 
     /** @var ProductBuilderInterface */
     private $productBuilder;
 
-    /** @var ESQuery */
-    private $esQueryService;
-
     /** @var TradeItemXmlProcessor */
     private $nodeProcessor;
 
+    /** @var ProductQueryBuilderFactory */
+    private $pqbFactory;
+
+    /** @var LoggerInterface */
+    private $logger;
+
     public function __construct(
-        ProductRepositoryInterface $productRepository,
         SaverInterface $productSaver,
         ProductBuilderInterface $productBuilder,
         TradeItemXmlProcessor $nodeProcessor,
-        ESQuery $esQueryService
+        ProductQueryBuilderFactory $pqbFactory,
+        LoggerInterface $logger
     ) {
         $this->xmlReader = new Service();
-        $this->productRepository = $productRepository;
         $this->productSaver = $productSaver;
         $this->productBuilder = $productBuilder;
-        $this->esQueryService = $esQueryService;
         $this->nodeProcessor = $nodeProcessor;
+        $this->pqbFactory = $pqbFactory;
+        $this->logger = $logger;
     }
 
     public function setStepExecution(StepExecution $stepExecution): void
@@ -112,22 +112,29 @@ class E2OpenFromXmlTasklet implements TaskletInterface
 
     private function instantiateProduct(array $element): ProductInterface
     {
-        $identifier = $element['value'];
-        $esQuery['query']['bool']['must'] = [
-            [
-                'match' => [
-                    'identifier' => $identifier,
-                ],
-            ],
-        ];
-        $result = $this->esQueryService->execute($esQuery);
+        $gtinValue = $element['value'];
+        $this->logger->info('Instantiating: '. $gtinValue);
 
-        if ($result['hits']['total'] < 1) {
-            return $this->createNewProductInstance($identifier);
+        $pqb = $this->pqbFactory->create([
+            'default_locale' => null,
+            'default_scope'  => null,
+        ]);
+        $pqb->addFilter('GTIN', '=', $gtinValue);
+        $productsCursor = $pqb->execute();
+        $product = $productsCursor->current();
+
+        if ($product) {
+            /** @var ProductInterface $product */
+            $this->logger->info('Product found, id: '. $product->getId());
+
+            return $product;
         }
-        $response = $result['hits']['hits'];
 
-        return $this->getProductInstanceFromRepository((int) $response[0]['_id']);
+        $this->logger->info('Product not found, creating new');
+
+        $uniqueId = microtime() . '-'. $gtinValue;
+
+        return $this->createNewProductInstance($uniqueId);
     }
 
     private function createNewProductInstance(string $identifier): ProductInterface
@@ -135,15 +142,6 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         return $this->productBuilder->createProduct(
             $identifier,
             E2OpenAttributesService::FAMILY_CODE
-        );
-    }
-
-    private function getProductInstanceFromRepository(int $id): ProductInterface
-    {
-        return $this->productRepository->findOneBy(
-            [
-                'id' => $id,
-            ]
         );
     }
 }
