@@ -1,3 +1,6 @@
+pim_notification:
+    types:
+        mass_delete: FR Mass delete
 pim_enrich:
     #Category
     category:
