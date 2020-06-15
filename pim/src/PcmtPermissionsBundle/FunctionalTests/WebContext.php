@@ -17,11 +17,11 @@ class WebContext extends \SeleniumBaseContext implements Context
 {
     /** @var string[] */
     private $chosenPermissions = [];
+
     /**
-     * @When I go to :nth category tree child
-     * clicks on the nth child in category tree view
+     * @When I go to :categoryName category tree child
      */
-    public function goToCategoryTreeChild(int $nth = 1): void
+    public function goToCategoryTreeChild(string $categoryName): void
     {
         $locator = '#node_1 > ul > li > a';
         $result = $this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $locator);
@@ -30,11 +30,16 @@ class WebContext extends \SeleniumBaseContext implements Context
         }
         $tree = $this->getSession()->getPage()->findAll('css', $locator);
 
-        if (!$tree[$nth]) {
-            throw new \InvalidArgumentException('Link does not exist');
+        foreach ($tree as $element) {
+            if ($element->getText() === $categoryName) {
+                $this->chosenCategory = $element->getText();
+                $element->click();
+
+                return;
+            }
         }
 
-        $tree[$nth]->click();
+        throw new \InvalidArgumentException('Link ' . $categoryName . ' does not exist.');
     }
 
     /**
@@ -60,7 +65,6 @@ class WebContext extends \SeleniumBaseContext implements Context
             '#s2id_pim_category_editAccess > ul' => $editAccessGroup,
             '#s2id_pim_category_ownAccess > ul'  => $ownAccessGroup,
         ];
-        //s2id_pim_category_viewAccess > ul
         $this->clearAllPermissionInputs();
         array_walk(
             $accessGroups,
@@ -96,6 +100,74 @@ class WebContext extends \SeleniumBaseContext implements Context
                 throw new \Exception('Permissions are not correctly set.');
             }
         });
+    }
+
+    /**
+     * @When I go to the products list for :categoryName category
+     */
+    public function iGoToTheProductsListForCategory(string $categoryName): void
+    {
+        $this->waitAndFollowLink('Products');
+        $locator = '#container > div > div > div.AknColumn > div.AknColumn-inner.column-inner > div.AknColumn-innerTop > div > div:nth-child(2) > div.AknDropdown.AknColumn-block.category-switcher > div:nth-child(1)';
+        $result = $this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $locator);
+        if (!$result) {
+            throw new \Exception('Element not found.');
+        }
+        $selector = $this->getSession()->getPage()->find('css', $locator);
+        $selector->click();
+
+        $locator = '#node_1 > ul > li > a';
+        $selectors = $this->getSession()->getPage()->findAll('css', $locator);
+
+        array_walk($selectors, function ($selector) use ($categoryName): void {
+            if (mb_substr($selector->getText(), 0, -7) === $categoryName) {
+                $selector->click();
+
+                return;
+            }
+        });
+
+        $this->getSession()->wait(4000);
+    }
+
+    /**
+     * @Then I should see :count products on the list
+     */
+    public function iShouldSeeProductsOnTheList(int $count): void
+    {
+        $locator = '#container > div > div > div.AknDefault-contentWithBottom > div.AknDefault-mainContent.entity-edit-form.edit-form > header > div:nth-child(1) > div.AknTitleContainer-mainContainer > div:nth-child(1) > div:nth-child(2) > div.AknTitleContainer-title > div';
+        $result = $this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $locator);
+        if (!$result) {
+            throw new \Exception('Element not found.');
+        }
+        $selector = $this->getSession()->getPage()->find('css', $locator);
+        $numProducts = (int) explode(' ', $selector->getText())[0];
+        if (!$numProducts === $count) {
+            throw new \Exception('Expected products count does not match');
+        }
+    }
+
+    /**
+     * @Then I should see more than zero products
+     */
+    public function iShouldSeeMoreThanZeroProducts(): void
+    {
+        $productsOnThePage = $this->getNumberOfResultsFromResultsPage();
+        if ($productsOnThePage < 0) {
+            throw new \InvalidArgumentException('The number of results should be more than 0.');
+        }
+    }
+
+    private function getNumberOfResultsFromResultsPage(): int
+    {
+        $resultsText = $this->getSession()
+            ->getPage()
+            ->find('css', 'div.AknTitleContainer-title > div')
+            ->getText();
+
+        $resultsCount = explode(' ', $resultsText);
+
+        return (int) $resultsCount[0];
     }
 
     private function clickOnSelect(string $selectLocator): void
