@@ -43,12 +43,16 @@ class BaseProductCreatorForDraft implements BaseEntityCreatorInterface
     {
         $newProduct = $this->productBuilder->createProduct($product->getIdentifier(), $product->getFamily()->getCode());
 
+        $values = $this->standardNormalizer->normalize($product->getValues(), 'standard');
+
+        $data = [];
+        if ($product->hasAttribute('GTIN')) {
+            $data['values']['GTIN'] = $values['GTIN'];
+        }
+
         if ($product->getParent()) {
-            $data = [];
             $newProduct->setParent($product->getParent());
             $newProduct->setFamilyVariant($product->getFamilyVariant());
-
-            $values = $this->standardNormalizer->normalize($product->getValues(), 'standard');
 
             $attributeSet = $product->getFamilyVariant()->getVariantAttributeSet(1);
             $axesAttributes = $attributeSet->getAxes();
@@ -56,6 +60,8 @@ class BaseProductCreatorForDraft implements BaseEntityCreatorInterface
                 $code = $attribute->getCode();
                 $data['values'][$code] = $values[$code];
             }
+        }
+        if ($data) {
             $this->productUpdater->update($newProduct, $data);
         }
 

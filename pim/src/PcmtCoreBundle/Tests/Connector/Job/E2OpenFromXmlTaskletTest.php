@@ -9,19 +9,20 @@ declare(strict_types=1);
 namespace PcmtCoreBundle\Tests\Connector\Job;
 
 use Akeneo\Pim\Enrichment\Bundle\Doctrine\Common\Saver\ProductSaver;
-use Akeneo\Pim\Enrichment\Bundle\Doctrine\ORM\Repository\ProductRepository;
+use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductQueryBuilderFactory;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilder;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
-use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
+use Akeneo\Tool\Component\StorageUtils\Cursor\CursorInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtCoreBundle\Connector\Job\E2OpenFromXmlTasklet;
 use PcmtCoreBundle\Service\E2Open\TradeItemXmlProcessor;
-use PcmtCoreBundle\Service\Query\ESQuery;
 use PHPUnit\Framework\MockObject\MockObject as Mock;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class E2OpenFromXmlTaskletTest extends KernelTestCase
@@ -29,17 +30,11 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
     /** @var string */
     private $testFilePath = 'src/PcmtCoreBundle/Tests/TestResources/TestImportE2OpenFile.xml';
 
-    /** @var ProductRepositoryInterface|Mock */
-    private $productRepositoryMock;
-
     /** @var SaverInterface|Mock */
     private $productSaverMock;
 
     /** @var ProductBuilderInterface|Mock */
     private $productBuilderMock;
-
-    /** @var ESQuery|Mock */
-    private $esQueryMock;
 
     /** @var TradeItemXmlProcessor|Mock */
     private $tradeItemProcessorMock;
@@ -50,13 +45,31 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
     /** @var JobParameters|Mock */
     private $jobParametersMock;
 
+    /** @var ProductQueryBuilderFactory|Mock */
+    private $productQueryBuilderFactoryMock;
+
+    /** @var CursorInterface|Mock */
+    private $productsCursorMock;
+
+    /** @var ProductQueryBuilderInterface|Mock */
+    private $productQueryBuilderMock;
+
+    /** @var LoggerInterface|Mock */
+    private $loggerMock;
+
     protected function setUp(): void
     {
-        $this->productRepositoryMock = $this->createMock(ProductRepository::class);
+        $this->loggerMock = $this->createMock(LoggerInterface::class);
         $this->productSaverMock = $this->createMock(ProductSaver::class);
         $this->productBuilderMock = $this->createMock(ProductBuilder::class);
-        $this->esQueryMock = $this->createMock(ESQuery::class);
         $this->tradeItemProcessorMock = $this->createMock(TradeItemXmlProcessor::class);
+        $this->productQueryBuilderFactoryMock = $this->createMock(ProductQueryBuilderFactory::class);
+        $this->productQueryBuilderMock = $this->createMock(ProductQueryBuilderInterface::class);
+        $this->productsCursorMock = $this->createMock(CursorInterface::class);
+        $this->productQueryBuilderFactoryMock->method('create')->willReturn(
+            $this->productQueryBuilderMock
+        );
+        $this->productQueryBuilderMock->method('execute')->willReturn($this->productsCursorMock);
 
         $this->stepExecutionMock = $this->createMock(StepExecution::class);
         $this->jobParametersMock = $this->createMock(JobParameters::class);
@@ -73,16 +86,13 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
         parent::setUp();
     }
 
-    /**
-     * @dataProvider dataProcessForANewProduct
-     */
-    public function testProcessForANewProduct(array $elasticSearchQueryResultWithoutProductIndexed): void
+    public function testProcessForANewProduct(): void
     {
         $importTasklet = $this->getE2OpenFromXmlTaskletInstance();
 
-        $this->esQueryMock->expects($this->atLeastOnce())
-            ->method('execute')
-            ->willReturn($elasticSearchQueryResultWithoutProductIndexed);
+        $this->productsCursorMock->expects($this->atLeastOnce())
+            ->method('current')
+            ->willReturn(null);
 
         $this->productBuilderMock->expects($this->atLeastOnce())
             ->method('createProduct')
@@ -97,20 +107,15 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
         $importTasklet->execute();
     }
 
-    /**
-     * @dataProvider dataProcessForExistingProduct
-     */
-    public function testProcessForAnExistingProduct(array $elasticSearchQueryResultWithProductIndexed): void
+    public function testProcessForAnExistingProduct(): void
     {
         $importTasklet = $this->getE2OpenFromXmlTaskletInstance();
 
-        $this->esQueryMock->expects($this->atLeastOnce())
-            ->method('execute')
-            ->willReturn($elasticSearchQueryResultWithProductIndexed);
+        $product = (new \PcmtCoreBundle\Tests\TestDataBuilder\ProductBuilder())->build();
 
-        $this->productRepositoryMock->expects($this->atLeastOnce())
-            ->method('findOneBy')
-            ->willReturn($product = new Product());
+        $this->productsCursorMock->expects($this->atLeastOnce())
+            ->method('current')
+            ->willReturn($product);
 
         $this->tradeItemProcessorMock->expects($this->exactly(3))
             ->method('setProductToUpdate');
@@ -121,46 +126,14 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
         $importTasklet->execute();
     }
 
-    public function dataProcessForANewProduct(): array
-    {
-        return [
-            [
-                [
-                    'hits' => [
-                        'total' => 0,
-                        'hits'  => [],
-                    ],
-                ],
-            ],
-        ];
-    }
-
-    public function dataProcessForExistingProduct(): array
-    {
-        return [
-            [
-                [
-                    'hits' => [
-                        'total' => 1,
-                        'hits'  => [
-                            0 => [
-                                '_id' => 1,
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-    }
-
     public function getE2OpenFromXmlTaskletInstance(): TaskletInterface
     {
         $tasklet = new E2OpenFromXmlTasklet(
-            $this->productRepositoryMock,
             $this->productSaverMock,
             $this->productBuilderMock,
             $this->tradeItemProcessorMock,
-            $this->esQueryMock
+            $this->productQueryBuilderFactoryMock,
+            $this->loggerMock
         );
         $tasklet->setStepExecution($this->stepExecutionMock);
 

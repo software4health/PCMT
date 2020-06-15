@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PcmtPermissionsBundle\Service;
 
+use Akeneo\Pim\Enrichment\Component\Product\Query\Filter\Operators;
 use Oro\Bundle\PimDataGridBundle\Datasource\ProductAndProductModelDatasource as ProductAndProductModelDatasourceBase;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 
@@ -31,7 +32,7 @@ class ProductAndProductModelDatasource extends ProductAndProductModelDatasourceB
     {
         $this->pqb->addFilter(
             'categories',
-            'IN OR UNCLASSIFIED',
+            Operators::IN_LIST_OR_UNCLASSIFIED,
             $this->categoryWithPermissionsRepository->getCategoryCodes(CategoryPermissionsCheckerInterface::VIEW_LEVEL)
         );
 
