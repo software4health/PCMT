@@ -18,9 +18,4 @@ class CategoryPermissionsChecker implements CategoryPermissionsCheckerInterface
     {
         return true;
     }
-
-    public function getCategoryCodesWithAccess(string $level): array
-    {
-        throw new \Exception('This function should not be called in this implementation.');
-    }
 }

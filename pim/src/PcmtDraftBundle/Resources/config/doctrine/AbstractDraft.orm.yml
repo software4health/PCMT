@@ -72,3 +72,16 @@ PcmtDraftBundle\Entity\AbstractDraft:
                 updatedBy:
                     referencedColumnName: id
                     onDelete: 'SET NULL'
+    manyToMany:
+        categories:
+            targetEntity: Akeneo\Pim\Enrichment\Component\Category\Model\CategoryInterface
+            joinTable:
+                name: pcmt_catalog_product_draft_category
+                joinColumns:
+                    draft_id:
+                        referencedColumnName: id
+                        onDelete: CASCADE
+                inverseJoinColumns:
+                    category_id:
+                        referencedColumnName: id
+                        onDelete: CASCADE

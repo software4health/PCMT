@@ -12,6 +12,8 @@ namespace PcmtDraftBundle\Entity;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use PcmtDraftBundle\Exception\DraftApproveFailedException;
 use PcmtDraftBundle\Exception\DraftRejectFailedException;
 
@@ -31,6 +33,9 @@ abstract class AbstractDraft implements DraftInterface
     // like family, groups etc. all the fields. - it helps rebuild product from new draft.
     /** @var mixed[] */
     protected $productData = [];
+
+    /** @var Collection */
+    protected $categories;
 
     /** @var int */
     protected $id = 0;
@@ -72,6 +77,24 @@ abstract class AbstractDraft implements DraftInterface
      * @var ?ProductInterface
      */
     protected $product;
+
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function setCategories(Collection $categories): void
+    {
+        $this->categories = new ArrayCollection();
+        foreach ($categories as $category) {
+            $this->categories->add($category);
+        }
+    }
+
+    public function __construct()
+    {
+        $this->categories = new ArrayCollection();
+    }
 
     public function getId(): int
     {

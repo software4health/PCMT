@@ -17,7 +17,7 @@ use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\MassActions\DraftsBulkApproveOperation;
-use PcmtDraftBundle\Repository\DraftRepository;
+use PcmtDraftBundle\Repository\DraftRepositoryInterface;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -32,13 +32,13 @@ class DraftsBulkApproveTasklet implements TaskletInterface
     /** @var NormalizerInterface */
     protected $constraintViolationNormalizer;
 
-    /** @var DraftRepository */
+    /** @var DraftRepositoryInterface */
     protected $draftRepository;
 
     public function __construct(
         DraftFacade $draftFacade,
         NormalizerInterface $constraintViolationNormalizer,
-        DraftRepository $draftRepository
+        DraftRepositoryInterface $draftRepository
     ) {
         $this->draftFacade = $draftFacade;
         $this->constraintViolationNormalizer = $constraintViolationNormalizer;

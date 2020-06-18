@@ -19,7 +19,7 @@ use PcmtDraftBundle\Exception\DraftSavingFailedException;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\MassActions\DraftsBulkApproveOperation;
 use PcmtDraftBundle\Normalizer\DraftViolationNormalizer;
-use PcmtDraftBundle\Repository\DraftRepository;
+use PcmtDraftBundle\Repository\DraftRepositoryInterface;
 use PcmtDraftBundle\Service\Builder\ResponseBuilder;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
 use PcmtDraftBundle\Service\Draft\DraftStatusListService;
@@ -45,7 +45,7 @@ class DraftController
     /** @var OperationJobLauncher */
     private $operationJobLauncher;
 
-    /** @var DraftRepository */
+    /** @var DraftRepositoryInterface */
     private $draftRepository;
 
     /** @var DraftViolationNormalizer */
@@ -62,7 +62,7 @@ class DraftController
         DraftFacade $draftFacade,
         ResponseBuilder $responseBuilder,
         OperationJobLauncher $operationJobLauncher,
-        DraftRepository $draftRepository,
+        DraftRepositoryInterface $draftRepository,
         DraftViolationNormalizer $draftViolationNormalizer,
         GeneralObjectFromDraftCreator $creator,
         CategoryPermissionsCheckerInterface $categoryPermissionsChecker
@@ -82,20 +82,18 @@ class DraftController
      */
     public function getList(Request $request): JsonResponse
     {
-        $criteria = [
-            'status' => $request->query->get('status') ?? AbstractDraft::STATUS_NEW,
-        ];
+        $statusId = $request->query->get('status') ?? AbstractDraft::STATUS_NEW;
+        $statusId = (int) $statusId;
 
         $page = $request->query->get('page') ?? ResponseBuilder::FIRST_PAGE;
-        $total = $this->draftRepository->count($criteria);
+        $total = $this->draftRepository->countWithStatus($statusId);
         $lastPage = $this->responseBuilder->getLastPage($total);
         $page = $page > $lastPage ? $lastPage : $page;
 
-        $drafts = $this->draftRepository->findBy(
-            $criteria,
-            null,
-            ResponseBuilder::PER_PAGE,
-            ($page * ResponseBuilder::PER_PAGE) - ResponseBuilder::PER_PAGE
+        $drafts = $this->draftRepository->findWithStatus(
+            $statusId,
+            ($page * ResponseBuilder::PER_PAGE) - ResponseBuilder::PER_PAGE,
+            ResponseBuilder::PER_PAGE
         );
 
         return $this->responseBuilder->buildPaginatedResponse($drafts, $total, (int) $page);
