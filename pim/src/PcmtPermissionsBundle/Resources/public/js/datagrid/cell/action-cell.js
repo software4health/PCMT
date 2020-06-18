@@ -82,7 +82,12 @@ define(
             createLaunchers: function() {
                 return _.map(this.actions, function(action) {
                     var launcherClass = action.launcherOptions.className;
-                    action.launcherOptions.enabled = !!action.model.attributes.user_ownership || 'delete' !== action.name;
+
+                    action.launcherOptions.enabled = true;
+
+                    if ('product-grid' === action.datagrid.name) {
+                        action.launcherOptions.enabled = !!action.model.attributes.user_ownership || 'delete' !== action.name;
+                    }
 
                     if (_.isUndefined(launcherClass) || ('' === launcherClass) || ('no-hash' === launcherClass)) {
                         launcherClass = 'AknIconButton AknIconButton--small AknIconButton--grey';
