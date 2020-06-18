@@ -92,6 +92,7 @@ datagrid:
                 route: pim_enrich_product_toggle_status
                 params:
                     - id
+            user_ownership: ~
         actions:
             edit:
                 type:      navigate-product-and-product-model

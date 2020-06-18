@@ -12,3 +12,14 @@ services:
             - '@pim_enrich.normalizer.attribute_group'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 200 }
+
+    pim_datagrid.normalizer.product_and_product_model_rows:
+        class: 'PcmtPermissionsBundle\Normalizer\ProductAndProductModelRowNormalizer'
+        arguments:
+            - '@pim_enrich.normalizer.image'
+        calls:
+            - [setCategoryPermissionsChecker, ['@pcmt.service.category_permissions_checker']]
+            - [setProductRepository, ['@pim_catalog.repository.product']]
+            - [setProductModelRepository, ['@pim_catalog.repository.product_model']]
+        tags:
+            - { name: pim_datagrid_serializer.normalizer }
