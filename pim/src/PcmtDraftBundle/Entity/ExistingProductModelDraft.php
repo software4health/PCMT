@@ -25,5 +25,7 @@ class ExistingProductModelDraft extends AbstractProductModelDraft implements Exi
         $this->productModel = $productModel;
         $this->productData = $productData;
         parent::__construct($author, $created);
+
+        $this->setCategories($this->productModel->getCategories());
     }
 }

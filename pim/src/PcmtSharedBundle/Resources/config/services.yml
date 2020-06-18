@@ -8,3 +8,7 @@ services:
 
     pcmt.service.category_permissions_checker:
         class: PcmtSharedBundle\Service\Checker\CategoryPermissionsChecker
+
+    pcmt.service.category_with_permissions_repository:
+        class: PcmtSharedBundle\Service\CategoryWithPermissionsRepository
+        autowire: true

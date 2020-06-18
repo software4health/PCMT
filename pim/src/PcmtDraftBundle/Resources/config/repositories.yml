@@ -9,3 +9,5 @@ services:
         arguments: ['%pcmt_catalog.entity.abstract_draft.class%']
         tags:
             - { name: 'pcmt_repository' }
+        calls:
+            - [setCategoryWithPermissionsRepository, ['@pcmt.service.category_with_permissions_repository']]

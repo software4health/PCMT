@@ -25,5 +25,7 @@ class ExistingProductDraft extends AbstractProductDraft implements ExistingObjec
         $this->product = $product;
         $this->productData = $productData;
         parent::__construct($created, $author);
+
+        $this->setCategories($this->product->getCategories());
     }
 }
