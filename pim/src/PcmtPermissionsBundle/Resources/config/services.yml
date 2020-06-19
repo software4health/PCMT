@@ -67,3 +67,20 @@ services:
         calls:
             - [ setUserGroupRepository, ['@pim_user.repository.group']]
 
+    akeneo.pim.enrichment.product.connector.get_product_from_identifiers.original:
+        class: 'Akeneo\Pim\Enrichment\Bundle\Storage\Sql\Connector\SqlGetConnectorProducts'
+        arguments:
+            $getValuesAndPropertiesFromProductIdentifiers: '@akeneo.pim.enrichment.product.query.get_values_and_properties_from_product_identifiers'
+            $getProductModelAssociationsByProductIdentifiers: '@akeneo.pim.enrichment.product.query.get_product_model_associations_by_product_identifiers'
+            $getGroupAssociationsByProductIdentifiers: '@akeneo.pim.enrichment.product.query.get_group_associations_by_product_identifiers'
+            $getProductAssociationsByProductIdentifiers: '@akeneo.pim.enrichment.product.query.get_product_associations_by_product_identifiers'
+            $getCategoryCodesByProductIdentifiers: '@akeneo.pim.enrichment.product.query.category_codes_by_product_identifiers'
+            $valueCollectionFactory: '@akeneo.pim.enrichment.factory.read.value_collection'
+            $attributeRepository: '@pim_catalog.repository.attribute'
+
+    akeneo.pim.enrichment.product.connector.get_product_from_identifiers:
+        class: 'PcmtPermissionsBundle\Connector\SqlGetConnectorProducts'
+        arguments:
+            - '@akeneo.pim.enrichment.product.connector.get_product_from_identifiers.original'
+            - '@pcmt.service.category_permissions_checker'
+            - '@pim_catalog.repository.product'
