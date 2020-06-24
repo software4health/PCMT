@@ -59,3 +59,5 @@ services:
             - '@security.token_storage'
             - '@akeneo.pim.enrichment.product.connector.get_product_from_identifiers'
             - '@pim_api.checker.duplicate_value'
+        calls:
+            - [setCategoryPermissionsChecker, ['@pcmt.service.category_permissions_checker']]
