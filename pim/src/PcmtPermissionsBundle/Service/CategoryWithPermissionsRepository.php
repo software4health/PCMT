@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace PcmtPermissionsBundle\Service;
 
 use Akeneo\Tool\Component\Classification\Repository\CategoryRepositoryInterface;
+use Akeneo\UserManagement\Component\Model\UserInterface;
 use PcmtPermissionsBundle\Entity\CategoryWithAccessInterface;
 use PcmtSharedBundle\Service\CategoryWithPermissionsRepositoryInterface;
 
@@ -30,13 +31,13 @@ class CategoryWithPermissionsRepository implements CategoryWithPermissionsReposi
         $this->categoryPermissionsChecker = $categoryPermissionsChecker;
     }
 
-    public function getCategoryCodes(string $permissionLevel): ?array
+    public function getCategoryCodes(string $permissionLevel, ?UserInterface $user = null): ?array
     {
         $categories = $this->categoryRepository->findAll();
         $codes = [];
         foreach ($categories as $category) {
             /** @var CategoryWithAccessInterface $category */
-            if ($this->categoryPermissionsChecker->isGranted($permissionLevel, $category)) {
+            if ($this->categoryPermissionsChecker->isGranted($permissionLevel, $category, $user)) {
                 $codes[] = $category->getCode();
             }
         }
