@@ -96,6 +96,12 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                 if (!$this->item) {
                     throw new \Exception('No item has been created.');
                 }
+
+                if (E2OpenAttributesService::FAMILY_CODE !== $this->item->getFamily()->getCode()) {
+                    $this->logger->info('Wrong family, ignoring item, id: '. $this->item->getId());
+                    // do not process products from other families than GS1_GDSN
+                    return;
+                }
                 array_walk(
                     $subTree,
                     function ($element): void {
