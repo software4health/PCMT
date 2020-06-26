@@ -11,6 +11,7 @@ namespace PcmtCoreBundle\Connector\Job;
 use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductQueryBuilderFactory;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Query\Filter\Operators;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
@@ -97,11 +98,6 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                     throw new \Exception('No item has been created.');
                 }
 
-                if (E2OpenAttributesService::FAMILY_CODE !== $this->item->getFamily()->getCode()) {
-                    $this->logger->info('Wrong family, ignoring item, id: '. $this->item->getId());
-                    // do not process products from other families than GS1_GDSN
-                    return;
-                }
                 array_walk(
                     $subTree,
                     function ($element): void {
@@ -126,17 +122,19 @@ class E2OpenFromXmlTasklet implements TaskletInterface
             'default_scope'  => null,
         ]);
         $pqb->addFilter('GTIN', '=', $gtinValue);
+        $pqb->addFilter('family', Operators::IN_LIST, [E2OpenAttributesService::FAMILY_CODE]);
+
         $productsCursor = $pqb->execute();
         $product = $productsCursor->current();
 
         if ($product) {
             /** @var ProductInterface $product */
-            $this->logger->info('Product found, id: '. $product->getId());
+            $this->logger->info('Product in GS1_GDSN family found, id: '. $product->getId());
 
             return $product;
         }
 
-        $this->logger->info('Product not found, creating new');
+        $this->logger->info('Product not found in GS1_GDSN family, creating new');
 
         $uniqueId = microtime() . '-'. $gtinValue;
 

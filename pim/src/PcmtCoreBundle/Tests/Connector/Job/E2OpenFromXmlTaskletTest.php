@@ -129,6 +129,9 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
             ->method('current')
             ->willReturn($product);
 
+        $this->productBuilderMock->expects($this->never())
+            ->method('createProduct');
+
         $this->tradeItemProcessorMock->expects($this->atLeastOnce())->method('processNode');
 
         $this->tradeItemProcessorMock->expects($this->exactly(3))
@@ -136,32 +139,6 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
 
         $this->productSaverMock->expects($this->atLeastOnce())
             ->method('save');
-
-        $importTasklet->execute();
-    }
-
-    public function dataProcessForDifferentFamily(): array
-    {
-        $family = (new FamilyBuilder())->withCode('xxxsss')->build();
-        $product = (new \PcmtCoreBundle\Tests\TestDataBuilder\ProductBuilder())->withFamily($family)->build();
-
-        return [
-            [$product],
-        ];
-    }
-
-    /** @dataProvider dataProcessForDifferentFamily */
-    public function testProcessForDifferentFamily(ProductInterface $product): void
-    {
-        $importTasklet = $this->getE2OpenFromXmlTaskletInstance();
-
-        $this->productsCursorMock->expects($this->atLeastOnce())
-            ->method('current')
-            ->willReturn($product);
-
-        $this->tradeItemProcessorMock->expects($this->never())->method('processNode');
-
-        $this->productSaverMock->expects($this->never())->method('save');
 
         $importTasklet->execute();
     }
