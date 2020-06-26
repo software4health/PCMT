@@ -25,6 +25,7 @@ class PcmtPermissionsExtension extends Extension
         $loader->load('jobs.yml');
         $loader->load('normalizers.yml');
         $loader->load('removers.yml');
+        $loader->load('readers.yml');
         $loader->load('services.yml');
         $loader->load('steps.yml');
         $loader->load('view_elements.yml');
