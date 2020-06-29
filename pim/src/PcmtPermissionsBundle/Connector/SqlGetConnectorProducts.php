@@ -15,6 +15,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Query;
 use Akeneo\Pim\Enrichment\Component\Product\Query\GetConnectorProducts;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterface;
+use PcmtSharedBundle\Service\CategoryWithPermissionsRepositoryInterface;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -29,14 +30,19 @@ class SqlGetConnectorProducts implements Query\GetConnectorProducts
     /** @var ProductRepositoryInterface */
     private $productRepository;
 
+    /** @var CategoryWithPermissionsRepositoryInterface */
+    private $categoryWithPermissionsRepository;
+
     public function __construct(
         GetConnectorProducts $originalGetConnectorProducts,
         CategoryPermissionsCheckerInterface $categoryPermissionsChecker,
-        ProductRepositoryInterface $productRepository
+        ProductRepositoryInterface $productRepository,
+        CategoryWithPermissionsRepositoryInterface $categoryWithPermissionsRepository
     ) {
         $this->originalGetConnectorProducts = $originalGetConnectorProducts;
         $this->categoryPermissionsChecker = $categoryPermissionsChecker;
         $this->productRepository = $productRepository;
+        $this->categoryWithPermissionsRepository = $categoryWithPermissionsRepository;
     }
 
     /**
@@ -49,6 +55,14 @@ class SqlGetConnectorProducts implements Query\GetConnectorProducts
         ?string $channelToFilterOn,
         ?array $localesToFilterOn
     ): ConnectorProductList {
+        $pqb->addFilter(
+            'categories',
+            Query\Filter\Operators::IN_LIST_OR_UNCLASSIFIED,
+            $this->categoryWithPermissionsRepository->getCategoryCodes(
+                CategoryPermissionsCheckerInterface::VIEW_LEVEL
+            )
+        );
+
         return $this->originalGetConnectorProducts->fromProductQueryBuilder(
             $pqb,
             $userId,
