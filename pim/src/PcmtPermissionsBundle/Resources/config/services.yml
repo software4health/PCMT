@@ -84,3 +84,4 @@ services:
             - '@akeneo.pim.enrichment.product.connector.get_product_from_identifiers.original'
             - '@pcmt.service.category_permissions_checker'
             - '@pim_catalog.repository.product'
+            - '@pcmt.service.category_with_permissions_repository'

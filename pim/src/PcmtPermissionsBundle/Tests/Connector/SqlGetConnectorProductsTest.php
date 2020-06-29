@@ -16,6 +16,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterfac
 use PcmtPermissionsBundle\Connector\SqlGetConnectorProducts;
 use PcmtPermissionsBundle\Tests\TestDataBuilder\ConnectorProductBuilder;
 use PcmtPermissionsBundle\Tests\TestDataBuilder\ConnectorProductListBuilder;
+use PcmtSharedBundle\Service\CategoryWithPermissionsRepositoryInterface;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -32,11 +33,15 @@ class SqlGetConnectorProductsTest extends TestCase
     /** @var ProductRepositoryInterface|MockObject */
     private $productRepositoryMock;
 
+    /** @var CategoryWithPermissionsRepositoryInterface|MockObject */
+    private $categoryWithPermissionsRepositoryMock;
+
     protected function setUp(): void
     {
         $this->originalSqlGetConnectorProductsMock = $this->createMock(GetConnectorProducts::class);
         $this->categoryPermissionsCheckerMock = $this->createMock(CategoryPermissionsCheckerInterface::class);
         $this->productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
+        $this->categoryWithPermissionsRepositoryMock = $this->createMock(CategoryWithPermissionsRepositoryInterface::class);
 
         parent::setUp();
     }
@@ -78,7 +83,8 @@ class SqlGetConnectorProductsTest extends TestCase
         return new SqlGetConnectorProducts(
             $this->originalSqlGetConnectorProductsMock,
             $this->categoryPermissionsCheckerMock,
-            $this->productRepositoryMock
+            $this->productRepositoryMock,
+            $this->categoryWithPermissionsRepositoryMock
         );
     }
 
