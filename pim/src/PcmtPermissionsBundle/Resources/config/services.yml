@@ -85,3 +85,21 @@ services:
             - '@pcmt.service.category_permissions_checker'
             - '@pim_catalog.repository.product'
             - '@pcmt.service.category_with_permissions_repository'
+
+    akeneo.pim.enrichment.product.connector.get_product_models_from_codes.original:
+        class: 'Akeneo\Pim\Enrichment\Bundle\Storage\Sql\Connector\SqlGetConnectorProductModels'
+        arguments:
+            - '@akeneo.pim.enrichment.product_model.query.get_values_and_properties_from_product_model_codes'
+            - '@akeneo.pim.enrichment.category.query.category_codes_by_product_model_codes'
+            - '@akeneo.pim.enrichment.product_model.query.get_product_associations_by_product_model_codes'
+            - '@akeneo.pim.enrichment.product_model.query.get_models_associations_by_product_model_codes'
+            - '@akeneo.pim.enrichment.product_model.query.get_group_associations_by_product_model_codes'
+            - '@akeneo.pim.enrichment.factory.read.value_collection'
+
+    akeneo.pim.enrichment.product.connector.get_product_models_from_codes:
+        class: 'PcmtPermissionsBundle\Connector\SqlGetConnectorProductModels'
+        arguments:
+            - '@akeneo.pim.enrichment.product.connector.get_product_models_from_codes.original'
+            - '@pcmt.service.category_permissions_checker'
+            - '@pim_catalog.repository.product_model'
+            - '@pcmt.service.category_with_permissions_repository'
