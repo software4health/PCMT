@@ -15,3 +15,6 @@ services:
             - '@pim_catalog.query.product_query_builder_factory'
             - '@pim_catalog.repository.channel'
             - '@pim_catalog.converter.metric'
+        calls:
+            - [setCategoryWithPermissionsRepository, ['@pcmt.service.category_with_permissions_repository']]
+            - [setUserRepository, ['@pim_user.repository.user']]

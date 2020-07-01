@@ -9,8 +9,13 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Connector\Job\Reader;
 
+use Akeneo\Channel\Component\Model\ChannelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Connector\Reader\Database\ProductReader;
+use Akeneo\Pim\Enrichment\Component\Product\Query\Filter\Operators;
 use Akeneo\Tool\Component\StorageUtils\Cursor\CursorInterface;
+use Akeneo\UserManagement\Component\Repository\UserRepositoryInterface;
+use PcmtPermissionsBundle\Service\CategoryWithPermissionsRepository;
+use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 
 class MstSupplierExportReader extends ProductReader implements CrossJoinExportReaderInterface
 {
@@ -19,6 +24,23 @@ class MstSupplierExportReader extends ProductReader implements CrossJoinExportRe
 
     /** @var bool */
     private $firstCrossRead = true;
+
+    /** @var CategoryWithPermissionsRepository */
+    private $categoryWithPermissionsRepository;
+
+    /** @var UserRepositoryInterface */
+    private $userRepository;
+
+    public function setCategoryWithPermissionsRepository(
+        CategoryWithPermissionsRepository $categoryWithPermissionsRepository
+    ): void {
+        $this->categoryWithPermissionsRepository = $categoryWithPermissionsRepository;
+    }
+
+    public function setUserRepository(UserRepositoryInterface $userRepository): void
+    {
+        $this->userRepository = $userRepository;
+    }
 
     /**
      * {@inheritdoc}
@@ -90,5 +112,37 @@ class MstSupplierExportReader extends ProductReader implements CrossJoinExportRe
     protected function getConfiguredFilters()
     {
         return $this->getFiltersWithFamily('MD_HUB');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getProductsCursor(array $filters, ?ChannelInterface $channel = null)
+    {
+        $options = null !== $channel ? ['default_scope' => $channel->getCode()] : [];
+
+        $jobExecution = $this->stepExecution->getJobExecution();
+        $user = $this->userRepository->findOneByIdentifier($jobExecution->getUser());
+
+        $productQueryBuilder = $this->pqbFactory->create($options);
+        foreach ($filters as $filter) {
+            $productQueryBuilder->addFilter(
+                $filter['field'],
+                $filter['operator'],
+                $filter['value'],
+                $filter['context'] ?? []
+            );
+        }
+
+        $productQueryBuilder->addFilter(
+            'categories',
+            Operators::IN_LIST_OR_UNCLASSIFIED,
+            $this->categoryWithPermissionsRepository->getCategoryCodes(
+                CategoryPermissionsCheckerInterface::VIEW_LEVEL,
+                $user
+            )
+        );
+
+        return $productQueryBuilder->execute();
     }
 }
