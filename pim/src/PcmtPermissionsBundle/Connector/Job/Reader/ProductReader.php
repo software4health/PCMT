@@ -35,6 +35,13 @@ class ProductReader extends AkeneoProductReader
         $this->userRepository = $userRepository;
     }
 
+    public function initialize(): void
+    {
+        parent::initialize();
+
+        $this->stepExecution->incrementSummaryInfo('read', 0);
+    }
+
     /**
      * {@inheritdoc}
      */
