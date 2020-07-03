@@ -55,9 +55,9 @@ class WebContext extends \SeleniumBaseContext
     }
 
     /**
-     * @When I wait and click approve on last draft
+     * @When I wait and click approve on first draft
      */
-    public function iWaitAndClickApproveOnLastDraft(): void
+    public function iWaitAndClickApproveOnFirstDraft(): void
     {
         $locator = 'a.AknIconButton.draft-approve';
         $result = $this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $locator);
@@ -66,8 +66,8 @@ class WebContext extends \SeleniumBaseContext
         }
 
         $links = $this->getSession()->getPage()->findAll('css', $locator);
-        $lastLink = end($links);
-        $lastLink->click();
+        $firstLink = reset($links);
+        $firstLink->click();
     }
 
     /**
@@ -115,6 +115,8 @@ class WebContext extends \SeleniumBaseContext
 
     public function getNumberOfResultsFromDraftsPage(): int
     {
+        $this->getSession()->wait(1000);
+
         $locator = 'div.AknTitleContainer-title > div';
         $this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $locator);
 
@@ -134,6 +136,9 @@ class WebContext extends \SeleniumBaseContext
     public function theNumberOfResultsShouldBeLowerBy(int $quantity, int $attempts): void
     {
         $previous = $this->numberOfResults;
+        if (!$previous) {
+            throw new \Exception('Previous number of drafts is 0.');
+        }
 
         // we make a number of attempts, as the job in background may last for some time
         for ($i = 0; $i < $attempts; $i++) {
