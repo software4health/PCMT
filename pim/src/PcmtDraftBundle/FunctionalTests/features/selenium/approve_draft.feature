@@ -15,6 +15,6 @@ Feature: Approving Drafts
     And I wait to load page "DASHBOARD"
     When I follow "Drafts"
     And I read number of drafts
-    And I wait and click approve on last draft
+    And I wait and click approve on first draft
     And I confirm approval
     Then the number of drafts should be lower by 1, try 2 times

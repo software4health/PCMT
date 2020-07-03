@@ -172,8 +172,9 @@ class WebContext extends \SeleniumBaseContext implements Context
             }
         }
 
-        if ($previous - $quantity !== $newNumber) {
-            throw new \Exception('Wrong number of results. Should be: ' . round($previous - $quantity));
+        $expected = (int) ($previous - $quantity);
+        if ($expected !== $newNumber) {
+            throw new \Exception('Wrong number of results. Should be: ' . $expected.' , is: ' . $newNumber);
         }
     }
 

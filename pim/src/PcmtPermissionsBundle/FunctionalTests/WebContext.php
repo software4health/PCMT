@@ -120,7 +120,9 @@ class WebContext extends \SeleniumBaseContext implements Context
         $selectors = $this->getSession()->getPage()->findAll('css', $locator);
 
         array_walk($selectors, function ($selector) use ($categoryName): void {
-            if (mb_substr($selector->getText(), 0, -7) === $categoryName) {
+            $position = mb_strpos($selector->getText(), '(');
+            $currentCategoryName = is_bool($position) ? trim($selector->getText()) : trim(mb_substr($selector->getText(), 0, $position));
+            if ($currentCategoryName === $categoryName) {
                 $selector->click();
 
                 return;
@@ -142,8 +144,8 @@ class WebContext extends \SeleniumBaseContext implements Context
         }
         $selector = $this->getSession()->getPage()->find('css', $locator);
         $numProducts = (int) explode(' ', $selector->getText())[0];
-        if (!$numProducts === $count) {
-            throw new \Exception('Expected products count does not match');
+        if ($numProducts !== $count) {
+            throw new \Exception('Expected products (' . $numProducts . ') does not match.');
         }
     }
 
@@ -153,8 +155,8 @@ class WebContext extends \SeleniumBaseContext implements Context
     public function iShouldSeeMoreThanZeroProducts(): void
     {
         $productsOnThePage = $this->getNumberOfResultsFromResultsPage();
-        if ($productsOnThePage < 0) {
-            throw new \InvalidArgumentException('The number of results should be more than 0.');
+        if ($productsOnThePage <= 0) {
+            throw new \Exception('The number of results should be more than 0.');
         }
     }
 
