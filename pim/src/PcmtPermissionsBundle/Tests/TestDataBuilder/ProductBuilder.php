@@ -14,6 +14,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Value\ScalarValue;
 use Akeneo\Pim\Structure\Component\Model\Family;
 use Doctrine\Common\Collections\Collection;
 
@@ -69,6 +70,13 @@ class ProductBuilder
     public function addCategory(CategoryInterface $category): self
     {
         $this->product->addCategory($category);
+
+        return $this;
+    }
+
+    public function withIdentifier(string $identifier): self
+    {
+        $this->product->setIdentifier(ScalarValue::value('sku', $identifier));
 
         return $this;
     }
