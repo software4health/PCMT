@@ -31,8 +31,9 @@ class CategoryAwareInvalidItem implements InvalidItemInterface
         $type = $this->entity instanceof ProductModelInterface ? 'product model' : 'product';
 
         return [
-            'id'   => $this->entity->getId(),
-            'type' => $type,
+            'identifier' => $this->entity instanceof ProductModelInterface ? $this->entity->getCode() : $this->entity->getIdentifier(),
+            'label'      => $this->entity->getLabel(),
+            'type'       => $type,
         ];
     }
 }
