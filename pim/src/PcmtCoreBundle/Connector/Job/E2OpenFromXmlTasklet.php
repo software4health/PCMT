@@ -13,6 +13,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\Filter\Operators;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
+use Akeneo\Tool\Component\Classification\Repository\CategoryRepositoryInterface;
 use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtCoreBundle\Service\E2Open\E2OpenAttributesService;
@@ -24,6 +25,8 @@ use Sabre\Xml\Service;
 
 class E2OpenFromXmlTasklet implements TaskletInterface
 {
+    private const CATEGORY_CODE_FOR_IMPORTED_ITEMS = 'GS1';
+
     /** @var StepExecution */
     protected $stepExecution;
 
@@ -48,12 +51,16 @@ class E2OpenFromXmlTasklet implements TaskletInterface
     /** @var LoggerInterface */
     private $logger;
 
+    /** @var CategoryRepositoryInterface */
+    private $categoryRepository;
+
     public function __construct(
         SaverInterface $productSaver,
         ProductBuilderInterface $productBuilder,
         TradeItemXmlProcessor $nodeProcessor,
         ProductQueryBuilderFactory $pqbFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        CategoryRepositoryInterface $categoryRepository
     ) {
         $this->xmlReader = new Service();
         $this->productSaver = $productSaver;
@@ -61,6 +68,7 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         $this->nodeProcessor = $nodeProcessor;
         $this->pqbFactory = $pqbFactory;
         $this->logger = $logger;
+        $this->categoryRepository = $categoryRepository;
     }
 
     public function setStepExecution(StepExecution $stepExecution): void
@@ -104,6 +112,11 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                         $this->nodeProcessor->processNode($element);
                     }
                 );
+
+                $category = $this->categoryRepository->findOneByIdentifier(self::CATEGORY_CODE_FOR_IMPORTED_ITEMS);
+                if ($category) {
+                    $this->item->addCategory($category);
+                }
 
                 $this->productSaver->save($this->item);
             },

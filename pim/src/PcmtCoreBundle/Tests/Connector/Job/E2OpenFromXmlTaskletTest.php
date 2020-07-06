@@ -16,12 +16,14 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
+use Akeneo\Tool\Component\Classification\Repository\CategoryRepositoryInterface;
 use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
 use Akeneo\Tool\Component\StorageUtils\Cursor\CursorInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtCoreBundle\Connector\Job\E2OpenFromXmlTasklet;
 use PcmtCoreBundle\Service\E2Open\E2OpenAttributesService;
 use PcmtCoreBundle\Service\E2Open\TradeItemXmlProcessor;
+use PcmtCoreBundle\Tests\TestDataBuilder\CategoryBuilder;
 use PcmtCoreBundle\Tests\TestDataBuilder\FamilyBuilder;
 use PHPUnit\Framework\MockObject\MockObject as Mock;
 use Psr\Log\LoggerInterface;
@@ -59,6 +61,9 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
     /** @var LoggerInterface|Mock */
     private $loggerMock;
 
+    /** @var CategoryRepositoryInterface|Mock */
+    private $categoryRepositoryMock;
+
     protected function setUp(): void
     {
         $this->loggerMock = $this->createMock(LoggerInterface::class);
@@ -68,6 +73,10 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
         $this->productQueryBuilderFactoryMock = $this->createMock(ProductQueryBuilderFactory::class);
         $this->productQueryBuilderMock = $this->createMock(ProductQueryBuilderInterface::class);
         $this->productsCursorMock = $this->createMock(CursorInterface::class);
+        $this->categoryRepositoryMock = $this->createMock(CategoryRepositoryInterface::class);
+        $this->categoryRepositoryMock->method('findOneByIdentifier')->willReturn(
+            (new CategoryBuilder())->build()
+        );
         $this->productQueryBuilderFactoryMock->method('create')->willReturn(
             $this->productQueryBuilderMock
         );
@@ -150,7 +159,8 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
             $this->productBuilderMock,
             $this->tradeItemProcessorMock,
             $this->productQueryBuilderFactoryMock,
-            $this->loggerMock
+            $this->loggerMock,
+            $this->categoryRepositoryMock
         );
         $tasklet->setStepExecution($this->stepExecutionMock);
 
