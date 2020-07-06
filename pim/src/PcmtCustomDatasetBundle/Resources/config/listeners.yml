@@ -1,0 +1,7 @@
+services:
+    pcmt.event_listener.api_connection_creator:
+        class: PcmtCustomDatasetBundle\EventListener\APIConnectionCreator
+        arguments:
+            - '@database_connection'
+        tags:
+            - { name: kernel.event_subscriber }

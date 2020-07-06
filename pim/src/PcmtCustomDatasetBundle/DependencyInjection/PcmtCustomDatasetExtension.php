@@ -21,6 +21,7 @@ class PcmtCustomDatasetExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('updaters.yml');
         $loader->load('array_converters.yml');
+        $loader->load('listeners.yml');
         $loader->load('normalizers.yml');
         $loader->load('readers.yml');
         $loader->load('processors.yml');
