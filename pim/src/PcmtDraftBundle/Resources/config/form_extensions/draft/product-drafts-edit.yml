@@ -284,6 +284,12 @@ extensions:
                 createdDraft: pcmt_core.drafts_editing.labels.created_product_draft
                 updatedDraft: pcmt_core.drafts_editing.labels.updated_draft
 
+    pcmt-product-drafts-edit-form-attribute-description:
+        module: dnd/product-edit-form/attributes/description
+        parent: pcmt-product-drafts-edit-form-attributes
+        targetZone: self
+        position: 100
+
 attribute_fields:
     akeneo-switch-field:           pim/boolean-field
     akeneo-datepicker-field:       pim/date-field
