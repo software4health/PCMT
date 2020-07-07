@@ -47,6 +47,7 @@ services:
             - '@pcmt_core.service.e2Open.trade_item_xml_processor'
             - '@pim_catalog.query.product_query_builder_factory'
             - '@logger'
+            - '@pim_catalog.repository.category'
         public: false
 
     pcmt_connector.job.pcmt_mst_supplier_export:
