@@ -14,6 +14,9 @@ use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilder;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Value\ScalarValue;
+use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Classification\Repository\CategoryRepositoryInterface;
@@ -64,6 +67,12 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
     /** @var CategoryRepositoryInterface|Mock */
     private $categoryRepositoryMock;
 
+    /** @var FamilyRepositoryInterface|Mock */
+    private $familyRepositoryMock;
+
+    /** @var ProductRepositoryInterface|Mock */
+    private $productRepositoryMock;
+
     protected function setUp(): void
     {
         $this->loggerMock = $this->createMock(LoggerInterface::class);
@@ -74,6 +83,12 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
         $this->productQueryBuilderMock = $this->createMock(ProductQueryBuilderInterface::class);
         $this->productsCursorMock = $this->createMock(CursorInterface::class);
         $this->categoryRepositoryMock = $this->createMock(CategoryRepositoryInterface::class);
+        $this->productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
+        $this->familyRepositoryMock = $this->createMock(FamilyRepositoryInterface::class);
+
+        $value = ScalarValue::value('GTIN', 'xxx');
+        $product = (new \PcmtCoreBundle\Tests\TestDataBuilder\ProductBuilder())->addValue($value)->build();
+        $this->productRepositoryMock->method('findBy')->willReturn([$product]);
         $this->categoryRepositoryMock->method('findOneByIdentifier')->willReturn(
             (new CategoryBuilder())->build()
         );
@@ -160,7 +175,9 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
             $this->tradeItemProcessorMock,
             $this->productQueryBuilderFactoryMock,
             $this->loggerMock,
-            $this->categoryRepositoryMock
+            $this->categoryRepositoryMock,
+            $this->productRepositoryMock,
+            $this->familyRepositoryMock
         );
         $tasklet->setStepExecution($this->stepExecutionMock);
 

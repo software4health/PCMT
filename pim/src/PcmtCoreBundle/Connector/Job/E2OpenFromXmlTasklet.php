@@ -12,6 +12,8 @@ use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductQueryBuilderFactory;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\Filter\Operators;
+use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterface;
+use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Classification\Repository\CategoryRepositoryInterface;
 use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
@@ -54,13 +56,21 @@ class E2OpenFromXmlTasklet implements TaskletInterface
     /** @var CategoryRepositoryInterface */
     private $categoryRepository;
 
+    /** @var ProductRepositoryInterface */
+    private $productRepository;
+
+    /** @var FamilyRepositoryInterface */
+    private $familyRepository;
+
     public function __construct(
         SaverInterface $productSaver,
         ProductBuilderInterface $productBuilder,
         TradeItemXmlProcessor $nodeProcessor,
         ProductQueryBuilderFactory $pqbFactory,
         LoggerInterface $logger,
-        CategoryRepositoryInterface $categoryRepository
+        CategoryRepositoryInterface $categoryRepository,
+        ProductRepositoryInterface $productRepository,
+        FamilyRepositoryInterface $familyRepository
     ) {
         $this->xmlReader = new Service();
         $this->productSaver = $productSaver;
@@ -69,6 +79,8 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         $this->pqbFactory = $pqbFactory;
         $this->logger = $logger;
         $this->categoryRepository = $categoryRepository;
+        $this->productRepository = $productRepository;
+        $this->familyRepository = $familyRepository;
     }
 
     public function setStepExecution(StepExecution $stepExecution): void
@@ -128,8 +140,25 @@ class E2OpenFromXmlTasklet implements TaskletInterface
     private function instantiateProduct(array $element): ProductInterface
     {
         $gtinValue = $element['value'];
-        $this->logger->info('Instantiating: '. $gtinValue);
+        $this->logger->info('Instantiating for GTIN: '. $gtinValue);
 
+        $product = $this->findProductForGTIN($gtinValue);
+        if ($product) {
+            $this->logger->info('Product in GS1_GDSN family found, id: '. $product->getId());
+
+            return $product;
+        }
+
+        $this->logger->info('Product not found in GS1_GDSN family, creating new');
+
+        $uniqueId = microtime() . '-'. $gtinValue;
+
+        return $this->createNewProductInstance($uniqueId);
+    }
+
+    private function findProductForGTIN(string $gtinValue): ?ProductInterface
+    {
+        // first, look in ElasticSearch index
         $pqb = $this->pqbFactory->create([
             'default_locale' => null,
             'default_scope'  => null,
@@ -141,17 +170,28 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         $product = $productsCursor->current();
 
         if ($product) {
-            /** @var ProductInterface $product */
-            $this->logger->info('Product in GS1_GDSN family found, id: '. $product->getId());
-
             return $product;
         }
 
-        $this->logger->info('Product not found in GS1_GDSN family, creating new');
+        // if not found, check latest products in the family
+        $family = $this->familyRepository->findOneByIdentifier(E2OpenAttributesService::FAMILY_CODE);
 
-        $uniqueId = microtime() . '-'. $gtinValue;
+        $products = $this->productRepository->findBy(
+            [
+                'family' => $family,
+            ],
+            ['id' => 'DESC'],
+            10
+        );
 
-        return $this->createNewProductInstance($uniqueId);
+        foreach ($products as $product) {
+            /** @var ProductInterface $product */
+            if ($gtinValue === $product->getValue('GTIN')->__toString()) {
+                return $product;
+            }
+        }
+
+        return null;
     }
 
     private function createNewProductInstance(string $identifier): ProductInterface
