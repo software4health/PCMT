@@ -48,6 +48,8 @@ services:
             - '@pim_catalog.query.product_query_builder_factory'
             - '@logger'
             - '@pim_catalog.repository.category'
+            - '@pim_catalog.repository.product'
+            - '@pim_catalog.repository.family'
         public: false
 
     pcmt_connector.job.pcmt_mst_supplier_export:
