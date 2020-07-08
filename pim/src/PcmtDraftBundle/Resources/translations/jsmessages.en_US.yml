@@ -122,6 +122,10 @@ pcmt.entity.draft:
             title: Draft approval
             content: "Are you sure you want to approve {{ count }} draft(s)?"
             button_text: Approve
+        bulk_delete:
+            title: Draft deletion
+            content: "Are you sure you want to delete {{ count }} draft(s)?"
+            button_text: Delete
         reject:
             title: Draft rejection
             content: Are you sure you want to reject this draft?
@@ -141,3 +145,4 @@ pcmt.entity.draft:
         reject: No permission to reject draft
     bulk_actions:
         approve: Bulk approve
+        delete: Bulk delete

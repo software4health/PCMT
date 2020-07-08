@@ -133,6 +133,9 @@ define(
                 this.listenTo(this.getRoot(), 'pcmt:drafts:approve', this.approveBulkDraftClicked);
                 this.listenTo(this.getRoot(), 'pcmt:drafts:approved', this.loadDrafts);
 
+                this.listenTo(this.getRoot(), 'pcmt:drafts:delete', this.deleteBulkDraftClicked);
+                this.listenTo(this.getRoot(), 'pcmt:drafts:deleted', this.loadDrafts);
+
                 this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_update', this.render);
             },
 
@@ -315,6 +318,22 @@ define(
                 );
             },
 
+            deleteBulkDraftClicked: function (ev) {
+                Dialog.confirm(
+                    __('pcmt.entity.draft.confirm.bulk_delete.content', {
+                        count: this.chosenDrafts.count(this.collection)
+                    }),
+                    __('pcmt.entity.draft.confirm.bulk_delete.title'),
+                    function () {
+                        this.startLoading();
+                        return this.deleteBulkDraft();
+                    }.bind(this),
+                    '',
+                    'AknButton--important',
+                    __('pcmt.entity.draft.confirm.bulk_delete.button_text'),
+                );
+            },
+
             approveBulkDraft: function () {
                 $.ajax({
                     url: Routing.generate('pcmt_core_drafts_approve_bulk'),
@@ -339,6 +358,11 @@ define(
                         __('pcmt_messages.job_drafts_bulk_approve.fail', {})
                     );
                 }).bind(this));
+            },
+
+            deleteBulkDraft: function () {
+                console.log('deleteBulkTest');
+                this.getRoot().trigger('pcmt:drafts:approved');
             },
 
             checkDraft: function (ev) {
