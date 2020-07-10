@@ -24,7 +24,8 @@ define(
 
             template: _.template(template),
             events: {
-                'click .draft-bulk-approve': 'approveDrafts'
+                'click .draft-bulk-approve': 'approveDrafts',
+                'click .draft-bulk-delete': 'deleteDrafts'
             },
 
             initialize: function() {
@@ -32,12 +33,17 @@ define(
 
             render: function () {
                 this.$el.html(this.template({
-                    bulkApproveText: __('pcmt.entity.draft.bulk_actions.approve')
+                    bulkApproveText: __('pcmt.entity.draft.bulk_actions.approve'),
+                    bulkDeleteText: __('pcmt.entity.draft.bulk_actions.delete')
                 }));
             },
 
             approveDrafts() {
                 this.getRoot().trigger('pcmt:drafts:approve');
+            },
+
+            deleteDrafts() {
+                this.getRoot().trigger('pcmt:drafts:delete');
             }
         });
     }
