@@ -40,7 +40,7 @@ class PcmtCreateCustomDatasetCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $bundleDir = __DIR__ . '/../';
-        $this->filesFolderPath = $bundleDir . 'Resources/fixtures/pcmt_global/import_files/2020-03-29/';
+        $this->filesFolderPath = $bundleDir . 'Resources/fixtures/pcmt_global/import_files/2020-07-08/';
         $this->createAttributeGroupsWithoutAttributes($output);
         $importList = $this->getImportList();
         $bar = new ProgressBar($output, count($importList));
