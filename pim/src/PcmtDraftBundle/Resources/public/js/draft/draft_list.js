@@ -133,8 +133,8 @@ define(
                 this.listenTo(this.getRoot(), 'pcmt:drafts:approve', this.approveBulkDraftClicked);
                 this.listenTo(this.getRoot(), 'pcmt:drafts:approved', this.loadDrafts);
 
-                this.listenTo(this.getRoot(), 'pcmt:drafts:delete', this.deleteBulkDraftClicked);
-                this.listenTo(this.getRoot(), 'pcmt:drafts:deleted', this.loadDrafts);
+                this.listenTo(this.getRoot(), 'pcmt:drafts:reject', this.rejectBulkDraftClicked);
+                this.listenTo(this.getRoot(), 'pcmt:drafts:rejected', this.loadDrafts);
 
                 this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_update', this.render);
             },
@@ -318,19 +318,19 @@ define(
                 );
             },
 
-            deleteBulkDraftClicked: function (ev) {
+            rejectBulkDraftClicked: function (ev) {
                 Dialog.confirm(
-                    __('pcmt.entity.draft.confirm.bulk_delete.content', {
+                    __('pcmt.entity.draft.confirm.bulk_reject.content', {
                         count: this.chosenDrafts.count(this.collection)
                     }),
-                    __('pcmt.entity.draft.confirm.bulk_delete.title'),
+                    __('pcmt.entity.draft.confirm.bulk_reject.title'),
                     function () {
                         this.startLoading();
-                        return this.deleteBulkDraft();
+                        return this.rejectBulkDraft();
                     }.bind(this),
                     '',
                     'AknButton--important',
-                    __('pcmt.entity.draft.confirm.bulk_delete.button_text'),
+                    __('pcmt.entity.draft.confirm.bulk_reject.button_text'),
                 );
             },
 
@@ -360,8 +360,8 @@ define(
                 }).bind(this));
             },
 
-            deleteBulkDraft: function () {
-                console.log('deleteBulkTest');
+            rejectBulkDraft: function () {
+                console.log('rejectBulkTest');
                 this.getRoot().trigger('pcmt:drafts:approved');
             },
 
