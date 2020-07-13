@@ -11,7 +11,7 @@ namespace PcmtDraftBundle\Connector\Job\JobParameters\DefaultValueProvider;
 
 use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface;
-use PcmtDraftBundle\MassActions\DraftsBulkApproveOperation;
+use PcmtDraftBundle\MassActions\DraftsBulkActionOperation;
 
 class DraftsBulkApprove implements DefaultValuesProviderInterface
 {
@@ -32,11 +32,11 @@ class DraftsBulkApprove implements DefaultValuesProviderInterface
     public function getDefaultValues(): array
     {
         return [
-            DraftsBulkApproveOperation::KEY_EXCLUDED              => [],
-            DraftsBulkApproveOperation::KEY_SELECTED              => [],
-            DraftsBulkApproveOperation::KEY_ALL_SELECTED          => false,
-            DraftsBulkApproveOperation::KEY_USER_TO_NOTIFY        => null,
-            DraftsBulkApproveOperation::KEY_IS_USER_AUTHENTICATED => false,
+            DraftsBulkActionOperation::KEY_EXCLUDED              => [],
+            DraftsBulkActionOperation::KEY_SELECTED              => [],
+            DraftsBulkActionOperation::KEY_ALL_SELECTED          => false,
+            DraftsBulkActionOperation::KEY_USER_TO_NOTIFY        => null,
+            DraftsBulkActionOperation::KEY_IS_USER_AUTHENTICATED => false,
         ];
     }
 

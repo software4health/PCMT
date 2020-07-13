@@ -16,7 +16,7 @@ use PcmtDraftBundle\Connector\Job\InvalidItems\DraftInvalidItem;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
-use PcmtDraftBundle\MassActions\DraftsBulkApproveOperation;
+use PcmtDraftBundle\MassActions\DraftsBulkActionOperation;
 use PcmtDraftBundle\Repository\DraftRepositoryInterface;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -66,9 +66,9 @@ class DraftsBulkApproveTasklet implements TaskletInterface
         $jobInstance = $this->stepExecution->getJobParameters();
 
         $draftsToApprove = $this->prepareDraftsToApprove(
-            (bool) ($jobInstance->get(DraftsBulkApproveOperation::KEY_ALL_SELECTED)),
-            $jobInstance->get(DraftsBulkApproveOperation::KEY_EXCLUDED),
-            $jobInstance->get(DraftsBulkApproveOperation::KEY_SELECTED)
+            (bool) ($jobInstance->get(DraftsBulkActionOperation::KEY_ALL_SELECTED)),
+            $jobInstance->get(DraftsBulkActionOperation::KEY_EXCLUDED),
+            $jobInstance->get(DraftsBulkActionOperation::KEY_SELECTED)
         );
 
         foreach ($draftsToApprove as $draft) {

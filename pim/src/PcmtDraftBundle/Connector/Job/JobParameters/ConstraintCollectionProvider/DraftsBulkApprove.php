@@ -11,7 +11,7 @@ namespace PcmtDraftBundle\Connector\Job\JobParameters\ConstraintCollectionProvid
 
 use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters\ConstraintCollectionProviderInterface;
-use PcmtDraftBundle\MassActions\DraftsBulkApproveOperation;
+use PcmtDraftBundle\MassActions\DraftsBulkActionOperation;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
@@ -37,11 +37,11 @@ class DraftsBulkApprove implements ConstraintCollectionProviderInterface
         return new Collection(
             [
                 'fields' => [
-                    DraftsBulkApproveOperation::KEY_EXCLUDED              => new NotNull(),
-                    DraftsBulkApproveOperation::KEY_SELECTED              => new NotNull(),
-                    DraftsBulkApproveOperation::KEY_ALL_SELECTED          => new Type('bool'),
-                    DraftsBulkApproveOperation::KEY_USER_TO_NOTIFY        => new Type('string'),
-                    DraftsBulkApproveOperation::KEY_IS_USER_AUTHENTICATED => new Type('bool'),
+                    DraftsBulkActionOperation::KEY_EXCLUDED              => new NotNull(),
+                    DraftsBulkActionOperation::KEY_SELECTED              => new NotNull(),
+                    DraftsBulkActionOperation::KEY_ALL_SELECTED          => new Type('bool'),
+                    DraftsBulkActionOperation::KEY_USER_TO_NOTIFY        => new Type('string'),
+                    DraftsBulkActionOperation::KEY_IS_USER_AUTHENTICATED => new Type('bool'),
                 ],
             ]
         );

@@ -12,7 +12,7 @@ namespace PcmtDraftBundle\Tests\Connector\Job\JobParameters\ConstraintCollection
 
 use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use PcmtDraftBundle\Connector\Job\JobParameters\ConstraintCollectionProvider\DraftsBulkApprove;
-use PcmtDraftBundle\MassActions\DraftsBulkApproveOperation;
+use PcmtDraftBundle\MassActions\DraftsBulkActionOperation;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -26,11 +26,11 @@ class DraftsBulkApproveTest extends TestCase
 
         $this->assertIsArray($fields);
 
-        $this->assertArrayHasKey(DraftsBulkApproveOperation::KEY_EXCLUDED, $fields);
-        $this->assertArrayHasKey(DraftsBulkApproveOperation::KEY_SELECTED, $fields);
-        $this->assertArrayHasKey(DraftsBulkApproveOperation::KEY_ALL_SELECTED, $fields);
-        $this->assertArrayHasKey(DraftsBulkApproveOperation::KEY_USER_TO_NOTIFY, $fields);
-        $this->assertArrayHasKey(DraftsBulkApproveOperation::KEY_IS_USER_AUTHENTICATED, $fields);
+        $this->assertArrayHasKey(DraftsBulkActionOperation::KEY_EXCLUDED, $fields);
+        $this->assertArrayHasKey(DraftsBulkActionOperation::KEY_SELECTED, $fields);
+        $this->assertArrayHasKey(DraftsBulkActionOperation::KEY_ALL_SELECTED, $fields);
+        $this->assertArrayHasKey(DraftsBulkActionOperation::KEY_USER_TO_NOTIFY, $fields);
+        $this->assertArrayHasKey(DraftsBulkActionOperation::KEY_IS_USER_AUTHENTICATED, $fields);
     }
 
     public function dataSupports(): array
