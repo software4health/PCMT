@@ -15,6 +15,7 @@ use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Exception\DraftSavingFailedException;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Saver\DraftSaver;
+use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
 use PcmtDraftBundle\Service\Draft\DraftExistenceChecker;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use PcmtDraftBundle\Tests\TestDataBuilder\AttributeBuilder;
@@ -52,11 +53,11 @@ class DraftSaverTest extends TestCase
     private $productModelValidatorMock;
 
     /** @var GeneralObjectFromDraftCreator|MockObject */
-    private $creatorMock;
+    private $generalObjectFromDraftCreatorMock;
 
-    /**
-     * {@inheritdoc}
-     */
+    /** @var AttributeChangeService|MockObject */
+    private $attributeChangeServiceMock;
+
     protected function setUp(): void
     {
         $this->entityManagerMock = $this->createMock(EntityManagerInterface::class);
@@ -64,7 +65,8 @@ class DraftSaverTest extends TestCase
         $this->draftExistenceCheckerMock = $this->createMock(DraftExistenceChecker::class);
         $this->productValidatorMock = $this->createMock(ValidatorInterface::class);
         $this->productModelValidatorMock = $this->createMock(ValidatorInterface::class);
-        $this->creatorMock = $this->createMock(GeneralObjectFromDraftCreator::class);
+        $this->generalObjectFromDraftCreatorMock = $this->createMock(GeneralObjectFromDraftCreator::class);
+        $this->attributeChangeServiceMock = $this->createMock(AttributeChangeService::class);
 
         $this->draftSaver = new DraftSaver(
             $this->entityManagerMock,
@@ -72,7 +74,8 @@ class DraftSaverTest extends TestCase
             $this->draftExistenceCheckerMock,
             $this->productValidatorMock,
             $this->productModelValidatorMock,
-            $this->creatorMock
+            $this->generalObjectFromDraftCreatorMock,
+            $this->attributeChangeServiceMock
         );
     }
 
@@ -80,7 +83,7 @@ class DraftSaverTest extends TestCase
     {
         $draft = (new ExistingProductDraftBuilder())->withId(112)->build();
 
-        $this->creatorMock
+        $this->generalObjectFromDraftCreatorMock
             ->method('getObjectToSave')
             ->willReturn((new ProductBuilder())->build());
 
@@ -100,7 +103,7 @@ class DraftSaverTest extends TestCase
     {
         $draft = (new ExistingProductModelDraftBuilder())->withId(11)->build();
 
-        $this->creatorMock
+        $this->generalObjectFromDraftCreatorMock
             ->method('getObjectToSave')
             ->willReturn((new ProductModelBuilder())->build());
 
@@ -120,7 +123,7 @@ class DraftSaverTest extends TestCase
     {
         $draft = (new NewProductDraftBuilder())->withId(2)->build();
 
-        $this->creatorMock
+        $this->generalObjectFromDraftCreatorMock
             ->method('getObjectToSave')
             ->willReturn((new ProductBuilder())->build());
 
@@ -140,7 +143,7 @@ class DraftSaverTest extends TestCase
     {
         $draft = (new NewProductModelDraftBuilder())->withId(2)->build();
 
-        $this->creatorMock
+        $this->generalObjectFromDraftCreatorMock
             ->method('getObjectToSave')
             ->willReturn((new ProductModelBuilder())->build());
 
@@ -160,7 +163,7 @@ class DraftSaverTest extends TestCase
     {
         $draft = (new ExistingProductDraftBuilder())->withId(0)->build();
 
-        $this->creatorMock
+        $this->generalObjectFromDraftCreatorMock
             ->method('getObjectToSave')
             ->willReturn((new ProductBuilder())->build());
 
@@ -192,7 +195,7 @@ class DraftSaverTest extends TestCase
 
     public function testSaveWhenCreatorReturnNullInsteadOfObject(): void
     {
-        $this->creatorMock
+        $this->generalObjectFromDraftCreatorMock
             ->method('getObjectToSave')
             ->willReturn(null);
 
@@ -237,7 +240,7 @@ class DraftSaverTest extends TestCase
     {
         $draft = (new NewProductDraftBuilder())->build();
 
-        $this->creatorMock
+        $this->generalObjectFromDraftCreatorMock
             ->method('getObjectToSave')
             ->willReturn((new ProductBuilder())->build());
 
@@ -263,7 +266,7 @@ class DraftSaverTest extends TestCase
     {
         $draft = (new NewProductDraftBuilder())->build();
 
-        $this->creatorMock
+        $this->generalObjectFromDraftCreatorMock
             ->method('getObjectToSave')
             ->willReturn((new ProductBuilder())->build());
 

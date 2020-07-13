@@ -14,6 +14,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
+use PcmtDraftBundle\Exception\DraftWithNoChangesException;
 use PcmtDraftBundle\Repository\DraftRepository;
 use PcmtDraftBundle\Service\Draft\BaseEntityCreatorInterface;
 use PcmtDraftBundle\Service\Draft\DraftCreatorInterface;
@@ -83,7 +84,13 @@ class ProductThroughDraftUpsertSaver implements SaverInterface
             $draft->setProductData($data);
         }
 
-        $this->draftSaver->save($draft, [DraftSaver::OPTION_NO_VALIDATION => true]);
+        try {
+            $this->draftSaver->save($draft, [
+                DraftSaver::OPTION_NO_VALIDATION           => true,
+                DraftSaver::OPTION_DONT_SAVE_IF_NO_CHANGES => true,
+            ]);
+        } catch (DraftWithNoChangesException $e) {
+        }
     }
 
     private function getEntityOrCreateIfNotExists(ProductInterface $object): ProductInterface

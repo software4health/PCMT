@@ -15,6 +15,7 @@ services:
             - '@pim_catalog.validator.product'
             - '@pim_catalog.validator.product_model'
             - '@pcmt.service.general_object_from_draft_creator'
+            - '@pcmt.service.attribute_change'
 
     # This service is used in PCMT Core Bundle
     pcmt.saver.product_import:
