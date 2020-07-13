@@ -11,7 +11,7 @@ namespace PcmtDraftBundle\MassActions;
 
 use Akeneo\Pim\Enrichment\Bundle\MassEditAction\Operation\BatchableOperationInterface;
 
-class DraftsBulkApproveOperation implements BatchableOperationInterface
+class DraftsBulkActionOperation implements BatchableOperationInterface
 {
     public const KEY_EXCLUDED = 'excluded';
     public const KEY_SELECTED = 'selected';

@@ -17,7 +17,7 @@ use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
 use PcmtDraftBundle\Exception\DraftSavingFailedException;
 use PcmtDraftBundle\Exception\DraftViolationException;
-use PcmtDraftBundle\MassActions\DraftsBulkApproveOperation;
+use PcmtDraftBundle\MassActions\DraftsBulkActionOperation;
 use PcmtDraftBundle\Normalizer\DraftViolationNormalizer;
 use PcmtDraftBundle\Repository\DraftRepositoryInterface;
 use PcmtDraftBundle\Service\Builder\ResponseBuilder;
@@ -239,11 +239,11 @@ class DraftController
     {
         $chosenDrafts = json_decode($request->getContent(), true)['chosenDrafts'];
 
-        $operation = new DraftsBulkApproveOperation(
+        $operation = new DraftsBulkActionOperation(
             'job_drafts_bulk_approve',
-            $chosenDrafts[DraftsBulkApproveOperation::KEY_ALL_SELECTED] ?? false,
-            $chosenDrafts[DraftsBulkApproveOperation::KEY_SELECTED] ?? [],
-            $chosenDrafts[DraftsBulkApproveOperation::KEY_EXCLUDED] ?? []
+            $chosenDrafts[DraftsBulkActionOperation::KEY_ALL_SELECTED] ?? false,
+            $chosenDrafts[DraftsBulkActionOperation::KEY_SELECTED] ?? [],
+            $chosenDrafts[DraftsBulkActionOperation::KEY_EXCLUDED] ?? []
         );
         $this->operationJobLauncher->launch($operation);
 
