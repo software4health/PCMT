@@ -6,12 +6,14 @@
 
 services:
 
-    pcmt_permissions.normalizer.internal.attribute_groups:
-        class: 'PcmtPermissionsBundle\Normalizer\AttributeGroupNormalizer'
-        arguments:
-            - '@pim_enrich.normalizer.attribute_group'
-        tags:
-            - { name: pim_internal_api_serializer.normalizer, priority: 200 }
+# It's commented in release purpose. Uncomment it after Release 2.0.0
+#
+#    pcmt_permissions.normalizer.internal.attribute_groups:
+#        class: 'PcmtPermissionsBundle\Normalizer\AttributeGroupNormalizer'
+#        arguments:
+#            - '@pim_enrich.normalizer.attribute_group'
+#        tags:
+#            - { name: pim_internal_api_serializer.normalizer, priority: 200 }
 
     pim_datagrid.normalizer.product_and_product_model_rows:
         class: 'PcmtPermissionsBundle\Normalizer\ProductAndProductModelRowNormalizer'

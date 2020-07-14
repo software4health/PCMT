@@ -58,14 +58,16 @@ services:
         tags:
             - { name: oro_datagrid.datasource, type: pim_datasource_product }
 
-    pim_catalog.updater.attribute_group:
-        class: 'PcmtPermissionsBundle\Updater\AttributeGroupUpdater'
-        arguments:
-            - '@pim_catalog.repository.attribute'
-            - '@pim_catalog.repository.attribute_group'
-            - '@pim_structure.updater.translatable'
-        calls:
-            - [ setUserGroupRepository, ['@pim_user.repository.group']]
+# It's commented in release purpose. Uncomment it after Release 2.0.0
+#
+#    pim_catalog.updater.attribute_group:
+#        class: 'PcmtPermissionsBundle\Updater\AttributeGroupUpdater'
+#        arguments:
+#            - '@pim_catalog.repository.attribute'
+#            - '@pim_catalog.repository.attribute_group'
+#            - '@pim_structure.updater.translatable'
+#        calls:
+#            - [ setUserGroupRepository, ['@pim_user.repository.group']]
 
     akeneo.pim.enrichment.product.connector.get_product_from_identifiers.original:
         class: 'Akeneo\Pim\Enrichment\Bundle\Storage\Sql\Connector\SqlGetConnectorProducts'
