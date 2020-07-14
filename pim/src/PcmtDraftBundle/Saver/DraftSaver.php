@@ -17,8 +17,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ExistingObjectDraftInterface;
+use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Exception\DraftSavingFailedException;
 use PcmtDraftBundle\Exception\DraftViolationException;
+use PcmtDraftBundle\Exception\DraftWithNoChangesException;
+use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
 use PcmtDraftBundle\Service\Draft\DraftExistenceChecker;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -29,6 +32,7 @@ class DraftSaver implements SaverInterface
 {
     public const OPTION_NO_VALIDATION = 'no_validation';
     public const OPTION_LAST_UPDATED_AT = 'lastUpdatedAt';
+    public const OPTION_DONT_SAVE_IF_NO_CHANGES = 'OPTION_DONT_SAVE_IF_NO_CHANGES';
 
     /** @var EntityManagerInterface */
     protected $entityManager;
@@ -46,7 +50,10 @@ class DraftSaver implements SaverInterface
     private $productModelValidator;
 
     /** @var GeneralObjectFromDraftCreator */
-    private $creator;
+    private $generalObjectFromDraftCreator;
+
+    /** @var AttributeChangeService */
+    private $attributeChangeService;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -54,14 +61,16 @@ class DraftSaver implements SaverInterface
         DraftExistenceChecker $draftExistenceChecker,
         ValidatorInterface $productValidator,
         ValidatorInterface $productModelValidator,
-        GeneralObjectFromDraftCreator $creator
+        GeneralObjectFromDraftCreator $generalObjectFromDraftCreator,
+        AttributeChangeService $attributeChangeService
     ) {
         $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->draftExistenceChecker = $draftExistenceChecker;
         $this->productValidator = $productValidator;
         $this->productModelValidator = $productModelValidator;
-        $this->creator = $creator;
+        $this->generalObjectFromDraftCreator = $generalObjectFromDraftCreator;
+        $this->attributeChangeService = $attributeChangeService;
     }
 
     /**
@@ -70,10 +79,33 @@ class DraftSaver implements SaverInterface
     public function save($draft, array $options = []): void
     {
         $this->validateDraft($draft, $options);
+        if ($draft instanceof ProductDraftInterface) {
+            $this->checkIfDraftHasAnyChanges($draft, $options);
+        }
         $this->eventDispatcher->dispatch(StorageEvents::PRE_SAVE, new GenericEvent($draft, $options));
         $this->entityManager->persist($draft);
         $this->entityManager->flush();
         $this->eventDispatcher->dispatch(StorageEvents::POST_SAVE, new GenericEvent($draft, $options));
+    }
+
+    private function checkIfDraftHasAnyChanges(ProductDraftInterface $draft, array $options): void
+    {
+        if (empty($options[self::OPTION_DONT_SAVE_IF_NO_CHANGES])) {
+            return;
+        }
+
+        if ($draft->getId()) {
+            // the draft is already there, we should update it whatever data
+            return;
+        }
+
+        $this->entityManager->refresh($draft->getProduct());
+
+        $newProduct = $this->generalObjectFromDraftCreator->getObjectToCompare($draft);
+        $changes = $this->attributeChangeService->get($newProduct, $draft->getProduct());
+        if (!$changes) {
+            throw new DraftWithNoChangesException('Draft does not contain any changes.');
+        }
     }
 
     protected function validateDraft(object $draft, array $options = []): void
@@ -115,7 +147,7 @@ class DraftSaver implements SaverInterface
 
     private function validateObjectToSave(DraftInterface $draft): void
     {
-        $objectToSave = $this->creator->getObjectToSave($draft);
+        $objectToSave = $this->generalObjectFromDraftCreator->getObjectToSave($draft);
         if (!$objectToSave) {
             throw DraftSavingFailedException::noCorrespondingObject();
         }
