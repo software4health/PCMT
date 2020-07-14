@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 
-class DraftsBulkApprove implements ConstraintCollectionProviderInterface
+class DraftsBulkActions implements ConstraintCollectionProviderInterface
 {
     /** @var string[] */
     protected $supportedJobNames = [];

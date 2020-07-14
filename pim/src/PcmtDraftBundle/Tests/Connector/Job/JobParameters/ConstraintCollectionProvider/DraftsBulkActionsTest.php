@@ -11,16 +11,16 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Tests\Connector\Job\JobParameters\ConstraintCollectionProvider;
 
 use Akeneo\Tool\Component\Batch\Job\JobInterface;
-use PcmtDraftBundle\Connector\Job\JobParameters\ConstraintCollectionProvider\DraftsBulkApprove;
+use PcmtDraftBundle\Connector\Job\JobParameters\ConstraintCollectionProvider\DraftsBulkActions;
 use PcmtDraftBundle\MassActions\DraftsBulkActionOperation;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class DraftsBulkApproveTest extends TestCase
+class DraftsBulkActionsTest extends TestCase
 {
     public function testGetConstraintCollection(): void
     {
-        $draftsBulkApprove = new DraftsBulkApprove(['test_job_name']);
+        $draftsBulkApprove = new DraftsBulkActions(['test_job_name']);
 
         $fields = $draftsBulkApprove->getConstraintCollection()->fields;
 
@@ -54,7 +54,7 @@ class DraftsBulkApproveTest extends TestCase
      */
     public function testSupports(array $supportedNames, string $jobName, bool $expectedResult): void
     {
-        $draftsBulkApprove = new DraftsBulkApprove($supportedNames);
+        $draftsBulkApprove = new DraftsBulkActions($supportedNames);
 
         /** @var JobInterface|MockObject $job */
         $job = $this->createMock(JobInterface::class);

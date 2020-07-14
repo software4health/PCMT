@@ -68,10 +68,15 @@ pim_menu:
 batch_jobs:
     default_steps:
         drafts_bulk_approve: FR Drafts bulk approve
+        drafts_bulk_reject: FR Drafts bulk reject
     job_drafts_bulk_approve:
         label: FR Drafts bulk approve
         mass_action.label: FR Drafts bulk approve
         perform.label: FR Mass approve drafts
+    job_drafts_bulk_reject:
+        label: FR Drafts bulk reject
+        mass_action.label: FR Drafts bulk reject
+        perform.label: FR Mass reject drafts
 
 pim_notification:
     types:
@@ -85,6 +90,9 @@ pcmt_messages:
     job_drafts_bulk_approve:
         success: FR The bulk action "Draft mass approve" has been launched. You will be notified when it is done
         fail: FR There was a problem and the bulk action "Draft mass approve" has not been launched.
+    job_drafts_bulk_reject:
+        success: FR The bulk action "Draft mass reject" has been launched. You will be notified when it is done
+        fail: FR There was a problem and the bulk action "Draft mass reject" has not been launched.
 
 # Managing drafts
 pcmt.entity.draft:
