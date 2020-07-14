@@ -1,5 +1,6 @@
 parameters:
     pcmt_connector.job.drafts_bulk_approve.name: 'job_drafts_bulk_approve'
+    pcmt_connector.job.drafts_bulk_reject.name: 'job_drafts_bulk_reject'
 
 services:
     pim_connector.job.xlsx_product_import:
@@ -38,6 +39,17 @@ services:
             - '@akeneo_batch.job_repository'
             -
                 - '@pcmt.step.drafts_bulk_approve'
+        tags:
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_enrich.job.mass_edit_type%' }
+
+    pcmt_connector.job.drafts_bulk_reject:
+        class: '%pim_connector.job.simple_job.class%'
+        arguments:
+            - '%pcmt_connector.job.drafts_bulk_reject.name%'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            -
+                - '@pcmt.step.drafts_bulk_reject'
         tags:
             - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_enrich.job.mass_edit_type%' }
 

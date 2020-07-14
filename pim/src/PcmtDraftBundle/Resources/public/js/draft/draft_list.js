@@ -336,8 +336,9 @@ define(
 
             approveBulkDraft: function () {
                 $.ajax({
-                    url: Routing.generate('pcmt_core_drafts_approve_bulk'),
+                    url: Routing.generate('pcmt_core_drafts_actions_bulk'),
                     data: JSON.stringify({
+                        jobInstanceCode: 'job_drafts_bulk_approve',
                         chosenDrafts: {
                             allSelected: this.chosenDrafts.allSelected,
                             selected: this.chosenDrafts.selected,
@@ -361,8 +362,30 @@ define(
             },
 
             rejectBulkDraft: function () {
-                console.log('rejectBulkTest');
-                this.getRoot().trigger('pcmt:drafts:approved');
+                $.ajax({
+                    url: Routing.generate('pcmt_core_drafts_actions_bulk'),
+                    data: JSON.stringify({
+                        jobInstanceCode: 'job_drafts_bulk_reject',
+                        chosenDrafts: {
+                            allSelected: this.chosenDrafts.allSelected,
+                            selected: this.chosenDrafts.selected,
+                            excluded: this.chosenDrafts.excluded,
+                        }
+                    }),
+                    type: 'PUT'
+                }).done((function () {
+                    this.getRoot().trigger('pcmt:drafts:rejected');
+                    messenger.notify(
+                        'success',
+                        __('pcmt_messages.job_drafts_bulk_reject.success', {})
+                    );
+                }).bind(this)).fail((function (jqXHR) {
+                    this.getRoot().trigger('pcmt:drafts:rejected');
+                    messenger.notify(
+                        'error',
+                        __('pcmt_messages.job_drafts_bulk_reject.fail', {})
+                    );
+                }).bind(this));
             },
 
             checkDraft: function (ev) {

@@ -45,3 +45,11 @@ services:
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             - '@pcmt.connector.job.tasklet.drafts_bulk_approve'
+
+    pcmt.step.drafts_bulk_reject:
+        class: '%pim_connector.step.tasklet.class%'
+        arguments:
+            - 'drafts_bulk_reject'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@pcmt.connector.job.tasklet.drafts_bulk_reject'

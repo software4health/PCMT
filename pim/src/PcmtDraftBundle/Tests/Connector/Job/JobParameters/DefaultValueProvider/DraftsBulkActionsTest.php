@@ -11,17 +11,17 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Tests\Connector\Job\JobParameters\DefaultValueProvider;
 
 use Akeneo\Tool\Component\Batch\Job\JobInterface;
-use PcmtDraftBundle\Connector\Job\JobParameters\DefaultValueProvider\DraftsBulkApprove;
+use PcmtDraftBundle\Connector\Job\JobParameters\DefaultValueProvider\DraftsBulkActions;
 use PcmtDraftBundle\MassActions\DraftsBulkActionOperation;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 
-class DraftsBulkApproveTest extends TestCase
+class DraftsBulkActionsTest extends TestCase
 {
     public function testGetDefaultValues(): void
     {
-        $draftsBulkApprove = new DraftsBulkApprove(['test_job_name']);
+        $draftsBulkApprove = new DraftsBulkActions(['test_job_name']);
 
         $defaultValues = $draftsBulkApprove->getDefaultValues();
 
@@ -60,7 +60,7 @@ class DraftsBulkApproveTest extends TestCase
      */
     public function testSupports(array $supportedJobs, string $jobName, bool $expectedResult): void
     {
-        $draftsBulkApprove = new DraftsBulkApprove($supportedJobs);
+        $draftsBulkApprove = new DraftsBulkActions($supportedJobs);
 
         /** @var JobInterface|MockObject $job */
         $job = $this->createMock(JobInterface::class);

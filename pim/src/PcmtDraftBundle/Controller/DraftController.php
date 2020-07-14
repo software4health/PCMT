@@ -235,12 +235,13 @@ class DraftController
     /**
      * @AclAncestor("pcmt_permission_drafts_approve")
      */
-    public function approveBulkDraft(Request $request): JsonResponse
+    public function actionsBulkDraft(Request $request): JsonResponse
     {
         $chosenDrafts = json_decode($request->getContent(), true)['chosenDrafts'];
+        $jobInstanceCode = json_decode($request->getContent(), true)['jobInstanceCode'];
 
         $operation = new DraftsBulkActionOperation(
-            'job_drafts_bulk_approve',
+            $jobInstanceCode,
             $chosenDrafts[DraftsBulkActionOperation::KEY_ALL_SELECTED] ?? false,
             $chosenDrafts[DraftsBulkActionOperation::KEY_SELECTED] ?? [],
             $chosenDrafts[DraftsBulkActionOperation::KEY_EXCLUDED] ?? []

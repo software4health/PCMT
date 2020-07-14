@@ -9,6 +9,7 @@ pcmt.permission:
 job_execution.summary:
     failed: failed
     approved: approved
+    rejected: rejected
 
 pim_dashboard:
     widget:

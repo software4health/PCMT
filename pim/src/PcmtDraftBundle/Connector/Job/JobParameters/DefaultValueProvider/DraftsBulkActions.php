@@ -13,7 +13,7 @@ use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface;
 use PcmtDraftBundle\MassActions\DraftsBulkActionOperation;
 
-class DraftsBulkApprove implements DefaultValuesProviderInterface
+class DraftsBulkActions implements DefaultValuesProviderInterface
 {
     /** @var string[] */
     protected $supportedJobNames = [];
