@@ -1,4 +1,4 @@
-VER 1.2.0 / unreleased
+VER 1.2.1 / unreleased
 ==================
 
 **Added**
@@ -8,6 +8,46 @@ VER 1.2.0 / unreleased
 **Removed**
 
 **Fixed**
+
+
+VER 1.2.0 / unreleased
+==================
+
+**Permissions to products basing on categories and user groups**
+
+* [#440](https://gitlab.com/pcmt/pcmt/-/issues/440): Setting permissions for specific categories - frontend
+* [#437](https://gitlab.com/pcmt/pcmt/-/issues/437): Setting permissions for specific categories - persistence
+* [#490](https://gitlab.com/pcmt/pcmt/-/issues/490): Implement category access - bulk approve of drafts
+* [#492](https://gitlab.com/pcmt/pcmt/-/issues/492): Implement category access - view the products list
+* [#493](https://gitlab.com/pcmt/pcmt/-/issues/493): Implement category access - view the list of product models and variants
+* [#491](https://gitlab.com/pcmt/pcmt/-/issues/491): Implement category access - bulk delete of products
+* [#438](https://gitlab.com/pcmt/pcmt/-/issues/438): Implement category access - edit product through drafts system
+* [#504](https://gitlab.com/pcmt/pcmt/-/issues/504): Limit view of drafts only to those that user has "EDIT" access according to category permissions
+* [#508](https://gitlab.com/pcmt/pcmt/-/issues/508): Handling single delete of product / product model
+* [#486](https://gitlab.com/pcmt/pcmt/-/issues/486): Implement category permissions in External API - product endpoints
+* [#523](https://gitlab.com/pcmt/pcmt/-/issues/523): Implement category permissions in External API - product models endpoints
+* [#522](https://gitlab.com/pcmt/pcmt/-/issues/522): Implement category permissions in External API - product model endpoints
+* [#521](https://gitlab.com/pcmt/pcmt/-/issues/521): Implement category permissions in External API - products endpoints
+* [#520](https://gitlab.com/pcmt/pcmt/-/issues/520): Add External API credentials to custom dataset
+* [#442](https://gitlab.com/pcmt/pcmt/-/issues/442): Implement actual access rights based on categories in import jobs
+* [#485](https://gitlab.com/pcmt/pcmt/-/issues/485): Implement actual access rights based on categories in export jobs
+* [#526](https://gitlab.com/pcmt/pcmt/-/issues/526): Implement actual access rights based on categories in export jobs - mst supplier export
+* [#524](https://gitlab.com/pcmt/pcmt/-/issues/524): Implement actual access rights based on categories in export jobs - products
+* [#525](https://gitlab.com/pcmt/pcmt/-/issues/525): Implement actual access rights based on categories in export jobs - product models
+* [#439](https://gitlab.com/pcmt/pcmt/-/issues/439): Create automatic functional test for access rights for category
+* [#533](https://gitlab.com/pcmt/pcmt/-/issues/533): Clear title for category permissions clone checkbox
+
+**Added**
+* [#518](https://gitlab.com/pcmt/pcmt/-/issues/518): GS1-GDSN import - ignore tradeItem if found product is of other family than GS1-GDSN
+* [#538](https://gitlab.com/pcmt/pcmt/-/issues/538): Automatically categorize GDSN imports into the GS1-GDSN Trade Items category
+
+**Fixed**
+* [#507](https://gitlab.com/pcmt/pcmt/-/issues/507): Table attribute breaks when upgrading
+* [#472](https://gitlab.com/pcmt/pcmt/-/issues/472): Attribute description not visible in draft
+* [#519](https://gitlab.com/pcmt/pcmt/-/issues/519): Add more info in bulk delete report
+* [#531](https://gitlab.com/pcmt/pcmt/-/issues/531): Summary column shouldn't be empty on the Process tracker view
+* [#455](https://gitlab.com/pcmt/pcmt/-/issues/455): Make two (reference data) functional test passing on CI
+
 
 VER 1.1.5 / 2020-05-28
 ==================
@@ -47,7 +87,6 @@ VER 1.1.3 / 2020-04-14
 * [#384](https://gitlab.com/pcmt/pcmt/-/issues/384): Add Language Codes (ISO-639) to Reference Data pull
 * [#277](https://gitlab.com/pcmt/pcmt/-/issues/277): GDSN-Queue (e2open) Import goes through Drafts/Approvals.
 * [#314](https://gitlab.com/pcmt/pcmt/-/issues/314): Messages when draft is already approved or rejected.
-
 
 **Removed**
 * [#277](https://gitlab.com/pcmt/pcmt/-/issues/277): Dependencies in PcmtDraftBundle on PcmtCoreBundle - it can works separately.
