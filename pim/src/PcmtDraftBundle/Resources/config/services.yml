@@ -116,3 +116,8 @@ services:
 
     pcmt.service.creator.product:
         class: 'PcmtDraftBundle\Service\Draft\ProductDraftCreator'
+
+    pcmt.service.draft.provider:
+        class: 'PcmtDraftBundle\Connector\Job\Provider\DraftProvider'
+        arguments:
+            - '@pcmt_catalog.repository.draft'

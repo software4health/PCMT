@@ -13,11 +13,10 @@ use Akeneo\Tool\Component\Batch\Item\InvalidItemException;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
 use PcmtDraftBundle\Connector\Job\InvalidItems\DraftInvalidItem;
-use PcmtDraftBundle\Entity\AbstractDraft;
+use PcmtDraftBundle\Connector\Job\Provider\DraftsProvider;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\MassActions\DraftsBulkActionOperation;
-use PcmtDraftBundle\Repository\DraftRepositoryInterface;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -32,17 +31,17 @@ class DraftsBulkRejectTasklet implements TaskletInterface
     /** @var NormalizerInterface */
     protected $constraintViolationNormalizer;
 
-    /** @var DraftRepositoryInterface */
-    protected $draftRepository;
+    /** @var DraftsProvider */
+    protected $draftsProvider;
 
     public function __construct(
         DraftFacade $draftFacade,
         NormalizerInterface $constraintViolationNormalizer,
-        DraftRepositoryInterface $draftRepository
+        DraftsProvider $draftIdsPreparator
     ) {
         $this->draftFacade = $draftFacade;
         $this->constraintViolationNormalizer = $constraintViolationNormalizer;
-        $this->draftRepository = $draftRepository;
+        $this->draftsProvider = $draftIdsPreparator;
     }
 
     /**
@@ -65,7 +64,7 @@ class DraftsBulkRejectTasklet implements TaskletInterface
         }
         $jobInstance = $this->stepExecution->getJobParameters();
 
-        $draftsToReject = $this->prepareDraftsToReject(
+        $draftsToReject = $this->draftsProvider->prepare(
             (bool) ($jobInstance->get(DraftsBulkActionOperation::KEY_ALL_SELECTED)),
             $jobInstance->get(DraftsBulkActionOperation::KEY_EXCLUDED),
             $jobInstance->get(DraftsBulkActionOperation::KEY_SELECTED)
@@ -97,28 +96,6 @@ class DraftsBulkRejectTasklet implements TaskletInterface
                 );
             }
         }
-    }
-
-    private function prepareDraftsToReject(bool $allSelected, array $excluded, array $selected): array
-    {
-        if ($allSelected) {
-            $drafts = $this->draftRepository->findBy(['status' => AbstractDraft::STATUS_NEW]);
-
-            foreach ($drafts as $index => $draft) {
-                if (in_array($draft->getId(), $excluded)) {
-                    unset($drafts[$index]);
-                }
-            }
-
-            return $drafts;
-        }
-
-        return $this->draftRepository->findBy(
-            [
-                'status' => AbstractDraft::STATUS_NEW,
-                'id'     => $selected,
-            ]
-        );
     }
 
     private function skipItemAndReturnException(array $violations, int $draftId, ?\Throwable $previousException = null): InvalidItemException

@@ -11,10 +11,9 @@ namespace PcmtDraftBundle\Tests\Connector\Job\Tasklet;
 
 use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
+use PcmtDraftBundle\Connector\Job\Provider\DraftsProvider;
 use PcmtDraftBundle\Connector\Job\Tasklet\DraftsBulkRejectTasklet;
-use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Exception\DraftViolationException;
-use PcmtDraftBundle\Repository\DraftRepository;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
 use PcmtDraftBundle\Tests\TestDataBuilder\ExistingProductDraftBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\NewProductDraftBuilder;
@@ -30,44 +29,44 @@ class DraftsBulkRejectTaskletTest extends TestCase
     private $draftBulkRejectTasklet;
 
     /** @var DraftFacade|MockObject */
-    private $draftFacade;
+    private $draftFacadeMock;
 
     /** @var NormalizerInterface|MockObject */
-    private $normalizer;
-
-    /** @var DraftRepository|MockObject */
-    private $draftRepository;
+    private $normalizerMock;
 
     /** @var StepExecution|MockObject */
-    private $stepExecution;
+    private $stepExecutionMock;
 
     /** @var JobParameters|MockObject */
-    private $jobInstance;
+    private $jobInstanceMock;
+
+    /** @var DraftsProvider|MockObject */
+    private $draftsProviderMock;
 
     protected function setUp(): void
     {
-        $this->draftFacade = $this->createMock(DraftFacade::class);
-        $this->normalizer = $this->createMock(NormalizerInterface::class);
-        $this->draftRepository = $this->createMock(DraftRepository::class);
-        $this->stepExecution = $this->createMock(StepExecution::class);
-        $this->jobInstance = $this->createMock(JobParameters::class);
+        $this->draftFacadeMock = $this->createMock(DraftFacade::class);
+        $this->normalizerMock = $this->createMock(NormalizerInterface::class);
+        $this->stepExecutionMock = $this->createMock(StepExecution::class);
+        $this->jobInstanceMock = $this->createMock(JobParameters::class);
+        $this->draftsProviderMock = $this->createMock(DraftsProvider::class);
 
         $this->draftBulkRejectTasklet = new DraftsBulkRejectTasklet(
-            $this->draftFacade,
-            $this->normalizer,
-            $this->draftRepository
+            $this->draftFacadeMock,
+            $this->normalizerMock,
+            $this->draftsProviderMock
         );
     }
 
     public function testExecuteWhenAllSelectedAndNoOneExcluded(): void
     {
-        $this->draftBulkRejectTasklet->setStepExecution($this->stepExecution);
+        $this->draftBulkRejectTasklet->setStepExecution($this->stepExecutionMock);
 
-        $this->stepExecution
+        $this->stepExecutionMock
             ->method('getJobParameters')
-            ->willReturn($this->jobInstance);
+            ->willReturn($this->jobInstanceMock);
 
-        $this->jobInstance
+        $this->jobInstanceMock
             ->method('get')
             ->withConsecutive(['allSelected'], ['excluded'], ['selected'])
             ->willReturnOnConsecutiveCalls(true, [], []);
@@ -80,12 +79,11 @@ class DraftsBulkRejectTaskletTest extends TestCase
             $draftOfAnExistingProduct,
         ];
 
-        $this->draftRepository
-            ->method('findBy')
-            ->with(['status' => AbstractDraft::STATUS_NEW])
+        $this->draftsProviderMock
+            ->method('prepare')
             ->willReturn($drafts);
 
-        $this->draftFacade
+        $this->draftFacadeMock
             ->expects($this->exactly(2))
             ->method('rejectDraft')
             ->withConsecutive([$draftOfANewProduct], [$draftOfAnExistingProduct]);
@@ -95,13 +93,13 @@ class DraftsBulkRejectTaskletTest extends TestCase
 
     public function testExecuteWhenAllSelectedAndOneDraftIsExcluded(): void
     {
-        $this->draftBulkRejectTasklet->setStepExecution($this->stepExecution);
+        $this->draftBulkRejectTasklet->setStepExecution($this->stepExecutionMock);
 
-        $this->stepExecution
+        $this->stepExecutionMock
             ->method('getJobParameters')
-            ->willReturn($this->jobInstance);
+            ->willReturn($this->jobInstanceMock);
 
-        $this->jobInstance
+        $this->jobInstanceMock
             ->method('get')
             ->withConsecutive(['allSelected'], ['excluded'], ['selected'])
             ->willReturnOnConsecutiveCalls(true, [31], []);
@@ -116,15 +114,13 @@ class DraftsBulkRejectTaskletTest extends TestCase
 
         $drafts = [
             $draftOfANewProduct,
-            $draftOfAnExistingProduct,
         ];
 
-        $this->draftRepository
-            ->method('findBy')
-            ->with(['status' => AbstractDraft::STATUS_NEW])
+        $this->draftsProviderMock
+            ->method('prepare')
             ->willReturn($drafts);
 
-        $this->draftFacade
+        $this->draftFacadeMock
             ->expects($this->exactly(1))
             ->method('rejectDraft')
             ->withConsecutive([$draftOfANewProduct], [$draftOfAnExistingProduct]);
@@ -134,13 +130,13 @@ class DraftsBulkRejectTaskletTest extends TestCase
 
     public function testExecuteWhenSelectedSomeDrafts(): void
     {
-        $this->draftBulkRejectTasklet->setStepExecution($this->stepExecution);
+        $this->draftBulkRejectTasklet->setStepExecution($this->stepExecutionMock);
 
-        $this->stepExecution
+        $this->stepExecutionMock
             ->method('getJobParameters')
-            ->willReturn($this->jobInstance);
+            ->willReturn($this->jobInstanceMock);
 
-        $this->jobInstance
+        $this->jobInstanceMock
             ->method('get')
             ->withConsecutive(['allSelected'], ['excluded'], ['selected'])
             ->willReturnOnConsecutiveCalls(false, [], [
@@ -161,20 +157,11 @@ class DraftsBulkRejectTaskletTest extends TestCase
             $draftOfAnExistingProduct,
         ];
 
-        $this->draftRepository
-            ->method('findBy')
-            ->with(
-                [
-                    'status' => AbstractDraft::STATUS_NEW,
-                    'id'     => [
-                        30,
-                        31,
-                    ],
-                ]
-            )
+        $this->draftsProviderMock
+            ->method('prepare')
             ->willReturn($drafts);
 
-        $this->draftFacade
+        $this->draftFacadeMock
             ->expects($this->exactly(2))
             ->method('rejectDraft')
             ->withConsecutive([$draftOfANewProduct], [$draftOfAnExistingProduct]);
@@ -191,13 +178,13 @@ class DraftsBulkRejectTaskletTest extends TestCase
 
     public function testExecuteWhenDraftApprovingFailed(): void
     {
-        $this->draftBulkRejectTasklet->setStepExecution($this->stepExecution);
+        $this->draftBulkRejectTasklet->setStepExecution($this->stepExecutionMock);
 
-        $this->stepExecution
+        $this->stepExecutionMock
             ->method('getJobParameters')
-            ->willReturn($this->jobInstance);
+            ->willReturn($this->jobInstanceMock);
 
-        $this->jobInstance
+        $this->jobInstanceMock
             ->method('get')
             ->withConsecutive(['allSelected'], ['excluded'], ['selected'])
             ->willReturnOnConsecutiveCalls(false, [], [
@@ -218,17 +205,8 @@ class DraftsBulkRejectTaskletTest extends TestCase
             $draftOfAnExistingProduct,
         ];
 
-        $this->draftRepository
-            ->method('findBy')
-            ->with(
-                [
-                    'status' => AbstractDraft::STATUS_NEW,
-                    'id'     => [
-                        30,
-                        31,
-                    ],
-                ]
-            )
+        $this->draftsProviderMock
+            ->method('prepare')
             ->willReturn($drafts);
 
         $exception = $this->createMock(DraftViolationException::class);
@@ -244,12 +222,12 @@ class DraftsBulkRejectTaskletTest extends TestCase
         $violations->add($violation);
         $exception->method('getViolations')->willReturn($violations);
 
-        $this->draftFacade
+        $this->draftFacadeMock
             ->expects($this->exactly(2))
             ->method('rejectDraft')
             ->willThrowException($exception);
 
-        $this->stepExecution
+        $this->stepExecutionMock
             ->expects($this->exactly(2))
             ->method('addWarning');
 
