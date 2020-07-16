@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace PcmtCustomDatasetBundle\Command;
 
 use Akeneo\Platform\Bundle\InstallerBundle\Command\DatabaseCommand;
+use Akeneo\Platform\Bundle\InstallerBundle\Event\InstallerEvent;
+use PcmtCustomDatasetBundle\Event\InstallerEvents;
 
 class NewDatabaseCommand extends DatabaseCommand
 {
@@ -25,6 +27,10 @@ class NewDatabaseCommand extends DatabaseCommand
         $this->commandExecutor->runCommand('pcmt:handler:import_reference_data');
         if ('PcmtCustomDatasetBundle:pcmt_global' === $this->getContainer()->getParameter('installer_data')) {
             $this->commandExecutor->runCommand('pcmt:custom-dataset:create');
+            $this->getEventDispatcher()->dispatch(
+                InstallerEvents::POST_DATA_IMPORTED,
+                new InstallerEvent($this->commandExecutor)
+            );
         }
 
         return $this;
