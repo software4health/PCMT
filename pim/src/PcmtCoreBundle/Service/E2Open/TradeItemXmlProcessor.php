@@ -93,6 +93,8 @@ class TradeItemXmlProcessor
      */
     private function processProductAttributeValue(string $mappedAttributeCode, $value, ?array $nodeAttributes): void
     {
+        $value = is_string($value) ? trim($value) : $value;
+
         $pcmtAttribute = $this->attributesService->getForCode($mappedAttributeCode);
 
         if (!$pcmtAttribute) {
