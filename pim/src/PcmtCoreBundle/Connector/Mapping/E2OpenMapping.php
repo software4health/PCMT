@@ -82,8 +82,7 @@ class E2OpenMapping
             '{}tradeItemMarketingMessage'                              => '',
             '{}packagingShapeCode'                                     => '',
             '{}packagingTypeCode'                                      => 'GS1_PACKAGINGTYPECODE',
-            '{}packagingMaterialTypeCode'                              => 'GS1_PACKAGINGMATERIALTYPECODE',
-            '{}dosageFormTypeCodeReference'                            => '',
+            '{}dosageFormTypeCodeReference'                            => 'GS1_DOSAGEFORMTYPECODEREFERENCE',
             '{}countryCode'                                            => 'GS1_PLACEOFPRODUCTACTIVITYCOUNTRYOFORIGINCOUNTRYCODE',
             '{}referencedFileTypeCode'                                 => 'GS1_REFERENCEDFILETYPECODE',
             '{}fileEffectiveStartDateTime'                             => '',
@@ -133,6 +132,7 @@ class E2OpenMapping
             '{}childTradeItem{}gtin'                                   => 'GS1_GTIN_CHILD_NEXTLOWERLEVELTRADEITEMINFORMATION',
             '{}childTradeItem{}quantityOfNextLowerLevelTradeItem'      => 'GS1_QUANTITYOFNEXTLOWERLEVELTRADEITEM',
             '{}childTradeItem{}totalQuantityOfNextLowerLevelTradeItem' => 'GS1_TOTALQUANTITYOFNEXTLOWERLEVELTRADEITEM',
+            '{}diameter'                                               => 'GS1_DIAMETER',
         ];
     }
 }
