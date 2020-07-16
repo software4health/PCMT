@@ -1,4 +1,4 @@
-VER 1.2.1 / unreleased
+VER 2.0.1 / unreleased
 ==================
 
 **Added**
@@ -10,7 +10,7 @@ VER 1.2.1 / unreleased
 **Fixed**
 
 
-VER 1.2.0 / unreleased
+VER 2.0.0 / unreleased
 ==================
 
 **Permissions to products basing on categories and user groups**
