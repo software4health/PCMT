@@ -10,7 +10,7 @@ VER 2.0.1 / unreleased
 **Fixed**
 
 
-VER 2.0.0 / unreleased
+VER 2.0.0 / 2020-07-17
 ==================
 
 **Permissions to products basing on categories and user groups**
