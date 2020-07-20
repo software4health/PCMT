@@ -541,7 +541,6 @@ env-zimbabwe-covid-destroy:
 
 .env-malawi_script-deploy:
   script:
-    - source .ci-chai.env
     - ./bin/ci-deploy.sh malawi
     
 env-malawi (WIPE DB):
