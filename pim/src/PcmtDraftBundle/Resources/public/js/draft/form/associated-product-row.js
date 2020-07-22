@@ -8,11 +8,13 @@ define([
     'jquery',
     'pim/product-edit-form/associated-product-row/original',
     'oro/mediator',
+    'pim/router'
 ], function (
     _,
     $,
     BaseRow,
-    mediator
+    mediator,
+    Router
 ) {
     return BaseRow.extend({
 
@@ -20,8 +22,9 @@ define([
             BaseRow.prototype.render.call(this, arguments);
 
             const row = this.renderedRow;
+            const id = parseInt(this.model.get('id').split('-')[1]);
 
-            row.off('click');
+            row.on('click', () => Router.redirectToRoute(this.isProductModel() ? 'pim_enrich_product_model_edit' : 'pim_enrich_product_edit', {id: id}));
 
             $('.AknIconButton--remove', row).on('click', () => {
                 mediator.trigger('datagrid:unselectModel:association-product-draft-grid', this.model);
