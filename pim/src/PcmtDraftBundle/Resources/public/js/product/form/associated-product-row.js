@@ -26,9 +26,17 @@ define([
             BaseRow.prototype.render.call(this, arguments);
 
             const row = this.renderedRow;
-            const id = parseInt(this.model.get('id').split('-')[1]);
+            const id = this.getEntityId();
 
             row.on('click', () => Router.redirectToRoute(this.isProductModel() ? 'pim_enrich_product_model_edit' : 'pim_enrich_product_edit', {id: id}));
         },
+
+        getEntityId() {
+            return parseInt(
+                this.isProductModel()
+                    ? this.model.get('id').split('-')[2]
+                    : this.model.get('id').split('-')[1]
+            );
+        }
     });
 });
