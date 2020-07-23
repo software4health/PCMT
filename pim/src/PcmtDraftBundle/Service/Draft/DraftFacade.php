@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Service\Draft;
 
-use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
@@ -17,9 +16,6 @@ use PcmtDraftBundle\Saver\DraftSaver;
 
 class DraftFacade
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
-
     /** @var DraftApprover */
     private $productDraftApprover;
 
@@ -29,16 +25,19 @@ class DraftFacade
     /** @var DraftSaver */
     private $draftSaver;
 
+    /** @var DraftRejecter */
+    private $draftRejecter;
+
     public function __construct(
         DraftApprover $productDraftApprover,
         DraftApprover $productModelDraftApprover,
-        EntityManagerInterface $entityManager,
-        DraftSaver $draftSaver
+        DraftSaver $draftSaver,
+        DraftRejecter $draftRejecter
     ) {
         $this->productDraftApprover = $productDraftApprover;
         $this->productModelDraftApprover = $productModelDraftApprover;
-        $this->entityManager = $entityManager;
         $this->draftSaver = $draftSaver;
+        $this->draftRejecter = $draftRejecter;
     }
 
     public function approveDraft(DraftInterface $draft): void
@@ -54,9 +53,7 @@ class DraftFacade
 
     public function rejectDraft(DraftInterface $draft): void
     {
-        $draft->reject();
-        $this->entityManager->persist($draft);
-        $this->entityManager->flush();
+        $this->draftRejecter->reject($draft);
     }
 
     public function updateDraft(DraftInterface $draft, array $options = []): void
