@@ -16,7 +16,6 @@ services:
         arguments:
             - '@pcmt.service.product_draft_approver'
             - '@pcmt.service.product_model_draft_approver'
-            - '@doctrine.orm.entity_manager'
             - '@pcmt.saver.draft'
             - '@pcmt.service.draft_rejecter'
 
