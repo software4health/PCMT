@@ -10,13 +10,13 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Tests\Service\Draft;
 
-use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
 use PcmtDraftBundle\Saver\DraftSaver;
 use PcmtDraftBundle\Service\Draft\DraftApprover;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
+use PcmtDraftBundle\Service\Draft\DraftRejecter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -28,18 +28,18 @@ class DraftFacadeTest extends TestCase
     /** @var DraftApprover|MockObject */
     private $productModelDraftApproverMock;
 
-    /** @var EntityManagerInterface|MockObject */
-    private $entityManagerMock;
-
     /** @var DraftSaver|MockObject */
     private $draftSaverMock;
+
+    /** @var DraftRejecter */
+    private $draftRejecterMock;
 
     protected function setUp(): void
     {
         $this->productDraftApproverMock = $this->createMock(DraftApprover::class);
         $this->productModelDraftApproverMock = $this->createMock(DraftApprover::class);
-        $this->entityManagerMock = $this->createMock(EntityManagerInterface::class);
         $this->draftSaverMock = $this->createMock(DraftSaver::class);
+        $this->draftRejecterMock = $this->createMock(DraftRejecter::class);
     }
 
     /**
@@ -71,10 +71,8 @@ class DraftFacadeTest extends TestCase
     public function testRejectDraft(): void
     {
         $facade = $this->getDraftFacadeInstance();
-        $this->entityManagerMock->expects($this->once())->method('persist');
-        $this->entityManagerMock->expects($this->once())->method('flush');
         $draft = $this->createMock(DraftInterface::class);
-        $draft->expects($this->once())->method('reject');
+        $this->draftRejecterMock->expects($this->once())->method('reject')->with($draft);
         $facade->rejectDraft($draft);
     }
 
@@ -91,8 +89,8 @@ class DraftFacadeTest extends TestCase
         return new DraftFacade(
             $this->productDraftApproverMock,
             $this->productModelDraftApproverMock,
-            $this->entityManagerMock,
-            $this->draftSaverMock
+            $this->draftSaverMock,
+            $this->draftRejecterMock
         );
     }
 }

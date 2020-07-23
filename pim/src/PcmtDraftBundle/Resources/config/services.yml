@@ -18,6 +18,15 @@ services:
             - '@pcmt.service.product_model_draft_approver'
             - '@doctrine.orm.entity_manager'
             - '@pcmt.saver.draft'
+            - '@pcmt.service.draft_rejecter'
+
+    pcmt.service.draft_rejecter:
+        class: PcmtDraftBundle\Service\Draft\DraftRejecter
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@security.token_storage'
+            - '@pcmt.service.general_object_from_draft_creator'
+            - '@pcmt.service.category_permissions_checker'
 
     pcmt.service.product_draft_approver:
         class: PcmtDraftBundle\Service\Draft\DraftApprover
