@@ -49,6 +49,8 @@ class MstSupplierExportReader extends ProductReader implements CrossJoinExportRe
     {
         parent::initialize();
         $this->firstCrossRead = true;
+
+        $this->stepExecution->incrementSummaryInfo('read', 0);
     }
 
     public function setFamilyToCrossRead(string $familyToCrossRead): void
