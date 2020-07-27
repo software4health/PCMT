@@ -59,7 +59,7 @@ class DraftRejecter
         if (!$this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::OWN_LEVEL, $objectToSave, $user)) {
             $violations->add(
                 new ConstraintViolation(
-                    'No permission to approve the draft: no "own" access to any of the categories of the product.',
+                    'No permission to reject the draft: no "own" access to any of the categories of the product.',
                     '',
                     [],
                     '',
