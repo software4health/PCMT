@@ -19,6 +19,7 @@ use Akeneo\Tool\Component\Classification\Repository\CategoryRepositoryInterface;
 use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtCoreBundle\Service\E2Open\E2OpenAttributesService;
+use PcmtCoreBundle\Service\E2Open\PackagingHierarchyProcessor;
 use PcmtCoreBundle\Service\E2Open\TradeItemXmlProcessor;
 use PcmtCoreBundle\Util\Adapter\FileGetContentsWrapper;
 use Psr\Log\LoggerInterface;
@@ -62,6 +63,12 @@ class E2OpenFromXmlTasklet implements TaskletInterface
     /** @var FamilyRepositoryInterface */
     private $familyRepository;
 
+    /** @var PackagingHierarchyProcessor */
+    private $packagingHierarchyProcessor;
+
+    /** @var ProductInterface[] */
+    private $products = [];
+
     public function __construct(
         SaverInterface $productSaver,
         ProductBuilderInterface $productBuilder,
@@ -70,7 +77,8 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         LoggerInterface $logger,
         CategoryRepositoryInterface $categoryRepository,
         ProductRepositoryInterface $productRepository,
-        FamilyRepositoryInterface $familyRepository
+        FamilyRepositoryInterface $familyRepository,
+        PackagingHierarchyProcessor $packagingHierarchyProcessor
     ) {
         $this->xmlReader = new Service();
         $this->productSaver = $productSaver;
@@ -81,6 +89,7 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         $this->categoryRepository = $categoryRepository;
         $this->productRepository = $productRepository;
         $this->familyRepository = $familyRepository;
+        $this->packagingHierarchyProcessor = $packagingHierarchyProcessor;
     }
 
     public function setStepExecution(StepExecution $stepExecution): void
@@ -92,7 +101,18 @@ class E2OpenFromXmlTasklet implements TaskletInterface
     {
         $filePath = $this->stepExecution->getJobParameters()
             ->get('xmlFilePath');
+        $this->products = [];
         $this->processFile($filePath);
+        $this->processPackagingHierarchyTable();
+    }
+
+    private function processPackagingHierarchyTable(): void
+    {
+        $this->packagingHierarchyProcessor->process($this->products);
+
+        foreach ($this->products as $product) {
+            $this->productSaver->save($product);
+        }
     }
 
     private function processFile(string $filePath): void
@@ -131,6 +151,8 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                 }
 
                 $this->productSaver->save($this->item);
+
+                $this->products[$this->item->getId()] = $this->item;
             },
         ];
 
