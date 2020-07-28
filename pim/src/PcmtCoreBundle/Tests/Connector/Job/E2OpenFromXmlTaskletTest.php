@@ -25,6 +25,7 @@ use Akeneo\Tool\Component\StorageUtils\Cursor\CursorInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtCoreBundle\Connector\Job\E2OpenFromXmlTasklet;
 use PcmtCoreBundle\Service\E2Open\E2OpenAttributesService;
+use PcmtCoreBundle\Service\E2Open\PackagingHierarchyProcessor;
 use PcmtCoreBundle\Service\E2Open\TradeItemXmlProcessor;
 use PcmtCoreBundle\Tests\TestDataBuilder\CategoryBuilder;
 use PcmtCoreBundle\Tests\TestDataBuilder\FamilyBuilder;
@@ -45,6 +46,9 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
 
     /** @var TradeItemXmlProcessor|Mock */
     private $tradeItemProcessorMock;
+
+    /** @var PackagingHierarchyProcessor|Mock */
+    private $packagingHierarchyProcessorMock;
 
     /** @var StepExecution */
     private $stepExecutionMock;
@@ -79,6 +83,7 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
         $this->productSaverMock = $this->createMock(ProductSaver::class);
         $this->productBuilderMock = $this->createMock(ProductBuilder::class);
         $this->tradeItemProcessorMock = $this->createMock(TradeItemXmlProcessor::class);
+        $this->packagingHierarchyProcessorMock = $this->createMock(PackagingHierarchyProcessor::class);
         $this->productQueryBuilderFactoryMock = $this->createMock(ProductQueryBuilderFactory::class);
         $this->productQueryBuilderMock = $this->createMock(ProductQueryBuilderInterface::class);
         $this->productsCursorMock = $this->createMock(CursorInterface::class);
@@ -177,7 +182,8 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
             $this->loggerMock,
             $this->categoryRepositoryMock,
             $this->productRepositoryMock,
-            $this->familyRepositoryMock
+            $this->familyRepositoryMock,
+            $this->packagingHierarchyProcessorMock
         );
         $tasklet->setStepExecution($this->stepExecutionMock);
 

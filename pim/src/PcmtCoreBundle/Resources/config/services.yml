@@ -61,6 +61,12 @@ services:
             - '@pcmt_e2Open_attributes_service'
             - '@pim_catalog.updater.product'
 
+    pcmt_core.service.e2Open.packaging_hierarchy_processor:
+        class: PcmtCoreBundle\Service\E2Open\PackagingHierarchyProcessor
+        arguments:
+            - '@pim_catalog.updater.product'
+            - '@monolog.logger'
+
     pcmt_catalog.product.updater.concatenated_attributes_for_product_and_model:
         class: PcmtCoreBundle\Service\ConcatenatedAttribute\ObjectUpdater
         arguments:

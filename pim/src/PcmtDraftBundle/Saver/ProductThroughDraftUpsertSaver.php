@@ -69,6 +69,9 @@ class ProductThroughDraftUpsertSaver implements SaverInterface
         $object->setCreated(new \DateTime());
         $object->setUpdated(new \DateTime());
         $baseObject = $this->getEntityOrCreateIfNotExists($object);
+        if (!$object->getId() && $baseObject->getId()) {
+            $object->setId($baseObject->getId());
+        }
         $data = $this->standardNormalizer->normalize($object, 'standard', ['import_via_drafts']);
 
         $criteria = [
