@@ -9,17 +9,22 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Tests\TestDataBuilder;
 
+use Akeneo\Pim\Structure\Component\AttributeTypes;
 use PcmtCoreBundle\Entity\Attribute;
 use PcmtCoreBundle\Extension\ConcatenatedAttribute\Structure\Component\AttributeType\PcmtAtributeTypes;
 
 class AttributeBuilder
 {
+    public const DEFAULT_CODE = 'DEFAULT_CODE';
+
     /** @var Attribute */
     private $attribute;
 
     public function __construct()
     {
         $this->attribute = new Attribute();
+        $this->attribute->setCode(self::DEFAULT_CODE);
+        $this->attribute->setType(AttributeTypes::TEXT);
     }
 
     public function withCode(string $code): self
@@ -39,6 +44,13 @@ class AttributeBuilder
     public function withProperties(array $properties): self
     {
         $this->attribute->setProperties($properties);
+
+        return $this;
+    }
+
+    public function withMetricFamily(string $family): self
+    {
+        $this->attribute->setMetricFamily($family);
 
         return $this;
     }

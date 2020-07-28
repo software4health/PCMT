@@ -51,6 +51,7 @@ services:
             - '@pim_catalog.repository.product'
             - '@pim_catalog.repository.family'
             - '@pcmt_core.service.e2Open.packaging_hierarchy_processor'
+            - '@pcmt_core.service.e2Open.trade_item_product_updater'
         public: false
 
     pcmt_connector.job.pcmt_mst_supplier_export:
