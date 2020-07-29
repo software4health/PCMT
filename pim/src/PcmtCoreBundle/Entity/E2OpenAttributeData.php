@@ -62,4 +62,9 @@ class E2OpenAttributeData
     {
         return $this->attributes;
     }
+
+    public function setCode(string $code): void
+    {
+        $this->code = $code;
+    }
 }

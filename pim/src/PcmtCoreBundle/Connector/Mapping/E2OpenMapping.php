@@ -63,7 +63,7 @@ class E2OpenMapping
             '{}gpcCategoryCode'                                        => 'GS1_GPCCATEGORYCODE',
             '{}gpcCategoryDefinition'                                  => '',
             '{}gpcCategoryName'                                        => '',
-            '{}additionalTradeItemClassificationSystemCode'            => '',
+            '{}additionalTradeItemClassificationSystemCode'            => 'GS1_ADDITIONALTRADEITEMCLASSIFICATIONSYSTEMCODE',
             '{}additionalTradeItemClassificationCodeValue'             => 'GS1_ADDITIONALTRADEITEMCLASSIFICATIONCODEVALUE',
             '{}additionalTradeItemClassificationVersion'               => '',
             '{}targetMarketCountryCode'                                => 'GS1_TARGETMARKETCOUNTRYCODE',
