@@ -26,6 +26,7 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtCoreBundle\Connector\Job\E2OpenFromXmlTasklet;
 use PcmtCoreBundle\Service\E2Open\E2OpenAttributesService;
 use PcmtCoreBundle\Service\E2Open\PackagingHierarchyProcessor;
+use PcmtCoreBundle\Service\E2Open\TradeItemDynamicMapping;
 use PcmtCoreBundle\Service\E2Open\TradeItemProductUpdater;
 use PcmtCoreBundle\Service\E2Open\TradeItemXmlProcessor;
 use PcmtCoreBundle\Tests\TestDataBuilder\CategoryBuilder;
@@ -81,6 +82,9 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
     /** @var TradeItemProductUpdater|Mock */
     private $tradeItemProductUpdaterMock;
 
+    /** @var TradeItemDynamicMapping|Mock */
+    private $tradeItemDynamicMappingMock;
+
     protected function setUp(): void
     {
         $this->loggerMock = $this->createMock(LoggerInterface::class);
@@ -95,6 +99,7 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
         $this->productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
         $this->familyRepositoryMock = $this->createMock(FamilyRepositoryInterface::class);
         $this->tradeItemProductUpdaterMock = $this->createMock(TradeItemProductUpdater::class);
+        $this->tradeItemDynamicMappingMock = $this->createMock(TradeItemDynamicMapping::class);
 
         $value = ScalarValue::value('GTIN', 'xxx');
         $product = (new \PcmtCoreBundle\Tests\TestDataBuilder\ProductBuilder())->addValue($value)->build();
@@ -189,7 +194,8 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
             $this->productRepositoryMock,
             $this->familyRepositoryMock,
             $this->packagingHierarchyProcessorMock,
-            $this->tradeItemProductUpdaterMock
+            $this->tradeItemProductUpdaterMock,
+            $this->tradeItemDynamicMappingMock
         );
         $tasklet->setStepExecution($this->stepExecutionMock);
 

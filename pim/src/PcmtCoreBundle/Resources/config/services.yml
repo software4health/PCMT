@@ -68,6 +68,9 @@ services:
             - '@pim_catalog.updater.product'
             - '@logger'
 
+    pcmt_core.service.e2Open.trade_item_dynamic_mapping:
+        class: PcmtCoreBundle\Service\E2Open\TradeItemDynamicMapping
+
     pcmt_core.service.e2Open.packaging_hierarchy_processor:
         class: PcmtCoreBundle\Service\E2Open\PackagingHierarchyProcessor
         arguments:

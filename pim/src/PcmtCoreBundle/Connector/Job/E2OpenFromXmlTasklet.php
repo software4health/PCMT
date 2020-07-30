@@ -20,6 +20,7 @@ use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtCoreBundle\Service\E2Open\E2OpenAttributesService;
 use PcmtCoreBundle\Service\E2Open\PackagingHierarchyProcessor;
+use PcmtCoreBundle\Service\E2Open\TradeItemDynamicMapping;
 use PcmtCoreBundle\Service\E2Open\TradeItemProductUpdater;
 use PcmtCoreBundle\Service\E2Open\TradeItemXmlProcessor;
 use PcmtCoreBundle\Util\Adapter\FileGetContentsWrapper;
@@ -70,6 +71,9 @@ class E2OpenFromXmlTasklet implements TaskletInterface
     /** @var PackagingHierarchyProcessor */
     private $packagingHierarchyProcessor;
 
+    /** @var TradeItemDynamicMapping */
+    private $tradeItemDynamicMapping;
+
     /** @var ProductInterface[] */
     private $products = [];
 
@@ -83,7 +87,8 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         ProductRepositoryInterface $productRepository,
         FamilyRepositoryInterface $familyRepository,
         PackagingHierarchyProcessor $packagingHierarchyProcessor,
-        TradeItemProductUpdater $tradeItemProductUpdater
+        TradeItemProductUpdater $tradeItemProductUpdater,
+        TradeItemDynamicMapping $tradeItemDynamicMapping
     ) {
         $this->xmlReader = new Service();
         $this->productSaver = $productSaver;
@@ -96,6 +101,7 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         $this->familyRepository = $familyRepository;
         $this->packagingHierarchyProcessor = $packagingHierarchyProcessor;
         $this->tradeItemProductUpdater = $tradeItemProductUpdater;
+        $this->tradeItemDynamicMapping = $tradeItemDynamicMapping;
     }
 
     public function setStepExecution(StepExecution $stepExecution): void
@@ -151,7 +157,9 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                     }
                 );
 
-                $this->tradeItemProductUpdater->update($this->item, $this->nodeProcessor->getFoundAttributes());
+                $data = $this->tradeItemDynamicMapping->process($this->nodeProcessor->getFoundAttributes());
+
+                $this->tradeItemProductUpdater->update($this->item, $data);
 
                 $category = $this->categoryRepository->findOneByIdentifier(self::CATEGORY_CODE_FOR_IMPORTED_ITEMS);
                 if ($category) {
