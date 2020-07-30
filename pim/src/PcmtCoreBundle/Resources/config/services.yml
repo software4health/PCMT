@@ -61,6 +61,13 @@ services:
             - '@pcmt_e2Open_attributes_service'
             - '@pim_catalog.updater.product'
 
+    pcmt_core.service.e2Open.trade_item_product_updater:
+        class: PcmtCoreBundle\Service\E2Open\TradeItemProductUpdater
+        arguments:
+            - '@pcmt_e2Open_attributes_service'
+            - '@pim_catalog.updater.product'
+            - '@logger'
+
     pcmt_core.service.e2Open.packaging_hierarchy_processor:
         class: PcmtCoreBundle\Service\E2Open\PackagingHierarchyProcessor
         arguments:

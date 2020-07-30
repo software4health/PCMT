@@ -8,65 +8,27 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Tests\Service\E2Open;
 
-use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Updater\ProductUpdater;
-use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
-use Monolog\Logger;
-use PcmtCoreBundle\Entity\Attribute;
-use PcmtCoreBundle\Service\E2Open\E2OpenAttributesService;
+use PcmtCoreBundle\Entity\E2OpenAttributeData;
 use PcmtCoreBundle\Service\E2Open\TradeItemXmlProcessor;
-use PHPUnit\Framework\MockObject\MockObject as Mock;
 use PHPUnit\Framework\TestCase;
 
 class TradeItemXmlProcessorTest extends TestCase
 {
-    /** @var Logger|Mock */
-    private $loggerMock;
-
-    /** @var E2OpenAttributesService|Mock */
-    private $attributeServiceMock;
-
-    /** @var ObjectUpdaterInterface|Mock */
-    private $productUpdaterMock;
-
-    /** @var ProductInterface|Mock */
-    private $productMock;
-
     protected function setUp(): void
     {
-        $this->loggerMock = $this->createMock(Logger::class);
-        $this->attributeServiceMock = $this->createMock(E2OpenAttributesService::class);
-        $this->productUpdaterMock = $this->createMock(ProductUpdater::class);
-        $this->productMock = $this->createMock(Product::class);
     }
 
     /**
      * @dataProvider dataProcess
      */
-    public function testProcess(array $node, array $updateSet): void
+    public function testProcess(array $node, array $expectedData): void
     {
         $tradeItemProcessor = $this->getTradeItemXmlProcessorInstance();
-
-        $this->productUpdaterMock->expects($this->atLeastOnce())
-            ->method('update')
-            ->with(
-                $this->productMock,
-                [
-                    'values' => $updateSet,
-                ]
-            );
-
-        $this->attributeServiceMock->expects($this->atLeastOnce())
-            ->method('getForCode')
-            ->willReturn($attributeMock = $this->createMock(Attribute::class));
-
-        $attributeMock->expects($this->atLeastOnce())
-            ->method('getMetricFamily')
-            ->willReturn(null);
-
-        $tradeItemProcessor->setProductToUpdate($this->productMock);
         $tradeItemProcessor->processNode($node);
+
+        $data = $tradeItemProcessor->getFoundAttributes();
+
+        $this->assertEquals($expectedData, $data);
     }
 
     public function dataProcess(): array
@@ -87,13 +49,7 @@ class TradeItemXmlProcessorTest extends TestCase
                     ],
                 ],
                 [
-                    'GS1_PACKAGINGTYPECODE' => [
-                        'data' => [
-                            'data'   => 'BPG',
-                            'locale' => null,
-                            'scope'  => null,
-                        ],
-                    ],
+                    'GS1_PACKAGINGTYPECODE' => new E2OpenAttributeData('{}packagingTypeCode', 'GS1_PACKAGINGTYPECODE', 'BPG', []),
                 ],
             ],
             [
@@ -111,83 +67,14 @@ class TradeItemXmlProcessorTest extends TestCase
                     ],
                 ],
                 [
-                    'GS1_EFFECTIVEDATETIME' => [
-                        'data' => [
-                            'data'   => '2019-11-26T00:00:00',
-                            'locale' => null,
-                            'scope'  => null,
-                        ],
-                    ],
+                    'GS1_EFFECTIVEDATETIME' => new E2OpenAttributeData('{}effectiveDateTime', 'GS1_EFFECTIVEDATETIME', '2019-11-26T00:00:00', []),
                 ],
             ],
         ];
-    }
-
-    public function testProcessMetricUnitAttributes(): void
-    {
-        $node = [
-            'name'  => '{}packaging',
-            'value' => [
-                0 => [
-                    'name'       => '{}packagingTypeCode',
-                    'value'      => 'BPG',
-                    'attributes' => [
-                        'measurementUnitCode' => 'code',
-                    ],
-                ],
-            ],
-        ];
-
-        $tradeItemProcessor = $this->getTradeItemXmlProcessorInstance();
-
-        $this->attributeServiceMock->expects($this->once())
-            ->method('getForCode')
-            ->willReturn($attributeMock = $this->createMock(Attribute::class));
-
-        $attributeMock->expects($this->once())
-            ->method('getMetricFamily')
-            ->willReturn(E2OpenAttributesService::MEASURE_UNIT);
-
-        $this->attributeServiceMock->expects($this->once())
-            ->method('getMeasureUnitForSymbol');
-
-        $tradeItemProcessor->setProductToUpdate($this->productMock);
-        $tradeItemProcessor->processNode($node);
-    }
-
-    public function testErrorWhenMappingNotFound(): void
-    {
-        $node = [
-            'name'  => '{}packaging',
-            'value' => [
-                0 => [
-                    'name'       => '{}packagingTypeCode',
-                    'value'      => 'BPG',
-                    'attributes' => [],
-                ],
-            ],
-        ];
-
-        $tradeItemProcessor = $this->getTradeItemXmlProcessorInstance();
-
-        $this->attributeServiceMock->expects($this->once())
-            ->method('getForCode')
-            ->with('GS1_PACKAGINGTYPECODE')
-            ->willReturn(null);
-
-        $this->loggerMock->expects($this->once())
-            ->method('error');
-
-        $tradeItemProcessor->setProductToUpdate($this->productMock);
-        $tradeItemProcessor->processNode($node);
     }
 
     private function getTradeItemXmlProcessorInstance(): TradeItemXmlProcessor
     {
-        return new TradeItemXmlProcessor(
-            $this->loggerMock,
-            $this->attributeServiceMock,
-            $this->productUpdaterMock
-        );
+        return new TradeItemXmlProcessor();
     }
 }

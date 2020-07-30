@@ -26,6 +26,7 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtCoreBundle\Connector\Job\E2OpenFromXmlTasklet;
 use PcmtCoreBundle\Service\E2Open\E2OpenAttributesService;
 use PcmtCoreBundle\Service\E2Open\PackagingHierarchyProcessor;
+use PcmtCoreBundle\Service\E2Open\TradeItemProductUpdater;
 use PcmtCoreBundle\Service\E2Open\TradeItemXmlProcessor;
 use PcmtCoreBundle\Tests\TestDataBuilder\CategoryBuilder;
 use PcmtCoreBundle\Tests\TestDataBuilder\FamilyBuilder;
@@ -77,6 +78,9 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
     /** @var ProductRepositoryInterface|Mock */
     private $productRepositoryMock;
 
+    /** @var TradeItemProductUpdater|Mock */
+    private $tradeItemProductUpdaterMock;
+
     protected function setUp(): void
     {
         $this->loggerMock = $this->createMock(LoggerInterface::class);
@@ -90,6 +94,7 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
         $this->categoryRepositoryMock = $this->createMock(CategoryRepositoryInterface::class);
         $this->productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
         $this->familyRepositoryMock = $this->createMock(FamilyRepositoryInterface::class);
+        $this->tradeItemProductUpdaterMock = $this->createMock(TradeItemProductUpdater::class);
 
         $value = ScalarValue::value('GTIN', 'xxx');
         $product = (new \PcmtCoreBundle\Tests\TestDataBuilder\ProductBuilder())->addValue($value)->build();
@@ -140,8 +145,8 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
             ->method('createProduct')
             ->willReturn($product);
 
-        $this->tradeItemProcessorMock->expects($this->exactly(3))
-            ->method('setProductToUpdate');
+        $this->tradeItemProductUpdaterMock->expects($this->exactly(3))
+            ->method('update');
 
         $this->productSaverMock->expects($this->atLeastOnce())
             ->method('save');
@@ -163,8 +168,8 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
 
         $this->tradeItemProcessorMock->expects($this->atLeastOnce())->method('processNode');
 
-        $this->tradeItemProcessorMock->expects($this->exactly(3))
-            ->method('setProductToUpdate');
+        $this->tradeItemProductUpdaterMock->expects($this->exactly(3))
+            ->method('update');
 
         $this->productSaverMock->expects($this->atLeastOnce())
             ->method('save');
@@ -183,7 +188,8 @@ class E2OpenFromXmlTaskletTest extends KernelTestCase
             $this->categoryRepositoryMock,
             $this->productRepositoryMock,
             $this->familyRepositoryMock,
-            $this->packagingHierarchyProcessorMock
+            $this->packagingHierarchyProcessorMock,
+            $this->tradeItemProductUpdaterMock
         );
         $tasklet->setStepExecution($this->stepExecutionMock);
 

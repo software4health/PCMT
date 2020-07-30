@@ -20,6 +20,7 @@ use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtCoreBundle\Service\E2Open\E2OpenAttributesService;
 use PcmtCoreBundle\Service\E2Open\PackagingHierarchyProcessor;
+use PcmtCoreBundle\Service\E2Open\TradeItemProductUpdater;
 use PcmtCoreBundle\Service\E2Open\TradeItemXmlProcessor;
 use PcmtCoreBundle\Util\Adapter\FileGetContentsWrapper;
 use Psr\Log\LoggerInterface;
@@ -47,6 +48,9 @@ class E2OpenFromXmlTasklet implements TaskletInterface
 
     /** @var TradeItemXmlProcessor */
     private $nodeProcessor;
+
+    /** @var TradeItemProductUpdater */
+    private $tradeItemProductUpdater;
 
     /** @var ProductQueryBuilderFactory */
     private $pqbFactory;
@@ -78,7 +82,8 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         CategoryRepositoryInterface $categoryRepository,
         ProductRepositoryInterface $productRepository,
         FamilyRepositoryInterface $familyRepository,
-        PackagingHierarchyProcessor $packagingHierarchyProcessor
+        PackagingHierarchyProcessor $packagingHierarchyProcessor,
+        TradeItemProductUpdater $tradeItemProductUpdater
     ) {
         $this->xmlReader = new Service();
         $this->productSaver = $productSaver;
@@ -90,6 +95,7 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         $this->productRepository = $productRepository;
         $this->familyRepository = $familyRepository;
         $this->packagingHierarchyProcessor = $packagingHierarchyProcessor;
+        $this->tradeItemProductUpdater = $tradeItemProductUpdater;
     }
 
     public function setStepExecution(StepExecution $stepExecution): void
@@ -130,7 +136,7 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                 foreach ($subTree as $element) {
                     if ('{}gtin' === $element['name']) {
                         $this->item = $this->instantiateProduct($element);
-                        $this->nodeProcessor->setProductToUpdate($this->item);
+                        $this->nodeProcessor->setFoundAttributes([]);
                         break;
                     }
                 }
@@ -144,6 +150,8 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                         $this->nodeProcessor->processNode($element);
                     }
                 );
+
+                $this->tradeItemProductUpdater->update($this->item, $this->nodeProcessor->getFoundAttributes());
 
                 $category = $this->categoryRepository->findOneByIdentifier(self::CATEGORY_CODE_FOR_IMPORTED_ITEMS);
                 if ($category) {
