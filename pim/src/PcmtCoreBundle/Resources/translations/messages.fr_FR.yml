@@ -295,3 +295,7 @@ pim_measure:
         SHEET: FR Sheet
         SQUARE YARD: FR Square Yard
         YARD: FR Yard
+
+pim_analytics:
+    info_type:
+        pcmt_version: PCMT Version
