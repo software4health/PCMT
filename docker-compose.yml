@@ -12,6 +12,7 @@ services:
     env_file: settings.env
     environment:
       - PCMT_PROFILE
+      - PCMT_VER
     user: 'docker'
     working_dir: '/srv/pim'
     secrets:

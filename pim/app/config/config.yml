@@ -12,6 +12,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: migrations.yml }
+    - { resource: parameters.php }
 
 framework:
     translator:      { fallback: en_US }

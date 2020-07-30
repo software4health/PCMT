@@ -80,3 +80,22 @@ services:
 
     pcmt_core.validator.directory.directory_path_validator:
         class: PcmtCoreBundle\Validator\Directory\DirectoryPathValidator
+
+    pcmt_core.pcmt_version_provider:
+        class: 'PcmtCoreBundle\Provider\PcmtVersionProvider'
+        arguments:
+            - '%pcmt_version%'
+
+    pcmt_core.twig.pcmt_version_extension:
+        class: 'PcmtCoreBundle\Twig\PcmtVersionExtension'
+        arguments:
+            - '@pcmt_core.pcmt_version_provider'
+        tags:
+            - { name: twig.extension }
+
+    pcmt_core.data_collector.pcmt_version:
+        class: 'PcmtCoreBundle\DataCollector\PcmtVersionDataCollector'
+        arguments:
+            - '@pcmt_core.pcmt_version_provider'
+        tags:
+            - { name: pim_analytics.data_collector, type: system_info_report }
