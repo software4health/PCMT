@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace PcmtDraftBundle\Tests\Connector\Job\Preparator;
+namespace PcmtDraftBundle\Tests\Connector\Job\Provider;
 
 use PcmtDraftBundle\Connector\Job\Provider\DraftsProvider;
 use PcmtDraftBundle\Entity\AbstractDraft;
@@ -39,8 +39,8 @@ class DraftsProviderTest extends TestCase
         $draftOfAnExistingProduct = (new ExistingProductDraftBuilder())->withId(2)->build();
 
         $this->draftsRepositoryMock
-            ->method('findBy')
-            ->with(['status' => AbstractDraft::STATUS_NEW])
+            ->method('findWithPermissionAndStatus')
+            ->with(AbstractDraft::STATUS_NEW)
             ->willReturn([
                 $draftOfANewProduct,
                 $draftOfAnExistingProduct,
@@ -60,8 +60,8 @@ class DraftsProviderTest extends TestCase
         $draftOfAnExistingProduct = (new ExistingProductDraftBuilder())->withId(2)->build();
 
         $this->draftsRepositoryMock
-            ->method('findBy')
-            ->with(['status' => AbstractDraft::STATUS_NEW])
+            ->method('findWithPermissionAndStatus')
+            ->with(AbstractDraft::STATUS_NEW)
             ->willReturn([
                 $draftOfANewProduct,
                 $draftOfAnExistingProduct,

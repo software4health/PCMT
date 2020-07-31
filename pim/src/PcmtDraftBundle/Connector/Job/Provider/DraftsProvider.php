@@ -26,7 +26,7 @@ class DraftsProvider
     public function prepare(bool $allSelected, array $excluded, array $selected): array
     {
         if ($allSelected) {
-            $drafts = $this->draftRepository->findBy(['status' => AbstractDraft::STATUS_NEW]);
+            $drafts = $this->draftRepository->findWithPermissionAndStatus(AbstractDraft::STATUS_NEW);
 
             foreach ($drafts as $index => $draft) {
                 if (in_array($draft->getId(), $excluded)) {

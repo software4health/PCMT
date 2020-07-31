@@ -36,7 +36,7 @@ class DraftRepository extends EntityRepository implements DraftRepositoryInterfa
         ';
     }
 
-    public function findWithStatus(int $statusId, int $offset, int $limit): array
+    public function findWithPermissionAndStatus(int $statusId, int $offset = 0, ?int $limit = null): array
     {
         $categoryIds = $this->categoryWithPermissionsRepository->getCategoryIds(CategoryPermissionsCheckerInterface::EDIT_LEVEL);
         if (null === $categoryIds) {
@@ -52,13 +52,13 @@ class DraftRepository extends EntityRepository implements DraftRepositoryInterfa
             );
         }
 
-        $query =
-            sprintf(
-                '%s ORDER BY id DESC LIMIT %d OFFSET %d',
-                $this->getStatement(),
-                $limit,
-                $offset
-            );
+        $query = $this->getStatement() . ' ORDER BY id DESC';
+        if ($limit) {
+            $query .= ' LIMIT '. $limit;
+        }
+        if ($offset) {
+            $query .= ' OFFSET '. $offset;
+        }
         $values = [
             'categoryIds' => $categoryIds,
             'statusId'    => $statusId,
@@ -87,7 +87,7 @@ class DraftRepository extends EntityRepository implements DraftRepositoryInterfa
         );
     }
 
-    public function countWithStatus(int $statusId): int
+    public function countWithPermissionAndStatus(int $statusId): int
     {
         $categoryIds = $this->categoryWithPermissionsRepository->getCategoryIds(CategoryPermissionsCheckerInterface::EDIT_LEVEL);
         if (null === $categoryIds) {
