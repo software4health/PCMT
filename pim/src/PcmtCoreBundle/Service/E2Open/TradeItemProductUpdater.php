@@ -38,17 +38,26 @@ class TradeItemProductUpdater
      */
     public function update(ProductInterface $product, array $dataToUpdate): void
     {
+        $valuesToUpdate = [];
+
         foreach ($dataToUpdate as $e2openAttributeData) {
             try {
-                $this->processProductAttributeValue($product, $e2openAttributeData);
+                $valuesToUpdate = $this->processProductAttributeValue($product, $e2openAttributeData, $valuesToUpdate);
             } catch (\Throwable $exception) {
                 $format = 'Processing key %s failed. Its value will be ignored. Details: %s';
                 $this->logger->error(sprintf($format, $e2openAttributeData->getName(), $exception->getMessage()));
             }
         }
+
+        $this->productUpdater->update(
+            $product,
+            [
+                'values' => $valuesToUpdate,
+            ]
+        );
     }
 
-    private function processProductAttributeValue(ProductInterface $product, E2OpenAttributeData $data): void
+    private function processProductAttributeValue(ProductInterface $product, E2OpenAttributeData $data, array $valuesToUpdate): array
     {
         $pcmtAttribute = $this->attributesService->getForCode($data->getCode());
 
@@ -76,17 +85,12 @@ class TradeItemProductUpdater
             ];
         }
 
-        $valuesToUpdate[$data->getCode()]['data'] = [
+        $valuesToUpdate[$data->getCode()][] = [
             'data'   => $value,
             'locale' => null,
             'scope'  => null,
         ];
 
-        $this->productUpdater->update(
-            $product,
-            [
-                'values' => $valuesToUpdate,
-            ]
-        );
+        return $valuesToUpdate;
     }
 }

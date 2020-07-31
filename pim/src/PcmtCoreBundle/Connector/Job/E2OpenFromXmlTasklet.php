@@ -114,12 +114,8 @@ class E2OpenFromXmlTasklet implements TaskletInterface
         $filePath = $this->stepExecution->getJobParameters()
             ->get('xmlFilePath');
         $this->products = [];
-        $this->processFile($filePath);
-        $this->processPackagingHierarchyTable();
-    }
 
-    private function processPackagingHierarchyTable(): void
-    {
+        $this->processFile($filePath);
         $this->packagingHierarchyProcessor->process($this->products);
 
         foreach ($this->products as $product) {
@@ -165,8 +161,6 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                 if ($category) {
                     $this->item->addCategory($category);
                 }
-
-                $this->productSaver->save($this->item);
 
                 $this->products[$this->item->getId()] = $this->item;
             },
@@ -224,7 +218,8 @@ class E2OpenFromXmlTasklet implements TaskletInterface
 
         foreach ($products as $product) {
             /** @var ProductInterface $product */
-            if ($gtinValue === $product->getValue('GTIN')->__toString()) {
+            $actualGTINvalue = $product->getValue('GTIN') ? $product->getValue('GTIN')->__toString() : null;
+            if ($gtinValue === $actualGTINvalue) {
                 return $product;
             }
         }
