@@ -14,7 +14,7 @@ use Doctrine\Common\Persistence\ObjectRepository;
 
 interface DraftRepositoryInterface extends ObjectRepository
 {
-    public function findWithStatus(int $statusId, int $offset, int $limit): array;
+    public function findWithPermissionAndStatus(int $statusId, int $offset = 0, ?int $limit = null): array;
 
-    public function countWithStatus(int $statusId): int;
+    public function countWithPermissionAndStatus(int $statusId): int;
 }

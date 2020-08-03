@@ -86,11 +86,11 @@ class DraftController
         $statusId = (int) $statusId;
 
         $page = $request->query->get('page') ?? ResponseBuilder::FIRST_PAGE;
-        $total = $this->draftRepository->countWithStatus($statusId);
+        $total = $this->draftRepository->countWithPermissionAndStatus($statusId);
         $lastPage = $this->responseBuilder->getLastPage($total);
         $page = $page > $lastPage ? $lastPage : $page;
 
-        $drafts = $this->draftRepository->findWithStatus(
+        $drafts = $this->draftRepository->findWithPermissionAndStatus(
             $statusId,
             ($page * ResponseBuilder::PER_PAGE) - ResponseBuilder::PER_PAGE,
             ResponseBuilder::PER_PAGE
