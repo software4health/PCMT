@@ -47,7 +47,7 @@
     "require": {
         "php": ">=7.2.0",
         "akeneo-labs/custom-entity-bundle": "3.0.*",
-        "akeneo/pim-community-dev": "3.2.x-dev@dev",
+        "akeneo/pim-community-dev": "3.2.66",
         "php-http/guzzle6-adapter": "^2.0",
         "sabre/xml": "^2.1",
         "phpoffice/phpspreadsheet": "1.9.0",

@@ -15,7 +15,7 @@ function cleanup {
 }
 trap cleanup EXIT
 
-AKENEO_VER="v3.2.5"
+AKENEO_VER="v3.2.66"
 
 # Path of this script
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
