@@ -51,7 +51,7 @@ class DraftRejecterTest extends TestCase
         parent::setUp();
     }
 
-    private function getDraftApproverInstance(): DraftRejecter
+    private function getDraftRejecterInstance(): DraftRejecter
     {
         return new DraftRejecter(
             $this->entityManagerMock,
@@ -74,7 +74,7 @@ class DraftRejecterTest extends TestCase
 
         $this->categoryPermissionsCheckerMock->method('hasAccessToProduct')->willReturn(true);
 
-        $service = $this->getDraftApproverInstance();
+        $service = $this->getDraftRejecterInstance();
 
         /** @var MockObject $draft */
         $draft->expects($this->once())->method('setStatus')->with();
@@ -85,7 +85,7 @@ class DraftRejecterTest extends TestCase
     /**
      * @dataProvider dataReject
      */
-    public function testApproveThrowsExceptionWhenNoAccess(DraftInterface $draft): void
+    public function testRejectThrowsExceptionWhenNoAccess(DraftInterface $draft): void
     {
         $objectToSave = (new ProductBuilder())->build();
 
@@ -95,7 +95,7 @@ class DraftRejecterTest extends TestCase
 
         $this->categoryPermissionsCheckerMock->method('hasAccessToProduct')->willReturn(false);
 
-        $service = $this->getDraftApproverInstance();
+        $service = $this->getDraftRejecterInstance();
 
         $this->expectException(DraftViolationException::class);
 
@@ -117,18 +117,16 @@ class DraftRejecterTest extends TestCase
     /**
      * @dataProvider dataRejectNoObject
      */
-    public function testApproveNoObject(DraftInterface $draft): void
+    public function testRejectNoObject(DraftInterface $draft): void
     {
         $this->creatorMock->expects($this->once())->method('getObjectToSave')->willReturn(null);
-        $this->entityManagerMock->expects($this->never())->method('persist');
-        $this->entityManagerMock->expects($this->never())->method('flush');
+        $this->entityManagerMock->expects($this->once())->method('persist');
+        $this->entityManagerMock->expects($this->once())->method('flush');
 
-        $this->expectException(\Throwable::class);
-
-        $service = $this->getDraftApproverInstance();
+        $service = $this->getDraftRejecterInstance();
 
         /** @var MockObject $draft */
-        $draft->expects($this->never())->method('setStatus');
+        $draft->expects($this->once())->method('setStatus')->with();
 
         $service->reject($draft);
     }
