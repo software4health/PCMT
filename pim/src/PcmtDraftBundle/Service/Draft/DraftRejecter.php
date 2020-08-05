@@ -47,30 +47,29 @@ class DraftRejecter
     public function reject(DraftInterface $draft): void
     {
         $objectToSave = $this->creator->getObjectToSave($draft);
-        if (!$objectToSave) {
-            throw new \Exception('pcmt.entity.draft.error.no_corresponding_object');
-        }
 
-        /** @var UserInterface $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        if ($objectToSave) {
+            /** @var UserInterface $user */
+            $user = $this->tokenStorage->getToken()->getUser();
 
-        $violations = new ConstraintViolationList();
+            $violations = new ConstraintViolationList();
 
-        if (!$this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::OWN_LEVEL, $objectToSave, $user)) {
-            $violations->add(
-                new ConstraintViolation(
-                    'No permission to reject the draft: no "own" access to any of the categories of the product.',
-                    '',
-                    [],
-                    '',
-                    '',
-                    ''
-                )
-            );
-        }
+            if (!$this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::OWN_LEVEL, $objectToSave, $user)) {
+                $violations->add(
+                    new ConstraintViolation(
+                        'No permission to reject the draft: no "own" access to any of the categories of the product.',
+                        '',
+                        [],
+                        '',
+                        '',
+                        ''
+                    )
+                );
+            }
 
-        if (0 !== $violations->count()) {
-            throw new DraftViolationException($violations, $objectToSave);
+            if (0 !== $violations->count()) {
+                throw new DraftViolationException($violations, $objectToSave);
+            }
         }
 
         $draft->reject();
