@@ -2,51 +2,40 @@
 declare(strict_types=1);
 
 use Behat\Behat\Context\Context;
-use Behat\MinkExtension\Context\MinkContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behatch\Asserter;
-use PcmtDraftBundle\Entity\AbstractDraft;
+use Behatch\Context\RestContext;
+use Behatch\HttpCall\Request;
 use Coduo\PHPMatcher\PHPUnit\PHPMatcherAssertions;
-use Symfony\Component\HttpKernel\KernelInterface;
-use PcmtDraftBundle\DataFixtures\NewDraftFixture;
-use Doctrine\ORM\EntityManagerInterface;
+use Psr\Http\Message\ResponseInterface;
 
-class BaseApiContext extends MinkContext implements Context
+class BaseApiContext extends RestContext implements Context
 {
+    /** @var string */
+    private $accessToken;
+
+    /** @var ResponseInterface */
+    private $lastResponse;
+
+    /** @var string */
+    private $username;
+
+    /** @var string */
+    private $password;
+
+    /** @var string */
+    private $clientIdSecret;
+
     use Asserter;
 
     use PHPMatcherAssertions;
 
-    /** @var KernelInterface */
-    protected $kernel;
-
-    /** @var NewDraftFixture */
-    protected $draftFixture;
-
-    /** @var EntityManagerInterface */
-    protected $entityManager;
-
-    /** @var Coduo\PHPMatcher\Matcher */
-    protected $matcher;
-
-    public function __construct(
-        PcmtDraftBundle\DataFixtures\NewDraftFixture $draftFixture
-    )
+    public function __construct(Request $request, array $parameters)
     {
-        $this->kernel = new \AppKernel('test', true);
-        $this->kernel->boot();
-        $this->draftFixture = $draftFixture;
-        $this->matcher = (new Coduo\PHPMatcher\Factory\SimpleFactory())->createMatcher();
-    }
-
-    /**
-     * @Given There is a draft with status :status
-     */
-    public function thereIsADraftWithStatus(string $status): void
-    {
-        $entityManager = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
-        (new NewDraftFixture())
-            ->load($entityManager);
+        $this->username = $parameters['username'];
+        $this->password = $parameters['password'];
+        $this->clientIdSecret = $parameters['client_id_secret'];
+        parent::__construct($request);
     }
 
     /**
@@ -54,17 +43,39 @@ class BaseApiContext extends MinkContext implements Context
      */
     public function iSendARequestToEndpoint(string $requestMethod, string $url, PyStringNode $body = null): void
     {
-        $body !== null ? $body->getRaw() : [];
-        $this->getSession()->setBasicAuth('admin', 'Admin123');
-        $client = $this->getSession()->getDriver()->getClient();
-        $client->request(
-            $requestMethod,
-            $this->locatePath($url),
-            [],
-            [],
-            $this->authentication(),
-            $body
-        );
+        $client = new GuzzleHttp\Client();
+        $this->lastResponse = $client->request($requestMethod, $this->locatePath($url), [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                "Authorization" => "Bearer " . $this->accessToken,
+            ],
+        ]);
+    }
+
+    /**
+     * @Given I receive token
+     */
+    public function iReceiveToken(): void
+    {
+        $body = json_encode([
+            "username" => $this->username,
+            "password" => $this->password,
+            "grant_type" => "password",
+        ]);
+        $client = new GuzzleHttp\Client();
+        $res = $client->request('POST', $this->locatePath('/api/oauth/v1/token'), [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                "Authorization" => "Basic " . $this->clientIdSecret,
+            ],
+            'body' => $body,
+        ]);
+        $resultBody = $res->getBody()->getContents();
+        $data = json_decode($resultBody, true);
+        $this->accessToken = $data['access_token'] ?? '';
+        if (!$this->accessToken) {
+            throw new Exception('No access token received.');
+        }
     }
 
     /**
@@ -72,48 +83,11 @@ class BaseApiContext extends MinkContext implements Context
      */
     public function theResponseStatusCodeShouldBe(int $code)
     {
-        $actual = $this->getSession()->getStatusCode();
+        $actual = $this->lastResponse->getStatusCode();
         $this->assertSame(
              $code,
-             $this->getSession()->getStatusCode(),
+             $actual,
             'Expected status code of ' . $code . ' does not match ' . $actual
         );
-    }
-
-    /**
-     * @Then The response matches expected template:
-     */
-    public function theResponseMatchesExpectedTemplate(PyStringNode $json): void
-    {
-        $actual = $this->getSession()->getPage()->getContent();
-        $this->assertMatchesPattern($json->getRaw(), $actual);
-    }
-
-    /**
-     * @BeforeScenario
-     * purges all drafts from database
-     */
-    public function clearSchema()
-    {
-        $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
-        $classMetaData = $em->getClassMetadata(AbstractDraft::class);
-        $connection = $em->getConnection();
-        $dbPlatform = $connection->getDatabasePlatform();
-        $connection->beginTransaction();
-        try {
-            $connection->query('SET FOREIGN_KEY_CHECKS=0');
-            $query = $dbPlatform->getTruncateTableSql($classMetaData->getTableName());
-            $connection->executeUpdate($query);
-            $connection->query('SET FOREIGN_KEY_CHECKS=1');
-            $connection->commit();
-        }
-        catch (\Exception $e) {
-            $connection->rollback();
-        }
-    }
-
-    private function authentication(): array
-    {
-        return ['PHP_AUTH_USER' => 'admin', 'PHP_AUTH_PW' => 'Admin123'];
     }
 }
