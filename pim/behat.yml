@@ -5,8 +5,10 @@ default:
         - %paths.base%/features/api
       contexts:
         - BaseApiContext:
-            draftFixture: '@pcmt_draft.fixture.new_draft_fixture'
-        - behatch:context:rest
+            parameters:
+                username: 'APIuser'
+                password: 'Admin123'
+                client_id_secret: 'MV9hcGlfY29ubmVjdGlvbl8xOmFwaV9zZWNyZXQ='
         - behatch:context:json
 
     selenium-drafts:
