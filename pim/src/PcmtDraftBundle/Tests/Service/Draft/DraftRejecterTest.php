@@ -11,10 +11,9 @@ namespace PcmtDraftBundle\Tests\Service\Draft;
 
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use PcmtDraftBundle\Entity\DraftInterface;
+use PcmtDraftBundle\Entity\AbstractProductDraft;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Service\Draft\DraftRejecter;
-use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductBuilder;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -24,9 +23,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class DraftRejecterTest extends TestCase
 {
-    /** @var GeneralObjectFromDraftCreator */
-    private $creatorMock;
-
     /** @var EntityManagerInterface */
     private $entityManagerMock;
 
@@ -38,7 +34,6 @@ class DraftRejecterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->creatorMock = $this->createMock(GeneralObjectFromDraftCreator::class);
         $this->entityManagerMock = $this->createMock(EntityManagerInterface::class);
         $user = $this->createMock(UserInterface::class);
         $token = $this->createMock(TokenInterface::class);
@@ -56,7 +51,6 @@ class DraftRejecterTest extends TestCase
         return new DraftRejecter(
             $this->entityManagerMock,
             $this->tokenStorageMock,
-            $this->creatorMock,
             $this->categoryPermissionsCheckerMock
         );
     }
@@ -64,11 +58,14 @@ class DraftRejecterTest extends TestCase
     /**
      * @dataProvider dataReject
      */
-    public function testReject(DraftInterface $draft): void
+    public function testReject(AbstractProductDraft $draft): void
     {
         $objectToSave = (new ProductBuilder())->build();
 
-        $this->creatorMock->expects($this->once())->method('getObjectToSave')->willReturn($objectToSave);
+        $draft
+            ->method('getProduct')
+            ->willReturn($objectToSave);
+
         $this->entityManagerMock->expects($this->once())->method('persist');
         $this->entityManagerMock->expects($this->once())->method('flush');
 
@@ -85,11 +82,14 @@ class DraftRejecterTest extends TestCase
     /**
      * @dataProvider dataReject
      */
-    public function testRejectThrowsExceptionWhenNoAccess(DraftInterface $draft): void
+    public function testRejectThrowsExceptionWhenNoAccess(AbstractProductDraft $draft): void
     {
         $objectToSave = (new ProductBuilder())->build();
 
-        $this->creatorMock->expects($this->once())->method('getObjectToSave')->willReturn($objectToSave);
+        $draft
+            ->method('getProduct')
+            ->willReturn($objectToSave);
+
         $this->entityManagerMock->expects($this->never())->method('persist');
         $this->entityManagerMock->expects($this->never())->method('flush');
 
@@ -107,7 +107,7 @@ class DraftRejecterTest extends TestCase
 
     public function dataReject(): array
     {
-        $draft = $this->createMock(DraftInterface::class);
+        $draft = $this->createMock(AbstractProductDraft::class);
 
         return [
             [$draft],
@@ -117,9 +117,12 @@ class DraftRejecterTest extends TestCase
     /**
      * @dataProvider dataRejectNoObject
      */
-    public function testRejectNoObject(DraftInterface $draft): void
+    public function testRejectNoObject(AbstractProductDraft $draft): void
     {
-        $this->creatorMock->expects($this->once())->method('getObjectToSave')->willReturn(null);
+        $draft
+            ->method('getProduct')
+            ->willReturn(null);
+
         $this->entityManagerMock->expects($this->once())->method('persist');
         $this->entityManagerMock->expects($this->once())->method('flush');
 
@@ -133,7 +136,7 @@ class DraftRejecterTest extends TestCase
 
     public function dataRejectNoObject(): array
     {
-        $draft = $this->createMock(DraftInterface::class);
+        $draft = $this->createMock(AbstractProductDraft::class);
 
         return [
             [$draft],

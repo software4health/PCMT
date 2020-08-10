@@ -12,6 +12,7 @@ namespace PcmtDraftBundle\Controller;
 use Akeneo\Pim\Enrichment\Bundle\MassEditAction\OperationJobLauncher;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use PcmtDraftBundle\Entity\AbstractDraft;
+use PcmtDraftBundle\Entity\AbstractProductDraft;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
@@ -23,7 +24,6 @@ use PcmtDraftBundle\Repository\DraftRepositoryInterface;
 use PcmtDraftBundle\Service\Builder\ResponseBuilder;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
 use PcmtDraftBundle\Service\Draft\DraftStatusListService;
-use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,9 +51,6 @@ class DraftController
     /** @var DraftViolationNormalizer */
     private $draftViolationNormalizer;
 
-    /** @var GeneralObjectFromDraftCreator */
-    private $creator;
-
     /** @var CategoryPermissionsCheckerInterface */
     private $categoryPermissionsChecker;
 
@@ -64,7 +61,6 @@ class DraftController
         OperationJobLauncher $operationJobLauncher,
         DraftRepositoryInterface $draftRepository,
         DraftViolationNormalizer $draftViolationNormalizer,
-        GeneralObjectFromDraftCreator $creator,
         CategoryPermissionsCheckerInterface $categoryPermissionsChecker
     ) {
         $this->draftStatusListService = $draftStatusListService;
@@ -73,7 +69,6 @@ class DraftController
         $this->operationJobLauncher = $operationJobLauncher;
         $this->draftRepository = $draftRepository;
         $this->draftViolationNormalizer = $draftViolationNormalizer;
-        $this->creator = $creator;
         $this->categoryPermissionsChecker = $categoryPermissionsChecker;
     }
 
@@ -253,8 +248,13 @@ class DraftController
 
     protected function hasAccessOr403(AbstractDraft $draft, string $level, string $message): void
     {
-        $objectToSave = $this->creator->getObjectToSave($draft);
-        if (!$this->categoryPermissionsChecker->hasAccessToProduct($level, $objectToSave)) {
+        if ($draft instanceof AbstractProductDraft) {
+            $entity = $draft->getProduct();
+        } else {
+            $entity = $draft->getProductModel();
+        }
+
+        if (!$this->categoryPermissionsChecker->hasAccessToProduct($level, $entity)) {
             throw new AccessDeniedHttpException($message);
         }
     }

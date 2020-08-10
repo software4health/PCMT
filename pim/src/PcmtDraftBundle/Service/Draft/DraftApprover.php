@@ -12,6 +12,7 @@ namespace PcmtDraftBundle\Service\Draft;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use PcmtDraftBundle\Entity\AbstractProductDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
@@ -57,6 +58,20 @@ class DraftApprover
 
     public function approve(DraftInterface $draft): void
     {
+        if ($draft instanceof AbstractProductDraft) {
+            $entity = $draft->getProduct();
+        } else {
+            $entity = $draft->getProductModel();
+        }
+
+        if (!$entity) {
+            throw new \Exception('pcmt.entity.draft.error.no_corresponding_object');
+        }
+
+        /** @var UserInterface $user */
+        $user = $this->tokenStorage->getToken()->getUser();
+        $hasAccess = $this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::OWN_LEVEL, $entity, $user);
+
         $objectToSave = $this->creator->getObjectToSave($draft);
         if (!$objectToSave) {
             throw new \Exception('pcmt.entity.draft.error.no_corresponding_object');
@@ -64,10 +79,7 @@ class DraftApprover
 
         $violations = $this->validator->validate($objectToSave, null, ['Default', 'creation']);
 
-        /** @var UserInterface $user */
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if (!$this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::OWN_LEVEL, $objectToSave, $user)) {
+        if (!$hasAccess) {
             $violations->add(
                 new ConstraintViolation(
                     'No permission to approve the draft: no "own" access to any of the categories of the product.',
