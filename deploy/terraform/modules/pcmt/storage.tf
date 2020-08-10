@@ -1,6 +1,5 @@
 resource "aws_s3_bucket" "backup" {
   provider = aws.compute
-  region   = var.aws-region
   bucket   = var.domain-name
   acl      = "private"
 
