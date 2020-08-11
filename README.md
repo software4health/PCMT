@@ -155,6 +155,33 @@ Copyright (c) 2019, VillageReach.  Licensed CC BY-SA 4.0:  https://creativecommo
 This section covers the additional services added with `docker-compose.tls.yml`
 and `docker-compose.prod.yml`.
 
+### Production Profile
+
+The `production` profile ensures that PCMT doesn't wipe and re-install the
+demo-data in the database - which is the default behavior.
+
+To set this profile set the environment variable `PCMT_PROFILE` to `production`
+before starting PCMT.
+
+An example of start PCMT with the demo data, stopping it, and then starting
+with the `production` profile would look roughly like this (with a bash shell):
+
+```shell
+# start in dev profile to get demo-data and initial db config
+export PCMT_PROFILE=dev
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+#  wait for PCMT to start in your browser
+
+# stop with the demo data, and re-start in production.
+docker-compose down
+export PCMT_PROFILE=production
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+```
+
+This example is meant to give a rough idea.  A production-ready deployment
+description is captured in our deployment [readme](deploy/README.md).
+
 ### Backup and Restore
 
 Restore:
