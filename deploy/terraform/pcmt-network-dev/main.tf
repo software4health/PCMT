@@ -5,6 +5,12 @@
 ######################################################################
 
 terraform {
+  required_providers {
+    aws = {
+      version = "~> 2.70"
+    }
+  }
+  
   backend "s3" {
     bucket = "pcmt-terraform-states"
     key    = "pcmt-network-dev.tf"

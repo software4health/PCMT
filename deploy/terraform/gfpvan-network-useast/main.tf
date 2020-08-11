@@ -5,6 +5,12 @@
 ######################################################################
 
 terraform {
+  required_providers {
+    aws = {
+      version = "~> 2.70"
+    }
+  }
+  
   backend "s3" {
     bucket  = "gfpvan-terraform-states"
     key     = "gfpvan-network-useast.tf"

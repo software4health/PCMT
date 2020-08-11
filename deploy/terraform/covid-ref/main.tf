@@ -5,6 +5,12 @@
 ######################################################################
 
 terraform {
+  required_providers {
+    aws = {
+      version = "~> 3.1.0"
+    }
+  }
+  
   backend "s3" {
     profile = "chai"
     bucket  = "chai-pcmt-terraform-states"

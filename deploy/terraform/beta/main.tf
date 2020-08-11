@@ -5,6 +5,12 @@
 ######################################################################
 
 terraform {
+  required_providers {
+    aws = {
+      version = "~> 3.1.0"
+    }
+  }
+  
   backend "s3" {
     bucket = "pcmt-terraform-states"
     key    = "pcmt-beta.tf"
@@ -36,7 +42,6 @@ data "terraform_remote_state" "pcmt-hosted-zone" {
 
 # s3 bucket to serve http redirect
 resource "aws_s3_bucket" "redirect" {
-  region = var.aws-region
   bucket = var.domain-name
   acl    = "public-read"
 
