@@ -7,6 +7,9 @@ use Behatch\Asserter;
 use Behatch\Context\RestContext;
 use Behatch\HttpCall\Request;
 use Coduo\PHPMatcher\PHPUnit\PHPMatcherAssertions;
+use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Exception\ClientException;
+use PcmtPermissionsBundle\DataFixtures\CategoryUserGroupFixture;
 use Psr\Http\Message\ResponseInterface;
 
 class BaseApiContext extends RestContext implements Context
@@ -26,16 +29,41 @@ class BaseApiContext extends RestContext implements Context
     /** @var string */
     private $clientIdSecret;
 
+    /** @var CategoryUserGroupFixture */
+    private $fixture;
+
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
     use Asserter;
 
     use PHPMatcherAssertions;
 
-    public function __construct(Request $request, array $parameters)
+    public function __construct(Request $request, array $parameters, CategoryUserGroupFixture $fixture, EntityManagerInterface $entityManager)
     {
         $this->username = $parameters['username'];
         $this->password = $parameters['password'];
         $this->clientIdSecret = $parameters['client_id_secret'];
+        $this->fixture = $fixture;
+        $this->entityManager = $entityManager;
         parent::__construct($request);
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function runFixtures()
+    {
+        $this->fixture->load($this->entityManager);
+    }
+
+    /**
+     * @AfterScenario
+     * @Given I clear fixtures
+     */
+    public function clearFixtures()
+    {
+        $this->fixture->clean($this->entityManager);
     }
 
     /**
@@ -43,13 +71,17 @@ class BaseApiContext extends RestContext implements Context
      */
     public function iSendARequestToEndpoint(string $requestMethod, string $url, PyStringNode $body = null): void
     {
-        $client = new GuzzleHttp\Client();
-        $this->lastResponse = $client->request($requestMethod, $this->locatePath($url), [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                "Authorization" => "Bearer " . $this->accessToken,
-            ],
-        ]);
+        try {
+            $client = new GuzzleHttp\Client();
+            $this->lastResponse = $client->request($requestMethod, $this->locatePath($url), [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    "Authorization" => "Bearer " . $this->accessToken,
+                ],
+            ]);
+        } catch (ClientException $e) {
+            $this->lastResponse = $e->getResponse();
+        }
     }
 
     /**
@@ -81,7 +113,7 @@ class BaseApiContext extends RestContext implements Context
     /**
      * @Then The response status code should be :code
      */
-    public function theResponseStatusCodeShouldBe(int $code)
+    public function theResponseStatusCodeShouldBe(int $code): void
     {
         $actual = $this->lastResponse->getStatusCode();
         $this->assertSame(
@@ -89,5 +121,29 @@ class BaseApiContext extends RestContext implements Context
              $actual,
             'Expected status code of ' . $code . ' does not match ' . $actual
         );
+    }
+
+    private function getItemsCount(): int
+    {
+        $data = $this->lastResponse->getBody()->getContents();
+        $data = json_decode($data, true);
+        return (int) $data["items_count"];
+    }
+
+    /**
+     * @Then The number of results should be greater than :number
+     */
+    public function theNumberOfResultsShouldBeGreaterThan(int $number): void
+    {
+        $this->assertTrue($this->getItemsCount() > $number);
+    }
+
+
+    /**
+     * @Then The number of results should be lower than :number
+     */
+    public function theNumberOfResultsShouldBeLowerThan(int $number): void
+    {
+        $this->assertTrue($this->getItemsCount() < $number);
     }
 }
