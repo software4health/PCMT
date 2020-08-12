@@ -9,6 +9,8 @@ default:
                 username: 'APIuser'
                 password: 'Admin123'
                 client_id_secret: 'MV9hcGlfY29ubmVjdGlvbl8xOmFwaV9zZWNyZXQ='
+            fixture: '@pcmt_permissions.data_fixtures.category_user_group_fixture'
+            entityManager: '@doctrine.orm.entity_manager'
         - behatch:context:json
 
     selenium-drafts:

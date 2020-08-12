@@ -23,7 +23,7 @@ class DraftFixtureFactory
 
         switch ($status) {
             case AbstractDraft::STATUS_NEW:
-                return new NewDraftFixture();
+                return new CategoryUserGroupFixture();
         }
     }
 }
