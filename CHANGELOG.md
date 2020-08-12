@@ -1,13 +1,20 @@
-VER 2.0.1 / unreleased
+VER 2.0.1 / 2020-08-12
 ==================
 
 **Added**
-
-**Changed**
-
-**Removed**
+* [#535](https://gitlab.com/pcmt/pcmt/-/issues/535): Clicking on associated product navigates to that product
+* [#547](https://gitlab.com/pcmt/pcmt/-/issues/547): Implement category access - Drafts bulk reject and single draft reject
+* [#537](https://gitlab.com/pcmt/pcmt/-/issues/537): Populate packaging heirarchy table from GTIN import
+* [#539](https://gitlab.com/pcmt/pcmt/-/issues/539): Update GDSN CIN mapping to reflect demo-data attribute changes
+* [#552](https://gitlab.com/pcmt/pcmt/-/issues/552): Display version of PCMT in UI
+* [#562](https://gitlab.com/pcmt/pcmt/-/issues/562): Create automated tests for PCMT External API (category permissions) - GET products
 
 **Fixed**
+* [#554](https://gitlab.com/pcmt/pcmt/-/issues/554): Invalid warning after draft bulk reject
+* [#548](https://gitlab.com/pcmt/pcmt/-/issues/548): Mst supplier export don’t show value in summary column
+* [#549](https://gitlab.com/pcmt/pcmt/-/issues/549): Bulk approve - limit access according to permissions in the process tracker view
+* [#560](https://gitlab.com/pcmt/pcmt/-/issues/560): Version building error
+* [#561](https://gitlab.com/pcmt/pcmt/-/issues/561): Trying to reject a draft without object causes error
 
 
 VER 2.0.0 / 2020-07-17
