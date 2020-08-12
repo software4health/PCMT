@@ -11,6 +11,7 @@ namespace PcmtDraftBundle\Service\Draft;
 
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use PcmtDraftBundle\Entity\AbstractProductDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
@@ -26,35 +27,34 @@ class DraftRejecter
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var GeneralObjectFromDraftCreator */
-    private $creator;
-
     /** @var CategoryPermissionsCheckerInterface */
     private $categoryPermissionsChecker;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         TokenStorageInterface $tokenStorage,
-        GeneralObjectFromDraftCreator $creator,
         CategoryPermissionsCheckerInterface $categoryPermissionsChecker
     ) {
         $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;
-        $this->creator = $creator;
         $this->categoryPermissionsChecker = $categoryPermissionsChecker;
     }
 
     public function reject(DraftInterface $draft): void
     {
-        $objectToSave = $this->creator->getObjectToSave($draft);
+        if ($draft instanceof AbstractProductDraft) {
+            $entity = $draft->getProduct();
+        } else {
+            $entity = $draft->getProductModel();
+        }
 
-        if ($objectToSave) {
+        if ($entity) {
             /** @var UserInterface $user */
             $user = $this->tokenStorage->getToken()->getUser();
 
             $violations = new ConstraintViolationList();
 
-            if (!$this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::OWN_LEVEL, $objectToSave, $user)) {
+            if (!$this->categoryPermissionsChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::OWN_LEVEL, $entity, $user)) {
                 $violations->add(
                     new ConstraintViolation(
                         'No permission to reject the draft: no "own" access to any of the categories of the product.',
@@ -68,7 +68,7 @@ class DraftRejecter
             }
 
             if (0 !== $violations->count()) {
-                throw new DraftViolationException($violations, $objectToSave);
+                throw new DraftViolationException($violations, $entity);
             }
         }
 

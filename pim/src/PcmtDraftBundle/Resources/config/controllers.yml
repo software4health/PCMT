@@ -10,7 +10,6 @@ services:
         autowire: true
         arguments:
             $draftViolationNormalizer: '@pcmt_draft.normalizer.draft_violation'
-            $creator: '@pcmt.service.general_object_from_draft_creator'
             $categoryPermissionsChecker: '@pcmt.service.category_permissions_checker'
 
     pcmt_core.controller.product:

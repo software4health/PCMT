@@ -12,7 +12,7 @@ namespace PcmtDraftBundle\Tests\Service\Draft;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use PcmtDraftBundle\Entity\DraftInterface;
+use PcmtDraftBundle\Entity\AbstractProductDraft;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Service\Draft\DraftApprover;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
@@ -79,9 +79,13 @@ class DraftApproverTest extends TestCase
     /**
      * @dataProvider dataApprove
      */
-    public function testApprove(DraftInterface $draft): void
+    public function testApprove(AbstractProductDraft $draft): void
     {
         $objectToSave = (new ProductBuilder())->build();
+
+        $draft
+            ->method('getProduct')
+            ->willReturn($objectToSave);
 
         $this->creatorMock->expects($this->once())->method('getObjectToSave')->willReturn($objectToSave);
         $this->entityManagerMock->expects($this->once())->method('persist');
@@ -103,9 +107,13 @@ class DraftApproverTest extends TestCase
     /**
      * @dataProvider dataApprove
      */
-    public function testApproveThrowsExceptionWhenNoAccess(DraftInterface $draft): void
+    public function testApproveThrowsExceptionWhenNoAccess(AbstractProductDraft $draft): void
     {
         $objectToSave = (new ProductBuilder())->build();
+
+        $draft
+            ->method('getProduct')
+            ->willReturn($objectToSave);
 
         $this->creatorMock->expects($this->once())->method('getObjectToSave')->willReturn($objectToSave);
         $this->entityManagerMock->expects($this->never())->method('persist');
@@ -128,7 +136,7 @@ class DraftApproverTest extends TestCase
 
     public function dataApprove(): array
     {
-        $draft = $this->createMock(DraftInterface::class);
+        $draft = $this->createMock(AbstractProductDraft::class);
 
         return [
             [$draft],
@@ -138,9 +146,13 @@ class DraftApproverTest extends TestCase
     /**
      * @dataProvider dataApproveNoObject
      */
-    public function testApproveNoObject(DraftInterface $draft): void
+    public function testApproveNoObject(AbstractProductDraft $draft): void
     {
-        $this->creatorMock->expects($this->once())->method('getObjectToSave')->willReturn(null);
+        $draft
+            ->method('getProduct')
+            ->willReturn(null);
+
+        $this->creatorMock->expects($this->never())->method('getObjectToSave');
         $this->entityManagerMock->expects($this->never())->method('persist');
         $this->entityManagerMock->expects($this->never())->method('flush');
 
@@ -158,7 +170,7 @@ class DraftApproverTest extends TestCase
 
     public function dataApproveNoObject(): array
     {
-        $draft = $this->createMock(DraftInterface::class);
+        $draft = $this->createMock(AbstractProductDraft::class);
 
         return [
             [$draft],
