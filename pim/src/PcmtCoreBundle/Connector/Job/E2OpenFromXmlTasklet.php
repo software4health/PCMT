@@ -162,6 +162,8 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                     $this->item->addCategory($category);
                 }
 
+                $this->productSaver->save($this->item);
+
                 $this->products[$this->item->getId()] = $this->item;
             },
         ];
