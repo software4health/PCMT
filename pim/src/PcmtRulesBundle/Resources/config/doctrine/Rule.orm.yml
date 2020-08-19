@@ -9,9 +9,15 @@ PcmtRulesBundle\Entity\Rule:
     table: pcmt_rule
     repositoryClass: PcmtRulesBundle\Repository\RuleRepository
     fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
         uniqueId:
             type: string
-            id: true
+            unique: true
+            column: unique_id
         created:
             type: datetime
         updated:

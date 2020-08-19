@@ -14,6 +14,9 @@ use DateTime;
 
 class Rule
 {
+    /** @var int */
+    private $id;
+
     /** @var string */
     private $uniqueId;
 
@@ -33,6 +36,7 @@ class Rule
     private $keyAttribute;
 
     public function __construct(
+        int $id,
         string $uniqueId,
         Family $sourceFamily,
         Family $destinationFamily,
@@ -40,12 +44,18 @@ class Rule
         ?DateTime $updated,
         ?AttributeInterface $keyAttribute
     ) {
+        $this->id = $id;
         $this->uniqueId = $uniqueId;
         $this->sourceFamily = $sourceFamily;
         $this->destinationFamily = $destinationFamily;
         $this->created = $created;
         $this->updated = $updated;
         $this->keyAttribute = $keyAttribute;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getUniqueId(): string
