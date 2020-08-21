@@ -1,4 +1,4 @@
-VER 2.0.2 / unreleased
+VER 2.0.3 / unreleased
 ==================
 
 **Added**
@@ -9,6 +9,16 @@ VER 2.0.2 / unreleased
 
 **Fixed**
 
+VER 2.0.2 / 2020-08-21
+==================
+
+**Added**
+* [#586](https://gitlab.com/pcmt/pcmt/-/issues/586): Create rule class model 
+
+**Fixed**
+* [#530](https://gitlab.com/pcmt/pcmt/-/issues/530): Issue with category permits on the draft list
+* [#587](https://gitlab.com/pcmt/pcmt/-/issues/587): Bug - GDSN XML import issues
+* [#594](https://gitlab.com/pcmt/pcmt/-/issues/594): Can't approve draft for a new product/product model
 
 VER 2.0.1 / 2020-08-12
 ==================
