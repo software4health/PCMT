@@ -14,6 +14,8 @@ use Akeneo\UserManagement\Component\Model\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\AbstractProductDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
+use PcmtDraftBundle\Entity\ExistingObjectDraftInterface;
+use PcmtDraftBundle\Entity\NewObjectDraftInterface;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -57,6 +59,38 @@ class DraftApprover
     }
 
     public function approve(DraftInterface $draft): void
+    {
+        if ($draft instanceof ExistingObjectDraftInterface) {
+            $this->approveExistingObjectDraft($draft);
+        } else {
+            $this->approveNewObjectDraft($draft);
+        }
+    }
+
+    private function approveNewObjectDraft(NewObjectDraftInterface $draft): void
+    {
+        $objectToSave = $this->creator->getObjectToSave($draft);
+        if (!$objectToSave) {
+            throw new \Exception('pcmt.entity.draft.error.no_corresponding_object');
+        }
+
+        /** @var UserInterface $user */
+        $user = $this->tokenStorage->getToken()->getUser();
+        $violations = $this->validator->validate($objectToSave, null, ['Default', 'creation']);
+
+        if (0 === $violations->count()) {
+            $this->saver->save($objectToSave);
+        } else {
+            throw new DraftViolationException($violations, $objectToSave);
+        }
+
+        $draft->approve($user);
+
+        $this->entityManager->persist($draft);
+        $this->entityManager->flush();
+    }
+
+    private function approveExistingObjectDraft(ExistingObjectDraftInterface $draft): void
     {
         if ($draft instanceof AbstractProductDraft) {
             $entity = $draft->getProduct();

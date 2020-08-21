@@ -13,6 +13,7 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\AbstractProductDraft;
+use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Service\Draft\DraftApprover;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
@@ -136,7 +137,7 @@ class DraftApproverTest extends TestCase
 
     public function dataApprove(): array
     {
-        $draft = $this->createMock(AbstractProductDraft::class);
+        $draft = $this->createMock(ExistingProductDraft::class);
 
         return [
             [$draft],
