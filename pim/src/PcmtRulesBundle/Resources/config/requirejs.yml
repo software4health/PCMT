@@ -1,0 +1,8 @@
+config:
+  paths:
+    pcmt/rules/index: pcmtrules/js/controller/rule_index
+  config:
+    pim/controller-registry:
+      controllers:
+        pcmt_rules_index:
+          module: pcmt/rules/index
