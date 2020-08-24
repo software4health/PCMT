@@ -1,0 +1,10 @@
+services:
+
+    pcmt.controller.rest.rules:
+        class: 'PcmtRulesBundle\Controller\RuleController'
+        arguments:
+            - '@pim_internal_api_serializer'
+            - '@pcmt.updater.rule'
+            - '@validator'
+            - '@pcmt.saver.rule'
+            - '@pim_enrich.normalizer.violation'

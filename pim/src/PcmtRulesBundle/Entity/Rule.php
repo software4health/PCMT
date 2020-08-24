@@ -35,21 +35,37 @@ class Rule
     /** @var ?AttributeInterface */
     private $keyAttribute;
 
-    public function __construct(
-        int $id,
-        string $uniqueId,
-        Family $sourceFamily,
-        Family $destinationFamily,
-        DateTime $created,
-        ?DateTime $updated,
-        ?AttributeInterface $keyAttribute
-    ) {
-        $this->id = $id;
+    public function __construct()
+    {
+    }
+
+    public function setUniqueId(string $uniqueId): void
+    {
         $this->uniqueId = $uniqueId;
+    }
+
+    public function setSourceFamily(Family $sourceFamily): void
+    {
         $this->sourceFamily = $sourceFamily;
+    }
+
+    public function setDestinationFamily(Family $destinationFamily): void
+    {
         $this->destinationFamily = $destinationFamily;
+    }
+
+    public function setCreated(DateTime $created): void
+    {
         $this->created = $created;
+    }
+
+    public function setUpdated(?DateTime $updated): void
+    {
         $this->updated = $updated;
+    }
+
+    public function setKeyAttribute(?AttributeInterface $keyAttribute): void
+    {
         $this->keyAttribute = $keyAttribute;
     }
 

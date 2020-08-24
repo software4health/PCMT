@@ -81,3 +81,7 @@ pcmt_draft:
 
 pcmt_permissions:
     resource: "@PcmtPermissionsBundle/Resources/config/routing.yml"
+
+pcmt_rules:
+    resource: "@PcmtRulesBundle/Resources/config/routing.yml"
+

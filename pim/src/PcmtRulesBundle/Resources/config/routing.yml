@@ -1,0 +1,4 @@
+
+internal_api_rule:
+    resource: '@PcmtRulesBundle/Resources/config/routing/rules.yml'
+    prefix: /rest/rule
