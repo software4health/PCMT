@@ -6,3 +6,8 @@
 
 services:
 
+    pcmt.rule.normalizer:
+        class: PcmtRulesBundle\Normalizer\RuleNormalizer
+        autowire: true
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 80 }

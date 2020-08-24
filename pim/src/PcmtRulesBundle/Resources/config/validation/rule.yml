@@ -1,0 +1,15 @@
+PcmtRulesBundle\Entity\Rule:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: uniqueId
+    properties:
+        uniqueId:
+            - NotBlank: ~
+            - Regex:
+                pattern: /^[a-zA-Z0-9_]+$/
+                message: Rule unique id may contain only letters, numbers and underscores
+            - Length:
+                max: 100
+        sourceFamily:
+            - NotBlank: ~
+        destinationFamily:
+            - NotBlank: ~
