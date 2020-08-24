@@ -1,0 +1,7 @@
+pcmt.permission:
+    rules: FR Rules
+    rules.label:
+        view: FR View rules
+        create: FR Create rules
+        edit: FR Edit rules
+        run: FR Run rules
