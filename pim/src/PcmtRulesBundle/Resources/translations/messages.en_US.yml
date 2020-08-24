@@ -1,0 +1,7 @@
+pcmt.permission:
+    rules: Rules
+    rules.label:
+        view: View rules
+        create: Create rules
+        edit: Edit rules
+        run: Run rules
