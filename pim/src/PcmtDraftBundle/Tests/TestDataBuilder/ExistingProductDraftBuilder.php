@@ -58,4 +58,11 @@ class ExistingProductDraftBuilder extends AbstractDraftBuilder
     {
         return $this->existingProductDraft;
     }
+
+    public function withNoProduct(): self
+    {
+        $this->existingProductDraft->setProduct();
+
+        return $this;
+    }
 }

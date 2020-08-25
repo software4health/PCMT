@@ -70,9 +70,6 @@ class DraftApprover
     private function approveNewObjectDraft(NewObjectDraftInterface $draft): void
     {
         $objectToSave = $this->creator->getObjectToSave($draft);
-        if (!$objectToSave) {
-            throw new \Exception('pcmt.entity.draft.error.no_corresponding_object');
-        }
 
         /** @var UserInterface $user */
         $user = $this->tokenStorage->getToken()->getUser();

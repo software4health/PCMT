@@ -32,6 +32,11 @@ abstract class AbstractProductDraft extends AbstractDraft implements ProductDraf
         return $this->product;
     }
 
+    public function setProduct(?ProductInterface $product = null): void
+    {
+        $this->product = $product;
+    }
+
     public function getObject(): ?EntityWithAssociationsInterface
     {
         return $this->getProduct();
