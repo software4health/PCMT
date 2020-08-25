@@ -10,64 +10,59 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Tests\Service\Draft;
 
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
-use Akeneo\UserManagement\Component\Model\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use PcmtDraftBundle\Entity\AbstractProductDraft;
-use PcmtDraftBundle\Entity\ExistingProductDraft;
+use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Service\Draft\DraftApprover;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
+use PcmtDraftBundle\Tests\TestDataBuilder\ConstraintViolationBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ConstraintViolationListBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\ExistingProductDraftBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\ExistingProductModelDraftBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\NewProductDraftBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\ProductModelBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\TokenBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\UserBuilder;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DraftApproverTest extends TestCase
 {
-    /** @var GeneralObjectFromDraftCreator */
-    private $creatorMock;
+    /** @var DraftApprover */
+    private $approver;
 
-    /** @var EntityManagerInterface */
+    /** @var EntityManagerInterface|MockObject */
     private $entityManagerMock;
 
-    /** @var TokenStorageInterface */
+    /** @var TokenStorageInterface|MockObject */
     private $tokenStorageMock;
 
-    /** @var ValidatorInterface */
+    /** @var ValidatorInterface|MockObject */
     private $validatorMock;
 
-    /** @var SaverInterface */
+    /** @var SaverInterface|MockObject */
     private $saverMock;
 
-    /** @var MockObject|CategoryPermissionsCheckerInterface */
+    /** @var GeneralObjectFromDraftCreator|MockObject */
+    private $creatorMock;
+
+    /** @var CategoryPermissionsCheckerInterface|MockObject */
     private $categoryPermissionsCheckerMock;
 
     protected function setUp(): void
     {
-        $this->creatorMock = $this->createMock(GeneralObjectFromDraftCreator::class);
         $this->entityManagerMock = $this->createMock(EntityManagerInterface::class);
-        $user = $this->createMock(UserInterface::class);
-        $token = $this->createMock(TokenInterface::class);
-        $token->method('getUser')->willReturn($user);
         $this->tokenStorageMock = $this->createMock(TokenStorageInterface::class);
-        $this->tokenStorageMock->method('getToken')->willReturn($token);
-
         $this->validatorMock = $this->createMock(ValidatorInterface::class);
-
         $this->saverMock = $this->createMock(SaverInterface::class);
-
+        $this->creatorMock = $this->createMock(GeneralObjectFromDraftCreator::class);
         $this->categoryPermissionsCheckerMock = $this->createMock(CategoryPermissionsCheckerInterface::class);
 
-        parent::setUp();
-    }
-
-    private function getDraftApproverInstance(): DraftApprover
-    {
-        return new DraftApprover(
+        $this->approver = new DraftApprover(
             $this->entityManagerMock,
             $this->tokenStorageMock,
             $this->validatorMock,
@@ -77,104 +72,246 @@ class DraftApproverTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider dataApprove
-     */
-    public function testApprove(AbstractProductDraft $draft): void
+    public function testApproveNewProductDraft(): void
     {
-        $objectToSave = (new ProductBuilder())->build();
-
-        $draft
-            ->method('getProduct')
-            ->willReturn($objectToSave);
-
-        $this->creatorMock->expects($this->once())->method('getObjectToSave')->willReturn($objectToSave);
-        $this->entityManagerMock->expects($this->once())->method('persist');
-        $this->entityManagerMock->expects($this->once())->method('flush');
-
+        $draftToApprove = (new NewProductDraftBuilder())->build();
+        $correspondingProduct = (new ProductBuilder())->build();
+        $user = (new UserBuilder())->build();
+        $token = (new TokenBuilder())->withUser($user)->build();
         $violations = (new ConstraintViolationListBuilder())->build();
-        $this->validatorMock->expects($this->once())->method('validate')->willReturn($violations);
 
-        $this->categoryPermissionsCheckerMock->method('hasAccessToProduct')->willReturn(true);
+        $this->creatorMock
+            ->method('getObjectToSave')
+            ->willReturn($correspondingProduct);
 
-        $service = $this->getDraftApproverInstance();
+        $this->tokenStorageMock
+            ->method('getToken')
+            ->willReturn($token);
 
-        /** @var MockObject $draft */
-        $draft->expects($this->once())->method('setStatus')->with();
+        $this->validatorMock
+            ->method('validate')
+            ->willReturn($violations);
 
-        $service->approve($draft);
+        $this->saverMock
+            ->expects($this->once())
+            ->method('save');
+        $this->entityManagerMock
+            ->expects($this->once())
+            ->method('persist');
+        $this->entityManagerMock
+            ->expects($this->once())
+            ->method('flush');
+
+        $this->approver->approve($draftToApprove);
+
+        $this->assertEquals(AbstractDraft::STATUS_APPROVED, $draftToApprove->getStatus());
     }
 
-    /**
-     * @dataProvider dataApprove
-     */
-    public function testApproveThrowsExceptionWhenNoAccess(AbstractProductDraft $draft): void
+    public function testApproveNewProductDraftWhenValidationFails(): void
     {
-        $objectToSave = (new ProductBuilder())->build();
+        $draftToApprove = (new NewProductDraftBuilder())->build();
+        $correspondingObject = (new ProductBuilder())->build();
+        $user = (new UserBuilder())->build();
+        $token = (new TokenBuilder())->withUser($user)->build();
+        $violations = (new ConstraintViolationListBuilder())
+            ->withViolation((new ConstraintViolationBuilder())->build())
+            ->build();
 
-        $draft
-            ->method('getProduct')
-            ->willReturn($objectToSave);
+        $this->creatorMock
+            ->method('getObjectToSave')
+            ->willReturn($correspondingObject);
 
-        $this->creatorMock->expects($this->once())->method('getObjectToSave')->willReturn($objectToSave);
-        $this->entityManagerMock->expects($this->never())->method('persist');
-        $this->entityManagerMock->expects($this->never())->method('flush');
+        $this->tokenStorageMock
+            ->method('getToken')
+            ->willReturn($token);
 
-        $violations = (new ConstraintViolationListBuilder())->build();
-        $this->validatorMock->expects($this->once())->method('validate')->willReturn($violations);
-
-        $this->categoryPermissionsCheckerMock->method('hasAccessToProduct')->willReturn(false);
-
-        $service = $this->getDraftApproverInstance();
+        $this->validatorMock
+            ->method('validate')
+            ->willReturn($violations);
 
         $this->expectException(DraftViolationException::class);
 
-        /** @var MockObject $draft */
-        $draft->expects($this->never())->method('setStatus')->with();
+        $this->saverMock
+            ->expects($this->never())
+            ->method('save');
+        $this->entityManagerMock
+            ->expects($this->never())
+            ->method('persist');
+        $this->entityManagerMock
+            ->expects($this->never())
+            ->method('flush');
 
-        $service->approve($draft);
+        $this->approver->approve($draftToApprove);
     }
 
-    public function dataApprove(): array
+    public function testApproveExistingProductDraft(): void
     {
-        $draft = $this->createMock(ExistingProductDraft::class);
+        $draftToApprove = (new ExistingProductDraftBuilder())->build();
+        $correspondingObject = (new ProductBuilder())->build();
+        $user = (new UserBuilder())->build();
+        $token = (new TokenBuilder())->withUser($user)->build();
+        $violations = (new ConstraintViolationListBuilder())->build();
 
-        return [
-            [$draft],
-        ];
+        $this->categoryPermissionsCheckerMock
+            ->method('hasAccessToProduct')
+            ->willReturn(true);
+
+        $this->creatorMock
+            ->method('getObjectToSave')
+            ->willReturn($correspondingObject);
+
+        $this->tokenStorageMock
+            ->method('getToken')
+            ->willReturn($token);
+
+        $this->validatorMock
+            ->method('validate')
+            ->willReturn($violations);
+
+        $this->saverMock
+            ->expects($this->once())
+            ->method('save');
+        $this->entityManagerMock
+            ->expects($this->once())
+            ->method('persist');
+        $this->entityManagerMock
+            ->expects($this->once())
+            ->method('flush');
+
+        $this->approver->approve($draftToApprove);
+
+        $this->assertEquals(AbstractDraft::STATUS_APPROVED, $draftToApprove->getStatus());
     }
 
-    /**
-     * @dataProvider dataApproveNoObject
-     */
-    public function testApproveNoObject(AbstractProductDraft $draft): void
+    public function testApproveExistingProductModelDraft(): void
     {
-        $draft
-            ->method('getProduct')
-            ->willReturn(null);
+        $draftToApprove = (new ExistingProductModelDraftBuilder())->build();
+        $correspondingObject = (new ProductModelBuilder())->build();
+        $user = (new UserBuilder())->build();
+        $token = (new TokenBuilder())->withUser($user)->build();
+        $violations = (new ConstraintViolationListBuilder())->build();
 
-        $this->creatorMock->expects($this->never())->method('getObjectToSave');
-        $this->entityManagerMock->expects($this->never())->method('persist');
-        $this->entityManagerMock->expects($this->never())->method('flush');
+        $this->categoryPermissionsCheckerMock
+            ->method('hasAccessToProduct')
+            ->willReturn(true);
 
-        $this->validatorMock->expects($this->never())->method('validate');
+        $this->creatorMock
+            ->method('getObjectToSave')
+            ->willReturn($correspondingObject);
+
+        $this->tokenStorageMock
+            ->method('getToken')
+            ->willReturn($token);
+
+        $this->validatorMock
+            ->method('validate')
+            ->willReturn($violations);
+
+        $this->saverMock
+            ->expects($this->once())
+            ->method('save');
+        $this->entityManagerMock
+            ->expects($this->once())
+            ->method('persist');
+        $this->entityManagerMock
+            ->expects($this->once())
+            ->method('flush');
+
+        $this->approver->approve($draftToApprove);
+
+        $this->assertEquals(AbstractDraft::STATUS_APPROVED, $draftToApprove->getStatus());
+    }
+
+    public function testApproveWhenThereIsNoCorrespondingObject(): void
+    {
+        $draftToApprove = (new ExistingProductDraftBuilder())->withNoProduct()->build();
 
         $this->expectException(\Throwable::class);
+        $this->expectExceptionMessage('pcmt.entity.draft.error.no_corresponding_object');
 
-        $service = $this->getDraftApproverInstance();
+        $this->saverMock
+            ->expects($this->never())
+            ->method('save');
+        $this->entityManagerMock
+            ->expects($this->never())
+            ->method('persist');
+        $this->entityManagerMock
+            ->expects($this->never())
+            ->method('flush');
 
-        /** @var MockObject $draft */
-        $draft->expects($this->never())->method('setStatus');
-
-        $service->approve($draft);
+        $this->approver->approve($draftToApprove);
     }
 
-    public function dataApproveNoObject(): array
+    public function testApproveWhenObjectToSaveIsNull(): void
     {
-        $draft = $this->createMock(AbstractProductDraft::class);
+        $draftToApprove = (new ExistingProductDraftBuilder())->build();
+        $user = (new UserBuilder())->build();
+        $token = (new TokenBuilder())->withUser($user)->build();
 
-        return [
-            [$draft],
-        ];
+        $this->creatorMock
+            ->method('getObjectToSave')
+            ->willReturn(null);
+
+        $this->tokenStorageMock
+            ->method('getToken')
+            ->willReturn($token);
+
+        $this->categoryPermissionsCheckerMock
+            ->method('hasAccessToProduct')
+            ->willReturn(false);
+
+        $this->expectException(\Throwable::class);
+        $this->expectExceptionMessage('pcmt.entity.draft.error.no_corresponding_object');
+
+        $this->saverMock
+            ->expects($this->never())
+            ->method('save');
+        $this->entityManagerMock
+            ->expects($this->never())
+            ->method('persist');
+        $this->entityManagerMock
+            ->expects($this->never())
+            ->method('flush');
+
+        $this->approver->approve($draftToApprove);
+    }
+
+    public function testApproveExistingProductDraftWhenUserHasNoAccessToTheProductsCategory(): void
+    {
+        $draftToApprove = (new ExistingProductDraftBuilder())->build();
+        $correspondingObject = (new ProductBuilder())->build();
+        $user = (new UserBuilder())->build();
+        $token = (new TokenBuilder())->withUser($user)->build();
+        $violations = (new ConstraintViolationListBuilder())->build();
+
+        $this->categoryPermissionsCheckerMock
+            ->method('hasAccessToProduct')
+            ->willReturn(false);
+
+        $this->creatorMock
+            ->method('getObjectToSave')
+            ->willReturn($correspondingObject);
+
+        $this->tokenStorageMock
+            ->method('getToken')
+            ->willReturn($token);
+
+        $this->validatorMock
+            ->method('validate')
+            ->willReturn($violations);
+
+        $this->saverMock
+            ->expects($this->never())
+            ->method('save');
+        $this->entityManagerMock
+            ->expects($this->never())
+            ->method('persist');
+        $this->entityManagerMock
+            ->expects($this->never())
+            ->method('flush');
+
+        $this->expectException(DraftViolationException::class);
+
+        $this->approver->approve($draftToApprove);
     }
 }
