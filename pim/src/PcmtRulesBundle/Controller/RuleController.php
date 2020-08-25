@@ -12,6 +12,7 @@ namespace PcmtRulesBundle\Controller;
 
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
+use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use PcmtRulesBundle\Entity\Rule;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -51,6 +52,9 @@ class RuleController
         $this->constraintViolationNormalizer = $constraintViolationNormalizer;
     }
 
+    /**
+     * @AclAncestor("pcmt_permission_rules_create")
+     */
     public function createAction(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
