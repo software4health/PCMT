@@ -333,8 +333,8 @@ env-gfpvan (WIPE DB):
     - .env-gfpvan_script-deploy
   variables:
     PCMT_PROFILE: dev
-    PCMT_VER: '1.1.2'
-    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v1.1.2/pcmt-v1.1.2.tar.gz'
+    PCMT_VER: '2.0.2'
+    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v2.0.2/pcmt-v2.0.2.tar.gz'
 
 env-gfpvan (KEEP DB):
   extends:
@@ -342,8 +342,8 @@ env-gfpvan (KEEP DB):
     - .env-gfpvan_script-deploy
   variables:
     PCMT_PROFILE: production
-    PCMT_VER: '1.1.2'
-    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v1.1.2/pcmt-v1.1.2.tar.gz'
+    PCMT_VER: '2.0.2'
+    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v2.0.2/pcmt-v2.0.2.tar.gz'
 
 env-gfpvan-destroy:
   extends:
