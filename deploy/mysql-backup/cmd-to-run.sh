@@ -5,6 +5,8 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
+set -o pipefail
+
 : "${CRED_PATH:=/run/secrets/mysql-creds}"
 if [ ! -r "$CRED_PATH" ]; then
     echo "$CRED_PATH not readable"
@@ -23,6 +25,18 @@ set +o allexport
 : "${BACKUP_DIR:=/backup}"
 : "${PCMT_HOSTNAME:=pcmt}"
 
-mysqldump -h $DB_HOST --port="$DB_PORT" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" \
+backupName="$PCMT_HOSTNAME-mysql-dump-$(date -u -Iminutes).sql.gz"
+
+mysqldump --no-tablespaces \
+  -h "$DB_HOST" \
+  --port="$DB_PORT" \
+  -u "$DB_USER" \
+  -p"$DB_PASS" \
+  "$DB_NAME" \
     | gzip \
-    > "$BACKUP_DIR/$PCMT_HOSTNAME-mysql-dump-$(date -u -Iminutes).sql.zip"
+    > "$BACKUP_DIR/$backupName"
+retVal=$?
+
+if [ $retVal -eq 0 ]; then
+  echo "Backup written to:  $backupName"
+fi
