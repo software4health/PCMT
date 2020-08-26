@@ -25,7 +25,7 @@ extensions:
     parent: pcmt-rules-index
     targetZone: title
     config:
-      title: pim_enrich.entity.rules.page_title.index
+      title: pcmt.entity.rule.page_title.index
 
   pcmt-rules-index-breadcrumbs:
     module: pim/common/breadcrumbs
@@ -34,3 +34,27 @@ extensions:
     config:
       tab: pim-menu-system
       item: pim-menu-system-rules
+
+  pcmt-rules-index-grid-filters-list:
+    module: oro/datafilter/filters-list
+    parent: pcmt-rules-index-grid-container
+    targetZone: filters
+
+  pcmt-rules-index-grid-filters-manage:
+    module: oro/datafilter/filters-button
+    parent: pcmt-rules-index-grid-container
+    targetZone: filters
+
+  pcmt-rules-index-pagination:
+    module: oro/datagrid/pagination-input
+    parent: pcmt-rules-index-grid-container
+    targetZone: toolbar
+    config:
+      gridName: rule-grid
+
+  pcmt-rules-index-grid:
+    module: pim/form/common/index/grid
+    parent: pcmt-rules-index-grid-container
+    position: 1000
+    config:
+      alias: rule-grid
