@@ -1,0 +1,26 @@
+datagrid:
+    rule-grid:
+        options:
+            entityHint: rule
+            manageFilters: false
+        source:
+            type:              pcmt_datasource_rule
+            entity:            '%pcmt.entity.rule.class%'
+            user_config_alias: rule-grid
+            acl_resource:      pcmt_permission_rules_view
+        columns:
+            id:
+                label:     ID
+                type:      field
+            unique_id:
+                label:     Label
+                type:      field
+            source_family:
+                label: Source Family
+                type: field
+            destination_family:
+                label: Destination Family
+                type: field
+        properties:
+            id: ~
+

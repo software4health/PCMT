@@ -4,3 +4,10 @@ pim_title:
 pim_menu:
     item:
         rules: Rules
+
+pcmt.entity.rule:
+    flash:
+        create:
+            success: Rule successfully created
+    page_title:
+        index: "]-Inf, 1]{{ count }} rule|]1, Inf[{{ count }} rules"

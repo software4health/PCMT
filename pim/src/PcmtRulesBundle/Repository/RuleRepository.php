@@ -11,7 +11,15 @@ declare(strict_types=1);
 namespace PcmtRulesBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Oro\Bundle\PimDataGridBundle\Doctrine\ORM\Repository\DatagridRepositoryInterface;
 
-class RuleRepository extends EntityRepository
+class RuleRepository extends EntityRepository implements DatagridRepositoryInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function createDatagridQueryBuilder()
+    {
+        return $this->createQueryBuilder('rule');
+    }
 }
