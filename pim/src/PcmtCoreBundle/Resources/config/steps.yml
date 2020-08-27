@@ -44,6 +44,8 @@ services:
             - '@akeneo_batch.job_repository'
             - '@pcmt_core.validator.directory.directory_path_validator'
             - '@pcmt_core.service.builder.path_builder'
+        calls:
+            - [setLogger, ['@logger']]
 
     pcmt_xml_connector.step.xml_reference_data_import:
         class: PcmtCoreBundle\Connector\Job\Step\ReferenceDataXmlImportStep

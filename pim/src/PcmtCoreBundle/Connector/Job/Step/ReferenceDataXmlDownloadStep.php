@@ -21,6 +21,7 @@ use PcmtCoreBundle\Connector\Job\JobParameters\DefaultValueProvider\ReferenceDat
 use PcmtCoreBundle\Service\Builder\PathBuilder;
 use PcmtCoreBundle\Util\Adapter\DirectoryCreator;
 use PcmtCoreBundle\Validator\Directory\DirectoryPathValidator;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Yaml\Yaml;
 
@@ -47,6 +48,9 @@ class ReferenceDataXmlDownloadStep extends AbstractStep
     /** @var DirectoryPathValidator */
     private $directoryValidator;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     /**
      * {@inheritdoc}
      */
@@ -61,6 +65,11 @@ class ReferenceDataXmlDownloadStep extends AbstractStep
         $this->pathBuilder = $pathBuilder;
         $this->directoryValidator = $directoryValidator;
         parent::__construct($name, $eventDispatcher, $jobRepository);
+    }
+
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
     }
 
     protected function doExecute(StepExecution $stepExecution): void
@@ -98,31 +107,46 @@ class ReferenceDataXmlDownloadStep extends AbstractStep
             return;
         }
         foreach ($urls as $url) {
-            $matches = [];
-            preg_match('/cl:(.*?)&/', $url, $matches) . '.xml';
-            $className = $matches[1];
-            $fileName = $className . '.xml';
-            try {
-                $tmpFilePath = $this->tmpDirectory . $fileName;
-                $tmpFile = fopen($tmpFilePath, 'w');
-                $response = $this->guzzleClient->get($url, ['save_to' => $tmpFile]);
-                fclose($tmpFile);
+            $this->processUrl($url, $stepExecution, 1);
+        }
+    }
 
-                $stepExecution->incrementSummaryInfo($response->getStatusCode());
-                $stepExecution->incrementSummaryInfo($className);
+    private function processUrl(string $url, StepExecution $stepExecution, int $attempt): void
+    {
+        $this->logger->info('Processing ' . $url.', attempt: '. $attempt);
+        $matches = [];
+        preg_match('/cl:(.*?)&/', $url, $matches) . '.xml';
+        $className = $matches[1];
+        $fileName = $className . '.xml';
+        try {
+            $tmpFilePath = $this->tmpDirectory . $fileName;
+            $tmpFile = fopen($tmpFilePath, 'w');
+            $response = $this->guzzleClient->get($url, [
+                'save_to' => $tmpFile,
+                'timeout' => 5,
+            ]);
+            fclose($tmpFile);
+            $this->logger->info('Finished successfully');
+
+            $stepExecution->incrementSummaryInfo($response->getStatusCode());
+            $stepExecution->incrementSummaryInfo($className);
+        } catch (\Throwable $exception) {
+            if ($attempt < 4) {
+                $this->processUrl($url, $stepExecution, ++$attempt);
+
+                return;
+            }
+            $this->logger->info('FAILED');
+            $invalidItem = new UrlInvalidItem($url);
+            $stepExecution->addWarning(
+                $exception->getMessage(),
+                [],
+                $invalidItem
+            );
+            $stepExecution->incrementSummaryInfo('failed');
+            try {
+                rename($tmpFilePath, $this->failedDirectory . $this->pathBuilder->getFileNameWithTime($fileName));
             } catch (\Throwable $exception) {
-                $invalidItem = new UrlInvalidItem($url);
-                $stepExecution->addWarning(
-                    $exception->getMessage(),
-                    [],
-                    $invalidItem
-                );
-                $stepExecution->incrementSummaryInfo('failed');
-                try {
-                    rename($tmpFilePath, $this->failedDirectory . $this->pathBuilder->getFileNameWithTime($fileName));
-                } catch (\Throwable $exception) {
-                }
-                continue;
             }
         }
     }
