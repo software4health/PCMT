@@ -25,7 +25,7 @@ extensions:
     parent: pcmt-rules-index
     targetZone: title
     config:
-      title: pcmt.entity.rule.page_title.index
+      title: pcmt.entity.rules.page_title.index
 
   pcmt-rules-index-breadcrumbs:
     module: pim/common/breadcrumbs
@@ -34,6 +34,17 @@ extensions:
     config:
       tab: pim-menu-system
       item: pim-menu-system-rules
+
+  pcmt-rules-index-create-button:
+    module: pim/form/common/index/create-button
+    parent: pcmt-rules-index
+    targetZone: buttons
+    position: 100
+    aclResourceId: pcmt_permission_rules_create
+    config:
+      iconName:  plus
+      title:     pcmt.entity.rules.module.create.button
+      modalForm: pcmt-rules-create-modal
 
   pcmt-rules-index-grid-filters-list:
     module: oro/datafilter/filters-list

@@ -1,6 +1,8 @@
 config:
   paths:
     pcmt/rules/index: pcmtrules/js/controller/rule_index
+
+    pcmt/form/common/creation/modal:                      pcmtrules/js/form/common/creation/modal
   config:
     pim/controller-registry:
       controllers:

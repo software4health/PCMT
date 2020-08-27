@@ -58,13 +58,13 @@ class RuleUpdater implements ObjectUpdaterInterface
     protected function setData(Rule $rule, $field, $data): void
     {
         switch ($field) {
-            case 'uniqueId':
+            case 'unique_id':
                 $rule->setUniqueId($data);
                 break;
-            case 'sourceFamily':
+            case 'source_family':
                 $this->setSourceFamily($rule, $data);
                 break;
-            case 'destinationFamily':
+            case 'destination_family':
                 $this->setDestinationFamily($rule, $data);
                 break;
         }
@@ -76,7 +76,7 @@ class RuleUpdater implements ObjectUpdaterInterface
 
         if (null === $family) {
             throw InvalidPropertyException::validEntityCodeExpected(
-                'sourceFamily',
+                'source_family',
                 'source family',
                 'The source family does not exist',
                 static::class,
@@ -93,7 +93,7 @@ class RuleUpdater implements ObjectUpdaterInterface
 
         if (null === $family) {
             throw InvalidPropertyException::validEntityCodeExpected(
-                'destinationFamily',
+                'destination_family',
                 'destination family',
                 'The destination family does not exist',
                 static::class,

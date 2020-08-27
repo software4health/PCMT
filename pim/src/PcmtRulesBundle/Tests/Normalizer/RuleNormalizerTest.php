@@ -24,7 +24,7 @@ class RuleNormalizerTest extends TestCase
         $array = $normalizer->normalize($rule);
 
         $this->assertIsArray($array);
-        $this->assertSame($rule->getUniqueId(), $array['uniqueId']);
+        $this->assertSame($rule->getUniqueId(), $array['unique_id']);
         $this->assertSame($rule->getId(), $array['id']);
     }
 

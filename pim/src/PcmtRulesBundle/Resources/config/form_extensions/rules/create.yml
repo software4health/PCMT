@@ -1,0 +1,41 @@
+extensions:
+  pcmt-rules-create-modal:
+    module: pcmt/form/common/creation/modal
+    config:
+      labels:
+        title: pim_common.create
+        subTitle: pim_menu.item.rules
+      picture: illustrations/Family.svg
+      successMessage: pcmt.entity.rules.flash.create.success
+      editRoute: pcmt_rules_index
+      postUrl: pcmt_rule_rest_create
+      routerKey: unique_id
+
+  pcmt-rules-create-code:
+    module: pim/form/common/creation/field
+    parent: pcmt-rules-create-modal
+    position: 10
+    targetZone: fields
+    config:
+      identifier: unique_id
+      label: pcmt.rules.create.unique_id
+
+  pcmt-rules-create-family-a:
+    module: pim/form/common/fields/simple-select-async
+    parent: pcmt-rules-create-modal
+    targetZone: fields
+    position: 20
+    config:
+      fieldName: source_family
+      label: pcmt.rules.create.source_family
+      choiceRoute: pim_enrich_family_rest_index
+
+  pcmt-rules-create-family-b:
+    module: pim/form/common/fields/simple-select-async
+    parent: pcmt-rules-create-modal
+    targetZone: fields
+    position: 20
+    config:
+      fieldName: destination_family
+      label: pcmt.rules.create.destination_family
+      choiceRoute: pim_enrich_family_rest_index

@@ -44,9 +44,9 @@ class RuleUpdaterTest extends TestCase
 
         $rule = (new RuleBuilder())->build();
         $data = [
-            'uniqueId'          => $uniqueId,
-            'sourceFamily'      => $sourceFamilyCode,
-            'destinationFamily' => $destinationFamilyCode,
+            'unique_id'          => $uniqueId,
+            'source_family'      => $sourceFamilyCode,
+            'destination_family' => $destinationFamilyCode,
         ];
         $updater = $this->getRuleUpdaterInstance();
         $updater->update($rule, $data);
@@ -65,9 +65,9 @@ class RuleUpdaterTest extends TestCase
         $this->familyRepositoryMock->expects($this->exactly(1))->method('findOneByIdentifier')->willReturn(null);
         $rule = (new RuleBuilder())->build();
         $data = [
-            'uniqueId'          => $uniqueId,
-            'sourceFamily'      => $sourceFamily,
-            'destinationFamily' => $destinationFamily,
+            'unique_id'          => $uniqueId,
+            'source_family'      => $sourceFamily,
+            'destination_family' => $destinationFamily,
         ];
         $updater = $this->getRuleUpdaterInstance();
         $updater->update($rule, $data);
@@ -89,9 +89,9 @@ class RuleUpdaterTest extends TestCase
 
         $rule = (new RuleBuilder())->build();
         $data = [
-            'uniqueId'          => $uniqueId,
-            'sourceFamily'      => $sourceFamilyCode,
-            'destinationFamily' => $destinationFamilyCode,
+            'unique_id'          => $uniqueId,
+            'source_family'      => $sourceFamilyCode,
+            'destination_family' => $destinationFamilyCode,
         ];
         $updater = $this->getRuleUpdaterInstance();
         $updater->update($rule, $data);

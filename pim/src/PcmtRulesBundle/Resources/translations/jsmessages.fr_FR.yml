@@ -4,3 +4,18 @@ pim_title:
 pim_menu:
     item:
         rules: FR Rules
+
+pcmt:
+    rules.create:
+        unique_id: FR Unique ID
+        source_family: FR Source Family
+        destination_family: FR Destination Family
+    entity.rules:
+        module:
+            create:
+                button: FR Create Rule
+        flash:
+            create:
+                success: FR Rule successfully created
+        page_title:
+            index: "]-Inf, 1]{{ count }} rule|]1, Inf[{{ count }} rules"
