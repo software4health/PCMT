@@ -5,9 +5,17 @@ pim_menu:
     item:
         rules: Rules
 
-pcmt.entity.rule:
-    flash:
-        create:
-            success: Rule successfully created
-    page_title:
-        index: "]-Inf, 1]{{ count }} rule|]1, Inf[{{ count }} rules"
+pcmt:
+    rules.create:
+        unique_id: Unique ID
+        source_family: Source Family
+        destination_family: Destination Family
+    entity.rules:
+        module:
+            create:
+                button: Create Rule
+        flash:
+            create:
+                success: Rule successfully created
+        page_title:
+            index: "]-Inf, 1]{{ count }} rule|]1, Inf[{{ count }} rules"

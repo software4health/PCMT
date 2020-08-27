@@ -22,10 +22,10 @@ class RuleNormalizer implements NormalizerInterface
     {
         /** @var Rule $object */
         return [
-            'id'                => $object->getId(),
-            'uniqueId'          => $object->getUniqueId(),
-            'sourceFamily'      => $object->getSourceFamily()->getCode(),
-            'destinationFamily' => $object->getDestinationFamily()->getCode(),
+            'id'                 => $object->getId(),
+            'unique_id'          => $object->getUniqueId(),
+            'source_family'      => $object->getSourceFamily()->getCode(),
+            'destination_family' => $object->getDestinationFamily()->getCode(),
         ];
     }
 
