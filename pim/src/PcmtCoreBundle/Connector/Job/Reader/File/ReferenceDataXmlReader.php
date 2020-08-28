@@ -48,7 +48,7 @@ class ReferenceDataXmlReader implements ReferenceDataXmlReaderInterface
 
     public function flush(): void
     {
-        $this->processed = null;
+        $this->processed = [];
         $this->arrayIterator = null;
     }
 
@@ -110,6 +110,9 @@ class ReferenceDataXmlReader implements ReferenceDataXmlReaderInterface
         }
 
         if (null === $this->arrayIterator) {
+            if (!$this->processed) {
+                throw new \Exception('There is no data in source file.');
+            }
             $arrayObject = new \ArrayObject($this->processed);
             $this->arrayIterator = $arrayObject->getIterator();
             $this->arrayIterator->rewind();

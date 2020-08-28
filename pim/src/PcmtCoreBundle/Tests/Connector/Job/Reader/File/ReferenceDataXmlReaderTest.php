@@ -178,6 +178,6 @@ class ReferenceDataXmlReaderTest extends TestCase
     {
         $this->referenceDataXmlReader->flush();
 
-        $this->assertNull($this->referenceDataXmlReader->getProcessed());
+        $this->assertSame([], $this->referenceDataXmlReader->getProcessed());
     }
 }
