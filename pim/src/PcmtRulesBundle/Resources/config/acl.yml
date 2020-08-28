@@ -14,12 +14,12 @@ pcmt_permission_rules_create:
     label: pcmt.permission.rules.label.create
     group_name: pcmt.permission.rules
 
-pcmt_permission_drafts_edit:
+pcmt_permission_rules_edit:
     type: action
     label: pcmt.permission.rules.label.edit
     group_name: pcmt.permission.rules
 
-pcmt_permission_drafts_run:
+pcmt_permission_rules_run:
     type: action
     label: pcmt.permission.rules.label.run
     group_name: pcmt.permission.rules

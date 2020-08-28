@@ -2,3 +2,10 @@ pcmt_rule_rest_create:
     path: /
     defaults: { _controller: pcmt.controller.rest.rules:createAction }
     methods: [PUT]
+
+pcmt_rule_rest_edit:
+    path: /{identifier}
+    defaults: { _controller: pcmt.controller.rest.rules:postAction }
+    requirements:
+        identifier: '[a-zA-Z0-9_]+'
+    methods: [POST]

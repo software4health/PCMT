@@ -12,6 +12,7 @@ namespace PcmtRulesBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\PimDataGridBundle\Doctrine\ORM\Repository\DatagridRepositoryInterface;
+use PcmtRulesBundle\Entity\Rule;
 
 class RuleRepository extends EntityRepository implements DatagridRepositoryInterface
 {
@@ -21,5 +22,12 @@ class RuleRepository extends EntityRepository implements DatagridRepositoryInter
     public function createDatagridQueryBuilder()
     {
         return $this->createQueryBuilder('rule');
+    }
+
+    public function findOneByIdentifier(string $identifier): ?Rule
+    {
+        return $this->findOneBy([
+            'uniqueId' => $identifier,
+        ]);
     }
 }
