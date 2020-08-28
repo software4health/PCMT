@@ -8,3 +8,4 @@ services:
             - '@validator'
             - '@pcmt.saver.rule'
             - '@pim_enrich.normalizer.violation'
+            - '@pcmt.repository.rule'
