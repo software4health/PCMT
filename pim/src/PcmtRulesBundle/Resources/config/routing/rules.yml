@@ -9,3 +9,9 @@ pcmt_rule_rest_edit:
     requirements:
         identifier: '[a-zA-Z0-9_]+'
     methods: [POST]
+
+pcmt_rule_rest_run:
+    path: /{id}/run
+    defaults: { _controller: pcmt.controller.rest.rules:runAction }
+    requirements:
+        id: \d+

@@ -144,4 +144,24 @@ class RuleController
             )
         );
     }
+
+    /**
+     * @AclAncestor("pcmt_permission_rules_run")
+     */
+    public function runAction(Rule $rule): Response
+    {
+        try {
+//            throw new \Exception();
+        } catch (\Throwable $e) {
+            return new JsonResponse([
+                'successful' => false,
+                'message'    => 'pcmt.rules.flash.running_start_error',
+            ]);
+        }
+
+        return new JsonResponse([
+            'successful' => true,
+            'message'    => 'pcmt.rules.flash.running_started',
+        ]);
+    }
 }

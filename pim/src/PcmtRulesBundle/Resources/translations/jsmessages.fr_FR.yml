@@ -10,6 +10,7 @@ pcmt:
         unique_id: FR Unique ID
         source_family: FR Source Family
         destination_family: FR Destination Family
+    rules.action.run.label: FR Run a rule
     entity.rules:
         module:
             create:
