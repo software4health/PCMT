@@ -5,3 +5,7 @@ pcmt.permission:
         create: FR Create rules
         edit: FR Edit rules
         run: FR Run rules
+
+pcmt.rules.flash:
+    running_started: FR The rule processing has been started.
+    running_start_error: FR The rule processing has not been started, there was an error.

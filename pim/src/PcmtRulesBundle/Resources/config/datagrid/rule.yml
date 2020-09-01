@@ -23,4 +23,17 @@ datagrid:
                 type: field
         properties:
             id: ~
+            run_link:
+                type: url
+                route: pcmt_rule_rest_run
+                params:
+                    - id
+        actions:
+            run:
+                launcherOptions:
+                    className: AknIconButton AknIconButton--small AknIconButton--play
+                type:         ajax
+                label:        pcmt.rules.action.run.label
+                link:         run_link
+                acl_resource: pcmt_permission_rules_run
 
