@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace PcmtRulesBundle\Controller;
 
+use Akeneo\Tool\Bundle\BatchBundle\Job\JobInstanceRepository;
+use Akeneo\Tool\Bundle\BatchBundle\Launcher\JobLauncherInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
@@ -20,6 +22,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -43,13 +46,25 @@ class RuleController
     /** @var NormalizerInterface */
     private $constraintViolationNormalizer;
 
+    /** @var JobLauncherInterface */
+    private $jobLauncher;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var JobInstanceRepository */
+    private $jobInstanceRepository;
+
     public function __construct(
         NormalizerInterface $normalizer,
         ObjectUpdaterInterface $updater,
         ValidatorInterface $validator,
         SaverInterface $saver,
         NormalizerInterface $constraintViolationNormalizer,
-        RuleRepository $ruleRepository
+        RuleRepository $ruleRepository,
+        JobLauncherInterface $jobLauncher,
+        TokenStorageInterface $tokenStorage,
+        JobInstanceRepository $jobInstanceRepository
     ) {
         $this->normalizer = $normalizer;
         $this->updater = $updater;
@@ -57,6 +72,9 @@ class RuleController
         $this->saver = $saver;
         $this->constraintViolationNormalizer = $constraintViolationNormalizer;
         $this->ruleRepository = $ruleRepository;
+        $this->jobLauncher = $jobLauncher;
+        $this->tokenStorage = $tokenStorage;
+        $this->jobInstanceRepository = $jobInstanceRepository;
     }
 
     /**
@@ -150,8 +168,23 @@ class RuleController
      */
     public function runAction(Rule $rule): Response
     {
+        $user = $this->tokenStorage->getToken()->getUser();
+        if (!$user) {
+            throw new \Exception('User not found');
+        }
+
+        $jobInstance = $this->jobInstanceRepository->findOneByIdentifier('pcmt_rule_process');
+
+        if (!$jobInstance) {
+            throw new \Exception('Job instance not found.');
+        }
+
+        $configuration = $jobInstance->getRawParameters();
+        $configuration['ruleId'] = $rule->getId();
+
+        $this->jobLauncher->launch($jobInstance, $user, $configuration);
+
         try {
-//            throw new \Exception();
         } catch (\Throwable $e) {
             return new JsonResponse([
                 'successful' => false,
