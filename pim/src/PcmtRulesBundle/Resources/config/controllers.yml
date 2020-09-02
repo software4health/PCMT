@@ -9,3 +9,6 @@ services:
             - '@pcmt.saver.rule'
             - '@pim_enrich.normalizer.violation'
             - '@pcmt.repository.rule'
+            - '@akeneo_batch_queue.launcher.queue_job_launcher'
+            - '@security.token_storage'
+            - '@akeneo_batch.job.job_instance_repository'

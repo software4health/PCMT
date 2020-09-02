@@ -20,3 +20,11 @@ pcmt:
                 success: FR Rule successfully created
         page_title:
             index: "]-Inf, 1]{{ count }} rule|]1, Inf[{{ count }} rules"
+
+pcmt.rules.flash:
+    running_started: FR The rule processing has been started.
+    running_start_error: FR The rule processing has not been started, there was an error.
+
+batch_jobs:
+    default_steps:
+        rule_process_step: FR Rule process step

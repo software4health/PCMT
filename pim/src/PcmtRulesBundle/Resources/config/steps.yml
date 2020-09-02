@@ -1,0 +1,7 @@
+services:
+    pcmt.connector.job.step.rule_process:
+        class: PcmtRulesBundle\Connector\Job\Step\RuleProcessStep
+        arguments:
+            - 'rule_process_step'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'

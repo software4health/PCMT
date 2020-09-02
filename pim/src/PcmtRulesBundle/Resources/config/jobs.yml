@@ -1,0 +1,35 @@
+######################################################################
+# Copyright (c) 2020, VillageReach
+# Licensed under the Non-Profit Open Software License version 3.0.
+# SPDX-License-Identifier: NPOSL-3.0
+######################################################################
+
+services:
+
+    pcmt.rules.job.rule_process:
+        class: '%pim_connector.job.simple_job.class%'
+        arguments:
+            - 'pcmt_rule_process'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            -
+                - '@pcmt.connector.job.step.rule_process'
+        tags:
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.import_type%' }
+
+
+    pcmt.rules.job.constraint_collection_provider.rule_process:
+        class: PcmtRulesBundle\Connector\Job\ConstraintCollectionProvider\RuleProcessConstraintCollectionProvider
+        arguments:
+            -
+                - 'pcmt_rule_process'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
+
+    pcmt.rules.job.default_values_provider.rule_process:
+        class: PcmtRulesBundle\Connector\Job\DefaultValueProvider\RuleProcessDefaultValueProvider
+        arguments:
+            -
+                - 'pcmt_rule_process'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.default_values_provider }
