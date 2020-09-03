@@ -1,13 +1,18 @@
+pcmt_rule_rest_get:
+    path: /{id}
+    defaults: { _controller: pcmt.controller.rest.rules:getAction }
+    methods: [GET]
+
 pcmt_rule_rest_create:
     path: /
     defaults: { _controller: pcmt.controller.rest.rules:createAction }
     methods: [PUT]
 
 pcmt_rule_rest_edit:
-    path: /{identifier}
+    path: /{id}
     defaults: { _controller: pcmt.controller.rest.rules:postAction }
     requirements:
-        identifier: '[a-zA-Z0-9_]+'
+        id: '[0-9_]+'
     methods: [POST]
 
 pcmt_rule_rest_run:

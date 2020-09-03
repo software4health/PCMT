@@ -5,3 +5,6 @@ internal_api_rule:
 
 pcmt_rules_index:
     path: /rule
+
+pcmt_rules_edit:
+    path: /rule/edit/{id}

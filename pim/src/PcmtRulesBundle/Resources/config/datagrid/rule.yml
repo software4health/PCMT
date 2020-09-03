@@ -23,12 +23,25 @@ datagrid:
                 type: field
         properties:
             id: ~
+            edit_link:
+                type: url
+                route: pcmt_rules_edit
+                params:
+                    - id
             run_link:
                 type: url
                 route: pcmt_rule_rest_run
                 params:
                     - id
         actions:
+            edit:
+                launcherOptions:
+                    className: AknIconButton AknIconButton--small AknIconButton--edit
+                type:      navigate
+                label:     pim_common.edit
+                link:      edit_link
+                rowAction: true
+                acl_resource: pcmt_permission_rules_edit
             run:
                 launcherOptions:
                     className: AknIconButton AknIconButton--small AknIconButton--play

@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -78,6 +77,17 @@ class RuleController
     }
 
     /**
+     * @AclAncestor("pcmt_permission_rules_view")
+     */
+    public function getAction(Rule $rule): Response
+    {
+        return new JsonResponse($this->normalizer->normalize(
+            $rule,
+            'internal_api'
+        ));
+    }
+
+    /**
      * @AclAncestor("pcmt_permission_rules_create")
      */
     public function createAction(Request $request): Response
@@ -113,30 +123,13 @@ class RuleController
     }
 
     /**
-     * @throws NotFoundHttpException
-     */
-    protected function getRuleOr404(string $identifier): Rule
-    {
-        $rule = $this->ruleRepository->findOneByIdentifier($identifier);
-        if (null === $rule) {
-            throw new NotFoundHttpException(
-                sprintf('Rule with identifier "%s" not found', $identifier)
-            );
-        }
-
-        return $rule;
-    }
-
-    /**
      * @AclAncestor("pcmt_permission_rules_edit")
      */
-    public function postAction(Request $request, string $identifier): Response
+    public function postAction(Rule $rule, Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
             return new RedirectResponse('/');
         }
-
-        $rule = $this->getRuleOr404($identifier);
 
         $data = json_decode($request->getContent(), true);
 
