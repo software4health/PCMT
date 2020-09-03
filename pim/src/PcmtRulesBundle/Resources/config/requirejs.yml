@@ -1,10 +1,24 @@
 config:
   paths:
     pcmt/rules/index: pcmtrules/js/controller/rule_index
+    pcmt/rules/edit: pcmtrules/js/controller/rule_edit
+    pcmt/rules/fetcher: pcmtrules/js/fetcher/rule_fetcher
 
-    pcmt/form/common/creation/modal:                      pcmtrules/js/form/common/creation/modal
+    pcmt/form/common/creation/modal: pcmtrules/js/form/common/creation/modal
+    pcmt/form/common/save-rule-form: pcmtrules/js/form/common/save-rule-form
+
   config:
     pim/controller-registry:
       controllers:
         pcmt_rules_index:
           module: pcmt/rules/index
+        pcmt_rules_edit:
+          module: pcmt/rules/edit
+    pim/fetcher-registry:
+      fetchers:
+        default: pim/base-fetcher
+        rule:
+          module: pcmt/rules/fetcher
+          options:
+            urls:
+              get: pcmt_rule_rest_get

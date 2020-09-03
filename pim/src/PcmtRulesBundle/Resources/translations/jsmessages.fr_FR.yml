@@ -1,23 +1,36 @@
 pim_title:
     pcmt_rules_index: FR Rules
+    pcmt_rules_edit: FR Rules
 
 pim_menu:
     item:
         rules: FR Rules
 
 pcmt:
-    rules.create:
-        unique_id: FR Unique ID
-        source_family: FR Source Family
-        destination_family: FR Destination Family
+    rules:
+        create:
+            unique_id: FR Unique ID
+            source_family: FR Source Family
+            destination_family: FR Destination Family
+        edit:
+            unique_id: FR Unique ID
+            source_family: FR Source Family
+            destination_family: FR Destination Family
     rules.action.run.label: FR Run a rule
     entity.rules:
+        label: FR Rule
         module:
             create:
                 button: FR Create Rule
+            edit:
+                common: FR General Parameters
         flash:
             create:
                 success: FR Rule successfully created
+            update:
+                success: FR Rule successfully updated
+                fail: FR Rule could not be updated
+                fields_not_ready: "FR Rule cannot be saved right now. The following fields are not ready: {{ fields }}"
         page_title:
             index: "]-Inf, 1]{{ count }} rule|]1, Inf[{{ count }} rules"
 
