@@ -12,30 +12,31 @@ extensions:
       routerKey: unique_id
 
   pcmt-rules-create-code:
-    module: pim/form/common/creation/field
+    module: pim/form/common/fields/text
     parent: pcmt-rules-create-modal
     position: 10
     targetZone: fields
     config:
-      identifier: unique_id
+      fieldName: unique_id
+      required: true
       label: pcmt.rules.create.unique_id
 
   pcmt-rules-create-family-a:
-    module: pim/form/common/fields/simple-select-async
+    module: pcmt/form/propeties/family
     parent: pcmt-rules-create-modal
     targetZone: fields
     position: 20
     config:
       fieldName: source_family
+      required: true
       label: pcmt.rules.create.source_family
-      choiceRoute: pim_enrich_family_rest_index
 
   pcmt-rules-create-family-b:
-    module: pim/form/common/fields/simple-select-async
+    module: pcmt/form/propeties/family
     parent: pcmt-rules-create-modal
     targetZone: fields
     position: 20
     config:
       fieldName: destination_family
+      required: true
       label: pcmt.rules.create.destination_family
-      choiceRoute: pim_enrich_family_rest_index

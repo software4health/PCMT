@@ -104,23 +104,21 @@ extensions:
       required: true
 
   pcmt-rules-edit-form-properties-common-source-family:
-    module: pim/form/common/fields/simple-select-async
+    module: pcmt/form/propeties/family
     parent: pcmt-rules-edit-form-properties-common
     targetZone: content
     position: 100
     config:
       fieldName: source_family
       label: pcmt.rules.edit.source_family
-      choiceRoute: pim_enrich_family_rest_index
       required: true
 
   pcmt-rules-edit-form-properties-common-destination-family:
-    module: pim/form/common/fields/simple-select-async
+    module: pcmt/form/propeties/family
     parent: pcmt-rules-edit-form-properties-common
     targetZone: content
     position: 110
     config:
       fieldName: destination_family
       label: pcmt.rules.edit.destination_family
-      choiceRoute: pim_enrich_family_rest_index
       required: true
