@@ -9,6 +9,7 @@ batch_jobs:
         hash_first_cell: Hash first cell
         process: Process
         reference_data_xml_download: Reference data xml download
+        pcmt_e2open_import: PCMT E2Open/GDSN Import step
 
     pcmt_mst_supplier_export:
         validation.label: Validation
@@ -337,3 +338,4 @@ pcmt_simple_job:
             button:
                 job.switcher: Simple launch
                 job.launch: Launch now
+

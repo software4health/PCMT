@@ -5,6 +5,7 @@
 ######################################################################
 parameters:
     pcmt.entity.rule.class:  PcmtRulesBundle\Entity\Rule
+    pim_datagrid.event_listener.add_username_to_grid_listener.class: PcmtRulesBundle\Listener\AddUsernameToGridListener
 
 services:
 
