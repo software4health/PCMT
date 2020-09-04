@@ -33,6 +33,7 @@ pcmt:
                 fields_not_ready: "Rule cannot be saved right now. The following fields are not ready: {{ fields }}"
         page_title:
             index: "]-Inf, 1]{{ count }} rule|]1, Inf[{{ count }} rules"
+        property.family.choose: Choose the family
 
 pcmt.rules.flash:
     running_started: The rule processing has been started.

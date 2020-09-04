@@ -33,7 +33,6 @@ define(
                     type: 'GET'
                 })
                     .then(function (rule) {
-                        console.log(rule);
                         return rule;
                     })
                     .promise();

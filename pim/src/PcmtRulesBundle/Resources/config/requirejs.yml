@@ -7,6 +7,8 @@ config:
     pcmt/form/common/creation/modal: pcmtrules/js/form/common/creation/modal
     pcmt/form/common/save-rule-form: pcmtrules/js/form/common/save-rule-form
 
+    pcmt/form/propeties/family: pcmtrules/js/form/properties/family
+
   config:
     pim/controller-registry:
       controllers:
