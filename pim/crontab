@@ -28,4 +28,4 @@
 #   m   h   dom mon dow command
 
 * * * * * sudo bash -c 'echo $(date -u) "Test CRON" >> /var/log/date_cron.log'
-* * * * * /usr/bin/php /srv/pim/bin/console pim:pcmt:e2Open:import_from_files
+*/15 * * * * /usr/bin/php /srv/pim/bin/console pim:pcmt:e2Open:import_from_files

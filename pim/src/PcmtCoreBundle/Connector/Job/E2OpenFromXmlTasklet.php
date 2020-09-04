@@ -146,6 +146,8 @@ class E2OpenFromXmlTasklet implements TaskletInterface
                     throw new \Exception('No item has been created.');
                 }
 
+                $this->stepExecution->incrementSummaryInfo('TradeItemsProcessed');
+
                 array_walk(
                     $subTree,
                     function ($element): void {
@@ -178,10 +180,13 @@ class E2OpenFromXmlTasklet implements TaskletInterface
 
         $product = $this->findProductForGTIN($gtinValue);
         if ($product) {
+            $this->stepExecution->incrementSummaryInfo('ProductsFoundByGTIN');
             $this->logger->info('Product in GS1_GDSN family found, id: '. $product->getId());
 
             return $product;
         }
+
+        $this->stepExecution->incrementSummaryInfo('NewProductsCreated');
 
         $this->logger->info('Product not found in GS1_GDSN family, creating new');
 

@@ -9,6 +9,7 @@ batch_jobs:
         hash_first_cell: FR Hash first cell
         process: FR Process
         reference_data_xml_download: FR Reference data xml download
+        pcmt_e2open_import: FR PCMT E2Open/GDSN Import step
 
     pcmt_mst_supplier_export:
         validation.label: FR Validation
