@@ -26,6 +26,7 @@ class RuleNormalizer implements NormalizerInterface
             'unique_id'          => $object->getUniqueId(),
             'source_family'      => $object->getSourceFamily()->getCode(),
             'destination_family' => $object->getDestinationFamily()->getCode(),
+            'key_attribute'      => $object->getKeyAttribute() ? $object->getKeyAttribute()->getCode() : null,
             'labels'             => [
                 'en_US' => $object->getUniqueId(),
             ],

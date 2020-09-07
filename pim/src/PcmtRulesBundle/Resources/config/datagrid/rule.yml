@@ -21,6 +21,9 @@ datagrid:
             destination_family:
                 label: Destination Family
                 type: field
+            key_attribute:
+                label: Key attribute
+                type: field
         properties:
             id: ~
             edit_link:

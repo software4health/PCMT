@@ -22,7 +22,7 @@ extensions:
       label: pcmt.rules.create.unique_id
 
   pcmt-rules-create-family-a:
-    module: pcmt/form/propeties/family
+    module: pcmt/form/properties/family
     parent: pcmt-rules-create-modal
     targetZone: fields
     position: 20
@@ -32,7 +32,7 @@ extensions:
       label: pcmt.rules.create.source_family
 
   pcmt-rules-create-family-b:
-    module: pcmt/form/propeties/family
+    module: pcmt/form/properties/family
     parent: pcmt-rules-create-modal
     targetZone: fields
     position: 20
@@ -40,3 +40,14 @@ extensions:
       fieldName: destination_family
       required: true
       label: pcmt.rules.create.destination_family
+
+  pcmt-rules-create-key-attribute:
+    module: pcmt/form/properties/key-attribute
+    parent: pcmt-rules-create-modal
+    targetZone: fields
+    position: 25
+    config:
+      fieldName: key_attribute
+      required: true
+      label: pcmt.rules.create.key_attribute
+

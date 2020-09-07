@@ -4,3 +4,4 @@ services:
         class: 'PcmtRulesBundle\Updater\RuleUpdater'
         arguments:
             - '@pim_catalog.repository.family'
+            - '@pim_catalog.repository.attribute'
