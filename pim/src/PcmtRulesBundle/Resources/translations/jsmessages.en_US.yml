@@ -12,10 +12,12 @@ pcmt:
             unique_id: Unique ID
             source_family: Source Family
             destination_family: Destination Family
+            key_attribute: Key attribute
         edit:
             unique_id: Unique ID
             source_family: Source Family
             destination_family: Destination Family
+            key_attribute: Key attribute
     rules.action.run.label: Run a rule
     entity.rules:
         label: Rule
@@ -34,6 +36,7 @@ pcmt:
         page_title:
             index: "]-Inf, 1]{{ count }} rule|]1, Inf[{{ count }} rules"
         property.family.choose: Choose the family
+        property.attribute.choose: Choose the attribute
 
 pcmt.rules.flash:
     running_started: The rule processing has been started.

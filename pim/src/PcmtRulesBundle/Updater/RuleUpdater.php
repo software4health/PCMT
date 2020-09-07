@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace PcmtRulesBundle\Updater;
 
+use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyException;
@@ -21,9 +22,15 @@ class RuleUpdater implements ObjectUpdaterInterface
     /** @var FamilyRepositoryInterface */
     private $familyRepository;
 
-    public function __construct(FamilyRepositoryInterface $familyRepository)
-    {
+    /** @var AttributeRepositoryInterface */
+    private $attributeRepository;
+
+    public function __construct(
+        FamilyRepositoryInterface $familyRepository,
+        AttributeRepositoryInterface $attributeRepository
+    ) {
         $this->familyRepository = $familyRepository;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -34,6 +41,7 @@ class RuleUpdater implements ObjectUpdaterInterface
      *     'uniqueId'   => 'unique id string',
      *     'sourceFamily' => 'sourceFamilyCode',
      *     'destinationFamily' => 'destinationFamilyCode',
+     *     'keyAttribute' => 'attributeCode',
      * ]
      */
     public function update($rule, array $data, array $options = [])
@@ -66,6 +74,9 @@ class RuleUpdater implements ObjectUpdaterInterface
                 break;
             case 'destination_family':
                 $this->setDestinationFamily($rule, $data);
+                break;
+            case 'key_attribute':
+                $this->setKeyAttribute($rule, $data);
                 break;
         }
     }
@@ -102,5 +113,22 @@ class RuleUpdater implements ObjectUpdaterInterface
         }
 
         $rule->setDestinationFamily($family);
+    }
+
+    protected function setKeyAttribute(Rule $rule, string $identifier): void
+    {
+        $attribute = $this->attributeRepository->findOneByIdentifier($identifier);
+
+        if (null === $attribute) {
+            throw InvalidPropertyException::validEntityCodeExpected(
+                'key_attribute',
+                'key attribute',
+                'The attribute does not exist',
+                static::class,
+                $identifier
+            );
+        }
+
+        $rule->setKeyAttribute($attribute);
     }
 }

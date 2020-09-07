@@ -13,3 +13,5 @@ PcmtRulesBundle\Entity\Rule:
             - NotBlank: ~
         destinationFamily:
             - NotBlank: ~
+        keyAttribute:
+            - NotBlank: ~

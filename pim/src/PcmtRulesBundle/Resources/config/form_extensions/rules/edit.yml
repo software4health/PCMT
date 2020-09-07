@@ -104,7 +104,7 @@ extensions:
       required: true
 
   pcmt-rules-edit-form-properties-common-source-family:
-    module: pcmt/form/propeties/family
+    module: pcmt/form/properties/family
     parent: pcmt-rules-edit-form-properties-common
     targetZone: content
     position: 100
@@ -114,11 +114,21 @@ extensions:
       required: true
 
   pcmt-rules-edit-form-properties-common-destination-family:
-    module: pcmt/form/propeties/family
+    module: pcmt/form/properties/family
     parent: pcmt-rules-edit-form-properties-common
     targetZone: content
     position: 110
     config:
       fieldName: destination_family
       label: pcmt.rules.edit.destination_family
+      required: true
+
+  pcmt-rules-edit-form-properties-common-key-attribute:
+    module: pcmt/form/properties/key-attribute
+    parent: pcmt-rules-edit-form-properties-common
+    targetZone: content
+    position: 120
+    config:
+      fieldName: key_attribute
+      label: pcmt.rules.edit.key_attribute
       required: true
