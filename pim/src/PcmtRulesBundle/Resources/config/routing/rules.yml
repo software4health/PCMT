@@ -20,3 +20,10 @@ pcmt_rule_rest_run:
     defaults: { _controller: pcmt.controller.rest.rules:runAction }
     requirements:
         id: \d+
+
+pcmt_rule_rest_delete:
+    path: /{id}
+    defaults: { _controller: pcmt.controller.rest.rules:deleteAction }
+    requirements:
+        id: \d+
+    methods: [DELETE]
