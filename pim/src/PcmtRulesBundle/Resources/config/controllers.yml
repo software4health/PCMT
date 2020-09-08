@@ -12,6 +12,7 @@ services:
             - '@akeneo_batch_queue.launcher.queue_job_launcher'
             - '@security.token_storage'
             - '@akeneo_batch.job.job_instance_repository'
+            - '@pcmt.remover.rule'
 
     pcmt.controller.rest.attributes:
         class: 'PcmtRulesBundle\Controller\AttributeController'

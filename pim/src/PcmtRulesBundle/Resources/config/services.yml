@@ -21,3 +21,10 @@ services:
         arguments: ['%pcmt.entity.rule.class%']
         tags:
             - { name: 'pim_repository' }
+
+    pcmt.remover.rule:
+        class: '%pim_catalog.remover.base.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
+            - '%pcmt.entity.rule.class%'

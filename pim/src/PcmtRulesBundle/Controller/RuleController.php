@@ -12,6 +12,7 @@ namespace PcmtRulesBundle\Controller;
 
 use Akeneo\Tool\Bundle\BatchBundle\Job\JobInstanceRepository;
 use Akeneo\Tool\Bundle\BatchBundle\Launcher\JobLauncherInterface;
+use Akeneo\Tool\Component\StorageUtils\Remover\RemoverInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
@@ -54,6 +55,9 @@ class RuleController
     /** @var JobInstanceRepository */
     private $jobInstanceRepository;
 
+    /** @var RemoverInterface */
+    private $remover;
+
     public function __construct(
         NormalizerInterface $normalizer,
         ObjectUpdaterInterface $updater,
@@ -63,7 +67,8 @@ class RuleController
         RuleRepository $ruleRepository,
         JobLauncherInterface $jobLauncher,
         TokenStorageInterface $tokenStorage,
-        JobInstanceRepository $jobInstanceRepository
+        JobInstanceRepository $jobInstanceRepository,
+        RemoverInterface $remover
     ) {
         $this->normalizer = $normalizer;
         $this->updater = $updater;
@@ -74,6 +79,7 @@ class RuleController
         $this->jobLauncher = $jobLauncher;
         $this->tokenStorage = $tokenStorage;
         $this->jobInstanceRepository = $jobInstanceRepository;
+        $this->remover = $remover;
     }
 
     /**
@@ -189,5 +195,19 @@ class RuleController
             'successful' => true,
             'message'    => 'pcmt.rules.flash.running_started',
         ]);
+    }
+
+    /**
+     * @AclAncestor("pcmt_permission_rules_delete")
+     */
+    public function deleteAction(Rule $rule, Request $request): Response
+    {
+        if (!$request->isXmlHttpRequest()) {
+            return new RedirectResponse('/');
+        }
+
+        $this->remover->remove($rule);
+
+        return new JsonResponse();
     }
 }

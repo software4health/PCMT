@@ -19,6 +19,11 @@ pcmt_permission_rules_edit:
     label: pcmt.permission.rules.label.edit
     group_name: pcmt.permission.rules
 
+pcmt_permission_rules_delete:
+    type: action
+    label: pcmt.permission.rules.label.delete
+    group_name: pcmt.permission.rules
+
 pcmt_permission_rules_run:
     type: action
     label: pcmt.permission.rules.label.run
