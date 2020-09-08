@@ -8,3 +8,8 @@ pcmt_rules_index:
 
 pcmt_rules_edit:
     path: /rule/edit/{id}
+
+pcmt_rules_attributes_for_families:
+    path: /rest/attributes-for-families/
+    defaults: { _controller: pcmt.controller.rest.attributes:getForFamiliesAction }
+    methods: [GET]
