@@ -29,32 +29,52 @@ define([
             events: {
                 'change select': function (event) {
                     this.errors = [];
-                    console.log('change select');
-                    console.log(this.getFieldValue(event.target));
                     this.updateModel(this.getFieldValue(event.target));
                     this.getRoot().render();
+                    this.fetchOptions();
                 }
             },
             template: _.template(template),
             attributes: {},
+            families_key: '',
 
             /**
              * {@inheritdoc}
              */
             configure: function () {
                 return $.when(
-                    BaseField.prototype.configure.apply(this, arguments),
-                    fetcherRegistry.getFetcher('attribute').fetchAll()
+                    BaseField.prototype.configure.apply(this, arguments)
+                );
+
+            },
+            generateKey: function() {
+                let formData = this.getFormData();
+                return (formData.source_family || '') + '-' + (formData.destination_family || '');
+            },
+
+            fetchOptions: function() {
+                let key = this.generateKey();
+                if (key === this.families_key) {
+                    return;
+                }
+                this.families_key = key;
+                this.attributes = [];
+                let formData = this.getFormData();
+                if (formData.source_family && formData.destination_family) {
+                    return fetcherRegistry.getFetcher('key-attribute-for-rule')
+                        .fetchForFamilies(formData.source_family, formData.destination_family)
                         .then(function (attributes) {
                             this.attributes = attributes;
-                        }.bind(this))
-                );
+                            this.getRoot().render();
+                        }.bind(this));
+                }
             },
 
             /**
              * {@inheritdoc}
              */
             renderInput: function (templateContext) {
+                this.fetchOptions();
                 return this.template(_.extend(templateContext, {
                     value: this.getFormData()[this.fieldName],
                     groups: _.sortBy(this.attributes, 'sort_order'),

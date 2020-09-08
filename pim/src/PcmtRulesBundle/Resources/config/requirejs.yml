@@ -3,6 +3,7 @@ config:
     pcmt/rules/index: pcmtrules/js/controller/rule_index
     pcmt/rules/edit: pcmtrules/js/controller/rule_edit
     pcmt/rules/fetcher: pcmtrules/js/fetcher/rule_fetcher
+    pcmt/fetcher/key-attribute-for-rules: pcmtrules/js/fetcher/key-attribute-for-rules-fetcher
 
     pcmt/form/common/creation/modal: pcmtrules/js/form/common/creation/modal
     pcmt/form/common/save-rule-form: pcmtrules/js/form/common/save-rule-form
@@ -25,3 +26,10 @@ config:
           options:
             urls:
               get: pcmt_rule_rest_get
+        key-attribute-for-rule:
+          module: pcmt/fetcher/key-attribute-for-rules
+          options:
+            identifier_type: pim_catalog_identifier
+            urls:
+              list: pcmt_rules_attributes_for_families
+              get: pim_enrich_attribute_rest_get
