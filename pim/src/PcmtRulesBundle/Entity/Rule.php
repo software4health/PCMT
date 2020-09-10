@@ -79,12 +79,12 @@ class Rule
         return $this->uniqueId;
     }
 
-    public function getSourceFamily(): Family
+    public function getSourceFamily(): ?Family
     {
         return $this->sourceFamily;
     }
 
-    public function getDestinationFamily(): Family
+    public function getDestinationFamily(): ?Family
     {
         return $this->destinationFamily;
     }
