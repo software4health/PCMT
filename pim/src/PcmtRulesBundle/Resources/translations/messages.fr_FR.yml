@@ -3,6 +3,7 @@ pcmt.permission:
     rules.label:
         view: FR View rules
         create: FR Create rules
+        delete: FR Delete rules
         edit: FR Edit rules
         run: FR Run rules
 

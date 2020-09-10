@@ -55,3 +55,5 @@ pcmt.rules.flash:
 batch_jobs:
     default_steps:
         rule_process_step: FR Rule process step
+
+error.removing.rule: FR The rule could not be removed
