@@ -5,3 +5,6 @@ services:
             - 'rule_process_step'
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
+        calls:
+            - [setAttributeProvider, ['@pcmt.service.rule_attribute_provider']]
+            - [setRuleRepository, ['@pcmt.repository.rule']]

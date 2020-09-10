@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace PcmtRulesBundle\Controller;
 
-use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
+use PcmtRulesBundle\Service\RuleAttributeProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,9 +20,6 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class AttributeController
 {
-    /** @var AttributeRepositoryInterface */
-    private $attributeRepository;
-
     /** @var FamilyRepositoryInterface */
     private $familyRepository;
 
@@ -32,16 +29,19 @@ class AttributeController
     /** @var UserContext */
     private $userContext;
 
+    /** @var RuleAttributeProvider */
+    private $ruleAttributeProvider;
+
     public function __construct(
-        AttributeRepositoryInterface $attributeRepository,
         FamilyRepositoryInterface $familyRepository,
         NormalizerInterface $lightAttributeNormalizer,
-        UserContext $userContext
+        UserContext $userContext,
+        RuleAttributeProvider $ruleAttributeProvider
     ) {
-        $this->attributeRepository = $attributeRepository;
         $this->familyRepository = $familyRepository;
         $this->lightAttributeNormalizer = $lightAttributeNormalizer;
         $this->userContext = $userContext;
+        $this->ruleAttributeProvider = $ruleAttributeProvider;
     }
 
     public function getForFamiliesAction(Request $request): Response
@@ -54,9 +54,7 @@ class AttributeController
             return new JsonResponse([]);
         }
 
-        $attributes1 = $this->attributeRepository->findAttributesByFamily($sourceFamily);
-        $attributes2 = $this->attributeRepository->findAttributesByFamily($destinationFamily);
-        $attributes = array_intersect($attributes1, $attributes2);
+        $attributes = $this->ruleAttributeProvider->getForFamilies($sourceFamily, $destinationFamily);
 
         $normalizedAttributes = array_map(function ($attribute) {
             return $this->lightAttributeNormalizer->normalize(
