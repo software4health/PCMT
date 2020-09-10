@@ -9,9 +9,6 @@ datagrid:
             user_config_alias: rule-grid
             acl_resource:      pcmt_permission_rules_view
         columns:
-            id:
-                label:     ID
-                type:      field
             unique_id:
                 label:     Label
                 type:      field
