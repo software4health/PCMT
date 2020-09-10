@@ -17,7 +17,7 @@ services:
     pcmt.controller.rest.attributes:
         class: 'PcmtRulesBundle\Controller\AttributeController'
         arguments:
-            - '@pim_catalog.repository.attribute'
             - '@pim_catalog.repository.family'
             - '@pim_enrich.normalizer.attribute'
             - '@pim_user.context.user'
+            - '@pcmt.service.rule_attribute_provider'

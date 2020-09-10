@@ -1,6 +1,8 @@
 PcmtRulesBundle\Entity\Rule:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: uniqueId
+        - PcmtRulesBundle\Constraints\AttributeExistsInBothFamiliesConstraint: ~
+
     properties:
         uniqueId:
             - NotBlank: ~

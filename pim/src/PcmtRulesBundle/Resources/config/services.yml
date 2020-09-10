@@ -28,3 +28,16 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@event_dispatcher'
             - '%pcmt.entity.rule.class%'
+
+    pcmt.service.rule_attribute_provider:
+        class: PcmtRulesBundle\Service\RuleAttributeProvider
+        arguments:
+            - '@pim_catalog.repository.attribute'
+
+    pcmt.constraints.attribute_exists_in_both_families_constraint_validator:
+        class: PcmtRulesBundle\Constraints\AttributeExistsInBothFamiliesConstraintValidator
+        arguments:
+            - '@pcmt.service.rule_attribute_provider'
+        tags:
+            - { name: validator.constraint_validator, alias: pcmt_attribute_exists_in_both_families_constraint_validator }
+
