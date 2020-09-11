@@ -37,7 +37,7 @@ class AttributeExistsInBothFamiliesConstraintValidator extends ConstraintValidat
         }
 
         /** @var Rule $entity */
-        if (!$entity->getSourceFamily() || !$entity->getDestinationFamily()) {
+        if (!$entity->getSourceFamily() || !$entity->getDestinationFamily() || !$entity->getKeyAttribute()) {
             return;
         }
         $attributes = $this->ruleAttributeProvider->getForFamilies($entity->getSourceFamily(), $entity->getDestinationFamily());
