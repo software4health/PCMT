@@ -6,11 +6,6 @@
 
 version: '3.4'
 services:
-  pim:
-    image: pcmt/pcmt:${PCMT_VER:-latest}
-    build:
-      context: .
-      target: pim
   node:
     image: pcmt/node:${PCMT_VER:-latest}
     build:
@@ -21,3 +16,8 @@ services:
     build:
       context: .
       target: httpd
+  pim:
+    image: pcmt/pcmt:${PCMT_VER:-latest}
+    build:
+      context: .
+      target: pim

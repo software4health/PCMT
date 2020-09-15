@@ -10,6 +10,7 @@ LABEL maintainer="josh.zamor@villagereach.org"
 ARG AKENEO_URL=https://github.com/akeneo/pim-community-standard/archive/
 ARG AKENEO_VER
 
+USER root
 RUN mkdir -p /srv/pim && \
     chown docker:docker /srv/pim && \
     apt-get update && \
@@ -19,17 +20,17 @@ RUN mkdir -p /srv/pim && \
 
 USER docker
 ADD --chown=docker:docker ${AKENEO_URL}${AKENEO_VER}.tar.gz /home/docker/pim.tar.gz
-RUN tar xvzf /home/docker/pim.tar.gz -C /srv/pim --strip-components=1 && \
-    rm /home/docker/pim.tar.gz
+RUN tar xvzf /home/docker/pim.tar.gz -C /srv/pim --strip-components=1
+WORKDIR /srv/pim    
 
-
-#--- PCMT PIM ---
-FROM akeneo as pim
+#--- PCMT PIM BUILD ---
+FROM akeneo as pim-build
 ARG PCMT_SEMVER
-LABEL maintainer="josh.zamor@villagereach.org"
 ARG COMPOSER_CACHE_PATH=/home/docker/.composer
+LABEL maintainer="josh.zamor@villagereach.org"
+ENV COMPOSER_CACHE_DIR ${COMPOSER_CACHE_PATH}
 COPY --from=akeneo --chown=docker:docker /srv/pim /srv/pim
-ADD --chown=docker:docker .cache/composer ${COMPOSER_CACHE_PATH}
+ADD --chown=docker:docker .cache/composer ${COMPOSER_CACHE_DIR}
 ADD --chown=docker:docker composer.* /srv/pim/
 ADD --chown=docker:docker app/ /srv/pim/app/
 ADD --chown=docker:docker src/ /srv/pim/src/
@@ -41,21 +42,17 @@ ADD --chown=docker:docker docker/pim/cpFromTmp.sh /srv/pim/
 ADD --chown=docker:docker docker/pim/cronRun.sh /srv/pim/
 ADD --chown=docker:docker docker/pim/pcmtMigrate.sh /srv/pim/
 
-USER docker
-WORKDIR /srv/pim    
-ENV COMPOSER_CACHE_DIR ${COMPOSER_CACHE_PATH}
 RUN src/cleanIfRelease.sh ${PCMT_SEMVER} && \
     php -d memory_limit=3G /usr/local/bin/composer install && \
     rm -rf var/cache/*
 CMD /srv/pim/start.sh
 
 #--- Node ---
-FROM pim
 FROM node:10-slim AS node
 USER node
 ARG YARN_CACHE_PATH=/home/node/.yarn-cache
 ADD --chown=node:node .cache/yarn-cache ${YARN_CACHE_PATH}
-COPY --from=pim --chown=node:node /srv/pim /srv/pim
+COPY --from=pim-build --chown=node:node /srv/pim /srv/pim
 
 WORKDIR /srv/pim
 ENV YARN_CACHE_FOLDER ${YARN_CACHE_PATH}docker
@@ -66,6 +63,9 @@ RUN yarn install && \
 #--- Httpd ---
 FROM httpd:2.4 as httpd
 LABEL maintainer="josh.zamor@villagereach.org"
-COPY --from=node --chown=1000:1000 /srv/pim /srv/pim
 COPY --from=node --chown=root:www-data /srv/pim/docker/httpd.conf /usr/local/apache2/conf/httpd.conf
 COPY --from=node --chown=root:www-data /srv/pim/docker/akeneo.conf /usr/local/apache2/conf/vhost.conf
+
+# pim
+FROM pim-build as pim
+COPY --from=node --chown=docker:docker /srv/pim /srv/pim

@@ -13,6 +13,10 @@ services:
     environment:
       - PCMT_PROFILE
       - PCMT_VER
+    volumes:
+      - type: volume
+        source: pim
+        target: '/srv/pim'
     user: 'docker'
     working_dir: '/srv/pim'
     secrets:
@@ -26,8 +30,15 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.http.rule=PathPrefix(`/`)"
+    volumes:
+      - type: volume
+        source: pim
+        target: '/srv/pim'
+        read_only: true
     networks:
       - 'akeneo'
+    depends_on:
+      - fpm
 
   mysql:
     image: 'mysql:${MYSQL_VER}'
@@ -85,6 +96,8 @@ volumes:
     driver: local
   esdata:
     driver: local
+  pim:
+    driver: local
 
 secrets:
   akeneo_parameters:
@@ -97,4 +110,4 @@ secrets:
       file: "${PCMT_MYSQL_PASSWORD_CONF:-./conf/mysql-password.dist}"
 
 networks:
-  akeneo:
+  akeneo:    
