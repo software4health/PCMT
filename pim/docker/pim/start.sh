@@ -22,10 +22,11 @@ source cpFromTmp.sh
 ./wait.sh mysql 3306
 ./wait.sh elasticsearch 9200
 
+source write-env-reverse-proxy.sh
 source cronRun.sh
 
 shopt -s nocasematch
-if [ "production" != $profile ]; then
+if [ "production" != "$profile" ]; then
     bin/console --env=prod pim:install --force --symlink --clean
 else
     bin/console --env=prod pim:installer:prepare-required-directories

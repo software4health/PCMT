@@ -7,10 +7,6 @@
 version: '3.5'
 services:
 
-  fpm:
-    environment:
-      - "TRUSTED_PROXY_IDS=/0"
-
   httpd:
     labels:
       - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
