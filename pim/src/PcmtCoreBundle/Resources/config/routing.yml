@@ -7,3 +7,8 @@
 pim_dashboard_index:
   path: /dashboard
   defaults: { _controller: FrameworkBundle:Template:template, template: PcmtCoreBundle:Dashboard:index.html.twig }
+
+pim_enrich_product_rest_create:
+  path: /rest
+  defaults: { _controller: pim_enrich.controller.rest.product:createAction }
+  methods: [PUT]
