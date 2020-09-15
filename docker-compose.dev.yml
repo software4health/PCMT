@@ -8,7 +8,6 @@ version: "3.5"
 services:
   fpm:
     volumes:
-      - 'pim:/srv/pim'
       - './pim/src:/srv/pim/src:rw'
       - './pim/app:/tmp/pcmt/app:ro'
       - './pim/web:/tmp/pcmt/web:ro'
@@ -21,11 +20,6 @@ services:
       - './pim/phpunit.xml.dist:/srv/pim/phpunit.xml.dist:ro'
       - './pim/crontab:/srv/pim/crontab'
       - './pim/infection.json.dist:/srv/pim/infection.json.dist'
-    # we use depends_on so that the pim volume is initialized by one container
-    # with a complete /srv/pim.  Otherwise there isn't a gurantee how this
-    # volume will be initialized.
-    depends_on:
-      - httpd
     environment:
       - PHP_XDEBUG_ENABLED=1
       - PHP_XDEBUG_REMOTE_PORT=9000
@@ -43,15 +37,9 @@ services:
     working_dir: '/srv/pim'
     networks:
      - akeneo
+    depends_on: 
+     - fpm
 
   mysql:
     ports:
       - '3306:3306'
-
-  httpd:
-    volumes:
-      - 'pim:/srv/pim'
-
-volumes:
-  pim:
-    driver: local
