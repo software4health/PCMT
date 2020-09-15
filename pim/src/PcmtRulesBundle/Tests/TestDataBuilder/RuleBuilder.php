@@ -30,6 +30,7 @@ class RuleBuilder
         $this->rule->setUniqueId(self::EXAMPLE_UNIQUE_ID);
         $this->rule->setSourceFamily((new FamilyBuilder())->build());
         $this->rule->setDestinationFamily((new FamilyBuilder())->build());
+        $this->rule->setKeyAttribute((new AttributeBuilder())->build());
     }
 
     protected function setId(Rule $rule, int $value): void

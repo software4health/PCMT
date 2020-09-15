@@ -8,3 +8,5 @@ services:
         calls:
             - [setAttributeProvider, ['@pcmt.service.rule_attribute_provider']]
             - [setRuleRepository, ['@pcmt.repository.rule']]
+            - [setProductRepository, ['@pim_catalog.repository.product']]
+            - [setRuleProductProcessor, ['@pcmt.service.rule_product_processor']]

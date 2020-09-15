@@ -41,3 +41,12 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: pcmt_attribute_exists_in_both_families_constraint_validator }
 
+    pcmt.service.rule_product_processor:
+        class: PcmtRulesBundle\Service\RuleProductProcessor
+        arguments:
+            - '@pim_catalog.query.product_query_builder_factory'
+            - '@pcmt.service.rule_attribute_provider'
+            - '@pim_catalog.updater.property_copier'
+            - '@pim_catalog.saver.product'
+
+
