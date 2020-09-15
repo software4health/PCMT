@@ -13,7 +13,7 @@ ARG AKENEO_VER
 RUN mkdir -p /srv/pim && \
     chown docker:docker /srv/pim && \
     apt-get update && \
-    apt-get install netcat cron -y && \
+    apt-get install netcat cron dnsutils -y && \
     apt-get clean && \
     apt-get autoremove
 
@@ -35,6 +35,7 @@ ADD --chown=docker:docker app/ /srv/pim/app/
 ADD --chown=docker:docker src/ /srv/pim/src/
 ADD --chown=docker:docker crontab /srv/pim/crontab
 ADD --chown=docker:docker docker/pim/wait.sh /srv/pim/
+ADD --chown=docker:docker docker/pim/write-env-reverse-proxy.sh /srv/pim/
 ADD --chown=docker:docker docker/pim/start.sh /srv/pim/
 ADD --chown=docker:docker docker/pim/cpFromTmp.sh /srv/pim/
 ADD --chown=docker:docker docker/pim/cronRun.sh /srv/pim/
