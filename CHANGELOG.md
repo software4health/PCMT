@@ -1,13 +1,39 @@
-VER 2.0.3 / unreleased
+VER 2.1.0 / unreleased
 ==================
 
 **Added**
+* [#575](https://gitlab.com/pcmt/pcmt/-/issues/575): Rules - creation - backend
+* [#583](https://gitlab.com/pcmt/pcmt/-/issues/583): Rules - creation - frontend
+* [#585](https://gitlab.com/pcmt/pcmt/-/issues/585): Rules - general view
+* [#581](https://gitlab.com/pcmt/pcmt/-/issues/581): Rules - permissions
+* [#576](https://gitlab.com/pcmt/pcmt/-/issues/576): Rules - listing
+* [#577](https://gitlab.com/pcmt/pcmt/-/issues/577): Rules - editing - backend
+* [#584](https://gitlab.com/pcmt/pcmt/-/issues/584): Rules - editing - frontend
+* [#578](https://gitlab.com/pcmt/pcmt/-/issues/578): Rules - running
+* [#600](https://gitlab.com/pcmt/pcmt/-/issues/600): Rules - minor UI issues in the create modal and edit form
+* [#580](https://gitlab.com/pcmt/pcmt/-/issues/580): Rules - key attribute 
+* [#617](https://gitlab.com/pcmt/pcmt/-/issues/617): Rules - deleting
+* [#579](https://gitlab.com/pcmt/pcmt/-/issues/579): Rules - processing
+
+VER 2.0.3 / 2020-09-16
+==================
+
+**Added**
+* [#590](https://gitlab.com/pcmt/pcmt/-/issues/590): GDSN import in Process Tracker 
 
 **Changed**
 
 **Removed**
 
 **Fixed**
+* [#618](https://gitlab.com/pcmt/pcmt/-/issues/618): Build failing - babel__traverse TS error
+* [#460](https://gitlab.com/pcmt/pcmt/-/issues/460): Image loading in endless redirect-loop
+* [#594](https://gitlab.com/pcmt/pcmt/-/issues/594): Can't approve draft for a new product/product model
+* [#596](https://gitlab.com/pcmt/pcmt/-/issues/596): Mysqldump container reporting access denied
+* [#599](https://gitlab.com/pcmt/pcmt/-/issues/599): Reference data download problems
+* [#601](https://gitlab.com/pcmt/pcmt/-/issues/601): Language codes reference data import problem - better error message
+* [#630](https://gitlab.com/pcmt/pcmt/-/issues/630): Fix for creating product model
+
 
 VER 2.0.2 / 2020-08-21
 ==================
