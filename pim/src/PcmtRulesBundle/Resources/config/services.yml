@@ -48,5 +48,6 @@ services:
             - '@pcmt.service.rule_attribute_provider'
             - '@pim_catalog.updater.property_copier'
             - '@pim_catalog.saver.product'
+            - '@pim_catalog.saver.product_model'
 
 

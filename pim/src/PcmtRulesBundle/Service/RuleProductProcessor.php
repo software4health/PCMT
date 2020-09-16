@@ -11,10 +11,15 @@ declare(strict_types=1);
 namespace PcmtRulesBundle\Service;
 
 use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductQueryBuilderFactory;
+use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithValuesInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\Filter\Operators;
+use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
+use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\PropertyCopierInterface;
+use PcmtCoreBundle\Connector\Job\InvalidItems\SimpleInvalidItem;
 use PcmtRulesBundle\Entity\Rule;
 
 class RuleProductProcessor
@@ -31,25 +36,39 @@ class RuleProductProcessor
     /** @var SaverInterface */
     private $productSaver;
 
+    /** @var SaverInterface */
+    private $productModelSaver;
+
+    /** @var ProductInterface[] */
+    private $productsToSave = [];
+
+    /** @var ProductModelInterface[] */
+    private $productModelsToSave = [];
+
     public function __construct(
         ProductQueryBuilderFactory $pqbFactory,
         RuleAttributeProvider $ruleAttributeProvider,
         PropertyCopierInterface $propertyCopier,
-        SaverInterface $productSaver
+        SaverInterface $productSaver,
+        SaverInterface $productModelSaver
     ) {
         $this->pqbFactory = $pqbFactory;
         $this->ruleAttributeProvider = $ruleAttributeProvider;
         $this->propertyCopier = $propertyCopier;
         $this->productSaver = $productSaver;
+        $this->productModelSaver = $productModelSaver;
     }
 
-    public function process(Rule $rule, ProductInterface $sourceProduct): int
+    public function process(StepExecution $stepExecution, Rule $rule, EntityWithValuesInterface $sourceProduct): void
     {
+        $this->productsToSave = [];
+        $this->productModelsToSave = [];
+
         $attributes = $this->ruleAttributeProvider->getForFamilies($rule->getSourceFamily(), $rule->getDestinationFamily());
 
         $keyValue = $sourceProduct->getValue($rule->getKeyAttribute()->getCode());
         if (!$keyValue) {
-            return 0;
+            return;
         }
         // searching through ElasticSearch index
         $pqb = $this->pqbFactory->create([
@@ -60,22 +79,60 @@ class RuleProductProcessor
         $pqb->addFilter('family', Operators::IN_LIST, [$rule->getDestinationFamily()->getCode()]);
 
         $destinationProducts = $pqb->execute();
-        $i = 0;
         foreach ($destinationProducts as $destinationProduct) {
             foreach ($attributes as $attribute) {
-                if ('pim_catalog_identifier' !== $attribute->getType()) {
-                    $this->propertyCopier->copyData(
-                        $sourceProduct,
-                        $destinationProduct,
-                        $attribute->getCode(),
-                        $attribute->getCode()
+                /** @var AttributeInterface $attribute */
+                try {
+                    if ('pim_catalog_identifier' !== $attribute->getType()) {
+                        $this->copyData($sourceProduct, $destinationProduct, $attribute->getCode());
+                    }
+                } catch (\Throwable $e) {
+                    $msg = sprintf(
+                        'Problem with copying data from product %s to product %s, attribute: %s. Error: %s',
+                        $sourceProduct->getId(),
+                        $destinationProduct->getId(),
+                        $attribute->getLabel(),
+                        $e->getMessage()
                     );
+                    $invalidItem = new SimpleInvalidItem(
+                        [
+                            'sourceProduct'      => $sourceProduct->getIdentifier(),
+                            'destinationProduct' => $destinationProduct->getIdentifier(),
+                            'attribute'          => $attribute->getCode(),
+                        ]
+                    );
+                    $stepExecution->addWarning($msg, [], $invalidItem);
                 }
             }
-            $this->productSaver->save($destinationProduct);
-            $i++;
         }
 
-        return $i;
+        foreach ($this->productsToSave as $product) {
+            $this->productSaver->save($product);
+            $stepExecution->incrementSummaryInfo('destination_products_found_and_saved', 1);
+        }
+        foreach ($this->productModelsToSave as $productModel) {
+            $this->productModelSaver->save($productModel);
+            $stepExecution->incrementSummaryInfo('destination_product_models_found_and_saved', 1);
+        }
+    }
+
+    private function copyData(EntityWithValuesInterface $sourceProduct, EntityWithValuesInterface $destinationProduct, string $attributeCode): void
+    {
+        if ($destinationProduct instanceof ProductInterface) {
+            $this->productsToSave[$destinationProduct->getId()] = $destinationProduct;
+        } elseif ($destinationProduct instanceof ProductModelInterface) {
+            $this->productModelsToSave[$destinationProduct->getId()] = $destinationProduct;
+        }
+
+        $this->propertyCopier->copyData(
+            $sourceProduct,
+            $destinationProduct,
+            $attributeCode,
+            $attributeCode
+        );
+
+        if ($destinationProduct->getParent()) {
+            $this->copyData($sourceProduct, $destinationProduct->getParent(), $attributeCode);
+        }
     }
 }
