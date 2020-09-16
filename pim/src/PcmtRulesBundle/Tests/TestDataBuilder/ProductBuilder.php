@@ -11,7 +11,7 @@ namespace PcmtRulesBundle\Tests\TestDataBuilder;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\Product;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Pim\Structure\Component\Model\Family;
 use Doctrine\Common\Collections\Collection;
@@ -30,7 +30,7 @@ class ProductBuilder
         $this->product->setFamily((new FamilyBuilder())->build());
     }
 
-    public function withParent(ProductModel $parent): self
+    public function withParent(ProductModelInterface $parent): self
     {
         $this->product->setParent($parent);
 

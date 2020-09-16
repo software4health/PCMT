@@ -64,9 +64,10 @@ class RuleProcessStep extends AbstractStep
         $attributes = $this->attributeProvider->getForFamilies($rule->getSourceFamily(), $rule->getDestinationFamily());
 
         $stepExecution->addSummaryInfo('attributes_found', count($attributes));
-        $stepExecution->incrementSummaryInfo('products_found_in_source_family', 0);
-        $stepExecution->incrementSummaryInfo('products_processed', 0);
-        $stepExecution->incrementSummaryInfo('products_found_in_destination_family', 0);
+        $stepExecution->incrementSummaryInfo('source_products_found', 0);
+        $stepExecution->incrementSummaryInfo('source_products_processed', 0);
+        $stepExecution->incrementSummaryInfo('destination_products_found_and_saved', 0);
+        $stepExecution->incrementSummaryInfo('destination_product_models_found_and_saved', 0);
 
         $result = true;
         $offset = 0;
@@ -79,12 +80,11 @@ class RuleProcessStep extends AbstractStep
     private function processBatch(StepExecution $stepExecution, Rule $rule, int $offset): bool
     {
         $products = $this->productRepository->findBy(['family' => $rule->getSourceFamily()], null, self::BATCH_SIZE, $offset);
-        $stepExecution->incrementSummaryInfo('products_found_in_source_family', count($products));
+        $stepExecution->incrementSummaryInfo('source_products_found', count($products));
 
         foreach ($products as $product) {
-            $stepExecution->incrementSummaryInfo('products_processed', 1);
-            $count = $this->ruleProductProcessor->process($rule, $product);
-            $stepExecution->incrementSummaryInfo('products_found_in_destination_family', $count);
+            $stepExecution->incrementSummaryInfo('source_products_processed', 1);
+            $this->ruleProductProcessor->process($stepExecution, $rule, $product);
         }
 
         return $products ? true : false;
