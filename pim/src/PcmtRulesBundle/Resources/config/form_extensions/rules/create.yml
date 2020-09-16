@@ -1,6 +1,6 @@
 extensions:
   pcmt-rules-create-modal:
-    module: pcmt/form/common/creation/modal
+    module: pcmt/rules/form/common/creation/modal
     config:
       labels:
         title: pim_common.create
@@ -22,7 +22,7 @@ extensions:
       label: pcmt.rules.create.unique_id
 
   pcmt-rules-create-family-a:
-    module: pcmt/form/properties/family
+    module: pcmt/rules/form/properties/family
     parent: pcmt-rules-create-modal
     targetZone: fields
     position: 20
@@ -32,7 +32,7 @@ extensions:
       label: pcmt.rules.create.source_family
 
   pcmt-rules-create-family-b:
-    module: pcmt/form/properties/family
+    module: pcmt/rules/form/properties/family
     parent: pcmt-rules-create-modal
     targetZone: fields
     position: 20
@@ -42,7 +42,7 @@ extensions:
       label: pcmt.rules.create.destination_family
 
   pcmt-rules-create-key-attribute:
-    module: pcmt/form/properties/key-attribute
+    module: pcmt/rules/form/properties/key-attribute
     parent: pcmt-rules-create-modal
     targetZone: fields
     position: 25
