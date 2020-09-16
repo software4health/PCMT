@@ -38,7 +38,7 @@ extensions:
     position: 110
 
   pcmt-rules-edit-form-save:
-    module: pcmt/form/common/save-rule-form
+    module: pcmt/rules/form/common/save-rule-form
     parent: pcmt-rules-edit-form
     targetZone: buttons
     position: 0
@@ -104,7 +104,7 @@ extensions:
       required: true
 
   pcmt-rules-edit-form-properties-common-source-family:
-    module: pcmt/form/properties/family
+    module: pcmt/rules/form/properties/family
     parent: pcmt-rules-edit-form-properties-common
     targetZone: content
     position: 100
@@ -114,7 +114,7 @@ extensions:
       required: true
 
   pcmt-rules-edit-form-properties-common-destination-family:
-    module: pcmt/form/properties/family
+    module: pcmt/rules/form/properties/family
     parent: pcmt-rules-edit-form-properties-common
     targetZone: content
     position: 110
@@ -124,7 +124,7 @@ extensions:
       required: true
 
   pcmt-rules-edit-form-properties-common-key-attribute:
-    module: pcmt/form/properties/key-attribute
+    module: pcmt/rules/form/properties/key-attribute
     parent: pcmt-rules-edit-form-properties-common
     targetZone: content
     position: 120
