@@ -30,7 +30,7 @@ class RuleAttributeProviderTest extends TestCase
 
     public function dataGetForFamilies(): array
     {
-        $attribute1 = (new AttributeBuilder())->withCode('A1')->build();
+        $attribute1 = (new AttributeBuilder())->withType(RuleAttributeProvider::TYPE_IDENTIFIER)->withCode('A1')->build();
         $attribute2 = (new AttributeBuilder())->withCode('A2')->build();
         $attribute3 = (new AttributeBuilder())->withCode('A3')->build();
         $attribute4 = (new AttributeBuilder())->withCode('A4')->build();
@@ -41,13 +41,13 @@ class RuleAttributeProviderTest extends TestCase
             [$sourceFamily, [$attribute1]],
             [$destinationFamily, [$attribute1, $attribute2]],
         ];
-        $expectedAttributes1 = [$attribute1];
+        $expectedAttributes1 = [];
 
         $map2 = [
             [$sourceFamily, [$attribute1, $attribute3, $attribute4]],
             [$destinationFamily, [$attribute1, $attribute2, $attribute3]],
         ];
-        $expectedAttributes2 = [$attribute1, $attribute3];
+        $expectedAttributes2 = [$attribute3];
 
         return [
             [$sourceFamily, $destinationFamily, $map1, $expectedAttributes1],
