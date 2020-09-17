@@ -1,4 +1,9 @@
 <?php
+/*
+ * Copyright (c) 2020, VillageReach
+ * Licensed under the Non-Profit Open Software License version 3.0.
+ * SPDX-License-Identifier: NPOSL-3.0
+ */
 
 declare(strict_types=1);
 
@@ -8,9 +13,10 @@ declare(strict_types=1);
  * SPDX-License-Identifier: NPOSL-3.0
  */
 
-namespace PcmtRulesBundle\Constraints;
+namespace PcmtRulesBundle\Validators;
 
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
+use PcmtRulesBundle\Constraints\AttributeExistsInBothFamiliesConstraint;
 use PcmtRulesBundle\Entity\Rule;
 use PcmtRulesBundle\Service\RuleAttributeProvider;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;

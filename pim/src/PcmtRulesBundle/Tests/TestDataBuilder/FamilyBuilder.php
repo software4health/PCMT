@@ -31,6 +31,16 @@ class FamilyBuilder
         return $this;
     }
 
+    public function withId(int $id): self
+    {
+        $reflection = new \ReflectionClass(get_class($this->family));
+        $property = $reflection->getProperty('id');
+        $property->setAccessible(true);
+        $property->setValue($this->family, $id);
+
+        return $this;
+    }
+
     public function build(): Family
     {
         return $this->family;
