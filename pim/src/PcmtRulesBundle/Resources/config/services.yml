@@ -35,11 +35,16 @@ services:
             - '@pim_catalog.repository.attribute'
 
     pcmt.constraints.attribute_exists_in_both_families_constraint_validator:
-        class: PcmtRulesBundle\Constraints\AttributeExistsInBothFamiliesConstraintValidator
+        class: PcmtRulesBundle\Validators\AttributeExistsInBothFamiliesConstraintValidator
         arguments:
             - '@pcmt.service.rule_attribute_provider'
         tags:
             - { name: validator.constraint_validator, alias: pcmt_attribute_exists_in_both_families_constraint_validator }
+
+    pcmt.constraints.different_family_constraint_validator:
+        class: PcmtRulesBundle\Validators\DifferentFamilyConstraintValidator
+        tags:
+            - { name: validator.constraint_validator, alias: pcmt_attribute_different_family_constraint_validator }
 
     pcmt.service.rule_product_processor:
         class: PcmtRulesBundle\Service\RuleProductProcessor

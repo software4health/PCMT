@@ -29,6 +29,7 @@
                 <directory>./src/*/Repository</directory>
                 <directory>./src/*/FunctionalTests</directory>
                 <directory>./src/*/Controller</directory>
+                <directory>./src/PcmtRulesBundle/Constraints</directory>
                 <file>./src/PcmtDraftBundle/Controller/DraftController.php</file>
             </exclude>
         </whitelist>

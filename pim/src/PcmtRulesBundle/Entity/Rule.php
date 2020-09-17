@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace PcmtRulesBundle\Entity;
 
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
-use Akeneo\Pim\Structure\Component\Model\Family;
+use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use DateTime;
 
 class Rule
@@ -20,10 +20,10 @@ class Rule
     /** @var string */
     private $uniqueId;
 
-    /** @var Family */
+    /** @var FamilyInterface */
     private $sourceFamily;
 
-    /** @var Family */
+    /** @var FamilyInterface */
     private $destinationFamily;
 
     /** @var DateTime */
@@ -44,12 +44,12 @@ class Rule
         $this->uniqueId = $uniqueId;
     }
 
-    public function setSourceFamily(Family $sourceFamily): void
+    public function setSourceFamily(?FamilyInterface $sourceFamily): void
     {
         $this->sourceFamily = $sourceFamily;
     }
 
-    public function setDestinationFamily(Family $destinationFamily): void
+    public function setDestinationFamily(?FamilyInterface $destinationFamily): void
     {
         $this->destinationFamily = $destinationFamily;
     }
@@ -79,12 +79,12 @@ class Rule
         return $this->uniqueId;
     }
 
-    public function getSourceFamily(): ?Family
+    public function getSourceFamily(): ?FamilyInterface
     {
         return $this->sourceFamily;
     }
 
-    public function getDestinationFamily(): ?Family
+    public function getDestinationFamily(): ?FamilyInterface
     {
         return $this->destinationFamily;
     }

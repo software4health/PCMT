@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PcmtRulesBundle\Tests\TestDataBuilder;
 
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
+use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use PcmtRulesBundle\Entity\Rule;
 
 class RuleBuilder
@@ -41,9 +42,23 @@ class RuleBuilder
         $property->setValue($rule, $value);
     }
 
-    public function withKeyAttribute(AttributeInterface $attribute): self
+    public function withKeyAttribute(?AttributeInterface $attribute): self
     {
         $this->rule->setKeyAttribute($attribute);
+
+        return $this;
+    }
+
+    public function withSourceFamily(?FamilyInterface $family): self
+    {
+        $this->rule->setSourceFamily($family);
+
+        return $this;
+    }
+
+    public function withDestinationFamily(?FamilyInterface $family): self
+    {
+        $this->rule->setDestinationFamily($family);
 
         return $this;
     }

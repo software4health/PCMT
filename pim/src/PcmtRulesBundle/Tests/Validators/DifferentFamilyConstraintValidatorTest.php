@@ -8,14 +8,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: NPOSL-3.0
  */
 
-namespace PcmtRulesBundle\Tests\Constraints;
+namespace PcmtRulesBundle\Tests\Validators;
 
-use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
-use PcmtRulesBundle\Constraints\AttributeExistsInBothFamiliesConstraintValidator;
-use PcmtRulesBundle\Service\RuleAttributeProvider;
-use PcmtRulesBundle\Tests\TestDataBuilder\AttributeBuilder;
-use PcmtRulesBundle\Tests\TestDataBuilder\AttributeExistsInBothFamiliesConstraintBuilder;
+use PcmtRulesBundle\Entity\Rule;
+use PcmtRulesBundle\Tests\TestDataBuilder\DifferentFamilyConstraintBuilder;
+use PcmtRulesBundle\Tests\TestDataBuilder\FamilyBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\RuleBuilder;
+use PcmtRulesBundle\Validators\DifferentFamilyConstraintValidator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
@@ -23,11 +22,8 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
-class AttributeExistsInBothFamiliesConstraintValidatorTest extends TestCase
+class DifferentFamilyConstraintValidatorTest extends TestCase
 {
-    /** @var RuleAttributeProvider|MockObject */
-    private $ruleAttributeProviderMock;
-
     /** @var ExecutionContextInterface|MockObject */
     private $contextMock;
 
@@ -36,7 +32,6 @@ class AttributeExistsInBothFamiliesConstraintValidatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->ruleAttributeProviderMock = $this->createMock(RuleAttributeProvider::class);
         $this->contextMock = $this->createMock(ExecutionContextInterface::class);
 
         $this->violationBuilderMock = $this->createMock(ConstraintViolationBuilderInterface::class);
@@ -45,23 +40,26 @@ class AttributeExistsInBothFamiliesConstraintValidatorTest extends TestCase
 
     public function dataValidate(): array
     {
-        $a1 = (new AttributeBuilder())->withCode('AAA1')->build();
-        $a2 = (new AttributeBuilder())->withCode('AAA2')->build();
+        $family1 = (new FamilyBuilder())->withCode('xxx')->withId(1)->build();
+        $family2 = (new FamilyBuilder())->withCode('yyy')->withId(2)->build();
+
+        $rule1 = (new RuleBuilder())->withSourceFamily($family1)->withDestinationFamily($family2)->build();
+        $rule2 = (new RuleBuilder())->withSourceFamily($family1)->withDestinationFamily($family1)->build();
+        $rule3 = (new RuleBuilder())->withSourceFamily($family2)->withDestinationFamily($family2)->build();
+        $rule4 = (new RuleBuilder())->withSourceFamily($family2)->withDestinationFamily(null)->build();
 
         return [
-            [$a1, [$a1, $a2], true],
-            [$a1, [$a2], false],
-            [$a2, [$a2], true],
-            [$a2, [], false],
+            [$rule1, true],
+            [$rule2, false],
+            [$rule3, false],
+            [$rule4, true],
         ];
     }
 
     /** @dataProvider dataValidate */
-    public function testValidate(AttributeInterface $keyAttribute, array $attributes, bool $result): void
+    public function testValidate(Rule $rule, bool $result): void
     {
-        $this->ruleAttributeProviderMock->method('getForFamilies')->willReturn($attributes);
-        $constraint = (new AttributeExistsInBothFamiliesConstraintBuilder())->build();
-        $rule = (new RuleBuilder())->withKeyAttribute($keyAttribute)->build();
+        $constraint = (new DifferentFamilyConstraintBuilder())->build();
 
         if ($result) {
             $this->contextMock->expects($this->never())->method('buildViolation');
@@ -83,9 +81,9 @@ class AttributeExistsInBothFamiliesConstraintValidatorTest extends TestCase
         $validator->validate($rule, $constraint);
     }
 
-    private function getValidatorInstance(): AttributeExistsInBothFamiliesConstraintValidator
+    private function getValidatorInstance(): DifferentFamilyConstraintValidator
     {
-        $validator = new AttributeExistsInBothFamiliesConstraintValidator($this->ruleAttributeProviderMock);
+        $validator = new DifferentFamilyConstraintValidator();
         $validator->initialize($this->contextMock);
 
         return $validator;
