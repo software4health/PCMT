@@ -10,3 +10,12 @@ pcmt.permission:
 pcmt.rules.flash:
     running_started: The rule processing has been started.
     running_start_error: The rule processing has not been started, there was an error.
+
+job_execution.summary:
+    rule_id: Rule ID
+    attributes_found: Attributes found
+    source_products_found: Source products found
+    source_products_processed: Source products processed
+    destination_products_found_and_saved: Destination products found and saved
+    destination_product_models_found_and_saved: Destination product models found and saved
+
