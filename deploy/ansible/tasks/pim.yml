@@ -24,6 +24,9 @@
     src: /tmp/secrets/
     dest: /app/conf
     mode: '0400'
+- name: Prune pim volume for dev
+  shell: docker volume rm app_pim
+  when: pcmt_profile == 'dev'
 - name: Pull and Start PCMT images
   docker_service:
     project_src: /app
