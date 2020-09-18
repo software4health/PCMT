@@ -7,9 +7,9 @@ extensions:
         subTitle: pim_menu.item.rules
       picture: illustrations/Family.svg
       successMessage: pcmt.entity.rules.flash.create.success
-      editRoute: pcmt_rules_index
+      editRoute: pcmt_rules_edit
       postUrl: pcmt_rule_rest_create
-      routerKey: unique_id
+      routerKey: id
 
   pcmt-rules-create-code:
     module: pim/form/common/fields/text
