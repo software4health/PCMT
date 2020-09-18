@@ -34,8 +34,7 @@
     build: no
     pull: no
     remove_orphans: yes
-    state: present
-    stopped: yes
+    state: absent
   when: pcmt_profile == 'dev'
 - name: Prune pim volume for dev
   shell: docker volume rm app_pim
