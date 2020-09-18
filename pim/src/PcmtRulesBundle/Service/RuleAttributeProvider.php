@@ -10,11 +10,14 @@ declare(strict_types=1);
 
 namespace PcmtRulesBundle\Service;
 
+use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Pim\Structure\Component\Model\Family;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 
 class RuleAttributeProvider
 {
+    public const TYPE_IDENTIFIER = 'pim_catalog_identifier';
+
     /** @var AttributeRepositoryInterface */
     private $attributeRepository;
 
@@ -23,10 +26,23 @@ class RuleAttributeProvider
         $this->attributeRepository = $attributeRepository;
     }
 
+    private function filterForType(array $attributes): array
+    {
+        return array_values(array_filter($attributes, function (AttributeInterface $attribute) {
+            if (self::TYPE_IDENTIFIER === $attribute->getType()) {
+                return false;
+            }
+
+            return true;
+        }));
+    }
+
     public function getForFamilies(Family $sourceFamily, Family $destinationFamily): array
     {
         $attributes1 = $this->attributeRepository->findAttributesByFamily($sourceFamily);
+        $attributes1 = $this->filterForType($attributes1);
         $attributes2 = $this->attributeRepository->findAttributesByFamily($destinationFamily);
+        $attributes2 = $this->filterForType($attributes2);
 
         return array_intersect($attributes1, $attributes2);
     }
