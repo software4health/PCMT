@@ -170,7 +170,11 @@ class E2OpenFromXmlTasklet implements TaskletInterface
             },
         ];
 
+        $this->stepExecution->incrementSummaryInfo('TradeItemsProcessed', 0);
+
         $this->xmlReader->parse($xmlInput);
+
+        $this->stepExecution->incrementSummaryInfo('UniqueProductsProcessed', count($this->products));
     }
 
     private function instantiateProduct(array $element): ProductInterface
