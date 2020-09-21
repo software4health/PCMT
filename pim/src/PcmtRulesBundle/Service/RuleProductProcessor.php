@@ -75,7 +75,17 @@ class RuleProductProcessor
             'default_locale' => null,
             'default_scope'  => null,
         ]);
-        $pqb->addFilter($rule->getKeyAttribute()->getCode(), Operators::IN_LIST, [$keyValue->getData()]);
+
+        try {
+            $pqb->addFilter($rule->getKeyAttribute()->getCode(), Operators::EQUALS, $keyValue->getData());
+        } catch (\Throwable $e) {
+            try {
+                $pqb->addFilter($rule->getKeyAttribute()->getCode(), Operators::IN_LIST, [$keyValue->getData()]);
+            } catch (\Throwable $e) {
+                throw new \Exception('Unsupported attribute: ' . $rule->getKeyAttribute()->getCode(). ' Details: '. $e->getMessage());
+            }
+        }
+
         $pqb->addFilter('family', Operators::IN_LIST, [$rule->getDestinationFamily()->getCode()]);
 
         $destinationProducts = $pqb->execute();
