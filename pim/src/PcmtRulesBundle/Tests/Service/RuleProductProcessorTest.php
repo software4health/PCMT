@@ -113,6 +113,18 @@ class RuleProductProcessorTest extends TestCase
     /**
      * @dataProvider dataProcess
      */
+    public function testProcessFilterException(Rule $rule, ProductInterface $sourceProduct, array $destinationProducts, array $attributes): void
+    {
+        $this->ruleAttributeProviderMock->expects($this->once())->method('getForFamilies')->willReturn($attributes);
+        $this->productQueryBuilderMock->method('addFilter')->willThrowException(new \Exception());
+        $this->expectException(\Throwable::class);
+        $processor = $this->getRuleProductProcessorInstance();
+        $processor->process($this->stepExecutionMock, $rule, $sourceProduct);
+    }
+
+    /**
+     * @dataProvider dataProcess
+     */
     public function testProcessNoKeyValue(Rule $rule, ProductInterface $sourceProduct, array $destinationProducts, array $attributes): void
     {
         $sourceProduct = (new ProductBuilder())->build();
