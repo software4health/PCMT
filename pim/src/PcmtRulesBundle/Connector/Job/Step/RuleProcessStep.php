@@ -68,6 +68,7 @@ class RuleProcessStep extends AbstractStep
         $stepExecution->incrementSummaryInfo('source_products_processed', 0);
         $stepExecution->incrementSummaryInfo('destination_products_found_and_saved', 0);
         $stepExecution->incrementSummaryInfo('destination_product_models_found_and_saved', 0);
+        $stepExecution->incrementSummaryInfo('destination_products_created', 0);
 
         $result = true;
         $offset = 0;

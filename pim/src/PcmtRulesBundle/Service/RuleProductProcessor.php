@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace PcmtRulesBundle\Service;
 
 use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductQueryBuilderFactory;
+use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithValuesInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
@@ -21,6 +22,7 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\PropertyCopierInterface;
 use PcmtCoreBundle\Connector\Job\InvalidItems\SimpleInvalidItem;
 use PcmtRulesBundle\Entity\Rule;
+use Ramsey\Uuid\Uuid;
 
 class RuleProductProcessor
 {
@@ -39,6 +41,9 @@ class RuleProductProcessor
     /** @var SaverInterface */
     private $productModelSaver;
 
+    /** @var ProductBuilderInterface */
+    private $productBuilder;
+
     /** @var ProductInterface[] */
     private $productsToSave = [];
 
@@ -50,13 +55,15 @@ class RuleProductProcessor
         RuleAttributeProvider $ruleAttributeProvider,
         PropertyCopierInterface $propertyCopier,
         SaverInterface $productSaver,
-        SaverInterface $productModelSaver
+        SaverInterface $productModelSaver,
+        ProductBuilderInterface $productBuilder
     ) {
         $this->pqbFactory = $pqbFactory;
         $this->ruleAttributeProvider = $ruleAttributeProvider;
         $this->propertyCopier = $propertyCopier;
         $this->productSaver = $productSaver;
         $this->productModelSaver = $productModelSaver;
+        $this->productBuilder = $productBuilder;
     }
 
     public function process(StepExecution $stepExecution, Rule $rule, EntityWithValuesInterface $sourceProduct): void
@@ -93,9 +100,7 @@ class RuleProductProcessor
             foreach ($attributes as $attribute) {
                 /** @var AttributeInterface $attribute */
                 try {
-                    if ('pim_catalog_identifier' !== $attribute->getType()) {
-                        $this->copyData($sourceProduct, $destinationProduct, $attribute->getCode());
-                    }
+                    $this->copyData($sourceProduct, $destinationProduct, $attribute->getCode());
                 } catch (\Throwable $e) {
                     $msg = sprintf(
                         'Problem with copying data from product %s to product %s, attribute: %s. Error: %s',
@@ -116,6 +121,11 @@ class RuleProductProcessor
             }
         }
 
+        if (0 === count($destinationProducts)) {
+            $this->createNewDestinationProduct($sourceProduct, $rule, $attributes);
+            $stepExecution->incrementSummaryInfo('destination_products_created', 1);
+        }
+
         foreach ($this->productsToSave as $product) {
             $this->productSaver->save($product);
             $stepExecution->incrementSummaryInfo('destination_products_found_and_saved', 1);
@@ -124,6 +134,20 @@ class RuleProductProcessor
             $this->productModelSaver->save($productModel);
             $stepExecution->incrementSummaryInfo('destination_product_models_found_and_saved', 1);
         }
+    }
+
+    private function createNewDestinationProduct(ProductInterface $sourceProduct, Rule $rule, array $attributes): void
+    {
+        $destinationProduct = $this->productBuilder->createProduct(
+            Uuid::uuid4()->toString(),
+            $rule->getDestinationFamily()->getCode()
+        );
+        foreach ($attributes as $attribute) {
+            /** @var AttributeInterface $attribute */
+            $this->copyData($sourceProduct, $destinationProduct, $attribute->getCode());
+        }
+
+        $this->productsToSave[] = $destinationProduct;
     }
 
     private function copyData(EntityWithValuesInterface $sourceProduct, EntityWithValuesInterface $destinationProduct, string $attributeCode): void

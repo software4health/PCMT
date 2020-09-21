@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace PcmtRulesBundle\Tests\Service;
 
 use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductQueryBuilderFactory;
+use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderFactoryInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderInterface;
@@ -54,6 +55,9 @@ class RuleProductProcessorTest extends TestCase
     /** @var StepExecution|MockObject */
     private $stepExecutionMock;
 
+    /** @var ProductBuilderInterface|MockObject */
+    private $productBuilderMock;
+
     protected function setUp(): void
     {
         $this->productQueryBuilderFactoryMock = $this->createMock(ProductQueryBuilderFactory::class);
@@ -64,6 +68,7 @@ class RuleProductProcessorTest extends TestCase
         $this->productQueryBuilderMock = $this->createMock(ProductQueryBuilderInterface::class);
         $this->productQueryBuilderFactoryMock->method('create')->willReturn($this->productQueryBuilderMock);
         $this->stepExecutionMock = $this->createMock(StepExecution::class);
+        $this->productBuilderMock = $this->createMock(ProductBuilderInterface::class);
     }
 
     public function dataProcess(): array
@@ -90,9 +95,41 @@ class RuleProductProcessorTest extends TestCase
      */
     public function testProcess(Rule $rule, ProductInterface $sourceProduct, array $destinationProducts, array $attributes): void
     {
+        $this->productBuilderMock->method('createProduct')->willReturn(
+            (new ProductBuilder())->withId(2332)->build()
+        );
         $this->ruleAttributeProviderMock->expects($this->once())->method('getForFamilies')->willReturn($attributes);
         $this->productQueryBuilderMock->method('execute')->willReturn($destinationProducts);
         $this->propertyCopierMock->expects($this->exactly(3))->method('copyData');
+        $processor = $this->getRuleProductProcessorInstance();
+        $processor->process($this->stepExecutionMock, $rule, $sourceProduct);
+    }
+
+    public function dataProcessNoDestinationProduct(): array
+    {
+        $attributes = [
+            (new AttributeBuilder())->build(),
+        ];
+        $rule = (new RuleBuilder())->build();
+        $value = ScalarValue::value($rule->getKeyAttribute()->getCode(), 'xxx');
+        $product = (new ProductBuilder())->addValue($value)->build();
+
+        return [
+            [$rule, $product, $attributes],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProcessNoDestinationProduct
+     */
+    public function testProcessNoDestinationProduct(Rule $rule, ProductInterface $sourceProduct, array $attributes): void
+    {
+        $this->productBuilderMock->method('createProduct')->willReturn(
+            (new ProductBuilder())->withId(2332)->build()
+        );
+        $this->ruleAttributeProviderMock->expects($this->once())->method('getForFamilies')->willReturn($attributes);
+        $this->productQueryBuilderMock->method('execute')->willReturn([]);
+        $this->propertyCopierMock->expects($this->exactly(1))->method('copyData');
         $processor = $this->getRuleProductProcessorInstance();
         $processor->process($this->stepExecutionMock, $rule, $sourceProduct);
     }
@@ -151,7 +188,8 @@ class RuleProductProcessorTest extends TestCase
             $this->ruleAttributeProviderMock,
             $this->propertyCopierMock,
             $this->productSaverMock,
-            $this->productModelSaverMock
+            $this->productModelSaverMock,
+            $this->productBuilderMock
         );
     }
 }

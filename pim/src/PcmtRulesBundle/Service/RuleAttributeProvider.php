@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace PcmtRulesBundle\Service;
 
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
-use Akeneo\Pim\Structure\Component\Model\Family;
+use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 
 class RuleAttributeProvider
@@ -37,7 +37,7 @@ class RuleAttributeProvider
         }));
     }
 
-    public function getForFamilies(Family $sourceFamily, Family $destinationFamily): array
+    public function getForFamilies(FamilyInterface $sourceFamily, FamilyInterface $destinationFamily): array
     {
         $attributes1 = $this->attributeRepository->findAttributesByFamily($sourceFamily);
         $attributes1 = $this->filterForType($attributes1);
