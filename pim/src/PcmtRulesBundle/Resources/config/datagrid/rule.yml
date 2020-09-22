@@ -10,16 +10,16 @@ datagrid:
             acl_resource:      pcmt_permission_rules_view
         columns:
             unique_id:
-                label:     Label
+                label:     pcmt.rules.datagrid.label
                 type:      field
             source_family:
-                label: Source Family
+                label: pcmt.rules.datagrid.source_family
                 type: field
             destination_family:
-                label: Destination Family
+                label: pcmt.rules.datagrid.destination_family
                 type: field
             key_attribute:
-                label: Key attribute
+                label: pcmt.rules.datagrid.key_attribute
                 type: field
         properties:
             id: ~

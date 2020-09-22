@@ -7,6 +7,14 @@ pcmt.permission:
         edit: FR Edit rules
         run: FR Run rules
 
+pcmt:
+    rules:
+        datagrid:
+            label: FR Label
+            source_family: FR Source Family
+            destination_family: FR Destination Family
+            key_attribute: FR Key Attribute
+
 pcmt.rules.flash:
     running_started: FR The rule processing has been started.
     running_start_error: FR The rule processing has not been started, there was an error.
