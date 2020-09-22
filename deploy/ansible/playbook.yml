@@ -11,7 +11,10 @@
   vars:
     pip_install_packages:
       - name: docker
+      - name: pyrsistent
+        version: ">0.15,<0.16"
       - name: docker-compose
+
     pcmt_asset_url: "{{ lookup('env', 'PCMT_ASSET_URL') }}"
     pcmt_profile: "{{ lookup('env', 'PCMT_PROFILE') }}"
     pcmt_ver: "{{ lookup('env', 'PCMT_VER') }}"
