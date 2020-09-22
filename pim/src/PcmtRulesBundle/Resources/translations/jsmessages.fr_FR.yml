@@ -44,7 +44,7 @@ pcmt:
                 fail: FR Rule could not be updated
                 fields_not_ready: "FR Rule cannot be saved right now. The following fields are not ready: {{ fields }}"
         page_title:
-            index: "]-Inf, 1]{{ count }} rule|]1, Inf[{{ count }} rules"
+            index: "]-Inf, 1]{{ count }} FR rule|]1, Inf[{{ count }} FR rules"
         property.family.choose: FR Choose the family
         property.attribute.choose: FR Choose the attribute
 
