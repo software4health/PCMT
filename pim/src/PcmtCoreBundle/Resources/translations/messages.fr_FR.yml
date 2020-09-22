@@ -1,6 +1,10 @@
 job_execution.summary:
     read_cross: FR read cross
     hashed_files: FR hashed files
+    TradeItemsProcessed: FR TradeItems processed
+    ProductsFoundByGTIN: FR Products found by GTIN
+    NewProductsCreated: FR New products created
+    UniqueProductsProcessed: FR Unique products processed
 
 pim_measure:
     families:

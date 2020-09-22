@@ -22,6 +22,7 @@ job_execution.summary:
     TradeItemsProcessed: TradeItems processed
     ProductsFoundByGTIN: Products found by GTIN
     NewProductsCreated: New products created
+    UniqueProductsProcessed: Unique products processed
 
 pim_measure:
     families:
