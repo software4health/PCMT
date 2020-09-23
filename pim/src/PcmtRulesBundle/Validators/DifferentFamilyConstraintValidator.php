@@ -39,7 +39,6 @@ class DifferentFamilyConstraintValidator extends ConstraintValidator
 
         if ($entity->getSourceFamily()->getId() === $entity->getDestinationFamily()->getId()) {
             $this->context->buildViolation($constraint->message)
-                ->atPath('destination_family')
                 ->addViolation();
         }
     }
