@@ -55,5 +55,7 @@ services:
             - '@pim_catalog.saver.product'
             - '@pim_catalog.saver.product_model'
             - '@pim_catalog.builder.product'
+            - '@pim_catalog.repository.channel'
+            - '@pim_catalog.repository.locale'
 
 

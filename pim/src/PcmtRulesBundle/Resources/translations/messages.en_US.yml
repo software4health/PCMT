@@ -26,4 +26,5 @@ job_execution.summary:
     source_products_processed: Source products processed
     destination_products_found_and_saved: Destination products found and saved
     destination_product_models_found_and_saved: Destination product models found and saved
+    destination_products_created: Destination products created
 

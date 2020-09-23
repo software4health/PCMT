@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace PcmtRulesBundle\Tests\Service;
 
+use Akeneo\Channel\Component\Repository\ChannelRepositoryInterface;
+use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
 use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductQueryBuilderFactory;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
@@ -58,6 +60,12 @@ class RuleProductProcessorTest extends TestCase
     /** @var ProductBuilderInterface|MockObject */
     private $productBuilderMock;
 
+    /** @var ChannelRepositoryInterface|MockObject */
+    private $channelRepositoryMock;
+
+    /** @var LocaleRepositoryInterface|MockObject */
+    private $localeRepositoryMock;
+
     protected function setUp(): void
     {
         $this->productQueryBuilderFactoryMock = $this->createMock(ProductQueryBuilderFactory::class);
@@ -69,6 +77,8 @@ class RuleProductProcessorTest extends TestCase
         $this->productQueryBuilderFactoryMock->method('create')->willReturn($this->productQueryBuilderMock);
         $this->stepExecutionMock = $this->createMock(StepExecution::class);
         $this->productBuilderMock = $this->createMock(ProductBuilderInterface::class);
+        $this->channelRepositoryMock = $this->createMock(ChannelRepositoryInterface::class);
+        $this->localeRepositoryMock = $this->createMock(LocaleRepositoryInterface::class);
     }
 
     public function dataProcess(): array
@@ -189,7 +199,9 @@ class RuleProductProcessorTest extends TestCase
             $this->propertyCopierMock,
             $this->productSaverMock,
             $this->productModelSaverMock,
-            $this->productBuilderMock
+            $this->productBuilderMock,
+            $this->channelRepositoryMock,
+            $this->localeRepositoryMock
         );
     }
 }

@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace PcmtRulesBundle\Service;
 
+use Akeneo\Channel\Component\Repository\ChannelRepositoryInterface;
+use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
 use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductQueryBuilderFactory;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithValuesInterface;
@@ -44,6 +46,12 @@ class RuleProductProcessor
     /** @var ProductBuilderInterface */
     private $productBuilder;
 
+    /** @var ChannelRepositoryInterface */
+    private $channelRepository;
+
+    /** @var LocaleRepositoryInterface */
+    private $localeRepository;
+
     /** @var ProductInterface[] */
     private $productsToSave = [];
 
@@ -56,7 +64,9 @@ class RuleProductProcessor
         PropertyCopierInterface $propertyCopier,
         SaverInterface $productSaver,
         SaverInterface $productModelSaver,
-        ProductBuilderInterface $productBuilder
+        ProductBuilderInterface $productBuilder,
+        ChannelRepositoryInterface $channelRepository,
+        LocaleRepositoryInterface $localeRepository
     ) {
         $this->pqbFactory = $pqbFactory;
         $this->ruleAttributeProvider = $ruleAttributeProvider;
@@ -64,6 +74,8 @@ class RuleProductProcessor
         $this->productSaver = $productSaver;
         $this->productModelSaver = $productModelSaver;
         $this->productBuilder = $productBuilder;
+        $this->channelRepository = $channelRepository;
+        $this->localeRepository = $localeRepository;
     }
 
     public function process(StepExecution $stepExecution, Rule $rule, EntityWithValuesInterface $sourceProduct): void
@@ -77,22 +89,21 @@ class RuleProductProcessor
         if (!$keyValue) {
             return;
         }
+
         // searching through ElasticSearch index
         $pqb = $this->pqbFactory->create([
             'default_locale' => null,
             'default_scope'  => null,
         ]);
-
         try {
             $pqb->addFilter($rule->getKeyAttribute()->getCode(), Operators::EQUALS, $keyValue->getData());
         } catch (\Throwable $e) {
             try {
                 $pqb->addFilter($rule->getKeyAttribute()->getCode(), Operators::IN_LIST, [$keyValue->getData()]);
             } catch (\Throwable $e) {
-                throw new \Exception('Unsupported attribute: ' . $rule->getKeyAttribute()->getCode(). ' Details: '. $e->getMessage());
+                throw new \Exception('Unsupported attribute type used as key attribute in a rule: ' . $rule->getKeyAttribute()->getCode());
             }
         }
-
         $pqb->addFilter('family', Operators::IN_LIST, [$rule->getDestinationFamily()->getCode()]);
 
         $destinationProducts = $pqb->execute();
@@ -100,7 +111,7 @@ class RuleProductProcessor
             foreach ($attributes as $attribute) {
                 /** @var AttributeInterface $attribute */
                 try {
-                    $this->copyData($sourceProduct, $destinationProduct, $attribute->getCode());
+                    $this->copyData($sourceProduct, $destinationProduct, $attribute);
                 } catch (\Throwable $e) {
                     $msg = sprintf(
                         'Problem with copying data from product %s to product %s, attribute: %s. Error: %s',
@@ -121,7 +132,7 @@ class RuleProductProcessor
             }
         }
 
-        if (0 === count($destinationProducts)) {
+        if (0 === count($destinationProducts) && 0 === count($rule->getDestinationFamily()->getFamilyVariants())) {
             $this->createNewDestinationProduct($sourceProduct, $rule, $attributes);
             $stepExecution->incrementSummaryInfo('destination_products_created', 1);
         }
@@ -144,13 +155,13 @@ class RuleProductProcessor
         );
         foreach ($attributes as $attribute) {
             /** @var AttributeInterface $attribute */
-            $this->copyData($sourceProduct, $destinationProduct, $attribute->getCode());
+            $this->copyData($sourceProduct, $destinationProduct, $attribute);
         }
 
         $this->productsToSave[] = $destinationProduct;
     }
 
-    private function copyData(EntityWithValuesInterface $sourceProduct, EntityWithValuesInterface $destinationProduct, string $attributeCode): void
+    private function copyData(EntityWithValuesInterface $sourceProduct, EntityWithValuesInterface $destinationProduct, AttributeInterface $attribute): void
     {
         if ($destinationProduct instanceof ProductInterface) {
             $this->productsToSave[$destinationProduct->getId()] = $destinationProduct;
@@ -158,15 +169,32 @@ class RuleProductProcessor
             $this->productModelsToSave[$destinationProduct->getId()] = $destinationProduct;
         }
 
-        $this->propertyCopier->copyData(
-            $sourceProduct,
-            $destinationProduct,
-            $attributeCode,
-            $attributeCode
-        );
+        $scopes = $attribute->isScopable() ? $this->channelRepository->getChannelCodes() : null;
+        $locales = $attribute->isLocalizable() ? $this->localeRepository->getActivatedLocaleCodes() : null;
+
+        $scopes = $scopes ?? [null];
+        $locales = $locales ?? [null];
+
+        foreach ($locales as $localeCode) {
+            foreach ($scopes as $scopeCode) {
+                $options = [
+                    'from_locale' => $localeCode,
+                    'to_locale'   => $localeCode,
+                    'from_scope'  => $scopeCode,
+                    'to_scope'    => $scopeCode,
+                ];
+                $this->propertyCopier->copyData(
+                    $sourceProduct,
+                    $destinationProduct,
+                    $attribute->getCode(),
+                    $attribute->getCode(),
+                    $options
+                );
+            }
+        }
 
         if ($destinationProduct->getParent()) {
-            $this->copyData($sourceProduct, $destinationProduct->getParent(), $attributeCode);
+            $this->copyData($sourceProduct, $destinationProduct->getParent(), $attribute);
         }
     }
 }
