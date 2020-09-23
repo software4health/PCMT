@@ -55,8 +55,14 @@ class RuleProductProcessor
     /** @var ProductInterface[] */
     private $productsToSave = [];
 
+    /** @var int[] */
+    private $destinationProductsId = [];
+
     /** @var ProductModelInterface[] */
     private $productModelsToSave = [];
+
+    /** @var int[] */
+    private $destinationProductModelsId = [];
 
     public function __construct(
         ProductQueryBuilderFactory $pqbFactory,
@@ -137,13 +143,19 @@ class RuleProductProcessor
             $stepExecution->incrementSummaryInfo('destination_products_created', 1);
         }
 
-        foreach ($this->productsToSave as $product) {
+        foreach ($this->productsToSave as $id => $product) {
             $this->productSaver->save($product);
-            $stepExecution->incrementSummaryInfo('destination_products_found_and_saved', 1);
+            if (empty($this->destinationProductsId[$id])) {
+                $stepExecution->incrementSummaryInfo('destination_products_found_and_saved', 1);
+                $this->destinationProductsId[$id] = $id;
+            }
         }
-        foreach ($this->productModelsToSave as $productModel) {
+        foreach ($this->productModelsToSave as $id => $productModel) {
             $this->productModelSaver->save($productModel);
-            $stepExecution->incrementSummaryInfo('destination_product_models_found_and_saved', 1);
+            if (empty($this->destinationProductModelsId[$id])) {
+                $stepExecution->incrementSummaryInfo('destination_products_found_and_saved', 1);
+                $this->destinationProductModelsId[$id] = $id;
+            }
         }
     }
 
