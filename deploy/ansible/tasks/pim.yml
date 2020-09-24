@@ -61,14 +61,16 @@
       - "fpm"
     restarted: yes
   when: pcmt_profile == 'dev'
-- name: Restart httpd for good measure
+- name: Restart httpd and reverse-proxy for good measure
   docker_service:
     project_src: /app
     files:
       - "docker-compose.yml"
       - "docker-compose.tls.yml"
+      - "docker-compose.prod.yml"
     services:
       - "httpd"
+      - "reverse-proxy"
     restarted: yes
 - name: Prune docker system
   shell: docker system prune -af
