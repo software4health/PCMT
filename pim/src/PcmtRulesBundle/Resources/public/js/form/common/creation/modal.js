@@ -33,6 +33,16 @@ define(
     ) {
         return BaseForm.extend({
             /**
+             *
+             * @return {Promise}
+             */
+            configure: function () {
+                this.listenTo(this.getRoot(), 'pim_enrich:form:entity:bad_request', this.displayError.bind(this));
+
+                return BaseForm.prototype.configure.apply(this, arguments);
+            },
+
+            /**
              * Save the form content by posting it to backend
              *
              * @return {Promise}
@@ -69,6 +79,14 @@ define(
                     this.render();
                 }.bind(this))
                     .always(() => loadingMask.remove());
+            },
+
+            displayError: function (event) {
+                _.each(event.response, function (error) {
+                    if (error.global) {
+                        messenger.notify('error', error.message);
+                    }
+                })
             }
         });
     }
