@@ -13,6 +13,7 @@ namespace PcmtDraftBundle\Service\Draft;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithFamilyVariantInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Updater\ProductUpdater;
+use Akeneo\Pim\Structure\Component\Model\VariantAttributeSetInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class BaseProductCreatorForDraft implements BaseEntityCreatorInterface
@@ -54,7 +55,13 @@ class BaseProductCreatorForDraft implements BaseEntityCreatorInterface
             $newProduct->setParent($product->getParent());
             $newProduct->setFamilyVariant($product->getFamilyVariant());
 
-            $attributeSet = $product->getFamilyVariant()->getVariantAttributeSet(1);
+            foreach ($product->getFamilyVariant()->getVariantAttributeSets() as $set) {
+                /** @var VariantAttributeSetInterface $set */
+                if (!$attributeSet || $set->getLevel() > $attributeSet->getLevel()) {
+                    $attributeSet = $set;
+                }
+            }
+
             $axesAttributes = $attributeSet->getAxes();
             foreach ($axesAttributes as $attribute) {
                 $code = $attribute->getCode();
