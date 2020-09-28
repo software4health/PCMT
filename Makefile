@@ -44,6 +44,10 @@ dev-cp-vendor:
 dev-cp-web:
     docker cp -L pcmt_fpm_1:/srv/pim/web pim/
 
+.PHONY: dev-cp-package-json
+dev-cp-package-json:
+	docker cp -L pcmt_fpm_1:/srv/pim/package.json ./pim
+
 .PHONY: dev-fpm
 dev-fpm:
 	./ddev.sh exec fpm bash
