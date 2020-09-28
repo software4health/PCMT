@@ -32,6 +32,7 @@ ENV COMPOSER_CACHE_DIR ${COMPOSER_CACHE_PATH}
 COPY --from=akeneo --chown=docker:docker /srv/pim /srv/pim
 ADD --chown=docker:docker .cache/composer ${COMPOSER_CACHE_DIR}
 ADD --chown=docker:docker composer.* /srv/pim/
+ADD --chown=docker:docker package.json /srv/pim/
 ADD --chown=docker:docker app/ /srv/pim/app/
 ADD --chown=docker:docker src/ /srv/pim/src/
 ADD --chown=docker:docker crontab /srv/pim/crontab
