@@ -10,14 +10,13 @@ declare(strict_types=1);
 
 namespace PcmtRulesBundle\Service;
 
+use Akeneo\Pim\Structure\Component\AttributeTypes;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 
 class RuleAttributeProvider
 {
-    public const TYPE_IDENTIFIER = 'pim_catalog_identifier';
-
     /** @var AttributeRepositoryInterface */
     private $attributeRepository;
 
@@ -26,14 +25,22 @@ class RuleAttributeProvider
         $this->attributeRepository = $attributeRepository;
     }
 
+    private function getSupportedTypes(): array
+    {
+        return [
+            AttributeTypes::TEXT,
+            AttributeTypes::OPTION_SIMPLE_SELECT,
+        ];
+    }
+
     private function filterForType(array $attributes): array
     {
         return array_values(array_filter($attributes, function (AttributeInterface $attribute) {
-            if (self::TYPE_IDENTIFIER === $attribute->getType()) {
-                return false;
+            if (in_array($attribute->getType(), $this->getSupportedTypes())) {
+                return true;
             }
 
-            return true;
+            return false;
         }));
     }
 
