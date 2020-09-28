@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace PcmtRulesBundle\Tests\Service;
 
+use Akeneo\Pim\Structure\Component\AttributeTypes;
 use Akeneo\Pim\Structure\Component\Model\Family;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use PcmtRulesBundle\Service\RuleAttributeProvider;
@@ -30,7 +31,7 @@ class RuleAttributeProviderTest extends TestCase
 
     public function dataGetForFamilies(): array
     {
-        $attribute1 = (new AttributeBuilder())->withType(RuleAttributeProvider::TYPE_IDENTIFIER)->withCode('A1')->build();
+        $attribute1 = (new AttributeBuilder())->withType(AttributeTypes::IDENTIFIER)->withCode('A1')->build();
         $attribute2 = (new AttributeBuilder())->withCode('A2')->build();
         $attribute3 = (new AttributeBuilder())->withCode('A3')->build();
         $attribute4 = (new AttributeBuilder())->withCode('A4')->build();
