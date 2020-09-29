@@ -64,11 +64,11 @@ class RuleProcessStep extends AbstractStep
         $attributes = $this->attributeProvider->getForFamilies($rule->getSourceFamily(), $rule->getDestinationFamily());
 
         $stepExecution->addSummaryInfo('attributes_found', count($attributes));
-        $stepExecution->incrementSummaryInfo('source_products_found', 0);
-        $stepExecution->incrementSummaryInfo('source_products_processed', 0);
-        $stepExecution->incrementSummaryInfo('destination_products_found_and_saved', 0);
-        $stepExecution->incrementSummaryInfo('destination_product_models_found_and_saved', 0);
-        $stepExecution->incrementSummaryInfo('destination_products_created', 0);
+        $stepExecution->addSummaryInfo('source_products_found', 0);
+        $stepExecution->addSummaryInfo('source_products_processed', 0);
+        $stepExecution->addSummaryInfo('destination_products_found_and_saved', 0);
+        $stepExecution->addSummaryInfo('destination_product_models_found_and_saved', 0);
+        $stepExecution->addSummaryInfo('destination_products_created', 0);
 
         $result = true;
         $offset = 0;

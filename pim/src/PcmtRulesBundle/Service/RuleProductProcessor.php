@@ -140,21 +140,26 @@ class RuleProductProcessor
 
         if (0 === count($destinationProducts) && 0 === count($rule->getDestinationFamily()->getFamilyVariants())) {
             $this->createNewDestinationProduct($sourceProduct, $rule, $attributes);
-            $stepExecution->incrementSummaryInfo('destination_products_created', 1);
-        }
 
-        foreach ($this->productsToSave as $id => $product) {
-            $this->productSaver->save($product);
-            if (empty($this->destinationProductsId[$id])) {
-                $stepExecution->incrementSummaryInfo('destination_products_found_and_saved', 1);
-                $this->destinationProductsId[$id] = $id;
+            foreach ($this->productsToSave as $product) {
+                $this->productSaver->save($product);
             }
-        }
-        foreach ($this->productModelsToSave as $id => $productModel) {
-            $this->productModelSaver->save($productModel);
-            if (empty($this->destinationProductModelsId[$id])) {
-                $stepExecution->incrementSummaryInfo('destination_products_found_and_saved', 1);
-                $this->destinationProductModelsId[$id] = $id;
+
+            $stepExecution->incrementSummaryInfo('destination_products_created', 1);
+        } else {
+            foreach ($this->productsToSave as $id => $product) {
+                $this->productSaver->save($product);
+                if (empty($this->destinationProductsId[$id])) {
+                    $stepExecution->incrementSummaryInfo('destination_products_found_and_saved', 1);
+                    $this->destinationProductsId[$id] = $id;
+                }
+            }
+            foreach ($this->productModelsToSave as $id => $productModel) {
+                $this->productModelSaver->save($productModel);
+                if (empty($this->destinationProductModelsId[$id])) {
+                    $stepExecution->incrementSummaryInfo('destination_products_found_and_saved', 1);
+                    $this->destinationProductModelsId[$id] = $id;
+                }
             }
         }
     }
@@ -165,12 +170,11 @@ class RuleProductProcessor
             Uuid::uuid4()->toString(),
             $rule->getDestinationFamily()->getCode()
         );
+
         foreach ($attributes as $attribute) {
             /** @var AttributeInterface $attribute */
             $this->copyData($sourceProduct, $destinationProduct, $attribute);
         }
-
-        $this->productsToSave[] = $destinationProduct;
     }
 
     private function copyData(EntityWithValuesInterface $sourceProduct, EntityWithValuesInterface $destinationProduct, AttributeInterface $attribute): void
