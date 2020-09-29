@@ -4,5 +4,12 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 parameters:
+    pcmt.cis.entity.subscription.class:  PcmtCISBundle\Entity\Subscription
 
 services:
+    pcmt.cis.repository.subscription:
+        class: PcmtCISBundle\Repository\SubscriptionRepository
+        factory: 'doctrine.orm.entity_manager:getRepository'
+        arguments: ['%pcmt.entity.rule.class%']
+        tags:
+            - { name: 'pim_repository' }
