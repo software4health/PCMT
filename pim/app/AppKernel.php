@@ -91,6 +91,7 @@ class AppKernel extends Kernel
             new PcmtPreReleaseBundle\PcmtPreReleaseBundle(),
             new PcmtPermissionsBundle\PcmtPermissionsBundle(),
             new PcmtRulesBundle\PcmtRulesBundle(),
+            new PcmtCISBundle\PcmtCISBundle(),
         ];
     }
 
