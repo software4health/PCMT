@@ -10,6 +10,6 @@ services:
     pcmt.cis.repository.subscription:
         class: PcmtCISBundle\Repository\SubscriptionRepository
         factory: 'doctrine.orm.entity_manager:getRepository'
-        arguments: ['%pcmt.entity.rule.class%']
+        arguments: ['%pcmt.cis.entity.subscription.class%']
         tags:
             - { name: 'pim_repository' }
