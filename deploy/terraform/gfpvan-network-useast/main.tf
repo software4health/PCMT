@@ -14,16 +14,16 @@ terraform {
   }
   
   backend "s3" {
-    bucket  = "gfpvan-terraform-states"
+    bucket  = "vr-gfpvan-terraform-states"
     key     = "gfpvan-network-useast.tf"
     region  = "us-east-2"
-    profile = "gfpvan"
+    profile = "villagereach-gfpvan"
   }
 }
 
 provider "aws" {
   region  = var.aws-region
-  profile = "gfpvan"
+  profile = "villagereach-gfpvan"
 }
 
 module "gfpvan-network-useast" {
