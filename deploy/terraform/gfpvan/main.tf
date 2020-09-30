@@ -14,8 +14,8 @@ terraform {
   }
   
   backend "s3" {
-    profile = "gfpvan"
-    bucket  = "gfpvan-terraform-states"
+    profile = "villagereach-gfpvan"
+    bucket  = "vr-gfpvan-terraform-states"
     key     = "pcmt-gfpvan.tf"
     region  = "us-east-2"
   }
@@ -29,15 +29,15 @@ provider "aws" {
 
 provider "aws" {
   alias   = "gfpvan"
-  profile = "gfpvan"
+  profile = "villagereach-gfpvan"
   region  = var.aws-region
 }
 
 data "terraform_remote_state" "pcmt-network" {
   backend = "s3"
   config = {
-    profile = "gfpvan"
-    bucket  = "gfpvan-terraform-states"
+    profile = "villagereach-gfpvan"
+    bucket  = "vr-gfpvan-terraform-states"
     key     = "gfpvan-network-useast.tf"
     region  = "us-east-2"
   }
