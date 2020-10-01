@@ -144,6 +144,33 @@ class RuleUpdaterTest extends TestCase
         $updater->update($rule, $data);
     }
 
+    /**
+     * @dataProvider dataUpdate
+     */
+    public function testUpdateNoKeyAttribute(string $uniqueId, string $sourceFamilyCode, string $destinationFamilyCode, string $keyAttributeCode): void
+    {
+        $sourceFamily = (new FamilyBuilder())->withCode($sourceFamilyCode)->build();
+        $destinationFamily = (new FamilyBuilder())->withCode($destinationFamilyCode)->build();
+        $this->familyRepositoryMock
+            ->expects($this->exactly(2))
+            ->method('findOneByIdentifier')
+            ->withConsecutive([$sourceFamilyCode], [$destinationFamilyCode])
+            ->willReturnOnConsecutiveCalls($sourceFamily, $destinationFamily);
+        $this->attributeRepositoryMock
+            ->expects($this->never())
+            ->method('findOneByIdentifier');
+
+        $rule = (new RuleBuilder())->build();
+        $data = [
+            'unique_id'          => $uniqueId,
+            'source_family'      => $sourceFamilyCode,
+            'destination_family' => $destinationFamilyCode,
+            'key_attribute'      => '',
+        ];
+        $updater = $this->getRuleUpdaterInstance();
+        $updater->update($rule, $data);
+    }
+
     public function dataUpdate(): array
     {
         return [

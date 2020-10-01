@@ -22,12 +22,12 @@ pcmt:
             unique_id: Unique ID
             source_family: Source Family
             destination_family: Destination Family
-            key_attribute: Key attribute (only attributes added to both families and of type text or simple select are available)
+            key_attribute: Key attribute (only attributes of text and simple select type that are added to both families are available)
         edit:
             unique_id: Unique ID
             source_family: Source Family
             destination_family: Destination Family
-            key_attribute: Key attribute (only attributes added to both families and of type text or simple select are available)
+            key_attribute: Key attribute (only attributes of text and simple select type that are added to both families are available)
     rules.action.run.label: Run a rule
     entity.rules:
         label: Rule
