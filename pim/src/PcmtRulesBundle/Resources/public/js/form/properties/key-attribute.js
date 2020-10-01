@@ -82,7 +82,7 @@ define([
                     this.updateModel(null);
                     return;
                 }
-                let result = this.attributes.filter(function(attribute) {
+                let result = _.filter(this.attributes, function(attribute) {
                     return attribute.code === value;
                 });
                 if (0 === result.length) {
