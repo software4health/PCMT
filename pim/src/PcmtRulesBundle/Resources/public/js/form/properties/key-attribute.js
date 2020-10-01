@@ -57,6 +57,7 @@ define([
                 if (key === this.families_key) {
                     return;
                 }
+                let first_time = !this.families_key;
                 this.families_key = key;
                 this.attributes = [];
                 let formData = this.getFormData();
@@ -65,8 +66,28 @@ define([
                         .fetchForFamilies(formData.source_family, formData.destination_family)
                         .then(function (attributes) {
                             this.attributes = attributes;
+                            if (!first_time) {
+                                this.verifyKeyAttribute();
+                            }
                             this.getRoot().render();
                         }.bind(this));
+                }
+            },
+
+            verifyKeyAttribute: function() {
+                let value = this.getFormData()[this.fieldName];
+
+                if (!this.attributes) {
+                    // no attributes for this pair of families
+                    this.updateModel(null);
+                    return;
+                }
+                let result = this.attributes.filter(function(attribute) {
+                    return attribute.code === value;
+                });
+                if (0 === result.length) {
+                    // corresponding object not found in attribute list
+                    this.updateModel(null);
                 }
             },
 

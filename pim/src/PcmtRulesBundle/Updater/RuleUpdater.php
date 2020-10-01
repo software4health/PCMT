@@ -115,8 +115,13 @@ class RuleUpdater implements ObjectUpdaterInterface
         $rule->setDestinationFamily($family);
     }
 
-    protected function setKeyAttribute(Rule $rule, string $identifier): void
+    protected function setKeyAttribute(Rule $rule, ?string $identifier): void
     {
+        if (!$identifier) {
+            $rule->setKeyAttribute(null);
+
+            return;
+        }
         $attribute = $this->attributeRepository->findOneByIdentifier($identifier);
 
         if (null === $attribute) {
