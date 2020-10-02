@@ -1,0 +1,9 @@
+PcmtCISBundle\Entity\Subscription:
+    constraints:
+        - PcmtCISBundle\Constraint\RequiredFieldConstraint: ~
+
+    properties:
+        dataRecipientsGLN:
+            - NotBlank: ~
+        dataSourcesGLN:
+            - NotBlank: ~
