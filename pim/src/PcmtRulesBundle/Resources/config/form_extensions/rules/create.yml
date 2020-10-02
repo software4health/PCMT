@@ -35,7 +35,7 @@ extensions:
     module: pcmt/rules/form/properties/family
     parent: pcmt-rules-create-modal
     targetZone: fields
-    position: 20
+    position: 22
     config:
       fieldName: destination_family
       required: true
