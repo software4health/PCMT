@@ -13,3 +13,14 @@ services:
         arguments: ['%pcmt.cis.entity.subscription.class%']
         tags:
             - { name: 'pim_repository' }
+
+    pcmt.cis.subscription.normalizer:
+        class: PcmtCISBundle\Normalizer\SubscriptionNormalizer
+        autowire: true
+        tags:
+            - { name: pim_internal_api_serializer.normalizer, priority: 80 }
+
+    pcmt.cis.constraint.required_field_constraint_validator:
+        class: PcmtCISBundle\Validator\RequiredFieldConstraintValidator
+        tags:
+            - { name: validator.constraint_validator, alias: pcmt_cis_required_field_constraint_validator }

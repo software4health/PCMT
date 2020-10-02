@@ -25,16 +25,16 @@ class Subscription
     private $updated;
 
     /** @var string */
-    private $dataRecipientsGLN;
+    private $dataRecipientsGLN = '';
 
     /** @var string */
-    private $dataSourcesGLN;
+    private $dataSourcesGLN = '';
 
     /** @var string */
-    private $GTIN;
+    private $GTIN = '';
 
     /** @var string */
-    private $GPCCategoryCode;
+    private $GPCCategoryCode = '';
 
     /** @var ?CountryCode */
     private $targetMarketCountryCode;
