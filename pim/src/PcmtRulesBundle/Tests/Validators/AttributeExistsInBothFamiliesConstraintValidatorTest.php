@@ -60,7 +60,7 @@ class AttributeExistsInBothFamiliesConstraintValidatorTest extends TestCase
     /** @dataProvider dataValidate */
     public function testValidate(?AttributeInterface $keyAttribute, array $attributes, bool $result): void
     {
-        $this->ruleAttributeProviderMock->method('getForFamilies')->willReturn($attributes);
+        $this->ruleAttributeProviderMock->method('getPossibleForKeyAttribute')->willReturn($attributes);
         $constraint = (new AttributeExistsInBothFamiliesConstraintBuilder())->build();
         $rule = (new RuleBuilder())->withKeyAttribute($keyAttribute)->build();
 

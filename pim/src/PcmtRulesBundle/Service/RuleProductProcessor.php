@@ -89,7 +89,7 @@ class RuleProductProcessor
         $this->productsToSave = [];
         $this->productModelsToSave = [];
 
-        $attributes = $this->ruleAttributeProvider->getForFamilies($rule->getSourceFamily(), $rule->getDestinationFamily());
+        $attributes = $this->ruleAttributeProvider->getAllForFamilies($rule->getSourceFamily(), $rule->getDestinationFamily());
 
         $keyValue = $sourceProduct->getValue($rule->getKeyAttribute()->getCode());
         if (!$keyValue) {

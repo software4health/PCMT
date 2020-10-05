@@ -61,7 +61,7 @@ class RuleProcessStep extends AbstractStep
 
         /** @var Rule $rule */
         $rule = $this->ruleRepository->find($ruleId);
-        $attributes = $this->attributeProvider->getForFamilies($rule->getSourceFamily(), $rule->getDestinationFamily());
+        $attributes = $this->attributeProvider->getAllForFamilies($rule->getSourceFamily(), $rule->getDestinationFamily());
 
         $stepExecution->addSummaryInfo('attributes_found', count($attributes));
         $stepExecution->addSummaryInfo('source_products_found', 0);
