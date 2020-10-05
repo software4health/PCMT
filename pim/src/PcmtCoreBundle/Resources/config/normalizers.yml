@@ -15,6 +15,11 @@ services:
     pcmt_core.normalizer.standard.attribute_description:
         class: 'PcmtCoreBundle\Normalizer\Standard\DescriptionNormalizer'
 
+    pcmt_core.normalizer.standard.country_code:
+        class: 'PcmtCoreBundle\Normalizer\Standard\CountryCodeNormalizer'
+        tags:
+            - { name: pim_standard_format_serializer.normalizer, priority: 80 }
+
     ### Attribute
     pim_catalog.normalizer.standard.attribute:
         class: 'PcmtCoreBundle\Normalizer\Standard\AttributeNormalizer'
