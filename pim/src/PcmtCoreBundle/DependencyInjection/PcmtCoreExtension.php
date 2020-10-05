@@ -25,6 +25,7 @@ class PcmtCoreExtension extends Extension
         $loader->load('array_converters.yml');
         $loader->load('attribute_types.yml');
         $loader->load('comparators.yml');
+        $loader->load('controllers.yml');
         $loader->load('event_subscribers.yml');
         $loader->load('entities.yml');
         $loader->load('factories.yml');
