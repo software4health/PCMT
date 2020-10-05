@@ -131,4 +131,5 @@ extensions:
     config:
       fieldName: key_attribute
       label: pcmt.rules.edit.key_attribute
+      tooltip: pcmt.rules.info.key_attribute
       required: true

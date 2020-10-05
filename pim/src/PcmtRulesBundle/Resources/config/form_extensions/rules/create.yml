@@ -50,4 +50,5 @@ extensions:
       fieldName: key_attribute
       required: true
       label: pcmt.rules.create.key_attribute
+      tooltip: pcmt.rules.info.key_attribute
 

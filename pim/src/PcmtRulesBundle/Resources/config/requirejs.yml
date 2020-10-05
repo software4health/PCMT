@@ -11,6 +11,8 @@ config:
     pcmt/rules/form/properties/family: pcmtrules/js/form/properties/family
     pcmt/rules/form/properties/key-attribute: pcmtrules/js/form/properties/key-attribute
 
+    pcmt/rules/template/group: pcmtrules/templates/group.html
+
   config:
     pim/controller-registry:
       controllers:

@@ -13,7 +13,7 @@ define([
         'pim/fetcher-registry',
         'pim/user-context',
         'pim/i18n',
-        'pim/template/attribute/tab/properties/group'
+        'pcmt/rules/template/group'
     ],
     function (
         $,
@@ -97,6 +97,7 @@ define([
             renderInput: function (templateContext) {
                 this.fetchOptions();
                 return this.template(_.extend(templateContext, {
+                    tooltip: this.config.tooltip,
                     value: this.getFormData()[this.fieldName],
                     groups: _.sortBy(this.attributes, 'sort_order'),
                     i18n: i18n,
@@ -112,6 +113,7 @@ define([
              */
             postRender: function () {
                 this.$('select.select2').select2();
+                this.$('[data-toggle="tooltip"]').tooltip();
             },
 
             /**
