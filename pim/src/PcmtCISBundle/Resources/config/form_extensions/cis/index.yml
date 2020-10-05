@@ -34,3 +34,15 @@ extensions:
     config:
       tab: pim-menu-system
       item: pim-menu-system-cis
+
+  pcmt-cis-index-create-button:
+    module: pim/form/common/index/create-button
+    parent: pcmt-cis-index
+    targetZone: buttons
+    position: 100
+    aclResourceId: pcmt_permission_cis_create
+    config:
+      iconName:  plus
+      title:     pcmt.entity.cis.module.create.button
+      modalForm: pcmt-cis-create-modal
+

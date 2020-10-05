@@ -15,6 +15,8 @@ config:
         pim/attribute-form-properties/concat-attribute-create: pcmtcore/js/attribute/form/properties/concat-attribute
         pim/template/form/properties/concat-attribute: pcmtcore/templates/form/properties/concat-attribute.html
 
+        pcmt/reference-data/common/fetcher/country-code-fetcher: pcmtcore/js/common/fetcher/country-code-fetcher
+
         #concat attribute select dropdown - module
         pcmt/attribute-edit-form-properties/concat-attribute-select: pcmtcore/js/attribute/form/properties/concat-attribute-select-attribute
 
@@ -41,6 +43,12 @@ config:
                         urls:
                             list: pim_enrich_attribute_rest_index
                             get: pim_enrich_attribute_rest_get
+                country-code:
+                    module: pcmt/reference-data/common/fetcher/country-code-fetcher
+                    options:
+                        identifier_type: id
+                        urls:
+                            list: pcmt_reference_data_get_country_codes
 
         pcmt/template/form/poperties/concat-attribute:
             fieldName: concatenated

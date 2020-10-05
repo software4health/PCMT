@@ -21,8 +21,10 @@ class CountryCodeNormalizer implements NormalizerInterface
     {
         /** @var CountryCode $object */
         return [
-            'code' => $object->getCode(),
-            'name' => $object->getName(),
+            'code'   => $object->getCode(),
+            'labels' => [
+                'en_US' => $object->getName(),
+            ],
         ];
     }
 
@@ -31,6 +33,6 @@ class CountryCodeNormalizer implements NormalizerInterface
      */
     public function supportsNormalization($data, $format = null)
     {
-        return $data instanceof CountryCode && 'standard' === $format;
+        return $data instanceof CountryCode;
     }
 }

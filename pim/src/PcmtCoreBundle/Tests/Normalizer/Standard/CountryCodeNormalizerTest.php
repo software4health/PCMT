@@ -34,10 +34,19 @@ class CountryCodeNormalizerTest extends TestCase
 
         $this->assertEquals(
             [
-                'code' => 'POLAND',
-                'name' => 'POLAND',
+                'code'   => 'POLAND',
+                'labels' => [
+                    'en_US' => 'POLAND',
+                ],
             ],
             $result
         );
+    }
+
+    public function testSupportsNormalization(): void
+    {
+        $countryCode = (new CountryCodeBuilder())->build();
+
+        $this->assertTrue($this->normalizer->supportsNormalization($countryCode));
     }
 }
