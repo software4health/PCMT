@@ -1,6 +1,8 @@
 config:
   paths:
     pcmt/cis/index: pcmtcis/js/controller/cis_index
+
+    pcmt/cis/form/properties/country_codes: pcmtcis/js/form/properties/country_codes
   config:
     pim/controller-registry:
       controllers:
