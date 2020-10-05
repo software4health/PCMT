@@ -46,7 +46,7 @@ class AttributeExistsInBothFamiliesConstraintValidator extends ConstraintValidat
         if (!$entity->getSourceFamily() || !$entity->getDestinationFamily() || !$entity->getKeyAttribute()) {
             return;
         }
-        $attributes = $this->ruleAttributeProvider->getForFamilies($entity->getSourceFamily(), $entity->getDestinationFamily());
+        $attributes = $this->ruleAttributeProvider->getPossibleForKeyAttribute($entity->getSourceFamily(), $entity->getDestinationFamily());
         foreach ($attributes as $attribute) {
             /** @var AttributeInterface $attribute */
             if ($entity->getKeyAttribute()->getCode() === $attribute->getCode()) {

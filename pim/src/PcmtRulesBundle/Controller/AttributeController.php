@@ -54,7 +54,7 @@ class AttributeController
             return new JsonResponse([]);
         }
 
-        $attributes = $this->ruleAttributeProvider->getForFamilies($sourceFamily, $destinationFamily);
+        $attributes = $this->ruleAttributeProvider->getPossibleForKeyAttribute($sourceFamily, $destinationFamily);
 
         $normalizedAttributes = array_map(function ($attribute) {
             return $this->lightAttributeNormalizer->normalize(

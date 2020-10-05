@@ -108,7 +108,7 @@ class RuleProductProcessorTest extends TestCase
         $this->productBuilderMock->method('createProduct')->willReturn(
             (new ProductBuilder())->withId(2332)->build()
         );
-        $this->ruleAttributeProviderMock->expects($this->once())->method('getForFamilies')->willReturn($attributes);
+        $this->ruleAttributeProviderMock->expects($this->once())->method('getAllForFamilies')->willReturn($attributes);
         $this->productQueryBuilderMock->method('execute')->willReturn($destinationProducts);
         $this->propertyCopierMock->expects($this->exactly(3))->method('copyData');
         $processor = $this->getRuleProductProcessorInstance();
@@ -137,7 +137,7 @@ class RuleProductProcessorTest extends TestCase
         $this->productBuilderMock->method('createProduct')->willReturn(
             (new ProductBuilder())->withId(2332)->build()
         );
-        $this->ruleAttributeProviderMock->expects($this->once())->method('getForFamilies')->willReturn($attributes);
+        $this->ruleAttributeProviderMock->expects($this->once())->method('getAllForFamilies')->willReturn($attributes);
         $this->productQueryBuilderMock->method('execute')->willReturn([]);
         $this->propertyCopierMock->expects($this->exactly(1))->method('copyData');
         $processor = $this->getRuleProductProcessorInstance();
@@ -149,7 +149,7 @@ class RuleProductProcessorTest extends TestCase
      */
     public function testProcessException(Rule $rule, ProductInterface $sourceProduct, array $destinationProducts, array $attributes): void
     {
-        $this->ruleAttributeProviderMock->expects($this->once())->method('getForFamilies')->willReturn($attributes);
+        $this->ruleAttributeProviderMock->expects($this->once())->method('getAllForFamilies')->willReturn($attributes);
         $this->productQueryBuilderMock->method('execute')->willReturn($destinationProducts);
         $this->propertyCopierMock->method('copyData')->willThrowException(new \Exception());
         $this->stepExecutionMock->expects($this->atLeastOnce())->method('addWarning');
@@ -162,7 +162,7 @@ class RuleProductProcessorTest extends TestCase
      */
     public function testProcessFilterException(Rule $rule, ProductInterface $sourceProduct, array $destinationProducts, array $attributes): void
     {
-        $this->ruleAttributeProviderMock->expects($this->once())->method('getForFamilies')->willReturn($attributes);
+        $this->ruleAttributeProviderMock->expects($this->once())->method('getAllForFamilies')->willReturn($attributes);
         $this->productQueryBuilderMock->method('addFilter')->willThrowException(new \Exception());
         $this->expectException(\Throwable::class);
         $processor = $this->getRuleProductProcessorInstance();

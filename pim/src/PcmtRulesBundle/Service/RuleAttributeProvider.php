@@ -33,7 +33,7 @@ class RuleAttributeProvider
         ];
     }
 
-    private function filterForType(array $attributes): array
+    private function filterForKeyAttribute(array $attributes): array
     {
         return array_values(array_filter($attributes, function (AttributeInterface $attribute) {
             if (in_array($attribute->getType(), $this->getSupportedTypes())) {
@@ -44,12 +44,33 @@ class RuleAttributeProvider
         }));
     }
 
-    public function getForFamilies(FamilyInterface $sourceFamily, FamilyInterface $destinationFamily): array
+    private function filterOutIdentifiers(array $attributes): array
+    {
+        return array_values(array_filter($attributes, function (AttributeInterface $attribute) {
+            if (AttributeTypes::IDENTIFIER !== $attribute->getType()) {
+                return true;
+            }
+
+            return false;
+        }));
+    }
+
+    public function getAllForFamilies(FamilyInterface $sourceFamily, FamilyInterface $destinationFamily): array
     {
         $attributes1 = $this->attributeRepository->findAttributesByFamily($sourceFamily);
-        $attributes1 = $this->filterForType($attributes1);
+        $attributes1 = $this->filterOutIdentifiers($attributes1);
         $attributes2 = $this->attributeRepository->findAttributesByFamily($destinationFamily);
-        $attributes2 = $this->filterForType($attributes2);
+        $attributes2 = $this->filterOutIdentifiers($attributes2);
+
+        return array_intersect($attributes1, $attributes2);
+    }
+
+    public function getPossibleForKeyAttribute(FamilyInterface $sourceFamily, FamilyInterface $destinationFamily): array
+    {
+        $attributes1 = $this->attributeRepository->findAttributesByFamily($sourceFamily);
+        $attributes1 = $this->filterForKeyAttribute($attributes1);
+        $attributes2 = $this->attributeRepository->findAttributesByFamily($destinationFamily);
+        $attributes2 = $this->filterForKeyAttribute($attributes2);
 
         return array_intersect($attributes1, $attributes2);
     }

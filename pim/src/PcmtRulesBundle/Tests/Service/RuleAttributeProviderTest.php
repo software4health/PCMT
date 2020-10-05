@@ -29,12 +29,12 @@ class RuleAttributeProviderTest extends TestCase
         $this->attributeRepositoryMock = $this->createMock(AttributeRepositoryInterface::class);
     }
 
-    public function dataGetForFamilies(): array
+    public function dataGetAllForFamilies(): array
     {
         $attribute1 = (new AttributeBuilder())->withType(AttributeTypes::IDENTIFIER)->withCode('A1')->build();
-        $attribute2 = (new AttributeBuilder())->withCode('A2')->build();
-        $attribute3 = (new AttributeBuilder())->withCode('A3')->build();
-        $attribute4 = (new AttributeBuilder())->withCode('A4')->build();
+        $attribute2 = (new AttributeBuilder())->withType(AttributeTypes::TEXT)->withCode('A2')->build();
+        $attribute3 = (new AttributeBuilder())->withType(AttributeTypes::BOOLEAN)->withCode('A3')->build();
+        $attribute4 = (new AttributeBuilder())->withType(AttributeTypes::OPTION_SIMPLE_SELECT)->withCode('A4')->build();
         $sourceFamily = (new FamilyBuilder())->withCode('XXX')->build();
         $destinationFamily = (new FamilyBuilder())->withCode('YYY')->build();
 
@@ -46,9 +46,36 @@ class RuleAttributeProviderTest extends TestCase
 
         $map2 = [
             [$sourceFamily, [$attribute1, $attribute3, $attribute4]],
-            [$destinationFamily, [$attribute1, $attribute2, $attribute3]],
+            [$destinationFamily, [$attribute1, $attribute2, $attribute3, $attribute4]],
         ];
-        $expectedAttributes2 = [$attribute3];
+        $expectedAttributes2 = [$attribute3, $attribute4];
+
+        return [
+            [$sourceFamily, $destinationFamily, $map1, $expectedAttributes1],
+            [$sourceFamily, $destinationFamily, $map2, $expectedAttributes2],
+        ];
+    }
+
+    public function dataGetPossibleForKeyAttribute(): array
+    {
+        $attribute1 = (new AttributeBuilder())->withType(AttributeTypes::IDENTIFIER)->withCode('A1')->build();
+        $attribute2 = (new AttributeBuilder())->withType(AttributeTypes::TEXT)->withCode('A2')->build();
+        $attribute3 = (new AttributeBuilder())->withType(AttributeTypes::BOOLEAN)->withCode('A3')->build();
+        $attribute4 = (new AttributeBuilder())->withType(AttributeTypes::OPTION_SIMPLE_SELECT)->withCode('A4')->build();
+        $sourceFamily = (new FamilyBuilder())->withCode('XXX')->build();
+        $destinationFamily = (new FamilyBuilder())->withCode('YYY')->build();
+
+        $map1 = [
+            [$sourceFamily, [$attribute1]],
+            [$destinationFamily, [$attribute1, $attribute2]],
+        ];
+        $expectedAttributes1 = [];
+
+        $map2 = [
+            [$sourceFamily, [$attribute1, $attribute3, $attribute4]],
+            [$destinationFamily, [$attribute1, $attribute2, $attribute3, $attribute4]],
+        ];
+        $expectedAttributes2 = [$attribute4];
 
         return [
             [$sourceFamily, $destinationFamily, $map1, $expectedAttributes1],
@@ -57,13 +84,24 @@ class RuleAttributeProviderTest extends TestCase
     }
 
     /**
-     * @dataProvider dataGetForFamilies
+     * @dataProvider dataGetAllForFamilies
      */
-    public function testGetForFamilies(Family $sourceFamily, Family $destinationFamily, array $valueMap, array $expectedAttributes): void
+    public function testGetAllForFamilies(Family $sourceFamily, Family $destinationFamily, array $valueMap, array $expectedAttributes): void
     {
         $this->attributeRepositoryMock->method('findAttributesByFamily')->will($this->returnValueMap($valueMap));
         $provider = $this->getRuleAttributeProviderInstance();
-        $attributes = $provider->getForFamilies($sourceFamily, $destinationFamily);
+        $attributes = $provider->getAllForFamilies($sourceFamily, $destinationFamily);
+        $this->assertEquals($expectedAttributes, $attributes);
+    }
+
+    /**
+     * @dataProvider dataGetPossibleForKeyAttribute
+     */
+    public function testGetPossibleForKeyAttribute(Family $sourceFamily, Family $destinationFamily, array $valueMap, array $expectedAttributes): void
+    {
+        $this->attributeRepositoryMock->method('findAttributesByFamily')->will($this->returnValueMap($valueMap));
+        $provider = $this->getRuleAttributeProviderInstance();
+        $attributes = $provider->getPossibleForKeyAttribute($sourceFamily, $destinationFamily);
         $this->assertEquals($expectedAttributes, $attributes);
     }
 
