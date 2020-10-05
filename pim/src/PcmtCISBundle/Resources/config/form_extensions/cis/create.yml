@@ -8,26 +8,26 @@ extensions:
       picture: illustrations/Family.svg
       successMessage: pcmt.entity.cis.flash.create.success
       editRoute: pcmt_cis_index
-      postUrl: pcmt_cis_rest_create
+      postUrl: pcmt_cis_subscription_rest_create
       routerKey: id
 
-  pcmt-cis-create-data-recipient-gln:
+  pcmt-cis-create-data-recipients-gln:
     module: pim/form/common/fields/number
     parent: pcmt-cis-create-modal
     targetZone: fields
     position: 20
     config:
-      fieldName: data_recipient_gln
-      label: pcmt.cis.create.data_recipient_gln
+      fieldName: data_recipients_gln
+      label: pcmt.cis.create.data_recipients_gln
 
-  pcmt-cis-create-data-source-gln:
+  pcmt-cis-create-data-sources-gln:
     module: pim/form/common/fields/number
     parent: pcmt-cis-create-modal
     targetZone: fields
     position: 20
     config:
-      fieldName: data_source_gln
-      label: pcmt.cis.create.data_source_gln
+      fieldName: data_sources_gln
+      label: pcmt.cis.create.data_sources_gln
 
   pcmt-cis-create-gtin:
     module: pim/form/common/fields/number
