@@ -59,7 +59,7 @@ define([
                     i18n: i18n,
                     locale: UserContext.get('catalogLocale'),
                     labels: {
-                        defaultLabel: __('pcmt.entity.rules.property.country_code.choose')
+                        defaultLabel: __('pcmt.entity.subscription.property.target_market_country_code.choose')
                     }
                 }));
             },

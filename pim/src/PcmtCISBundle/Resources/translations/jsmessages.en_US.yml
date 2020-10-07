@@ -4,3 +4,24 @@ pim_title:
 pim_menu:
   item:
     cis: CIS
+
+pcmt:
+  entity:
+    subscription:
+      module:
+        create:
+          button: Create
+      property:
+        target_market_country_code:
+          choose: Choose the country code
+      flash:
+        create:
+          success: A new subscription successfully created
+  cis:
+    create:
+      gpc_category_code: GPC Category Code
+      gtin: GTIN
+      data_sources_gln: Data Source's GLN
+      data_recipients_gln: Data Recipient's GLN
+      target_market_country_code: Target Market Country Code
+

@@ -43,7 +43,7 @@ extensions:
     aclResourceId: pcmt_permission_cis_create
     config:
       iconName:  plus
-      title:     pcmt.entity.cis.module.create.button
+      title:     pcmt.entity.subscription.module.create.button
       modalForm: pcmt-cis-create-modal
 
   pcmt-cis-index-grid-filters-list:
