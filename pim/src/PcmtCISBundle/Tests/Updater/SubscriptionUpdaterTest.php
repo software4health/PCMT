@@ -52,11 +52,11 @@ class SubscriptionUpdaterTest extends TestCase
 
         $subscription = (new SubscriptionBuilder())->build();
         $data = [
-            'data_recipients_gln'        => $dataRecipientsGLN,
-            'data_sources_gln'           => $dataSourcesGLN,
-            'gtin'                       => $gtin,
-            'gpc_category_code'          => $GPCCategoryCode,
-            'target_market_country_code' => $countryCode,
+            'data_recipients_g_l_n'        => $dataRecipientsGLN,
+            'data_sources_g_l_n'           => $dataSourcesGLN,
+            'gtin'                         => $gtin,
+            'gpc_category_code'            => $GPCCategoryCode,
+            'target_market_country_code'   => $countryCode,
         ];
         $updater = $this->getSubscriptionUpdaterInstance();
         $updater->update($subscription, $data);
@@ -80,11 +80,11 @@ class SubscriptionUpdaterTest extends TestCase
 
         $subscription = (new SubscriptionBuilder())->build();
         $data = [
-            'data_recipients_gln'        => $dataRecipientsGLN,
-            'data_sources_gln'           => $dataSourcesGLN,
-            'gtin'                       => $gtin,
-            'gpc_category_code'          => $GPCCategoryCode,
-            'target_market_country_code' => $countryCode,
+            'data_recipients_g_l_n'        => $dataRecipientsGLN,
+            'data_sources_g_l_n'           => $dataSourcesGLN,
+            'gtin'                         => $gtin,
+            'gpc_category_code'            => $GPCCategoryCode,
+            'target_market_country_code'   => $countryCode,
         ];
         $updater = $this->getSubscriptionUpdaterInstance();
         $updater->update($subscription, $data);

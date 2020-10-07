@@ -34,8 +34,8 @@ class SubscriptionUpdater implements ObjectUpdaterInterface
      *
      * Expected input format :
      * [
-     *     'data_recipients_gln' => 'string',
-     *     'data_sources_gln' => 'string',
+     *     'data_recipients_g_l_n' => 'string',
+     *     'data_sources_g_l_n' => 'string',
      *     'gtin' => 'string',
      *     'gpc_category_code' => 'string'
      *     'target_market_country_code' => 'string'
@@ -63,10 +63,10 @@ class SubscriptionUpdater implements ObjectUpdaterInterface
     protected function setData(Subscription $subscription, $field, $data): void
     {
         switch ($field) {
-            case 'data_sources_gln':
+            case 'data_sources_g_l_n':
                 $subscription->setDataSourcesGLN($data);
                 break;
-            case 'data_recipients_gln':
+            case 'data_recipients_g_l_n':
                 $subscription->setDataRecipientsGLN($data);
                 break;
             case 'gtin':
