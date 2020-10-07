@@ -35,7 +35,6 @@
     pull: no
     remove_orphans: yes
     state: absent
-    timeout: 120
   when: pcmt_profile == 'dev'
 - name: Prune pim volume for dev
   shell: docker volume rm -f app_pim
@@ -51,7 +50,6 @@
     pull: yes
     remove_orphans: yes
     state: present
-    timeout: 120
 - name: Restart fpm to wipe
   docker_service:
     project_src: /app

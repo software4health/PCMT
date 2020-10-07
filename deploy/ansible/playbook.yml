@@ -28,6 +28,8 @@
     PCMT_TRAEFIK_CONF: "{{ pcmt_traefik_conf }}"
     PCMT_HOSTNAME: "{{ pcmt_hostname }}"
     PCMT_S3_BUCKET: "s3://{{ pcmt_hostname }}"
+    COMPOSE_HTTP_TIMEOUT: "120"
+    DOCKER_CLIENT_TIMEOUT: "120"
   
   pre_tasks:
     - include_tasks: tasks/python2-ubuntu.yml
