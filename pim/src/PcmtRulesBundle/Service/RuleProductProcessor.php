@@ -17,6 +17,8 @@ use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithValuesInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
+use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\ProductAttributeFilter;
+use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\ProductModelAttributeFilter;
 use Akeneo\Pim\Enrichment\Component\Product\Query\Filter\Operators;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
@@ -25,6 +27,7 @@ use Akeneo\Tool\Component\StorageUtils\Updater\PropertyCopierInterface;
 use PcmtCoreBundle\Connector\Job\InvalidItems\SimpleInvalidItem;
 use PcmtRulesBundle\Entity\Rule;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class RuleProductProcessor
 {
@@ -64,6 +67,15 @@ class RuleProductProcessor
     /** @var int[] */
     private $destinationProductModelsId = [];
 
+    /** @var ProductAttributeFilter */
+    private $productAttributeFilter;
+
+    /** @var ProductModelAttributeFilter */
+    private $productModelAttributeFilter;
+
+    /** @var NormalizerInterface */
+    private $normalizer;
+
     public function __construct(
         ProductQueryBuilderFactory $pqbFactory,
         RuleAttributeProvider $ruleAttributeProvider,
@@ -72,7 +84,10 @@ class RuleProductProcessor
         SaverInterface $productModelSaver,
         ProductBuilderInterface $productBuilder,
         ChannelRepositoryInterface $channelRepository,
-        LocaleRepositoryInterface $localeRepository
+        LocaleRepositoryInterface $localeRepository,
+        ProductAttributeFilter $productAttributeFilter,
+        ProductModelAttributeFilter $productModelAttributeFilter,
+        NormalizerInterface $normalizer
     ) {
         $this->pqbFactory = $pqbFactory;
         $this->ruleAttributeProvider = $ruleAttributeProvider;
@@ -82,6 +97,9 @@ class RuleProductProcessor
         $this->productBuilder = $productBuilder;
         $this->channelRepository = $channelRepository;
         $this->localeRepository = $localeRepository;
+        $this->productAttributeFilter = $productAttributeFilter;
+        $this->productModelAttributeFilter = $productModelAttributeFilter;
+        $this->normalizer = $normalizer;
     }
 
     public function process(StepExecution $stepExecution, Rule $rule, EntityWithValuesInterface $sourceProduct): void
@@ -179,6 +197,28 @@ class RuleProductProcessor
 
     private function copyData(EntityWithValuesInterface $sourceProduct, EntityWithValuesInterface $destinationProduct, AttributeInterface $attribute): void
     {
+        $productData = $this->normalizer->normalize($destinationProduct, 'standard');
+        $productData['values'] = [
+            $attribute->getCode() => 'value',
+        ];
+
+        if ($destinationProduct instanceof ProductInterface) {
+            $productData = $this->productAttributeFilter->filter($productData);
+        } else {
+            $productData = $this->productModelAttributeFilter->filter($productData);
+        }
+
+        if (count($productData['values']) > 0) {
+            $this->simpleCopyData($sourceProduct, $destinationProduct, $attribute);
+        }
+
+        if ($destinationProduct->getParent()) {
+            $this->copyData($sourceProduct, $destinationProduct->getParent(), $attribute);
+        }
+    }
+
+    private function simpleCopyData(EntityWithValuesInterface $sourceProduct, EntityWithValuesInterface $destinationProduct, AttributeInterface $attribute): void
+    {
         if ($destinationProduct instanceof ProductInterface) {
             $this->productsToSave[$destinationProduct->getId()] = $destinationProduct;
         } elseif ($destinationProduct instanceof ProductModelInterface) {
@@ -207,10 +247,6 @@ class RuleProductProcessor
                     $options
                 );
             }
-        }
-
-        if ($destinationProduct->getParent()) {
-            $this->copyData($sourceProduct, $destinationProduct->getParent(), $attribute);
         }
     }
 }

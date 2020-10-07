@@ -15,6 +15,8 @@ use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
 use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductQueryBuilderFactory;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\ProductAttributeFilter;
+use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\ProductModelAttributeFilter;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderFactoryInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Value\ScalarValue;
@@ -30,6 +32,7 @@ use PcmtRulesBundle\Tests\TestDataBuilder\ProductModelBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\RuleBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * @property ProductQueryBuilderInterface|MockObject productQueryBuilderMock
@@ -66,6 +69,15 @@ class RuleProductProcessorTest extends TestCase
     /** @var LocaleRepositoryInterface|MockObject */
     private $localeRepositoryMock;
 
+    /** @var ProductAttributeFilter|MockObject */
+    private $productAttributeFilterMock;
+
+    /** @var ProductModelAttributeFilter|MockObject */
+    private $productModelAttributeFilterMock;
+
+    /** @var NormalizerInterface|MockObject */
+    private $normalizerMock;
+
     protected function setUp(): void
     {
         $this->productQueryBuilderFactoryMock = $this->createMock(ProductQueryBuilderFactory::class);
@@ -79,6 +91,19 @@ class RuleProductProcessorTest extends TestCase
         $this->productBuilderMock = $this->createMock(ProductBuilderInterface::class);
         $this->channelRepositoryMock = $this->createMock(ChannelRepositoryInterface::class);
         $this->localeRepositoryMock = $this->createMock(LocaleRepositoryInterface::class);
+        $this->productAttributeFilterMock = $this->createMock(ProductAttributeFilter::class);
+        $this->productModelAttributeFilterMock = $this->createMock(ProductModelAttributeFilter::class);
+        $this->normalizerMock = $this->createMock(NormalizerInterface::class);
+        $this->productAttributeFilterMock->method('filter')->willReturn([
+            'values' => [
+                'attributeCode' => 'example value',
+            ],
+        ]);
+        $this->productModelAttributeFilterMock->method('filter')->willReturn([
+            'values' => [
+                'attributeCode' => 'example value',
+            ],
+        ]);
     }
 
     public function dataProcess(): array
@@ -201,7 +226,10 @@ class RuleProductProcessorTest extends TestCase
             $this->productModelSaverMock,
             $this->productBuilderMock,
             $this->channelRepositoryMock,
-            $this->localeRepositoryMock
+            $this->localeRepositoryMock,
+            $this->productAttributeFilterMock,
+            $this->productModelAttributeFilterMock,
+            $this->normalizerMock
         );
     }
 }
