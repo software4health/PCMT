@@ -2,3 +2,10 @@ pcmt_cis_subscription_rest_create:
     path: /
     defaults: { _controller: pcmt.cis.controller.rest.subscription:createAction }
     methods: [PUT, POST]
+
+pcmt_cis_subscription_rest_delete:
+    path: /{id}
+    defaults: { _controller: pcmt.cis.controller.rest.subscription:deleteAction }
+    requirements:
+        id: \d+
+    methods: [DELETE]

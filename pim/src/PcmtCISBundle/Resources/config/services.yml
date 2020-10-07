@@ -24,3 +24,10 @@ services:
         class: PcmtCISBundle\Validator\RequiredFieldConstraintValidator
         tags:
             - { name: validator.constraint_validator, alias: pcmt_cis_required_field_constraint_validator }
+
+    pcmt.cis.remover.subscription:
+        class: '%pim_catalog.remover.base.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
+            - '%pcmt.cis.entity.subscription.class%'
