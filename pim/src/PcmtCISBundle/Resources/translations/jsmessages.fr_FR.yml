@@ -24,3 +24,15 @@ pcmt:
       data_sources_gln: FR Data Source's GLN
       data_recipients_gln: FR Data Recipient's GLN
       target_market_country_code: FR Target Market Country Code
+
+pim_enrich:
+  entity:
+    subscription:
+      module:
+        delete:
+          confirm: FR Are you sure you want to delete this subscription?
+      flash:
+        delete:
+          success: FR Subscription successfully deleted
+
+error.removing.subscription: FR The subscription could not be removed

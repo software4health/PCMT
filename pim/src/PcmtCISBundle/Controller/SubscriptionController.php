@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace PcmtCISBundle\Controller;
 
+use Akeneo\Tool\Component\StorageUtils\Remover\RemoverInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
@@ -38,18 +39,23 @@ class SubscriptionController
     /** @var NormalizerInterface */
     private $constraintViolationNormalizer;
 
+    /** @var RemoverInterface */
+    private $remover;
+
     public function __construct(
         NormalizerInterface $normalizer,
         ObjectUpdaterInterface $updater,
         ValidatorInterface $validator,
         SaverInterface $saver,
-        NormalizerInterface $constraintViolationNormalizer
+        NormalizerInterface $constraintViolationNormalizer,
+        RemoverInterface $remover
     ) {
         $this->normalizer = $normalizer;
         $this->updater = $updater;
         $this->validator = $validator;
         $this->saver = $saver;
         $this->constraintViolationNormalizer = $constraintViolationNormalizer;
+        $this->remover = $remover;
     }
 
     /**
@@ -85,5 +91,19 @@ class SubscriptionController
             $subscription,
             'internal_api'
         ));
+    }
+
+    /**
+     * @AclAncestor("pcmt_permission_cis_delete")
+     */
+    public function deleteAction(Subscription $subscription, Request $request): Response
+    {
+        if (!$request->isXmlHttpRequest()) {
+            return new RedirectResponse('/');
+        }
+
+        $this->remover->remove($subscription);
+
+        return new JsonResponse();
     }
 }
