@@ -46,3 +46,26 @@ extensions:
       title:     pcmt.entity.cis.module.create.button
       modalForm: pcmt-cis-create-modal
 
+  pcmt-cis-index-grid-filters-list:
+    module: oro/datafilter/filters-list
+    parent: pcmt-cis-index-grid-container
+    targetZone: filters
+
+  pcmt-cis-index-grid-filters-manage:
+    module: oro/datafilter/filters-button
+    parent: pcmt-cis-index-grid-container
+    targetZone: filters
+
+  pcmt-cis-index-pagination:
+    module: oro/datagrid/pagination-input
+    parent: pcmt-cis-index-grid-container
+    targetZone: toolbar
+    config:
+        gridName: subscription-grid
+
+  pcmt-cis-index-grid:
+    module: pim/form/common/index/grid
+    parent: pcmt-cis-index-grid-container
+    position: 1000
+    config:
+      alias: subscription-grid

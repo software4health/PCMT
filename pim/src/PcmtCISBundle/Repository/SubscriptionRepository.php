@@ -11,7 +11,21 @@ declare(strict_types=1);
 namespace PcmtCISBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Oro\Bundle\PimDataGridBundle\Doctrine\ORM\Repository\DatagridRepositoryInterface;
 
-class SubscriptionRepository extends EntityRepository
+class SubscriptionRepository extends EntityRepository implements DatagridRepositoryInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function createDatagridQueryBuilder()
+    {
+        $qb = $this->createQueryBuilder('subscription');
+        $aliases = $qb->getRootAliases();
+        $rootAlias = reset($aliases);
+
+        $qb->addOrderBy(sprintf('%s.id', $rootAlias), 'ASC');
+
+        return $qb;
+    }
 }
