@@ -25,7 +25,7 @@ extensions:
     parent: pcmt-cis-index
     targetZone: title
     config:
-      title: pim_enrich.entity.cis.page_title.index
+      title: pcmt.entity.subscription.page_title.index
 
   pcmt-cis-index-breadcrumbs:
     module: pim/common/breadcrumbs

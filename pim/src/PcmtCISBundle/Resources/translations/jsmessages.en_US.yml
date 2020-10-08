@@ -17,6 +17,8 @@ pcmt:
       flash:
         create:
           success: A new subscription successfully created
+      page_title:
+        index: "]-Inf, 1]{{ count }} subscription|]1, Inf[{{ count }} subscriptions"
   cis:
     create:
       gpc_category_code: GPC Category Code
@@ -24,6 +26,7 @@ pcmt:
       data_sources_gln: Data Source's GLN
       data_recipients_gln: Data Recipient's GLN
       target_market_country_code: Target Market Country Code
+
 
 pim_enrich:
   entity:
