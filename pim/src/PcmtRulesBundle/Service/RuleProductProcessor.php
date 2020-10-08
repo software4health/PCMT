@@ -175,7 +175,7 @@ class RuleProductProcessor
             foreach ($this->productModelsToSave as $id => $productModel) {
                 $this->productModelSaver->save($productModel);
                 if (empty($this->destinationProductModelsId[$id])) {
-                    $stepExecution->incrementSummaryInfo('destination_products_found_and_saved', 1);
+                    $stepExecution->incrementSummaryInfo('destination_product_models_found_and_saved', 1);
                     $this->destinationProductModelsId[$id] = $id;
                 }
             }
