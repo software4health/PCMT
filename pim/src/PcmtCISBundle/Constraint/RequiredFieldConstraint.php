@@ -27,5 +27,5 @@ class RequiredFieldConstraint extends Constraint
     }
 
     /** @var string */
-    public $message = 'One of the fields should be filled.';
+    public $message = 'At least one of the fields: GTIN, GPC Category Code or Target Market Country Code should be filled.';
 }
