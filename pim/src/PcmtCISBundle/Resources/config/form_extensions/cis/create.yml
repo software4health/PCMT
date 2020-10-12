@@ -12,7 +12,7 @@ extensions:
       routerKey: id
 
   pcmt-cis-create-data-recipients-gln:
-    module: pim/form/common/fields/number
+    module: pim/form/common/fields/text
     parent: pcmt-cis-create-modal
     targetZone: fields
     position: 20
@@ -22,7 +22,7 @@ extensions:
       required: true
 
   pcmt-cis-create-data-sources-gln:
-    module: pim/form/common/fields/number
+    module: pim/form/common/fields/text
     parent: pcmt-cis-create-modal
     targetZone: fields
     position: 22
@@ -32,7 +32,7 @@ extensions:
       required: true
 
   pcmt-cis-create-gtin:
-    module: pim/form/common/fields/number
+    module: pim/form/common/fields/text
     parent: pcmt-cis-create-modal
     targetZone: fields
     position: 24

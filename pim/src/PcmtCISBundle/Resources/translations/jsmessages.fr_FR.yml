@@ -26,6 +26,8 @@ pcmt:
       data_sources_gln: FR Data Source's GLN
       data_recipients_gln: FR Data Recipient's GLN
       target_market_country_code: FR Target Market Country Code
+      error:
+        required_field: "FR At least one of the fields: GTIN, GPC Category Code or Target Market Country Code should be filled."
 
 pim_enrich:
   entity:
