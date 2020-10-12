@@ -9,6 +9,7 @@ extensions:
         module: pcmt/product-model/edit/form/save
         parent: pim-product-model-edit-form
         targetZone: buttons
+        aclResourceId: pcmt_permission_drafts_edit
         position: 0
         config:
             redirect: pcmt_core_drafts_edit
@@ -17,6 +18,7 @@ extensions:
         module: pcmt/product-model/edit/form/save
         parent: pcmt-product-model-edit-form-no-draft
         targetZone: draft
+        aclResourceId: pcmt_permission_drafts_edit
         position: 0
         config:
             redirect: pcmt_core_drafts_edit
