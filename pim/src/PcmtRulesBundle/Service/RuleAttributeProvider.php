@@ -36,11 +36,15 @@ class RuleAttributeProvider
     private function filterForKeyAttribute(array $attributes): array
     {
         return array_values(array_filter($attributes, function (AttributeInterface $attribute) {
-            if (in_array($attribute->getType(), $this->getSupportedTypes())) {
-                return true;
+            if (!in_array($attribute->getType(), $this->getSupportedTypes())) {
+                return false;
             }
 
-            return false;
+            if ($attribute->isLocalizable() || $attribute->isScopable()) {
+                return false;
+            }
+
+            return true;
         }));
     }
 

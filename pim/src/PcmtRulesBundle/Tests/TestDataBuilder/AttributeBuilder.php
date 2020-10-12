@@ -58,4 +58,11 @@ class AttributeBuilder
     {
         return $this->attribute;
     }
+
+    public function asScopable(): self
+    {
+        $this->attribute->setScopable(true);
+
+        return $this;
+    }
 }
