@@ -40,7 +40,7 @@ extensions:
     parent: pcmt-cis-index
     targetZone: buttons
     position: 100
-    aclResourceId: pcmt_permission_cis_create
+    aclResourceId: pcmt_permission_cis
     config:
       iconName:  plus
       title:     pcmt.entity.subscription.module.create.button

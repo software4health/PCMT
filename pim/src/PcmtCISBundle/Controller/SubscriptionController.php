@@ -59,7 +59,7 @@ class SubscriptionController
     }
 
     /**
-     * @AclAncestor("pcmt_permission_cis_create")
+     * @AclAncestor("pcmt_permission_cis")
      */
     public function createAction(Request $request): Response
     {
@@ -94,7 +94,7 @@ class SubscriptionController
     }
 
     /**
-     * @AclAncestor("pcmt_permission_cis_delete")
+     * @AclAncestor("pcmt_permission_cis")
      */
     public function deleteAction(Subscription $subscription, Request $request): Response
     {
