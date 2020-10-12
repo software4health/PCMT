@@ -27,5 +27,5 @@ class RequiredFieldConstraint extends Constraint
     }
 
     /** @var string */
-    public $message = 'At least one of the fields: GTIN, GPC Category Code or Target Market Country Code should be filled.';
+    public $message = 'pcmt.cis.create.error.required_field';
 }

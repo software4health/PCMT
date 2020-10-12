@@ -60,6 +60,20 @@ class SubscriptionBuilder
         return $this;
     }
 
+    public function withDataSourcesGLN(string $dataSourcesGLN): self
+    {
+        $this->subscription->setDataSourcesGLN($dataSourcesGLN);
+
+        return $this;
+    }
+
+    public function withDataRecipientsGLN(string $dataRecipientsGLN): self
+    {
+        $this->subscription->setDataRecipientsGLN($dataRecipientsGLN);
+
+        return $this;
+    }
+
     public function build(): Subscription
     {
         return $this->subscription;
