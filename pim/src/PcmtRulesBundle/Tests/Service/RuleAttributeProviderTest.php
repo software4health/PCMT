@@ -62,6 +62,7 @@ class RuleAttributeProviderTest extends TestCase
         $attribute2 = (new AttributeBuilder())->withType(AttributeTypes::TEXT)->withCode('A2')->build();
         $attribute3 = (new AttributeBuilder())->withType(AttributeTypes::BOOLEAN)->withCode('A3')->build();
         $attribute4 = (new AttributeBuilder())->withType(AttributeTypes::OPTION_SIMPLE_SELECT)->withCode('A4')->build();
+        $attribute5 = (new AttributeBuilder())->withType(AttributeTypes::TEXT)->asScopable()->withCode('A5')->build();
         $sourceFamily = (new FamilyBuilder())->withCode('XXX')->build();
         $destinationFamily = (new FamilyBuilder())->withCode('YYY')->build();
 
@@ -77,9 +78,16 @@ class RuleAttributeProviderTest extends TestCase
         ];
         $expectedAttributes2 = [$attribute4];
 
+        $map3 = [
+            [$sourceFamily, [$attribute1, $attribute5]],
+            [$destinationFamily, [$attribute1, $attribute2, $attribute5]],
+        ];
+        $expectedAttributes3 = [];
+
         return [
             [$sourceFamily, $destinationFamily, $map1, $expectedAttributes1],
             [$sourceFamily, $destinationFamily, $map2, $expectedAttributes2],
+            [$sourceFamily, $destinationFamily, $map3, $expectedAttributes3],
         ];
     }
 
