@@ -7,7 +7,7 @@ datagrid:
             type:              pcmt_cis_datasource_subscription
             entity:            '%pcmt.cis.entity.subscription.class%'
             user_config_alias: subscription-grid
-            acl_resource:      pcmt_permission_cis_view
+            acl_resource:      pcmt_permission_cis
         columns:
             data_recipients_gln:
                 label: pcmt.cis.datagrid.data_recipients_gln
@@ -38,6 +38,6 @@ datagrid:
                 type: delete
                 label: pim_common.delete
                 link: delete_link
-                acl_resource: pcmt_permission_cis_delete
+                acl_resource: pcmt_permission_cis
 
 

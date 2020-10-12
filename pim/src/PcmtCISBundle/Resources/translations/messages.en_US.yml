@@ -1,10 +1,6 @@
 pcmt.permission:
     cis: CIS
-    cis.label:
-        view: View CIS
-        create: Create CIS
-        delete: Delete CIS
-        edit: Edit CIS
+    cis.label: Catalog Item Subscriptions
 
 pcmt:
     cis:

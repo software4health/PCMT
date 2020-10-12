@@ -4,22 +4,7 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
-pcmt_permission_cis_view:
+pcmt_permission_cis:
     type: action
-    label: pcmt.permission.cis.label.view
-    group_name: pcmt.permission.cis
-
-pcmt_permission_cis_create:
-    type: action
-    label: pcmt.permission.cis.label.create
-    group_name: pcmt.permission.cis
-
-pcmt_permission_cis_edit:
-    type: action
-    label: pcmt.permission.cis.label.edit
-    group_name: pcmt.permission.cis
-
-pcmt_permission_cis_delete:
-    type: action
-    label: pcmt.permission.cis.label.delete
+    label: pcmt.permission.cis.label
     group_name: pcmt.permission.cis
