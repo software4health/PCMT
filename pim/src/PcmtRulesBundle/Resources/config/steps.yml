@@ -8,5 +8,6 @@ services:
         calls:
             - [setAttributeProvider, ['@pcmt.service.rule_attribute_provider']]
             - [setRuleRepository, ['@pcmt.repository.rule']]
-            - [setProductRepository, ['@pim_catalog.repository.product']]
             - [setRuleProductProcessor, ['@pcmt.service.rule_product_processor']]
+            - [setPqbFactory, ['@pim_enrich.query.product_and_product_model_query_builder_from_size_factory']]
+

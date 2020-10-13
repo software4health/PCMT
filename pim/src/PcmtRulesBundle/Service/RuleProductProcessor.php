@@ -182,8 +182,12 @@ class RuleProductProcessor
         }
     }
 
-    private function createNewDestinationProduct(ProductInterface $sourceProduct, Rule $rule, array $attributes): void
+    private function createNewDestinationProduct(EntityWithValuesInterface $sourceEntity, Rule $rule, array $attributes): void
     {
+        if (!$sourceEntity instanceof ProductInterface) {
+            // creating new product model - not possible
+            return;
+        }
         $destinationProduct = $this->productBuilder->createProduct(
             Uuid::uuid4()->toString(),
             $rule->getDestinationFamily()->getCode()
@@ -191,7 +195,7 @@ class RuleProductProcessor
 
         foreach ($attributes as $attribute) {
             /** @var AttributeInterface $attribute */
-            $this->copyData($sourceProduct, $destinationProduct, $attribute);
+            $this->copyData($sourceEntity, $destinationProduct, $attribute);
         }
     }
 
