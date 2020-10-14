@@ -18,7 +18,7 @@ use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use PcmtRulesBundle\Connector\Job\Step\RuleProcessStep;
 use PcmtRulesBundle\Repository\RuleRepository;
 use PcmtRulesBundle\Service\RuleAttributeProvider;
-use PcmtRulesBundle\Service\RuleProductProcessor;
+use PcmtRulesBundle\Service\RuleProcessor;
 use PcmtRulesBundle\Tests\TestDataBuilder\ProductBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\ProductModelBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\RuleBuilder;
@@ -52,7 +52,7 @@ class RuleProcessStepTest extends TestCase
     /** @var ProductQueryBuilderInterface|MockObject */
     private $productQueryBuilderMock;
 
-    /** @var RuleProductProcessor|MockObject */
+    /** @var RuleProcessor|MockObject */
     private $ruleProductProcessorMock;
 
     protected function setUp(): void
@@ -67,7 +67,7 @@ class RuleProcessStepTest extends TestCase
         $this->pqbFactoryMock = $this->createMock(ProductQueryBuilderFactoryInterface::class);
         $this->productQueryBuilderMock = $this->createMock(ProductQueryBuilderInterface::class);
         $this->pqbFactoryMock->method('create')->willReturn($this->productQueryBuilderMock);
-        $this->ruleProductProcessorMock = $this->createMock(RuleProductProcessor::class);
+        $this->ruleProductProcessorMock = $this->createMock(RuleProcessor::class);
     }
 
     /**
