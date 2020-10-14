@@ -49,7 +49,7 @@ services:
     pcmt.service.rule_product_processor:
         class: PcmtRulesBundle\Service\RuleProductProcessor
         arguments:
-            - '@pim_catalog.query.product_query_builder_factory'
+            - '@pim_enrich.query.product_and_product_model_query_builder_from_size_factory'
             - '@pcmt.service.rule_attribute_provider'
             - '@pim_catalog.updater.property_copier'
             - '@pim_catalog.saver.product'

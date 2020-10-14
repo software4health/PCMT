@@ -12,7 +12,6 @@ namespace PcmtRulesBundle\Service;
 
 use Akeneo\Channel\Component\Repository\ChannelRepositoryInterface;
 use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
-use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductQueryBuilderFactory;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithValuesInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
@@ -20,6 +19,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\ProductAttributeFilter;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\ProductModelAttributeFilter;
 use Akeneo\Pim\Enrichment\Component\Product\Query\Filter\Operators;
+use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderFactoryInterface;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
@@ -31,7 +31,9 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class RuleProductProcessor
 {
-    /** @var ProductQueryBuilderFactory */
+    public const MAX_DESTINATION_PRODUCTS = 100000;
+
+    /** @var ProductQueryBuilderFactoryInterface */
     private $pqbFactory;
 
     /** @var RuleAttributeProvider */
@@ -77,7 +79,7 @@ class RuleProductProcessor
     private $normalizer;
 
     public function __construct(
-        ProductQueryBuilderFactory $pqbFactory,
+        ProductQueryBuilderFactoryInterface $pqbFactory,
         RuleAttributeProvider $ruleAttributeProvider,
         PropertyCopierInterface $propertyCopier,
         SaverInterface $productSaver,
@@ -118,6 +120,7 @@ class RuleProductProcessor
         $pqb = $this->pqbFactory->create([
             'default_locale' => null,
             'default_scope'  => null,
+            'limit'          => self::MAX_DESTINATION_PRODUCTS,
         ]);
         try {
             $pqb->addFilter($rule->getKeyAttribute()->getCode(), Operators::EQUALS, $keyValue->getData());
@@ -184,10 +187,6 @@ class RuleProductProcessor
 
     private function createNewDestinationProduct(EntityWithValuesInterface $sourceEntity, Rule $rule, array $attributes): void
     {
-        if (!$sourceEntity instanceof ProductInterface) {
-            // creating new product model - not possible
-            return;
-        }
         $destinationProduct = $this->productBuilder->createProduct(
             Uuid::uuid4()->toString(),
             $rule->getDestinationFamily()->getCode()
