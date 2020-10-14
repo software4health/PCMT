@@ -15,6 +15,7 @@ use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
 use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductQueryBuilderFactory;
 use Akeneo\Pim\Enrichment\Component\Product\Builder\ProductBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\ProductAttributeFilter;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\ProductModelAttributeFilter;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderFactoryInterface;
@@ -167,6 +168,32 @@ class RuleProductProcessorTest extends TestCase
         $this->propertyCopierMock->expects($this->exactly(1))->method('copyData');
         $processor = $this->getRuleProductProcessorInstance();
         $processor->process($this->stepExecutionMock, $rule, $sourceProduct);
+    }
+
+    public function dataProcessNoDestinationProductForProductModel(): array
+    {
+        $attributes = [
+            (new AttributeBuilder())->build(),
+        ];
+        $rule = (new RuleBuilder())->build();
+        $value = ScalarValue::value($rule->getKeyAttribute()->getCode(), 'xxx');
+        $productModel = (new ProductModelBuilder())->addValue($value)->build();
+
+        return [
+            [$rule, $productModel, $attributes],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProcessNoDestinationProductForProductModel
+     */
+    public function testProcessNoDestinationProductForProductModel(Rule $rule, ProductModelInterface $sourceProductModel, array $attributes): void
+    {
+        $this->ruleAttributeProviderMock->expects($this->once())->method('getAllForFamilies')->willReturn($attributes);
+        $this->productQueryBuilderMock->method('execute')->willReturn([]);
+        $this->propertyCopierMock->expects($this->exactly(0))->method('copyData');
+        $processor = $this->getRuleProductProcessorInstance();
+        $processor->process($this->stepExecutionMock, $rule, $sourceProductModel);
     }
 
     /**
