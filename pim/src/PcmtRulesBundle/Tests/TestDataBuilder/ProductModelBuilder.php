@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtRulesBundle\Tests\TestDataBuilder;
 
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
@@ -29,7 +30,7 @@ class ProductModelBuilder
 
     public function addValue(ValueInterface $value): self
     {
-        $this->productModel->getValues()->add($value);
+        $this->productModel->addValue($value);
 
         return $this;
     }
@@ -37,6 +38,20 @@ class ProductModelBuilder
     public function withAssociations(Collection $collection): self
     {
         $this->productModel->setAssociations($collection);
+
+        return $this;
+    }
+
+    public function addSubProductModel(ProductModelInterface $productModel): self
+    {
+        $this->productModel->addProductModel($productModel);
+
+        return $this;
+    }
+
+    public function addProductVariant(ProductInterface $product): self
+    {
+        $this->productModel->addProduct($product);
 
         return $this;
     }
