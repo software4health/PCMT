@@ -18,7 +18,7 @@ use Akeneo\Tool\Component\Batch\Step\AbstractStep;
 use PcmtRulesBundle\Entity\Rule;
 use PcmtRulesBundle\Repository\RuleRepository;
 use PcmtRulesBundle\Service\RuleAttributeProvider;
-use PcmtRulesBundle\Service\RuleProductProcessor;
+use PcmtRulesBundle\Service\RuleProcessor;
 
 class RuleProcessStep extends AbstractStep
 {
@@ -28,7 +28,7 @@ class RuleProcessStep extends AbstractStep
     /** @var RuleRepository */
     private $ruleRepository;
 
-    /** @var RuleProductProcessor */
+    /** @var RuleProcessor */
     private $ruleProductProcessor;
 
     /** @var ProductQueryBuilderFactoryInterface */
@@ -46,7 +46,7 @@ class RuleProcessStep extends AbstractStep
         $this->ruleRepository = $ruleRepository;
     }
 
-    public function setRuleProductProcessor(RuleProductProcessor $ruleProductProcessor): void
+    public function setRuleProductProcessor(RuleProcessor $ruleProductProcessor): void
     {
         $this->ruleProductProcessor = $ruleProductProcessor;
     }

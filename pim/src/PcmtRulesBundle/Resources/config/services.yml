@@ -47,14 +47,20 @@ services:
             - { name: validator.constraint_validator, alias: pcmt_attribute_different_family_constraint_validator }
 
     pcmt.service.rule_product_processor:
-        class: PcmtRulesBundle\Service\RuleProductProcessor
+        class: PcmtRulesBundle\Service\RuleProcessor
         arguments:
             - '@pim_enrich.query.product_and_product_model_query_builder_from_size_factory'
             - '@pcmt.service.rule_attribute_provider'
-            - '@pim_catalog.updater.property_copier'
             - '@pim_catalog.saver.product'
             - '@pim_catalog.saver.product_model'
             - '@pim_catalog.builder.product'
+            - '@pcmt.service.rule_processor_copier'
+
+
+    pcmt.service.rule_processor_copier:
+        class: PcmtRulesBundle\Service\RuleProcessorCopier
+        arguments:
+            - '@pim_catalog.updater.property_copier'
             - '@pim_catalog.repository.channel'
             - '@pim_catalog.repository.locale'
             - '@pim_enrich.filter.product_attribute_filter'
