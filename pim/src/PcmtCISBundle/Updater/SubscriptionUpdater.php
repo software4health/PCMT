@@ -69,7 +69,7 @@ class SubscriptionUpdater implements ObjectUpdaterInterface
             case 'data_recipients_g_l_n':
                 $subscription->setDataRecipientsGLN($data);
                 break;
-            case 'gtin':
+            case 'g_t_i_n':
                 $subscription->setGTIN($data);
                 break;
             case 'gpc_category_code':
