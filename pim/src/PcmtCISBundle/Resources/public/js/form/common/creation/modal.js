@@ -14,7 +14,8 @@ define(
         'pim/router',
         'oro/messenger',
         'pim/template/form/creation/modal',
-        'pim/common/property'
+        'pim/common/property',
+        'oro/mediator'
     ],
     function (
         $,
@@ -29,7 +30,8 @@ define(
         router,
         messenger,
         template,
-        propertyAccessor
+        propertyAccessor,
+        mediator
     ) {
         return BaseForm.extend({
             /**
@@ -40,6 +42,23 @@ define(
                 this.listenTo(this.getRoot(), 'pim_enrich:form:entity:bad_request', this.displayError.bind(this));
 
                 return BaseForm.prototype.configure.apply(this, arguments);
+            },
+
+            /**
+             * Confirm the modal and redirect to route after save
+             * @param  {Object} modal    The backbone view for the modal
+             * @param  {Promise} deferred Promise to resolve
+             */
+            confirmModal(modal, deferred) {
+                this.save().done(entity => {
+                    modal.close();
+                    modal.remove();
+                    deferred.resolve();
+
+                    messenger.notify('success', __(this.config.successMessage));
+
+                    mediator.trigger('datagrid:doRefresh:subscription-grid');
+                });
             },
 
             /**

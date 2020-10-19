@@ -39,8 +39,13 @@ class SubscriptionUpdaterTest extends TestCase
     /**
      * @dataProvider dataUpdate
      */
-    public function testUpdate(string $dataRecipientsGLN, string $dataSourcesGLN, string $gtin, string $GPCCategoryCode, string $countryCode): void
-    {
+    public function testUpdate(
+        string $dataRecipientsGLN,
+        string $dataSourcesGLN,
+        string $gtin,
+        string $GPCCategoryCode,
+        string $countryCode
+    ): void {
         $countryCodeObject = new CountryCode();
         $countryCodeObject->setCode($countryCode);
 
@@ -52,11 +57,11 @@ class SubscriptionUpdaterTest extends TestCase
 
         $subscription = (new SubscriptionBuilder())->build();
         $data = [
-            'data_recipients_g_l_n'        => $dataRecipientsGLN,
-            'data_sources_g_l_n'           => $dataSourcesGLN,
-            'gtin'                         => $gtin,
-            'gpc_category_code'            => $GPCCategoryCode,
-            'target_market_country_code'   => $countryCode,
+            'data_recipients_g_l_n'      => $dataRecipientsGLN,
+            'data_sources_g_l_n'         => $dataSourcesGLN,
+            'g_t_i_n'                    => $gtin,
+            'gpc_category_code'          => $GPCCategoryCode,
+            'target_market_country_code' => $countryCode,
         ];
         $updater = $this->getSubscriptionUpdaterInstance();
         $updater->update($subscription, $data);
@@ -69,8 +74,13 @@ class SubscriptionUpdaterTest extends TestCase
     /**
      * @dataProvider dataUpdate
      */
-    public function testUpdateWrongTargetMarketCountryCode(string $dataRecipientsGLN, string $dataSourcesGLN, string $gtin, string $GPCCategoryCode, string $countryCode): void
-    {
+    public function testUpdateWrongTargetMarketCountryCode(
+        string $dataRecipientsGLN,
+        string $dataSourcesGLN,
+        string $gtin,
+        string $GPCCategoryCode,
+        string $countryCode
+    ): void {
         $this->expectException(InvalidPropertyException::class);
         $this->referenceDataRepositoryMock
             ->expects($this->exactly(1))
@@ -80,11 +90,11 @@ class SubscriptionUpdaterTest extends TestCase
 
         $subscription = (new SubscriptionBuilder())->build();
         $data = [
-            'data_recipients_g_l_n'        => $dataRecipientsGLN,
-            'data_sources_g_l_n'           => $dataSourcesGLN,
-            'gtin'                         => $gtin,
-            'gpc_category_code'            => $GPCCategoryCode,
-            'target_market_country_code'   => $countryCode,
+            'data_recipients_g_l_n'      => $dataRecipientsGLN,
+            'data_sources_g_l_n'         => $dataSourcesGLN,
+            'g_t_i_n'                    => $gtin,
+            'gpc_category_code'          => $GPCCategoryCode,
+            'target_market_country_code' => $countryCode,
         ];
         $updater = $this->getSubscriptionUpdaterInstance();
         $updater->update($subscription, $data);
@@ -93,7 +103,13 @@ class SubscriptionUpdaterTest extends TestCase
     public function dataUpdate(): array
     {
         return [
-            ['gln1', 'gln2', 'gtin222', 'gpccategorycode22', 'countrycode234'],
+            [
+                'gln1',
+                'gln2',
+                'gtin222',
+                'gpccategorycode22',
+                'countrycode234',
+            ],
         ];
     }
 

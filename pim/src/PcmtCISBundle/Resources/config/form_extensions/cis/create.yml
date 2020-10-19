@@ -9,7 +9,6 @@ extensions:
       successMessage: pcmt.entity.subscription.flash.create.success
       editRoute: pcmt_cis_index
       postUrl: pcmt_cis_subscription_rest_create
-      routerKey: id
 
   pcmt-cis-create-data-recipients-gln:
     module: pim/form/common/fields/text
@@ -37,7 +36,7 @@ extensions:
     targetZone: fields
     position: 24
     config:
-      fieldName: gtin
+      fieldName: g_t_i_n
       label: pcmt.cis.create.gtin
 
   pcmt-cis-create-gpc-category-code:

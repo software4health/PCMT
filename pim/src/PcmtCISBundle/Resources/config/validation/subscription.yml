@@ -4,19 +4,17 @@ PcmtCISBundle\Entity\Subscription:
 
     properties:
         dataRecipientsGLN:
-            - NotBlank: ~
             - GreaterThanOrEqual: 0
             - Type:
-                  type: integer
-                  message: The value {{ value }} is not a valid {{ type }}.
+                  type: numeric
+                  message: pcmt.cis.create.error.not_valid_integer
         dataSourcesGLN:
-            - NotBlank: ~
             - GreaterThanOrEqual: 0
             - Type:
-                  type: integer
-                  message: The value {{ value }} is not a valid {{ type }}.
+                  type: numeric
+                  message: pcmt.cis.create.error.not_valid_integer
         GTIN:
             - GreaterThanOrEqual: 0
             - Type:
-                  type: integer
-                  message: The value {{ value }} is not a valid {{ type }}.
+                  type: numeric
+                  message: pcmt.cis.create.error.not_valid_integer
