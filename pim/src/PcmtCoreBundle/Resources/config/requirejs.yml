@@ -25,6 +25,11 @@ config:
 
         pcmt_connector_button: pcmtcore/js/common/button
 
+        # identifier field overwritten (for creating unique id button)
+        pim/text-field: pcmtcore/js/product/field/text-field-with-uuid-button
+
+        pcmt/template/form/button/create-unique-id: pcmtcore/templates/form/button/create-unique-id.html
+
     config:
         pim/controller-registry:
             controllers:
