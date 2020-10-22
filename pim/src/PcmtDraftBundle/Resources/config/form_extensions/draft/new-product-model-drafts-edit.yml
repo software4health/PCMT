@@ -26,6 +26,7 @@ extensions:
         config:
             identifier: code
             label: pim_common.code
+            create_button: on
 
     pcmt-product-model-create-family:
         module: pim/form/common/fields/simple-select-async

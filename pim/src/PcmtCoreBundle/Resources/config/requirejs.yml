@@ -15,6 +15,10 @@ config:
         pim/attribute-form-properties/concat-attribute-create: pcmtcore/js/attribute/form/properties/concat-attribute
         pim/template/form/properties/concat-attribute: pcmtcore/templates/form/properties/concat-attribute.html
 
+        pim/product-edit-form/creation/identifier: pcmtcore/js/product/form/creation/identifier
+        pim/form/common/creation/field: pcmtcore/js/form/creation/field-with-uuid-button
+        pim/template/form/creation/field: pcmtcore/templates/form/creation/field.html
+
         pcmt/reference-data/common/fetcher/country-code-fetcher: pcmtcore/js/common/fetcher/country-code-fetcher
 
         #concat attribute select dropdown - module

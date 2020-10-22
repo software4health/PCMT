@@ -23,6 +23,7 @@ extensions:
         position: 10
         config:
             identifier: identifier
+            create_button: on
 
     pcmt-product-create-family:
         module: pim/form/common/fields/simple-select-async
