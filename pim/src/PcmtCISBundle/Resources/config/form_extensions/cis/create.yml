@@ -45,7 +45,7 @@ extensions:
     targetZone: fields
     position: 26
     config:
-      fieldName: gpc_category_code
+      fieldName: g_p_c_category_code
       label: pcmt.cis.create.gpc_category_code
 
   pcmt-cis-create-target-market-country-code:

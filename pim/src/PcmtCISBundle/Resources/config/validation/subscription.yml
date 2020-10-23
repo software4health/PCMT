@@ -4,11 +4,13 @@ PcmtCISBundle\Entity\Subscription:
 
     properties:
         dataRecipientsGLN:
+            - NotBlank: ~
             - GreaterThanOrEqual: 0
             - Type:
                   type: numeric
                   message: pcmt.cis.create.error.not_valid_integer
         dataSourcesGLN:
+            - NotBlank: ~
             - GreaterThanOrEqual: 0
             - Type:
                   type: numeric
@@ -18,3 +20,9 @@ PcmtCISBundle\Entity\Subscription:
             - Type:
                   type: numeric
                   message: pcmt.cis.create.error.not_valid_integer
+        GPCCategoryCode:
+            - GreaterThanOrEqual: 0
+            - Type:
+                  type: numeric
+                  message: pcmt.cis.create.error.not_valid_integer
+

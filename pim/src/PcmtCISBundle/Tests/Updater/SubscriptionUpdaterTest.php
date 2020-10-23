@@ -60,7 +60,7 @@ class SubscriptionUpdaterTest extends TestCase
             'data_recipients_g_l_n'      => $dataRecipientsGLN,
             'data_sources_g_l_n'         => $dataSourcesGLN,
             'g_t_i_n'                    => $gtin,
-            'gpc_category_code'          => $GPCCategoryCode,
+            'g_p_c_category_code'        => $GPCCategoryCode,
             'target_market_country_code' => $countryCode,
         ];
         $updater = $this->getSubscriptionUpdaterInstance();
@@ -93,7 +93,7 @@ class SubscriptionUpdaterTest extends TestCase
             'data_recipients_g_l_n'      => $dataRecipientsGLN,
             'data_sources_g_l_n'         => $dataSourcesGLN,
             'g_t_i_n'                    => $gtin,
-            'gpc_category_code'          => $GPCCategoryCode,
+            'g_p_c_category_code'        => $GPCCategoryCode,
             'target_market_country_code' => $countryCode,
         ];
         $updater = $this->getSubscriptionUpdaterInstance();

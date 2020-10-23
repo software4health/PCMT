@@ -24,17 +24,17 @@ class Subscription
     /** @var ?DateTime */
     private $updated;
 
-    /** @var string */
-    private $dataRecipientsGLN = '';
+    /** @var ?string */
+    private $dataRecipientsGLN;
 
-    /** @var string */
-    private $dataSourcesGLN = '';
+    /** @var ?string */
+    private $dataSourcesGLN;
 
-    /** @var string */
-    private $GTIN = '';
+    /** @var ?string */
+    private $GTIN;
 
-    /** @var string */
-    private $GPCCategoryCode = '';
+    /** @var ?string */
+    private $GPCCategoryCode;
 
     /** @var ?CountryCode */
     private $targetMarketCountryCode;
@@ -51,17 +51,17 @@ class Subscription
 
     public function setDataRecipientsGLN(string $dataRecipientsGLN): void
     {
-        $this->dataRecipientsGLN = $dataRecipientsGLN;
+        $this->dataRecipientsGLN = $dataRecipientsGLN ?: null;
     }
 
     public function setDataSourcesGLN(string $dataSourcesGLN): void
     {
-        $this->dataSourcesGLN = $dataSourcesGLN;
+        $this->dataSourcesGLN = $dataSourcesGLN ?: null;
     }
 
     public function setGTIN(string $GTIN): void
     {
-        $this->GTIN = $GTIN;
+        $this->GTIN = $GTIN ?: null;
     }
 
     public function setGPCCategoryCode(string $GPCCategoryCode): void
@@ -84,22 +84,22 @@ class Subscription
         return $this->updated;
     }
 
-    public function getDataRecipientsGLN(): string
+    public function getDataRecipientsGLN(): ?string
     {
         return $this->dataRecipientsGLN;
     }
 
-    public function getDataSourcesGLN(): string
+    public function getDataSourcesGLN(): ?string
     {
         return $this->dataSourcesGLN;
     }
 
-    public function getGTIN(): string
+    public function getGTIN(): ?string
     {
         return $this->GTIN;
     }
 
-    public function getGPCCategoryCode(): string
+    public function getGPCCategoryCode(): ?string
     {
         return $this->GPCCategoryCode;
     }
