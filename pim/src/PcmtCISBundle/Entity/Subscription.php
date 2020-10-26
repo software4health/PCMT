@@ -66,7 +66,7 @@ class Subscription
 
     public function setGPCCategoryCode(string $GPCCategoryCode): void
     {
-        $this->GPCCategoryCode = $GPCCategoryCode;
+        $this->GPCCategoryCode = $GPCCategoryCode ?: null;
     }
 
     public function setTargetMarketCountryCode(?CountryCode $targetMarketCountryCode): void
