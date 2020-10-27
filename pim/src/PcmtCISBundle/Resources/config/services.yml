@@ -31,3 +31,14 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@event_dispatcher'
             - '%pcmt.cis.entity.subscription.class%'
+
+    pcmt.cis.file.service:
+        class: PcmtCISBundle\Service\CISFileService
+        arguments:
+            - '@filesystem'
+            - '@pcmt.cis.file.unique_identifier_generator'
+            - '%cis_file_path%'
+            - '%cis_file_source%'
+
+    pcmt.cis.file.unique_identifier_generator:
+        class: PcmtCISBundle\Service\CISFileUniqueIdentifierGenerator

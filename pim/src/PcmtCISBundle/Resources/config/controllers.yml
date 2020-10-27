@@ -9,4 +9,5 @@ services:
             - '@pcmt.cis.saver.subscription'
             - '@pim_enrich.normalizer.violation'
             - '@pcmt.cis.remover.subscription'
+            - '@pcmt.cis.file.service'
 

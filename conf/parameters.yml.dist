@@ -12,3 +12,5 @@ parameters:
     product_and_product_model_index_name: akeneo_pim_product_and_product_model
     index_hosts: 'elastic:changeme@elasticsearch:9200'
     e2Open_import_files_directory: '%kernel.project_dir%/src/PcmtCoreBundle/Resources/E2OpenImport/'
+    cis_file_source: 'RHSC'
+    cis_file_path: '%kernel.project_dir%/src/PcmtCISBundle/Resources/E2OpenCIS/'
