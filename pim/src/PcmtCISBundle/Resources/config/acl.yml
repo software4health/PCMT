@@ -6,5 +6,5 @@
 
 pcmt_permission_cis:
     type: action
-    label: pcmt.permission.cis.label
-    group_name: pcmt.permission.cis
+    label: pcmt.permission.cis
+    group_name: pcmt.permission.gdsn

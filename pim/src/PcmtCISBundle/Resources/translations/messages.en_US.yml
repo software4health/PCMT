@@ -1,6 +1,6 @@
 pcmt.permission:
-    cis: CIS
-    cis.label: Catalog Item Subscriptions
+    gdsn: GDSN Permissions
+    cis: Catalog Item Subscriptions
 
 pcmt:
     cis:
