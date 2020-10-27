@@ -29,6 +29,7 @@ define([
                 .then(function(identifier) {
                     var params = this.getRenderParams();
                     params.errors = this.getRoot().validationErrors;
+                    params.label = i18n.getLabel(identifier.labels, UserContext.get('catalogLocale'), identifier.code);
                     this.$el.html(this.template(params));
 
                     this.delegateEvents();
