@@ -32,6 +32,8 @@ config:
         # identifier field overwritten (for creating unique id button)
         pim/text-field: pcmtcore/js/product/field/text-field-with-uuid-button
 
+        pcmt/form/common/fields/values/text-with-uuid-button: pcmtcore/js/form/common/fields/values/text-with-uuid-button
+
         pcmt/form/common/fields/text-with-uuid-button: pcmtcore/js/form/common/fields/text-with-uuid-button
 
         pcmt/template/form/button/create-unique-id: pcmtcore/templates/form/button/create-unique-id.html

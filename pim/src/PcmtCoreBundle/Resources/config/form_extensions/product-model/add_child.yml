@@ -5,3 +5,8 @@ extensions:
         config:
             required: true
             label: pim_common.code
+
+    pim-product-model-add-child-field-text:
+        module: pcmt/form/common/fields/values/text-with-uuid-button
+        config:
+            required: true
