@@ -10,5 +10,6 @@ pcmt:
             gtin: FR GTIN
             gpc_category_code: FR GPC Category Code
             target_market_country_code: FR Target Market Country Code
+            created: FR Created at
 
 

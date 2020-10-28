@@ -10,5 +10,6 @@ pcmt:
             gtin: GTIN
             gpc_category_code: GPC Category Code
             target_market_country_code: Target Market Country Code
+            created: Created at
 
 
