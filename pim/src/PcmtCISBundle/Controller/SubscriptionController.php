@@ -93,7 +93,7 @@ class SubscriptionController
 
         $this->saver->save($subscription);
 
-        $this->fileService->createFile();
+        $this->fileService->createFile($subscription);
 
         return new JsonResponse($this->normalizer->normalize(
             $subscription,
