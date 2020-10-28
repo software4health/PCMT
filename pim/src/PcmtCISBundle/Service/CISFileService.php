@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace PcmtCISBundle\Service;
 
+use PcmtCISBundle\Entity\Subscription;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 
 class CISFileService
@@ -42,7 +44,7 @@ class CISFileService
         $this->path = $path;
     }
 
-    public function createFile(): void
+    public function createFile(Subscription $subscription): void
     {
         $this->prepareDirectory($this->path);
 
@@ -52,10 +54,47 @@ class CISFileService
 
         $uniqueIdentifier = $this->uniqueIdentifierGenerator->generate();
 
-        $this->filesystem->touch("{$this->path}work/{$this->source}_{$destination}_{$messageType}_{$version}_{$uniqueIdentifier}.txt");
+        $filepath = "{$this->path}work/{$this->source}_{$destination}_{$messageType}_{$version}_{$uniqueIdentifier}.txt";
+
+        $this->filesystem->touch($filepath);
+
+        if (!$this->filesystem->exists($filepath)) {
+            throw new FileNotFoundException('File has not been created!');
+        }
+
+        $this->filesystem->appendToFile($filepath, $this->getHeader() . PHP_EOL);
+        $this->filesystem->appendToFile($filepath, $this->getSubscriptionContent($subscription));
     }
 
-    private function prepareDirectory(string $path): void
+    private function getHeader(): string
+    {
+        $header = [
+            'documentCommand.type',
+            'dataRecipient',
+            'gtin',
+            'gpcCategoryCode',
+            'targetMarketCountryCode',
+            'dataSource',
+        ];
+
+        return implode("\t", $header);
+    }
+
+    private function getSubscriptionContent(Subscription $subscription): string
+    {
+        $row = [
+            'ADD',
+            $subscription->getDataRecipientsGLN(),
+            $subscription->getGTIN(),
+            $subscription->getGPCCategoryCode(),
+            $subscription->getTargetMarketCountryCode() ? $subscription->getTargetMarketCountryCode()->getCode() : '',
+            $subscription->getDataSourcesGLN(),
+        ];
+
+        return implode("\t", $row);
+    }
+
+    public function prepareDirectory(string $path): void
     {
         if (!$this->filesystem->exists($path)) {
             $this->filesystem->mkdir($path);
