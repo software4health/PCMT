@@ -4,5 +4,5 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
-pcmt.permission.cis:
+pcmt.permission.gdsn:
     order: 9
