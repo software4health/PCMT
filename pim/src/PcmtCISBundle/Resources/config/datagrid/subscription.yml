@@ -24,6 +24,10 @@ datagrid:
             target_market_country_code:
                 label: pcmt.cis.datagrid.target_market_country_code
                 type: field
+            created:
+                label: pcmt.cis.datagrid.created
+                type: datetime
+                frontend_type: datetime
         properties:
             id: ~
             delete_link:
