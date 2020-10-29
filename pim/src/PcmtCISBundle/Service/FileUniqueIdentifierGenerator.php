@@ -12,7 +12,7 @@ namespace PcmtCISBundle\Service;
 
 use Carbon\Carbon;
 
-class CISFileUniqueIdentifierGenerator
+class FileUniqueIdentifierGenerator
 {
     public function generate(): string
     {

@@ -11,17 +11,17 @@ declare(strict_types=1);
 namespace PcmtCISBundle\Tests\Service;
 
 use Carbon\Carbon;
-use PcmtCISBundle\Service\CISFileUniqueIdentifierGenerator;
+use PcmtCISBundle\Service\FileUniqueIdentifierGenerator;
 use PHPUnit\Framework\TestCase;
 
-class CISFileUniqueIdentifierGeneratorTest extends TestCase
+class FileUniqueIdentifierGeneratorTest extends TestCase
 {
-    /** @var CISFileUniqueIdentifierGenerator */
+    /** @var FileUniqueIdentifierGenerator */
     private $generator;
 
     protected function setUp(): void
     {
-        $this->generator = new CISFileUniqueIdentifierGenerator();
+        $this->generator = new FileUniqueIdentifierGenerator();
     }
 
     public function testGenerate(): void
