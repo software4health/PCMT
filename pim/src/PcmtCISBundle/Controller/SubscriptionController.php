@@ -15,7 +15,7 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use PcmtCISBundle\Entity\Subscription;
-use PcmtCISBundle\Service\CISFileService;
+use PcmtCISBundle\Service\FileService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +43,7 @@ class SubscriptionController
     /** @var RemoverInterface */
     private $remover;
 
-    /** @var CISFileService */
+    /** @var FileService */
     private $fileService;
 
     public function __construct(
@@ -53,7 +53,7 @@ class SubscriptionController
         SaverInterface $saver,
         NormalizerInterface $constraintViolationNormalizer,
         RemoverInterface $remover,
-        CISFileService $fileService
+        FileService $fileService
     ) {
         $this->normalizer = $normalizer;
         $this->updater = $updater;
@@ -93,7 +93,7 @@ class SubscriptionController
 
         $this->saver->save($subscription);
 
-        $this->fileService->createFile($subscription);
+        $this->fileService->createFileCommandAdd($subscription);
 
         return new JsonResponse($this->normalizer->normalize(
             $subscription,
@@ -109,6 +109,8 @@ class SubscriptionController
         if (!$request->isXmlHttpRequest()) {
             return new RedirectResponse('/');
         }
+
+        $this->fileService->createFileCommandDelete($subscription);
 
         $this->remover->remove($subscription);
 

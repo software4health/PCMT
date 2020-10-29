@@ -33,12 +33,34 @@ services:
             - '%pcmt.cis.entity.subscription.class%'
 
     pcmt.cis.file.service:
-        class: PcmtCISBundle\Service\CISFileService
+        class: PcmtCISBundle\Service\FileService
+        arguments:
+            - '@pcmt.cis.service.file_command'
+
+
+    pcmt.cis.service.file_command:
+        class: PcmtCISBundle\Service\FileCommandService
         arguments:
             - '@filesystem'
-            - '@pcmt.cis.file.unique_identifier_generator'
+            - '@pcmt.cis.service.file_content'
+            - '@pcmt.cis.service.file_name'
+            - '@pcmt.cis.service.directory'
+
+    pcmt.cis.service.directory:
+        class: PcmtCISBundle\Service\DirectoryService
+        arguments:
+            - '@filesystem'
             - '%cis_file_path%'
+
+    pcmt.cis.service.file_name:
+        class: PcmtCISBundle\Service\FileNameService
+        arguments:
+            - '@pcmt.cis.service.file_unique_identifier_generator'
             - '%cis_file_source%'
 
-    pcmt.cis.file.unique_identifier_generator:
-        class: PcmtCISBundle\Service\CISFileUniqueIdentifierGenerator
+    pcmt.cis.service.file_unique_identifier_generator:
+        class: PcmtCISBundle\Service\FileUniqueIdentifierGenerator
+
+    pcmt.cis.service.file_content:
+        class: PcmtCISBundle\Service\FileContentService
+
