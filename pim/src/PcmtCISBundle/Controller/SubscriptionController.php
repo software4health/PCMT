@@ -104,6 +104,26 @@ class SubscriptionController
     /**
      * @AclAncestor("pcmt_permission_cis")
      */
+    public function reSubmitAction(Subscription $subscription): Response
+    {
+        try {
+            $this->fileService->createFileCommandAdd($subscription);
+        } catch (\Throwable $e) {
+            return new JsonResponse([
+                'successful' => false,
+                'message'    => 'pcmt.entity.subscription.flash.resubmit.fail',
+            ]);
+        }
+
+        return new JsonResponse([
+            'successful' => true,
+            'message'    => 'pcmt.entity.subscription.flash.resubmit.success',
+        ]);
+    }
+
+    /**
+     * @AclAncestor("pcmt_permission_cis")
+     */
     public function deleteAction(Subscription $subscription, Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
