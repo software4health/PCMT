@@ -314,4 +314,29 @@ class DraftApproverTest extends TestCase
 
         $this->approver->approve($draftToApprove);
     }
+
+    public function testApproveNewObjectDraftThrowsException(): void
+    {
+        $draftToApprove = (new NewProductDraftBuilder())->build();
+
+        $this->creatorMock
+            ->expects($this->once())
+            ->method('getObjectToSave')
+            ->willReturn(null);
+
+        $this->expectException(\Throwable::class);
+        $this->expectExceptionMessage('pcmt.entity.draft.error.no_corresponding_object');
+
+        $this->saverMock
+            ->expects($this->never())
+            ->method('save');
+        $this->entityManagerMock
+            ->expects($this->never())
+            ->method('persist');
+        $this->entityManagerMock
+            ->expects($this->never())
+            ->method('flush');
+
+        $this->approver->approve($draftToApprove);
+    }
 }

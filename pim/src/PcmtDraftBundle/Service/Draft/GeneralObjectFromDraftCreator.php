@@ -12,11 +12,13 @@ namespace PcmtDraftBundle\Service\Draft;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithAssociationsInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
+use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyException;
 use Doctrine\Common\Collections\ArrayCollection;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\NewObjectDraftInterface;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
+use Psr\Log\LoggerInterface;
 
 class GeneralObjectFromDraftCreator
 {
@@ -26,17 +28,30 @@ class GeneralObjectFromDraftCreator
     /** @var ObjectFromDraftCreatorInterface */
     private $productModelFromDraftCreator;
 
-    public function __construct(ObjectFromDraftCreatorInterface $productFromDraftCreator, ObjectFromDraftCreatorInterface $productModelFromDraftCreator)
-    {
+    /** @var LoggerInterface */
+    private $logger;
+
+    public function __construct(
+        ObjectFromDraftCreatorInterface $productFromDraftCreator,
+        ObjectFromDraftCreatorInterface $productModelFromDraftCreator,
+        LoggerInterface $logger
+    ) {
         $this->productFromDraftCreator = $productFromDraftCreator;
         $this->productModelFromDraftCreator = $productModelFromDraftCreator;
+        $this->logger = $logger;
     }
 
     public function getObjectToSave(DraftInterface $draft): ?EntityWithAssociationsInterface
     {
         $creator = $this->getCreator($draft);
         if ($draft instanceof NewObjectDraftInterface) {
-            return $creator->createNewObject($draft);
+            try {
+                return $creator->createNewObject($draft);
+            } catch (InvalidPropertyException $e) {
+                $this->logger->error('The object for draft could not be created: '. $e->getMessage());
+
+                return null;
+            }
         }
 
         return $creator->createForSaveForDraftForExistingObject($draft);
@@ -45,7 +60,13 @@ class GeneralObjectFromDraftCreator
     public function getObjectToCompare(DraftInterface $draft): ?EntityWithAssociationsInterface
     {
         if ($draft instanceof NewObjectDraftInterface) {
-            return $this->getCreator($draft)->createNewObject($draft);
+            try {
+                return $this->getCreator($draft)->createNewObject($draft);
+            } catch (InvalidPropertyException $e) {
+                $this->logger->error('The object for draft could not be created: '. $e->getMessage());
+
+                return null;
+            }
         }
 
         return $this->createForComparingForDraftForExistingObject($draft);

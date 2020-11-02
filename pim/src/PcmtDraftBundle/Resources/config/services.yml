@@ -80,6 +80,7 @@ services:
         arguments:
             - '@pcmt.service.product_from_draft_creator'
             - '@pcmt.service.product_model_from_draft_creator'
+            - '@logger'
 
     pcmt.service.attribute_change:
         class: PcmtDraftBundle\Service\AttributeChange\AttributeChangeService
