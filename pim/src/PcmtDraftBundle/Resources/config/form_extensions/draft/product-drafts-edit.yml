@@ -193,6 +193,13 @@ extensions:
             aclAddAssociations: pim_enrich_associations_edit
             datagridName: 'association-product-draft-grid'
 
+    pcmt-product-drafts-edit-form-comments:
+        module: pcmt/product/form/comments
+        parent: pcmt-product-drafts-edit-form-column-tabs
+        targetZone: container
+        aclResourceId: pim_enrich_product_comment
+        position: 140
+
     pcmt-product-drafts-edit-form-attribute-group-selector:
         module: pcmt/draft/form/attributes/attribute-group-selector
         parent: pcmt-product-drafts-edit-form-attributes

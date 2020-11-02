@@ -61,6 +61,7 @@ config:
         pcmt/product/form/meta/status-switcher-disabled: pcmtdraft/js/product/form/meta/status-switcher-disabled
         pcmt/product/form/label: pcmtdraft/js/product/form/label
         pcmt/product/form/variant-navigation: pcmtdraft/js/product/form/variant-navigation
+        pcmt/product/form/comments: pcmtdraft/js/product/form/comments
 
         pcmt/product-model/edit/form/save: pcmtdraft/js/product-model/form/save
 
