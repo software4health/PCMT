@@ -14,6 +14,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithAssociationsInterfac
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\WriteValueCollection;
+use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyException;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
@@ -21,36 +22,67 @@ use PcmtDraftBundle\Entity\NewProductDraft;
 use PcmtDraftBundle\Entity\NewProductModelDraft;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use PcmtDraftBundle\Service\Draft\ObjectFromDraftCreatorInterface;
+use PcmtDraftBundle\Tests\TestDataBuilder\NewProductDraftBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class GeneralObjectFromDraftCreatorTest extends TestCase
 {
-    /** @var ObjectFromDraftCreatorInterface */
-    private $productCreator;
+    /** @var ObjectFromDraftCreatorInterface|MockObject */
+    private $productCreatorMock;
 
-    /** @var ObjectFromDraftCreatorInterface */
-    private $productModelCreator;
+    /** @var ObjectFromDraftCreatorInterface|MockObject */
+    private $productModelCreatorMock;
+
+    /** @var LoggerInterface|MockObject */
+    private $loggerMock;
 
     protected function setUp(): void
     {
-        $this->productCreator = $this->createMock(ObjectFromDraftCreatorInterface::class);
-        $this->productModelCreator = $this->createMock(ObjectFromDraftCreatorInterface::class);
+        $this->productCreatorMock = $this->createMock(ObjectFromDraftCreatorInterface::class);
+        $this->productModelCreatorMock = $this->createMock(ObjectFromDraftCreatorInterface::class);
+        $this->loggerMock = $this->createMock(LoggerInterface::class);
+    }
+
+    public function testGetCreatorThrowsException(): void
+    {
+        $this->expectException(\Throwable::class);
+        $service = $this->getCreatorInstance();
+        $draft = $this->createMock(DraftInterface::class);
+        $service->getObjectToSave($draft);
     }
 
     public function testGetObjectToSaveThrowsException(): void
     {
-        $this->expectException(\Throwable::class);
-        $service = new GeneralObjectFromDraftCreator($this->productCreator, $this->productModelCreator);
-        $draft = $this->createMock(DraftInterface::class);
-        $service->getObjectToSave($draft);
+        $this->productCreatorMock->expects($this->once())
+            ->method('createNewObject')
+            ->willThrowException(new InvalidPropertyException('', '', ''));
+        $this->loggerMock->expects($this->once())->method('error');
+        $service = $this->getCreatorInstance();
+        $draft = (new NewProductDraftBuilder())->build();
+        $result = $service->getObjectToSave($draft);
+        $this->assertNull($result);
+    }
+
+    public function testGetObjectToCompareThrowsException(): void
+    {
+        $this->productCreatorMock->expects($this->once())
+            ->method('createNewObject')
+            ->willThrowException(new InvalidPropertyException('', '', ''));
+        $this->loggerMock->expects($this->once())->method('error');
+        $service = $this->getCreatorInstance();
+        $draft = (new NewProductDraftBuilder())->build();
+        $result = $service->getObjectToCompare($draft);
+        $this->assertNull($result);
     }
 
     public function testGetObjectToSaveNewProductDraft(): void
     {
         $product = $this->createMock(EntityWithAssociationsInterface::class);
         $draft = $this->createMock(NewProductDraft::class);
-        $this->productCreator->expects($this->once())->method('createNewObject')->willReturn($product);
-        $service = new GeneralObjectFromDraftCreator($this->productCreator, $this->productModelCreator);
+        $this->productCreatorMock->expects($this->once())->method('createNewObject')->willReturn($product);
+        $service = $this->getCreatorInstance();
         $this->assertSame($product, $service->getObjectToSave($draft));
     }
 
@@ -61,8 +93,8 @@ class GeneralObjectFromDraftCreatorTest extends TestCase
         $collection->add($this->createMock(ValueInterface::class));
         $productMock->method('getValuesForVariation')->willReturn($collection);
         $draft = $this->createMock(ExistingProductDraft::class);
-        $this->productCreator->expects($this->once())->method('createForSaveForDraftForExistingObject')->willReturn($productMock);
-        $service = new GeneralObjectFromDraftCreator($this->productCreator, $this->productModelCreator);
+        $this->productCreatorMock->expects($this->once())->method('createForSaveForDraftForExistingObject')->willReturn($productMock);
+        $service = $this->getCreatorInstance();
         $this->assertSame($productMock, $service->getObjectToSave($draft));
     }
 
@@ -70,8 +102,8 @@ class GeneralObjectFromDraftCreatorTest extends TestCase
     {
         $object = $this->createMock(EntityWithAssociationsInterface::class);
         $draft = $this->createMock(NewProductModelDraft::class);
-        $this->productModelCreator->expects($this->once())->method('createNewObject')->willReturn($object);
-        $service = new GeneralObjectFromDraftCreator($this->productCreator, $this->productModelCreator);
+        $this->productModelCreatorMock->expects($this->once())->method('createNewObject')->willReturn($object);
+        $service = $this->getCreatorInstance();
         $this->assertSame($object, $service->getObjectToCompare($draft));
     }
 
@@ -79,9 +111,9 @@ class GeneralObjectFromDraftCreatorTest extends TestCase
     {
         $draft = $this->createMock(ExistingProductModelDraft::class);
         $draft->method('getObject')->willReturn(null);
-        $service = new GeneralObjectFromDraftCreator($this->productCreator, $this->productModelCreator);
-        $this->productModelCreator->expects($this->never())->method('updateObject');
-        $this->productCreator->expects($this->never())->method('updateObject');
+        $service = $this->getCreatorInstance();
+        $this->productModelCreatorMock->expects($this->never())->method('updateObject');
+        $this->productCreatorMock->expects($this->never())->method('updateObject');
         $this->assertNull($service->getObjectToCompare($draft));
     }
 
@@ -98,9 +130,18 @@ class GeneralObjectFromDraftCreatorTest extends TestCase
                 'xxx' => 1,
             ],
         ]);
-        $service = new GeneralObjectFromDraftCreator($this->productCreator, $this->productModelCreator);
-        $this->productModelCreator->expects($this->once())->method('updateObject');
-        $this->productCreator->expects($this->never())->method('updateObject');
+        $service = $this->getCreatorInstance();
+        $this->productModelCreatorMock->expects($this->once())->method('updateObject');
+        $this->productCreatorMock->expects($this->never())->method('updateObject');
         $this->assertInstanceOf(EntityWithAssociationsInterface::class, $service->getObjectToCompare($draft));
+    }
+
+    private function getCreatorInstance(): GeneralObjectFromDraftCreator
+    {
+        return new GeneralObjectFromDraftCreator(
+            $this->productCreatorMock,
+            $this->productModelCreatorMock,
+            $this->loggerMock
+        );
     }
 }
