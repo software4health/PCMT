@@ -35,7 +35,20 @@ datagrid:
                 route: pcmt_cis_subscription_rest_delete
                 params:
                     - id
+            resubmit_link:
+                type: url
+                route: pcmt_cis_subscription_rest_resubmit
+                params:
+                    - id
+
         actions:
+            resubmit:
+                launcherOptions:
+                    className: AknIconButton AknIconButton--small AknIconButton--play
+                type: ajax
+                label: 'Re-submit'
+                link: resubmit_link
+                acl_resource: pcmt_permission_cis
             delete:
                 launcherOptions:
                     className: AknIconButton AknIconButton--small AknIconButton--trash
