@@ -11,5 +11,6 @@ pcmt:
             gpc_category_code: GPC Category Code
             target_market_country_code: Target Market Country Code
             created: Created at
+            button_resubmit: Re-submit
 
 
