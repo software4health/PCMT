@@ -46,7 +46,7 @@ datagrid:
                 launcherOptions:
                     className: AknIconButton AknIconButton--small AknIconButton--play
                 type: ajax
-                label: 'Re-submit'
+                label: pcmt.cis.datagrid.button_resubmit
                 link: resubmit_link
                 acl_resource: pcmt_permission_cis
             delete:
