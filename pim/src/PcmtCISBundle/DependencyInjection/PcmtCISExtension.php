@@ -22,6 +22,7 @@ class PcmtCISExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('controllers.yml');
         $loader->load('data_sources.yml');
+        $loader->load('formatters.yml');
         $loader->load('savers.yml');
         $loader->load('services.yml');
         $loader->load('updaters.yml');
