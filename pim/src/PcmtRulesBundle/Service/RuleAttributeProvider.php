@@ -30,6 +30,7 @@ class RuleAttributeProvider
         return [
             AttributeTypes::TEXT,
             AttributeTypes::OPTION_SIMPLE_SELECT,
+            AttributeTypes::REFERENCE_DATA_SIMPLE_SELECT,
         ];
     }
 
