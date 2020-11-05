@@ -31,6 +31,7 @@ pcmt:
       target_market_country_code: FR Target Market Country Code
       error:
         required_field: "FR At least one of the fields: GTIN, GPC Category Code or Target Market Country Code should be filled."
+        unique_values: "FR Values of CIS should be unique."
 
 pim_enrich:
   entity:

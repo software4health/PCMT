@@ -25,6 +25,12 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: pcmt_cis_required_field_constraint_validator }
 
+    pcmt.cis.constraint.unique_values_constraint_validator:
+        class: PcmtCISBundle\Validator\UniqueValuesConstraintValidator
+        autowire: true
+        tags:
+            - { name: validator.constraint_validator, alias: pcmt_cis_unique_values_constraint_validator }
+
     pcmt.cis.remover.subscription:
         class: '%pim_catalog.remover.base.class%'
         arguments:
