@@ -16,6 +16,6 @@ class FileUniqueIdentifierGenerator
 {
     public function generate(): string
     {
-        return (new Carbon())->toIso8601String();
+        return (new Carbon())->format('Ymd\THis\Z');
     }
 }

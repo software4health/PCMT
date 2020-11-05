@@ -30,6 +30,6 @@ class FileUniqueIdentifierGeneratorTest extends TestCase
 
         Carbon::setTestNow($date);
 
-        $this->assertEquals('2020-10-20T10:15:51+00:00', $this->generator->generate());
+        $this->assertEquals('20201020T101551Z', $this->generator->generate());
     }
 }
