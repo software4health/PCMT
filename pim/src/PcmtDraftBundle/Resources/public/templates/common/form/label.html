@@ -7,3 +7,7 @@
 <% if (label !== '') { %>
 <span style="font-size: 15px;"><i class="AknIconButton icon-info-sign"></i> <%- label %></span>
 <% } %>
+<% if (typeof goToBaseProductLabel !== 'undefined' && goToBaseProductLabel) { %>
+<br>
+<span style="font-size: 15px;"><%= goToBaseProductLabel %></span>
+<% } %>

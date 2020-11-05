@@ -8,12 +8,14 @@ define (
     [
         'oro/translator',
         'pim/form/common/label',
-        'pcmt/common/template/form/label'
+        'pcmt/common/template/form/label',
+        'pim/router'
     ],
     function (
         __,
         Label,
-        template
+        template,
+        Router
     ) {
         return Label.extend({
             tagName: 'div',
@@ -32,6 +34,17 @@ define (
                 Label.prototype.initialize.apply(this, arguments);
             },
 
+            getLink() {
+                let data  = this.getFormData().product.meta;
+
+                return data ? Router.generate('pim_enrich_' + data.model_type + '_edit', { id: data.id }) : null;
+            },
+
+            getGoToBaseProductLabel() {
+                var url = this.getLink();
+                return url ? __('pcmt_core.drafts_editing.labels.go_to_base_product').replace('{{url}}', url) : null;
+            },
+
             render: function () {
                 let label = '';
 
@@ -44,7 +57,8 @@ define (
                 }
 
                 this.$el.empty().html(this.template({
-                    label: label
+                    label: label,
+                    goToBaseProductLabel: this.getGoToBaseProductLabel(),
                 }));
 
                 return this;

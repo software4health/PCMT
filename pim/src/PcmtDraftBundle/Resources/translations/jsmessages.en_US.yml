@@ -31,6 +31,7 @@ pcmt_core:
             created_product_draft: You are editing the draft of a product
             created_product_model_draft: You are editing the draft of a product model
             updated_draft: This draft was last edited at
+            go_to_base_product: Go to <a href="#{{url}}">base product</a>
         button:
             save_draft: Save draft
     editing:
