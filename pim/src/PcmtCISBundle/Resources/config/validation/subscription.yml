@@ -1,6 +1,7 @@
 PcmtCISBundle\Entity\Subscription:
     constraints:
         - PcmtCISBundle\Constraint\RequiredFieldConstraint: ~
+        - PcmtCISBundle\Constraint\UniqueValuesConstraint: ~
 
     properties:
         dataRecipientsGLN:
