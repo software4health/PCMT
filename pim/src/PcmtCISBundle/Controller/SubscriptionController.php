@@ -93,7 +93,19 @@ class SubscriptionController
 
         $this->saver->save($subscription);
 
-        $this->fileService->createFileCommandAdd($subscription);
+        try {
+            $this->fileService->createFileCommandAdd($subscription);
+        } catch (\Throwable $e) {
+            return new JsonResponse(
+                [
+                    'values' => [[
+                        'global'  => true,
+                        'message' => 'pcmt.entity.subscription.flash.create.fail',
+                    ]],
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
 
         return new JsonResponse($this->normalizer->normalize(
             $subscription,

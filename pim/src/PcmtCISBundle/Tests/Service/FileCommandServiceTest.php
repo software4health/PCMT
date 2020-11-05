@@ -14,6 +14,7 @@ use PcmtCISBundle\Service\DirectoryService;
 use PcmtCISBundle\Service\FileCommandService;
 use PcmtCISBundle\Service\FileContentService;
 use PcmtCISBundle\Service\FileNameService;
+use PcmtCISBundle\Service\FileSearchService;
 use PcmtCISBundle\Tests\TestDataBuilder\SubscriptionBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -34,6 +35,9 @@ class FileCommandServiceTest extends TestCase
     /** @var DirectoryService|MockObject */
     private $directoryServiceMock;
 
+    /** @var FileSearchService|MockObject */
+    private $fileSearchServiceMock;
+
     /** @var string */
     private $commandType = 'EXAMPLE_TYPE';
 
@@ -43,6 +47,7 @@ class FileCommandServiceTest extends TestCase
         $this->fileContentServiceMock = $this->createMock(FileContentService::class);
         $this->fileNameServiceMock = $this->createMock(FileNameService::class);
         $this->directoryServiceMock = $this->createMock(DirectoryService::class);
+        $this->fileSearchServiceMock = $this->createMock(FileSearchService::class);
     }
 
     public function testCreateFile(): void
@@ -109,13 +114,37 @@ class FileCommandServiceTest extends TestCase
         $service->createFile($subscription, $this->commandType);
     }
 
+    public function testCreateFileWhenPreviousOneHasNotBeenYetUploaded(): void
+    {
+        $subscription = (new SubscriptionBuilder())->build();
+
+        $service = $this->getFileServiceInstance();
+
+        $this->fileSearchServiceMock
+            ->method('isFileWaitingForUploadByContent')
+            ->willReturn(true);
+
+        $this->directoryServiceMock
+            ->expects($this->once())
+            ->method('prepare');
+
+        $this->directoryServiceMock
+            ->expects($this->never())
+            ->method('getWorkDirectory');
+
+        $this->expectException(\RuntimeException::class);
+
+        $service->createFile($subscription, $this->commandType);
+    }
+
     private function getFileServiceInstance(): FileCommandService
     {
         return new FileCommandService(
             $this->filesystemMock,
             $this->fileContentServiceMock,
             $this->fileNameServiceMock,
-            $this->directoryServiceMock
+            $this->directoryServiceMock,
+            $this->fileSearchServiceMock
         );
     }
 }

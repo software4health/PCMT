@@ -28,21 +28,31 @@ class FileCommandService
     /** @var DirectoryService */
     private $directoryService;
 
+    /** @var FileSearchService */
+    private $fileSearchService;
+
     public function __construct(
         Filesystem $filesystem,
         FileContentService $fileContentService,
         FileNameService $fileNameService,
-        DirectoryService $directoryService
+        DirectoryService $directoryService,
+        FileSearchService $fileSearchService
     ) {
         $this->filesystem = $filesystem;
         $this->fileContentService = $fileContentService;
         $this->fileNameService = $fileNameService;
         $this->directoryService = $directoryService;
+        $this->fileSearchService = $fileSearchService;
     }
 
     public function createFile(Subscription $subscription, string $documentCommandType): void
     {
         $this->directoryService->prepare();
+        $content = $this->fileContentService->getSubscriptionContent($subscription, $documentCommandType);
+
+        if ($this->fileSearchService->isFileWaitingForUploadByContent($content)) {
+            throw new \RuntimeException('There is existing file which is waiting for upload.');
+        }
 
         $filepath = $this->directoryService->getWorkDirectory() . $this->fileNameService->get();
 
@@ -55,7 +65,7 @@ class FileCommandService
         $this->filesystem->appendToFile($filepath, $this->fileContentService->getHeader() . PHP_EOL);
         $this->filesystem->appendToFile(
             $filepath,
-            $this->fileContentService->getSubscriptionContent($subscription, $documentCommandType)
+            $content
         );
     }
 }

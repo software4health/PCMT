@@ -43,7 +43,6 @@ services:
         arguments:
             - '@pcmt.cis.service.file_command'
 
-
     pcmt.cis.service.file_command:
         class: PcmtCISBundle\Service\FileCommandService
         arguments:
@@ -51,6 +50,7 @@ services:
             - '@pcmt.cis.service.file_content'
             - '@pcmt.cis.service.file_name'
             - '@pcmt.cis.service.directory'
+            - '@pcmt.cis.service.file_search'
 
     pcmt.cis.service.directory:
         class: PcmtCISBundle\Service\DirectoryService
@@ -69,4 +69,14 @@ services:
 
     pcmt.cis.service.file_content:
         class: PcmtCISBundle\Service\FileContentService
+
+    pcmt.cis.service.finder:
+        class: Symfony\Component\Finder\Finder
+        public: false
+
+    pcmt.cis.service.file_search:
+        class: PcmtCISBundle\Service\FileSearchService
+        arguments:
+            - '@pcmt.cis.service.finder'
+            - '%cis_file_path%'
 

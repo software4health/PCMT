@@ -17,6 +17,7 @@ pcmt:
       flash:
         create:
           success: FR A new subscription successfully created
+          fail: FR A new subscription has not been created.
         resubmit:
           success: FR Subscription file has been re-submitted.
           fail: FR Subscription file re-submitting failed.
