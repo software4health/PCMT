@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace PcmtCISBundle\Service;
 
 use PcmtCISBundle\Entity\Subscription;
+use PcmtCISBundle\Exception\FileIsWaitingForUploadException;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -51,7 +52,7 @@ class FileCommandService
         $content = $this->fileContentService->getSubscriptionContent($subscription, $documentCommandType);
 
         if ($this->fileSearchService->isFileWaitingForUploadByContent($content)) {
-            throw new \RuntimeException('There is existing file which is waiting for upload.');
+            throw new FileIsWaitingForUploadException('There is existing file which is waiting for upload.');
         }
 
         $filepath = $this->directoryService->getWorkDirectory() . $this->fileNameService->get();

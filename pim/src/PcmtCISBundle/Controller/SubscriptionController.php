@@ -15,6 +15,7 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use PcmtCISBundle\Entity\Subscription;
+use PcmtCISBundle\Exception\FileIsWaitingForUploadException;
 use PcmtCISBundle\Service\FileService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -95,22 +96,34 @@ class SubscriptionController
 
         try {
             $this->fileService->createFileCommandAdd($subscription);
+        } catch (FileIsWaitingForUploadException $e) {
+            return new JsonResponse(
+                [
+                    'successful' => false,
+                    'message'    => 'pcmt.entity.subscription.flash.create.file_is_waiting_for_upload',
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
         } catch (\Throwable $e) {
             return new JsonResponse(
                 [
-                    'values' => [[
-                        'global'  => true,
-                        'message' => 'pcmt.entity.subscription.flash.create.fail',
-                    ]],
+                    'values' => [
+                        [
+                            'global'  => true,
+                            'message' => 'pcmt.entity.subscription.flash.create.fail',
+                        ],
+                    ],
                 ],
                 Response::HTTP_BAD_REQUEST
             );
         }
 
-        return new JsonResponse($this->normalizer->normalize(
-            $subscription,
-            'internal_api'
-        ));
+        return new JsonResponse(
+            $this->normalizer->normalize(
+                $subscription,
+                'internal_api'
+            )
+        );
     }
 
     /**
@@ -120,17 +133,28 @@ class SubscriptionController
     {
         try {
             $this->fileService->createFileCommandAdd($subscription);
+        } catch (FileIsWaitingForUploadException $e) {
+            return new JsonResponse(
+                [
+                    'successful' => false,
+                    'message'    => 'pcmt.entity.subscription.flash.resubmit.file_is_waiting_for_upload',
+                ]
+            );
         } catch (\Throwable $e) {
-            return new JsonResponse([
-                'successful' => false,
-                'message'    => 'pcmt.entity.subscription.flash.resubmit.fail',
-            ]);
+            return new JsonResponse(
+                [
+                    'successful' => false,
+                    'message'    => 'pcmt.entity.subscription.flash.resubmit.fail',
+                ]
+            );
         }
 
-        return new JsonResponse([
-            'successful' => true,
-            'message'    => 'pcmt.entity.subscription.flash.resubmit.success',
-        ]);
+        return new JsonResponse(
+            [
+                'successful' => true,
+                'message'    => 'pcmt.entity.subscription.flash.resubmit.success',
+            ]
+        );
     }
 
     /**
