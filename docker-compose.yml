@@ -17,6 +17,12 @@ services:
       - type: volume
         source: pim
         target: '/srv/pim'
+      - type: volume
+        source: file_storage
+        target: '/srv/pim/app/file_storage'
+      - type: volume
+        source: uploads
+        target: '/srv/pim/app/uploads'
     user: 'docker'
     working_dir: '/srv/pim'
     secrets:
@@ -97,6 +103,10 @@ volumes:
   esdata:
     driver: local
   pim:
+    driver: local
+  file_storage:
+    driver: local
+  uploads:
     driver: local
 
 secrets:

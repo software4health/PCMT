@@ -45,7 +45,10 @@ ADD --chown=docker:docker docker/pim/pcmtMigrate.sh /srv/pim/
 
 RUN src/cleanIfRelease.sh ${PCMT_SEMVER} && \
     php -d memory_limit=3G /usr/local/bin/composer install && \
-    rm -rf var/cache/*
+    rm -rf var/cache/* && \
+    mkdir -p /srv/pim/app/file_storage/catalog && \
+    mkdir -p /srv/pim/app/uploads/product /srv/pim/app/archive && \
+    mkdir -p /tmp/pim/file_storage /tmp/pim/upload_tmp_dir
 CMD /srv/pim/start.sh
 
 #--- Node ---
@@ -70,3 +73,6 @@ COPY --from=node --chown=root:www-data /srv/pim/docker/akeneo.conf /usr/local/ap
 # pim
 FROM pim-build as pim
 COPY --from=node --chown=docker:docker /srv/pim /srv/pim
+VOLUME /srv/pim
+VOLUME /srv/pim/app/file_storage
+VOLUME /srv/pim/app/uploads

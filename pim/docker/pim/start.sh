@@ -29,9 +29,7 @@ shopt -s nocasematch
 if [ "production" != "$profile" ]; then
     bin/console --env=prod pim:install --force --symlink
 else
-    bin/console --env=prod pim:installer:prepare-required-directories
     bin/console --env=prod pim:installer:check-requirements
-    bin/console --env=prod pim:installer:assets --symlink
 fi
 
 ./pcmtMigrate.sh
