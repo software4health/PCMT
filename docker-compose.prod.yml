@@ -23,7 +23,19 @@ services:
     secrets:
       - mysql-creds
     volumes:
-      - mysql-backup:/backup
+      - backup:/backup
+    networks:
+      - 'akeneo'
+
+  asset-backup:
+    image: pcmt/asset-backup
+    restart: unless-stopped
+    environment:
+      CRON_SCHEDULE: '0 3 * * *'
+    volumes:
+      - backup:/backup
+      - uploads:/pim-assets/uploads
+      - file_storage:/pim-assets/file_storage
     networks:
       - 'akeneo'
 
@@ -35,7 +47,7 @@ services:
       LOCAL_DIR_TO_SYNC_OUT: '/backup'
       S3_BUCKET: "${PCMT_S3_BUCKET}"
     volumes:
-      - mysql-backup:/backup
+      - backup:/backup
     secrets:
       - s3-creds
 
@@ -64,7 +76,7 @@ services:
       - scalyr-creds
           
 volumes:
-  mysql-backup:
+  backup:
     driver: local
   ftp-get:
     driver: local

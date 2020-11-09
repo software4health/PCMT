@@ -119,6 +119,10 @@ ansible:
 cron:
 	cd deploy/cron && docker build -t pcmt/cron .
 
+.PHONY: asset-backup
+asset-backup:
+	cd deploy/asset-backup && docker build -t pcmt/asset-backup .
+
 .PHONY: mysql-backup
 mysql-backup: cron
 	cd deploy/mysql-backup && docker build -t pcmt/mysql-backup .
