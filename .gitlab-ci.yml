@@ -170,6 +170,22 @@ mysql-backup docker build:
     - docker push pcmt/cron:latest
     - docker push pcmt/mysql-backup:latest
 
+asset-backup docker build:
+  stage: build
+  only:
+    refs:
+      - master@pcmt/pcmt
+    changes:
+      - deploy/asset-backup/**/*
+      - deploy/cron/**/*
+  except:
+    variables:
+      - $CI_SELENIUM == "true"
+  script:
+    - make asset-backup
+    - docker push pcmt/cron:latest
+    - docker push pcmt/asset-backup:latest
+
 s3 docker build:
   stage: build
   only:
