@@ -215,13 +215,15 @@ If you want to run PCMT migrations manually, type `make dev-pcmt-migrate`.
 
 In case of issues related to the lack of access to the Akeneo's `package.json` file, we decided to add this file to our repository. The advantage is that from now, we have possibility to control version of each library used by frontend part of the project. But on the other side, we have also a big drawback which is complex process of updating the `package.json` content.
 
-#### How to update `package.json` with the latest Akeneo PIM version?
+#### How to update Akeneo PIM version?
 
+1. Go to container with `make dev-fpm` and update dependencies with `COMPOSER_MEMORY_LIMIT=-1 composer update`
+1. Update `AKENEO_VER` in `pim/build-images.sh` according to value from freshly generated `composer.lock` 
 1. In `pim/Dockerfile` comment out the `ADD --chown=docker:docker package.json /srv/pim/` line.
-2. Run `make dev-clean` command, which will clean up your local environment (so be sure if you are able to do it, and that you have all your changes saved).
-3. Run `make` command to build the newest version of the PCMT Docker image.
-4. Run `make dev-up` and wait until your environment will be ready.
-5. Run `make dev-cp-package-json` command. This command is responsible for copying the `package.json` file from running fpm Docker container to your local codebase.
-6. Uncomment the `ADD --chown=docker:docker package.json /srv/pim/` line in `pim/Dockerfile`.
-7. Commit your changes and push them to the remote repository repository.
+1. Run `make dev-clean` command, which will clean up your local environment (so be sure if you are able to do it, and that you have all your changes saved).
+1. Run `make` command to build the newest version of the PCMT Docker image.
+1. Run `make dev-up` and wait until your environment will be ready.
+1. Run `make dev-cp-package-json` command. This command is responsible for copying the `package.json` file from running fpm Docker container to your local codebase.
+1. Uncomment the `ADD --chown=docker:docker package.json /srv/pim/` line in `pim/Dockerfile`.
+1. Commit your changes and push them to the remote repository.
   
