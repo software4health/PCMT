@@ -85,6 +85,6 @@ pcmt_permissions:
 pcmt_rules:
     resource: "@PcmtRulesBundle/Resources/config/routing.yml"
 
-pcmt_cis:
-    resource: "@PcmtCISBundle/Resources/config/routing.yml"
+#pcmt_cis:
+#    resource: "@PcmtCISBundle/Resources/config/routing.yml"
 
