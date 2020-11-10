@@ -1,20 +1,29 @@
+VER 2.2.0 / unreleased
+==================
+
+**Added**
+* [&47](https://gitlab.com/pcmt/-/epics/47): GDSN CIS
+
 VER 2.1.0 / unreleased
 ==================
 
 **Added**
-* [#575](https://gitlab.com/pcmt/pcmt/-/issues/575): Rules - creation - backend
-* [#583](https://gitlab.com/pcmt/pcmt/-/issues/583): Rules - creation - frontend
-* [#585](https://gitlab.com/pcmt/pcmt/-/issues/585): Rules - general view
-* [#581](https://gitlab.com/pcmt/pcmt/-/issues/581): Rules - permissions
-* [#576](https://gitlab.com/pcmt/pcmt/-/issues/576): Rules - listing
-* [#577](https://gitlab.com/pcmt/pcmt/-/issues/577): Rules - editing - backend
-* [#584](https://gitlab.com/pcmt/pcmt/-/issues/584): Rules - editing - frontend
-* [#578](https://gitlab.com/pcmt/pcmt/-/issues/578): Rules - running
-* [#600](https://gitlab.com/pcmt/pcmt/-/issues/600): Rules - minor UI issues in the create modal and edit form
-* [#580](https://gitlab.com/pcmt/pcmt/-/issues/580): Rules - key attribute 
-* [#617](https://gitlab.com/pcmt/pcmt/-/issues/617): Rules - deleting
-* [#579](https://gitlab.com/pcmt/pcmt/-/issues/579): Rules - processing
+* [&43](https://gitlab.com/pcmt/-/epics/43): Family to Family Product Mapping (rules)
+* [#625](https://gitlab.com/pcmt/pcmt/-/issues/625): GDSN import in Process Tracker - add number of unique products
+* [#629](https://gitlab.com/pcmt/pcmt/-/issues/629): Automatically create unique id
+* [#694](https://gitlab.com/pcmt/pcmt/-/issues/694): Draft: make existing comments visible in Edit Draft view
+* [#692](https://gitlab.com/pcmt/pcmt/-/issues/692): Draft: add button to go back to product / model
 
+**Changed**
+* [#622](https://gitlab.com/pcmt/pcmt/-/issues/622): Package.json file in PCMT repository
+
+**Fixed**
+* [#460](https://gitlab.com/pcmt/pcmt/-/issues/460): Image loading in endless redirect-loop
+* [#641](https://gitlab.com/pcmt/pcmt/-/issues/641): Multiple variant family prevents draft approval with "undefined... attribute not in attribute set"
+* [#668](https://gitlab.com/pcmt/pcmt/-/issues/668): User can go to the product edition without the Edit Product Draft permission
+* [#695](https://gitlab.com/pcmt/pcmt/-/issues/695): An error occurs in the draft list after deleting a product model with an unapproved product variant
+* [#654](https://gitlab.com/pcmt/pcmt/-/issues/654): Integrity constraint violation for product model xls import 
+  
 VER 2.0.3 / 2020-09-16
 ==================
 
