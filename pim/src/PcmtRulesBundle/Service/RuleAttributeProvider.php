@@ -45,27 +45,35 @@ class RuleAttributeProvider
                 return false;
             }
 
+            if ($attribute->isUnique()) {
+                return false;
+            }
+
             return true;
         }));
     }
 
-    private function filterOutIdentifiers(array $attributes): array
+    private function filterAttributes(array $attributes): array
     {
         return array_values(array_filter($attributes, function (AttributeInterface $attribute) {
-            if (AttributeTypes::IDENTIFIER !== $attribute->getType()) {
-                return true;
+            if (AttributeTypes::IDENTIFIER === $attribute->getType()) {
+                return false;
             }
 
-            return false;
+            if ($attribute->isUnique()) {
+                return false;
+            }
+
+            return true;
         }));
     }
 
     public function getAllForFamilies(FamilyInterface $sourceFamily, FamilyInterface $destinationFamily): array
     {
         $attributes1 = $this->attributeRepository->findAttributesByFamily($sourceFamily);
-        $attributes1 = $this->filterOutIdentifiers($attributes1);
+        $attributes1 = $this->filterAttributes($attributes1);
         $attributes2 = $this->attributeRepository->findAttributesByFamily($destinationFamily);
-        $attributes2 = $this->filterOutIdentifiers($attributes2);
+        $attributes2 = $this->filterAttributes($attributes2);
 
         return array_intersect($attributes1, $attributes2);
     }

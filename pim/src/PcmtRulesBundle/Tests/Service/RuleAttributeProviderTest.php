@@ -35,6 +35,7 @@ class RuleAttributeProviderTest extends TestCase
         $attribute2 = (new AttributeBuilder())->withType(AttributeTypes::TEXT)->withCode('A2')->build();
         $attribute3 = (new AttributeBuilder())->withType(AttributeTypes::BOOLEAN)->withCode('A3')->build();
         $attribute4 = (new AttributeBuilder())->withType(AttributeTypes::OPTION_SIMPLE_SELECT)->withCode('A4')->build();
+        $attributeUnique = (new AttributeBuilder())->withType(AttributeTypes::TEXT)->asUnique()->withCode('A5')->build();
         $sourceFamily = (new FamilyBuilder())->withCode('XXX')->build();
         $destinationFamily = (new FamilyBuilder())->withCode('YYY')->build();
 
@@ -45,8 +46,8 @@ class RuleAttributeProviderTest extends TestCase
         $expectedAttributes1 = [];
 
         $map2 = [
-            [$sourceFamily, [$attribute1, $attribute3, $attribute4]],
-            [$destinationFamily, [$attribute1, $attribute2, $attribute3, $attribute4]],
+            [$sourceFamily, [$attribute1, $attribute3, $attribute4, $attributeUnique]],
+            [$destinationFamily, [$attribute1, $attribute2, $attribute3, $attribute4, $attributeUnique]],
         ];
         $expectedAttributes2 = [$attribute3, $attribute4];
 
@@ -63,18 +64,19 @@ class RuleAttributeProviderTest extends TestCase
         $attribute3 = (new AttributeBuilder())->withType(AttributeTypes::BOOLEAN)->withCode('A3')->build();
         $attribute4 = (new AttributeBuilder())->withType(AttributeTypes::OPTION_SIMPLE_SELECT)->withCode('A4')->build();
         $attribute5 = (new AttributeBuilder())->withType(AttributeTypes::TEXT)->asScopable()->withCode('A5')->build();
+        $attributeUnique = (new AttributeBuilder())->withType(AttributeTypes::TEXT)->asUnique()->withCode('A6')->build();
         $sourceFamily = (new FamilyBuilder())->withCode('XXX')->build();
         $destinationFamily = (new FamilyBuilder())->withCode('YYY')->build();
 
         $map1 = [
-            [$sourceFamily, [$attribute1]],
-            [$destinationFamily, [$attribute1, $attribute2]],
+            [$sourceFamily, [$attribute1, $attributeUnique]],
+            [$destinationFamily, [$attribute1, $attribute2, $attributeUnique]],
         ];
         $expectedAttributes1 = [];
 
         $map2 = [
-            [$sourceFamily, [$attribute1, $attribute3, $attribute4]],
-            [$destinationFamily, [$attribute1, $attribute2, $attribute3, $attribute4]],
+            [$sourceFamily, [$attribute1, $attribute3, $attribute4, $attributeUnique]],
+            [$destinationFamily, [$attribute1, $attribute2, $attribute3, $attribute4, $attributeUnique]],
         ];
         $expectedAttributes2 = [$attribute4];
 

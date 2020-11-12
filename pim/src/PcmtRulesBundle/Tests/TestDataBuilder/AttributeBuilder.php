@@ -65,4 +65,11 @@ class AttributeBuilder
 
         return $this;
     }
+
+    public function asUnique(): self
+    {
+        $this->attribute->setUnique(true);
+
+        return $this;
+    }
 }

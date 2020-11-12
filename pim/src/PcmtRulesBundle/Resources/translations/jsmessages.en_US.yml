@@ -29,7 +29,7 @@ pcmt:
             destination_family: Destination Family
             key_attribute: Key attribute
         info:
-            key_attribute: Only attributes of text and simple select type that are added to both families are available
+            key_attribute: Only not unique attributes of text and simple select type that are added to both families are available
     rules.action.run.label: Run a rule
     entity.rules:
         label: Rule
