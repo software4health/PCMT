@@ -27,6 +27,7 @@ use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\NewProductModelDraft;
+use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Normalizer\PcmtProductModelNormalizer;
 use PcmtDraftBundle\Service\Builder\ResponseBuilder;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
@@ -63,15 +64,6 @@ class PcmtProductModelController extends ProductModelController
     /** @var ResponseBuilder */
     private $responseBuilder;
 
-    /** @var SimpleFactoryInterface */
-    private $productModelFactory;
-
-    /** @var ObjectUpdaterInterface */
-    private $productModelUpdater;
-
-    /** @var ValidatorInterface */
-    private $validator;
-
     /** @var NormalizerInterface */
     private $violationNormalizer;
 
@@ -102,9 +94,6 @@ class PcmtProductModelController extends ProductModelController
         $this->productModelRepository = $productModelRepository;
         $this->userContext = $userContext;
         $this->objectFilter = $objectFilter;
-        $this->productModelUpdater = $productModelUpdater;
-        $this->validator = $validator;
-        $this->productModelFactory = $productModelFactory;
         $this->violationNormalizer = $violationNormalizer;
 
         parent::__construct(
@@ -151,36 +140,27 @@ class PcmtProductModelController extends ProductModelController
 
         $data = json_decode($request->getContent(), true);
 
-        /* following code is copied from parent controller for validation */
-        $productModel = $this->productModelFactory->create();
-        $this->productModelUpdater->update($productModel, $data);
-
-        $violations = $this->validator->validate($productModel);
-
-        if (count($violations) > 0) {
-            $normalizedViolations = [];
-            foreach ($violations as $violation) {
-                $normalizedViolations[] = $this->violationNormalizer->normalize(
-                    $violation,
-                    'internal_api',
-                    ['product_model' => $productModel]
-                );
-            }
-
-            return new JsonResponse(['values' => $normalizedViolations], 400);
-        }
-
-        /**
-         * at this stage we create NewDraft, populate it with data
-         * (which we will later use to create Product Model itself) and prevent Product Model from being created.
-         **/
         $draft = new NewProductModelDraft(
             $data,
             $this->userContext->getUser(),
             new \DateTime()
         );
 
-        $this->draftSaver->save($draft);
+        try {
+            $this->draftSaver->save($draft);
+        } catch (DraftViolationException $e) {
+            $normalizedViolations = [];
+            $context = $e->getContextForNormalizer();
+            foreach ($e->getViolations() as $violation) {
+                $normalizedViolations[] = $this->violationNormalizer->normalize(
+                    $violation,
+                    'internal_api',
+                    $context
+                );
+            }
+
+            return new JsonResponse(['values' => $normalizedViolations], Response::HTTP_BAD_REQUEST);
+        }
 
         return $this->responseBuilder->setData($draft)
             ->setFormat('internal_api')
