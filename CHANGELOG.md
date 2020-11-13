@@ -4,7 +4,7 @@ VER 2.2.0 / unreleased
 **Added**
 * [&47](https://gitlab.com/pcmt/-/epics/47): GDSN CIS
 
-VER 2.1.0 / unreleased
+VER 2.1.0 / 2020-11-13
 ==================
 
 **Added**
