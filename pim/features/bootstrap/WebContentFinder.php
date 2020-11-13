@@ -27,6 +27,8 @@ class WebContentFinder implements WebContentFinderInterface
 
     public const MESSAGE_EXISTS = "message-exists";
 
+    public const FLASH_SUCCESS_MESSAGE_EXISTS = "flash-success-message-exists";
+
     public const LOCATOR_EXISTS = "locator-exists";
 
     public static function getContentCondition(string $element, string $extraData = ""): ?string
@@ -50,6 +52,8 @@ class WebContentFinder implements WebContentFinderInterface
                 return "document.querySelector('" . $extraData . "').innerText == 'SAVE'";
             case self::MESSAGE_EXISTS:
                 return "document.querySelector('.flash-messages-holder').childNodes.length > 0";
+            case self::FLASH_SUCCESS_MESSAGE_EXISTS:
+                return "document.querySelector('.alert-success.AknFlash--success') != null";
             case self::LOCATOR_EXISTS:
                 return "document.querySelector('" . $extraData . "') != null";
         }
