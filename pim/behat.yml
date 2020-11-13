@@ -31,6 +31,12 @@ default:
       contexts:
         - PcmtPermissionsBundle\FunctionalTests\WebContext: ~
 
+    selenium-rules:
+      paths:
+        - %paths.base%/src/PcmtRulesBundle/FunctionalTests/features/selenium/
+      contexts:
+        -   PcmtRulesBundle\FunctionalTests\WebContext: ~
+
   extensions:
     Behat\Symfony2Extension:
       kernel:
