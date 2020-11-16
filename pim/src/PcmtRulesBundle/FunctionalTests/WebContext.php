@@ -15,6 +15,9 @@ use WebContentFinder;
 
 class WebContext extends \SeleniumBaseContext implements Context
 {
+    /** @var int */
+    private $numberOfResults;
+
     /**
      * @And I save
      * @When I save
@@ -100,6 +103,81 @@ class WebContext extends \SeleniumBaseContext implements Context
         $result = $this->waitUntil(WebContentFinder::FLASH_SUCCESS_MESSAGE_EXISTS);
         if (!$result) {
             throw new \Exception('Success message not found');
+        }
+    }
+
+    /**
+     * @Given I read number of rules
+     */
+    public function iReadNumberOfRules(): void
+    {
+        $this->waitToLoadPage('RULES');
+        $this->numberOfResults = $this->getNumberOfResultsOnList();
+    }
+
+    public function getNumberOfResultsOnList(): int
+    {
+        $this->getSession()->wait(1000);
+
+        $locator = 'div.AknTitleContainer-title > div';
+        $this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $locator);
+
+        $resultsText = $this->getSession()
+            ->getPage()
+            ->find('css', $locator)
+            ->getText();
+
+        $resultsCount = explode(' ', $resultsText);
+
+        return (int) $resultsCount[0];
+    }
+
+    /**
+     * @When I wait and click delete on last draft
+     */
+    public function iWaitAndClickDeleteOnLastDraft(): void
+    {
+        $locator = 'a.AknIconButton.AknIconButton--trash';
+        $result = $this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $locator);
+        if (!$result) {
+            throw new \Exception('No rules to remove found.');
+        }
+
+        $links = $this->getSession()->getPage()->findAll('css', $locator);
+        $lastLink = end($links);
+        $lastLink->click();
+    }
+
+    /**
+     * @When I confirm delete
+     */
+    public function iConfirmDelete(): void
+    {
+        $cssLocator = 'div.AknButton.AknButtonList-item.AknButton--apply.ok.ok';
+        if (!$this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $cssLocator)) {
+            throw new \Exception('Delete button not found.');
+        }
+        $buttonDiv = $this->getSession()->getPage()->find('css', $cssLocator);
+        $buttonDiv->click();
+    }
+
+    /**
+     * @Then the number of rules should be lower by :quantity
+     */
+    public function theNumberOfResultsShouldBeLowerBy(int $quantity): void
+    {
+        $previous = $this->numberOfResults;
+        if (!$previous) {
+            throw new \Exception('Previous number of rules is 0.');
+        }
+
+        $this->waitToLoadPage('RULES');
+        $newNumber = $this->getNumberOfResultsOnList();
+
+        if ($previous - $quantity !== $newNumber) {
+            throw new \Exception(
+                'Wrong number of rules. Should be: ' . round($previous - $quantity) . ', is: ' . $newNumber
+            );
         }
     }
 }
