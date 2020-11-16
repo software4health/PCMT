@@ -1,9 +1,9 @@
 pim_title:
-  pcmt_cis_index: CIS
+  pcmt_cis_index: Subscriptions
 
 pim_menu:
   item:
-    cis: CIS
+    cis: Subscriptions
 
 pcmt:
   entity:
@@ -34,7 +34,7 @@ pcmt:
       target_market_country_code: Target Market Country Code
       error:
         required_field: "At least one of the fields: GTIN, GPC Category Code or Target Market Country Code should be filled."
-        unique_values: "Values of CIS should be unique."
+        unique_values: "Subscription already exists."
 
 pim_enrich:
   entity:

@@ -1,9 +1,9 @@
 pim_title:
-  pcmt_cis_index: FR CIS
+  pcmt_cis_index: FR Subscriptions
 
 pim_menu:
   item:
-    cis: FR CIS
+    cis: FR Subscriptions
 
 pcmt:
   entity:
@@ -34,7 +34,7 @@ pcmt:
       target_market_country_code: FR Target Market Country Code
       error:
         required_field: "FR At least one of the fields: GTIN, GPC Category Code or Target Market Country Code should be filled."
-        unique_values: "FR Values of CIS should be unique."
+        unique_values: "FR Subscription already exists."
 
 pim_enrich:
   entity:
