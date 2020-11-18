@@ -17,7 +17,7 @@ Feature: Creating rule
     And I wait
     And I follow "Choose the attribute"
     And I choose "MD COUNTRY" option
-    And I save
+    And I save create form
     Then I should get success message
 
 

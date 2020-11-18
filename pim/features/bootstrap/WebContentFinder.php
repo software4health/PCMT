@@ -7,6 +7,13 @@
 
 declare(strict_types=1);
 
+/**
+ * Class WebContentFinder
+ * @deprecated
+ *
+ * The contents of this class should rather be in specific bundles.
+ * The example can be found in PcmtRulesBundle.
+ */
 class WebContentFinder implements WebContentFinderInterface
 {
     public const LOGIN_FORM_EXISTS = "login-form-exists";

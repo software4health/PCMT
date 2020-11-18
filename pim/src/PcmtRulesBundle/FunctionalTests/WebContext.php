@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace PcmtRulesBundle\FunctionalTests;
 
 use Behat\Behat\Context\Context;
-use WebContentFinder;
 
 class WebContext extends \SeleniumBaseContext implements Context
 {
@@ -19,15 +18,28 @@ class WebContext extends \SeleniumBaseContext implements Context
     private $numberOfResults;
 
     /**
-     * @And I save
-     * @When I save
+     * @When I save create form
      */
-    public function iSave(): void
+    public function iSaveCreateForm(): void
     {
+        $locator = WebContentFinder::getSaveButtonLocatorOnCreateForm();
         $this->waitForThePageToLoad();
-        $locator = 'div.AknButton.ok';
-        if (!$this->waitUntil(\WebContentFinder::SAVE_BUTTON_EXISTS, $locator)) {
-            throw new \Exception('Element not found');
+        if (!$this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator))) {
+            throw new \Exception('Save element not found');
+        }
+        $saveBtn = $this->getSession()->getPage()->find('css', $locator);
+        $saveBtn->click();
+    }
+
+    /**
+     * @When I save edit form
+     */
+    public function iSaveEditForm(): void
+    {
+        $locator = WebContentFinder::getSaveButtonLocatorOnEditForm();
+        $this->waitForThePageToLoad();
+        if (!$this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator))) {
+            throw new \Exception('Save element not found');
         }
         $saveBtn = $this->getSession()->getPage()->find('css', $locator);
         $saveBtn->click();
@@ -46,13 +58,48 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iClickOnCreateRule(): void
     {
-        $this->waitUntil(WebContentFinder::ELEMENT_WITH_ID_EXISTS, 'create-button-extension');
+        $this->waitUntilExpression(WebContentFinder::getElementWithIdLocatorExistsExpression('create-button-extension'));
         $buttonDiv = $this->getSession()->getPage()->findById('create-button-extension');
         if (!$buttonDiv) {
             throw new \Exception('Create rule button not found');
         }
         $buttonDiv->click();
         $this->waitForThePageToLoad();
+    }
+
+    /**
+     * @Then I click on source family
+     */
+    public function iClickOnSourceFamily(): void
+    {
+        $elements = $this->getAllFamilySelectElements();
+        if (!$elements) {
+            throw new \Exception('Source family not found');
+        }
+        $element = reset($elements);
+        $element->click();
+    }
+
+    /**
+     * @Then I click on destination family
+     */
+    public function iClickOnDestinationFamily(): void
+    {
+        $elements = $this->getAllFamilySelectElements();
+        if (!$elements) {
+            throw new \Exception('Source family not found');
+        }
+        $elements = array_slice($elements, 1, 1);
+        $element = reset($elements);
+        $element->click();
+    }
+
+    private function getAllFamilySelectElements(): array
+    {
+        $locator = WebContentFinder::getFamilySelectLocator();
+        $this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator));
+
+        return $this->getSession()->getPage()->findAll('css', $locator);
     }
 
     /**
@@ -100,9 +147,22 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iShouldGetSuccessMessage(): void
     {
-        $result = $this->waitUntil(WebContentFinder::FLASH_SUCCESS_MESSAGE_EXISTS);
+        $locator = WebContentFinder::getFlashSuccessMessageLocator();
+        $result = $this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator));
         if (!$result) {
             throw new \Exception('Success message not found');
+        }
+    }
+
+    /**
+     * @Given I should get error message
+     */
+    public function iShouldGetErrorMessage(): void
+    {
+        $locator = WebContentFinder::getFlashErrorMessageLocator();
+        $result = $this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator));
+        if (!$result) {
+            throw new \Exception('Error message not found');
         }
     }
 
@@ -119,8 +179,8 @@ class WebContext extends \SeleniumBaseContext implements Context
     {
         $this->getSession()->wait(1000);
 
-        $locator = 'div.AknTitleContainer-title > div';
-        $this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $locator);
+        $locator = WebContentFinder::getNumberOfResultsLocator();
+        $this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator));
 
         $resultsText = $this->getSession()
             ->getPage()
@@ -137,10 +197,23 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iWaitAndClickDeleteOnLastDraft(): void
     {
-        $locator = 'a.AknIconButton.AknIconButton--trash';
-        $result = $this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $locator);
+        $this->iWaitAndClickIconOnLastDraft('trash');
+    }
+
+    /**
+     * @When I wait and click edit on last draft
+     */
+    public function iWaitAndClickEditOnLastDraft(): void
+    {
+        $this->iWaitAndClickIconOnLastDraft('edit');
+    }
+
+    private function iWaitAndClickIconOnLastDraft(string $type): void
+    {
+        $locator = WebContentFinder::getIconLocator($type);
+        $result = $this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator));
         if (!$result) {
-            throw new \Exception('No rules to remove found.');
+            throw new \Exception('No rules found.');
         }
 
         $links = $this->getSession()->getPage()->findAll('css', $locator);
@@ -153,11 +226,11 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iConfirmDelete(): void
     {
-        $cssLocator = 'div.AknButton.AknButtonList-item.AknButton--apply.ok.ok';
-        if (!$this->waitUntil(WebContentFinder::LOCATOR_EXISTS, $cssLocator)) {
+        $locator = WebContentFinder::getConfirmationButtonLocator();
+        if (!$this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator))) {
             throw new \Exception('Delete button not found.');
         }
-        $buttonDiv = $this->getSession()->getPage()->find('css', $cssLocator);
+        $buttonDiv = $this->getSession()->getPage()->find('css', $locator);
         $buttonDiv->click();
     }
 
@@ -179,5 +252,13 @@ class WebContext extends \SeleniumBaseContext implements Context
                 'Wrong number of rules. Should be: ' . round($previous - $quantity) . ', is: ' . $newNumber
             );
         }
+    }
+
+    protected function waitUntilExpression(string $expression): bool
+    {
+        return $this->getSession()->wait(
+            self::WAIT_TIME_MAX,
+            $expression
+        );
     }
 }
