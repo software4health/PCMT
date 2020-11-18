@@ -9,7 +9,7 @@ Feature: Creating rule
     And I wait and follow link "System"
     And I wait and follow link "Rules"
     And I click on create rule
-    And I save
+    And I save create form
     Then I should get 4 errors
 
     
