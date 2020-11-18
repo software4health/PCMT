@@ -18,11 +18,11 @@ pcmt:
         create:
           success: FR A new subscription successfully created
           fail: FR A new subscription has not been created.
-          file_is_waiting_for_upload: FR There is existing CIS file which is waiting for upload
+          file_is_waiting_for_upload: FR There is an existing subscription file which is waiting for upload
         resubmit:
           success: FR Subscription file has been re-submitted.
           fail: FR Subscription file re-submitting failed.
-          file_is_waiting_for_upload: FR There is existing CIS file which is waiting for upload
+          file_is_waiting_for_upload: FR There is an existing subscription file which is waiting for upload
       page_title:
         index: "]-Inf, 1]{{ count }} FR subscription|]1, Inf[{{ count }} FR subscriptions"
   cis:
