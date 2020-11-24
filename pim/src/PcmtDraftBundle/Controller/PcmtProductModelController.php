@@ -15,6 +15,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Comparator\Filter\EntityWithValuesFi
 use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Localization\Localizer\AttributeConverterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\AttributeFilterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductModelRepositoryInterface;
 use Akeneo\Pim\Structure\Component\Repository\FamilyVariantRepositoryInterface;
@@ -25,11 +26,10 @@ use Akeneo\Tool\Component\StorageUtils\Remover\RemoverInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Bundle\Context\UserContext;
-use PcmtDraftBundle\Entity\ExistingProductModelDraft;
-use PcmtDraftBundle\Entity\NewProductModelDraft;
-use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Normalizer\PcmtProductModelNormalizer;
 use PcmtDraftBundle\Service\Builder\ResponseBuilder;
+use PcmtDraftBundle\Service\Draft\DraftCreatorInterface;
+use PcmtDraftBundle\Service\Helper\SpecialCategoryUpdater;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -70,6 +70,27 @@ class PcmtProductModelController extends ProductModelController
     /** @var CategoryPermissionsCheckerInterface */
     private $categoryPermissionsChecker;
 
+    /** @var DraftCreatorInterface */
+    private $draftCreator;
+
+    /** @var SpecialCategoryUpdater */
+    private $specialCategoryUpdater;
+
+    /** @var SimpleFactoryInterface */
+    private $productModelFactory;
+
+    /** @var ObjectUpdaterInterface */
+    private $productModelUpdater;
+
+    /** @var ValidatorInterface */
+    private $validator;
+
+    /** @var SaverInterface */
+    private $productModelSaver;
+
+    /** @var NormalizerInterface */
+    private $normalizer;
+
     public function __construct(
         ProductModelRepositoryInterface $productModelRepository,
         NormalizerInterface $normalizer,
@@ -95,6 +116,11 @@ class PcmtProductModelController extends ProductModelController
         $this->userContext = $userContext;
         $this->objectFilter = $objectFilter;
         $this->violationNormalizer = $violationNormalizer;
+        $this->productModelFactory = $productModelFactory;
+        $this->productModelUpdater = $productModelUpdater;
+        $this->validator = $validator;
+        $this->productModelSaver = $productModelSaver;
+        $this->normalizer = $normalizer;
 
         parent::__construct(
             $productModelRepository,
@@ -129,6 +155,11 @@ class PcmtProductModelController extends ProductModelController
         $this->draftSaver = $draftSaver;
     }
 
+    public function setDraftCreator(DraftCreatorInterface $draftCreator): void
+    {
+        $this->draftCreator = $draftCreator;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -138,34 +169,45 @@ class PcmtProductModelController extends ProductModelController
             return new RedirectResponse('/');
         }
 
-        $data = json_decode($request->getContent(), true);
+        $productModel = $this->productModelFactory->create();
+        $content = json_decode($request->getContent(), true);
 
-        $draft = new NewProductModelDraft(
-            $data,
-            $this->userContext->getUser(),
-            new \DateTime()
-        );
+        $this->productModelUpdater->update($productModel, $content);
 
-        try {
-            $this->draftSaver->save($draft);
-        } catch (DraftViolationException $e) {
+        $this->specialCategoryUpdater->addSpecialCategory($productModel);
+
+        $violations = $this->validator->validate($productModel);
+
+        if (count($violations) > 0) {
             $normalizedViolations = [];
-            $context = $e->getContextForNormalizer();
-            foreach ($e->getViolations() as $violation) {
+            foreach ($violations as $violation) {
                 $normalizedViolations[] = $this->violationNormalizer->normalize(
                     $violation,
                     'internal_api',
-                    $context
+                    ['product_model' => $productModel]
                 );
             }
 
-            return new JsonResponse(['values' => $normalizedViolations], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['values' => $normalizedViolations], 400);
         }
 
-        return $this->responseBuilder->setData($draft)
-            ->setFormat('internal_api')
-            ->setContext($this->getNormalizationContext())
-            ->build();
+        $this->productModelSaver->save($productModel);
+        $normalizedProductModel = $this->normalizeProductModel($productModel);
+
+        return new JsonResponse($normalizedProductModel);
+    }
+
+    private function normalizeProductModel(ProductModelInterface $productModel): array
+    {
+        $normalizationContext = $this->userContext->toArray() + [
+            'filter_types' => [],
+        ];
+
+        return $this->normalizer->normalize(
+            $productModel,
+            'internal_api',
+            $normalizationContext
+        );
     }
 
     /**
@@ -205,11 +247,10 @@ class PcmtProductModelController extends ProductModelController
             }
         }
 
-        $draft = new ExistingProductModelDraft(
+        $draft = $this->draftCreator->create(
             $productModel,
             $data,
-            $this->userContext->getUser(),
-            new \DateTime()
+            $this->userContext->getUser()
         );
 
         $this->draftSaver->save($draft);
@@ -252,5 +293,10 @@ class PcmtProductModelController extends ProductModelController
     public function setCategoryPermissionsChecker(CategoryPermissionsCheckerInterface $categoryPermissionsChecker): void
     {
         $this->categoryPermissionsChecker = $categoryPermissionsChecker;
+    }
+
+    public function setSpecialCategoryUpdater(SpecialCategoryUpdater $specialCategoryUpdater): void
+    {
+        $this->specialCategoryUpdater = $specialCategoryUpdater;
     }
 }

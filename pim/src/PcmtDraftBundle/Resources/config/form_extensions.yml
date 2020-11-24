@@ -13,8 +13,8 @@ extensions:
                 title: pim_common.create
                 subTitle: pim_enrich.entity.product.plural_label
             picture: illustrations/Product.svg
-            successMessage: pcmt.entity.draft.flash.create.success
-            editRoute: pcmt_core_drafts_index
+            successMessage: pim_enrich.entity.product.flash.create.success
+            editRoute: pim_enrich_product_edit
             postUrl: pim_enrich_product_rest_create
 
     # overridden route - redirection to drafts
@@ -26,7 +26,7 @@ extensions:
                 subTitle: pim_enrich.entity.product.plural_label
                 content: pim_enrich.entity.product_model.module.create.content
             picture: illustrations/Product-model.svg
-            successMessage: pcmt.entity.draft.flash.create.success
-            editRoute: pcmt_core_drafts_index
+            successMessage: pim_enrich.entity.product_model.flash.create.success
+            editRoute: pim_enrich_product_model_edit
             postUrl: pim_enrich_product_model_rest_create
             excludedProperties: [ family ]

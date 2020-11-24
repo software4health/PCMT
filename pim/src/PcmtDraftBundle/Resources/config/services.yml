@@ -129,3 +129,13 @@ services:
         class: 'PcmtDraftBundle\Connector\Job\Provider\DraftProvider'
         arguments:
             - '@pcmt_catalog.repository.draft'
+
+    pcmt.service.helper.special_category_updater.product:
+        class: 'PcmtDraftBundle\Service\Helper\SpecialCategoryUpdater'
+        arguments:
+            - '@pim_catalog.updater.product'
+
+    pcmt.service.helper.special_category_updater.product_model:
+        class: 'PcmtDraftBundle\Service\Helper\SpecialCategoryUpdater'
+        arguments:
+            - '@pim_catalog.updater.product_model'
