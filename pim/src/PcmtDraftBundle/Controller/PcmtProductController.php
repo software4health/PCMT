@@ -13,11 +13,10 @@ use Akeneo\Pim\Enrichment\Bundle\Controller\InternalApi\ProductController;
 use Akeneo\Pim\Enrichment\Component\Product\Exception\ObjectNotFoundException;
 use Akeneo\Tool\Component\Classification\CategoryAwareInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
-use PcmtDraftBundle\Entity\ExistingProductDraft;
-use PcmtDraftBundle\Entity\NewProductDraft;
-use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Normalizer\PcmtProductNormalizer;
 use PcmtDraftBundle\Service\Builder\ResponseBuilder;
+use PcmtDraftBundle\Service\Draft\DraftCreatorInterface;
+use PcmtDraftBundle\Service\Helper\SpecialCategoryUpdater;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -48,6 +47,12 @@ class PcmtProductController extends ProductController
     /** @var CategoryPermissionsCheckerInterface */
     private $categoryPermissionsChecker;
 
+    /** @var DraftCreatorInterface */
+    private $draftCreator;
+
+    /** @var SpecialCategoryUpdater */
+    private $specialCategoryUpdater;
+
     public function createAction(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
@@ -56,33 +61,47 @@ class PcmtProductController extends ProductController
 
         $data = json_decode($request->getContent(), true);
 
-        /**
-         * at this stage we create NewDraft, populate it with data (which we will later use to create Product itself)
-         * and prevent Product from being created.
-         **/
-        $draft = new NewProductDraft(
-            $data,
-            new \DateTime(),
-            $this->userContext->getUser()
-        );
+        if (isset($data['parent'])) {
+            $product = $this->variantProductBuilder->createProduct(
+                $data['identifier'] ?? null,
+                $data['family'] ?? null
+            );
 
-        try {
-            $this->draftSaver->save($draft);
-        } catch (DraftViolationException $e) {
-            $normalizedViolations = [];
-            $context = $e->getContextForNormalizer();
-            foreach ($e->getViolations() as $violation) {
-                $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
-                    $violation,
-                    'internal_api',
-                    $context
-                );
+            if (isset($data['values'])) {
+                $this->updateProduct($product, $data);
             }
-
-            return new JsonResponse(['values' => $normalizedViolations], Response::HTTP_BAD_REQUEST);
+        } else {
+            $product = $this->productBuilder->createProduct(
+                $data['identifier'] ?? null,
+                $data['family'] ?? null
+            );
         }
 
-        return $this->responseBuilder->setData($draft)->setContext($this->getNormalizationContext())->build();
+        // add a special category
+        $this->specialCategoryUpdater->addSpecialCategory($product);
+
+        $violations = $this->validator->validate($product);
+
+        if (0 === $violations->count()) {
+            $this->productSaver->save($product);
+
+            return new JsonResponse($this->normalizer->normalize(
+                $product,
+                'internal_api',
+                $this->getNormalizationContext()
+            ));
+        }
+
+        $normalizedViolations = [];
+        foreach ($violations as $violation) {
+            $normalizedViolations[] = $this->constraintViolationNormalizer->normalize(
+                $violation,
+                'internal_api',
+                ['product' => $product]
+            );
+        }
+
+        return new JsonResponse(['values' => $normalizedViolations], 400);
     }
 
     /**
@@ -138,10 +157,9 @@ class PcmtProductController extends ProductController
             }
         }
 
-        $draft = new ExistingProductDraft(
+        $draft = $this->draftCreator->create(
             $product,
             $data,
-            new \DateTime(),
             $this->userContext->getUser()
         );
 
@@ -172,10 +190,20 @@ class PcmtProductController extends ProductController
         $this->categoryPermissionsChecker = $categoryPermissionsChecker;
     }
 
+    public function setDraftCreator(DraftCreatorInterface $draftCreator): void
+    {
+        $this->draftCreator = $draftCreator;
+    }
+
     protected function hasAccessOr403(CategoryAwareInterface $entity, string $level): void
     {
         if (!$this->categoryPermissionsChecker->hasAccessToProduct($level, $entity)) {
             throw new AccessDeniedHttpException('Access denied basing on categories');
         }
+    }
+
+    public function setSpecialCategoryUpdater(SpecialCategoryUpdater $specialCategoryUpdater): void
+    {
+        $this->specialCategoryUpdater = $specialCategoryUpdater;
     }
 }

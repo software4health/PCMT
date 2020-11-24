@@ -17,6 +17,8 @@ use PcmtDraftBundle\Entity\AbstractDraft;
 
 interface DraftCreatorInterface
 {
+    public const CATEGORY_FOR_BASE_PRODUCTS = 'NEW_SKIPPED_DRAFTS';
+
     /**
      * @param ProductInterface|ProductModelInterface $baseEntity
      */

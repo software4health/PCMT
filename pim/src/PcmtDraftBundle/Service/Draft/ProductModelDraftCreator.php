@@ -25,7 +25,14 @@ class ProductModelDraftCreator implements DraftCreatorInterface
         array $productData,
         ?UserInterface $author = null
     ): AbstractDraft {
-        if ($baseEntity->getId()) {
+        if ($baseEntity && $baseEntity->getId()) {
+            if (!empty($productData['categories'])) {
+                $key = array_search(DraftCreatorInterface::CATEGORY_FOR_BASE_PRODUCTS, $productData['categories']);
+                if (false !== $key) {
+                    unset($productData['categories'][$key]);
+                }
+            }
+
             return new ExistingProductModelDraft(
                 $baseEntity,
                 $productData,

@@ -27,7 +27,27 @@ class ProductModelDraftCreatorTest extends TestCase
         $this->productModelDraftCreator = new ProductModelDraftCreator();
     }
 
-    public function testCreateWhenProductModelExists(): void
+    public function dataCreate(): array
+    {
+        return [
+            [['ATTRIBUTE' => 'VALUE'], ['ATTRIBUTE' => 'VALUE']],
+            [[
+                'categories' => ['CATEGORY1'],
+            ], [
+                'categories' => ['CATEGORY1'],
+            ]],
+            [[
+                'categories' => ['NEW_SKIPPED_DRAFTS'],
+            ], [
+                'categories' => [],
+            ]],
+        ];
+    }
+
+    /**
+     * @dataProvider dataCreate
+     */
+    public function testCreateWhenProductModelExists(array $productData, array $expectedData): void
     {
         $productModel = (new ProductModelBuilder())
             ->withId(143)
@@ -38,12 +58,12 @@ class ProductModelDraftCreatorTest extends TestCase
 
         $draft = $this->productModelDraftCreator->create(
             $productModel,
-            ['ATTRIBUTE' => 'VALUE'],
+            $productData,
             $user
         );
 
         $this->assertInstanceOf(ExistingProductModelDraft::class, $draft);
-        $this->assertEquals(['ATTRIBUTE' => 'VALUE'], $draft->getProductData());
+        $this->assertEquals($expectedData, $draft->getProductData());
     }
 
     public function testCreateWhenProductModelDoesNotExist(): void

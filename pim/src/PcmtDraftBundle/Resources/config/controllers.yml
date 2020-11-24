@@ -45,6 +45,8 @@ services:
             - [setDraftSaver, ['@pcmt.saver.draft']]
             - [setResponseBuilder, ['@pcmt.service.builder.response_builder']]
             - [setCategoryPermissionsChecker, ['@pcmt.service.category_permissions_checker']]
+            - [setDraftCreator, ['@pcmt.service.creator.product']]
+            - [setSpecialCategoryUpdater, ['@pcmt.service.helper.special_category_updater.product']]
 
     ### overrides product model controller
     pim_enrich.controller.rest.product_model:
@@ -73,6 +75,8 @@ services:
             - [setDraftSaver, ['@pcmt.saver.draft']]
             - [setResponseBuilder, ['@pcmt.service.builder.response_builder']]
             - [setCategoryPermissionsChecker, ['@pcmt.service.category_permissions_checker']]
+            - [setDraftCreator, ['@pcmt.service.creator.product_model']]
+            - [setSpecialCategoryUpdater, ['@pcmt.service.helper.special_category_updater.product_model']]
 
     pcmt.draft.controller.product_category:
         class: 'PcmtDraftBundle\Controller\PcmtProductCategoryController'

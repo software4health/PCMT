@@ -101,8 +101,8 @@ pcmt.entity.draft:
         create:
             success: FR Draft successfully created.
             fail: FR The draft could not be created.
-            product_model_added: FR Draft successfully created.
-            variant_product_added: FR Draft successfully created.
+            product_model_added: FR Product model successfully added to the product model
+            variant_product_added: FR Variant product successfully added to the product model
             fields_not_ready: "FR The draft cannot be created right now. The following fields are not ready: {{ fields }}"
         update:
             success: FR Draft successfully updated.
