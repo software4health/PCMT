@@ -135,6 +135,10 @@ s3: cron
 ftp-get: cron
 	cd deploy/ftp-get && docker build -t pcmt/ftp-get .
 
+.PHONY: ftp-put
+ftp-put: cron
+	cd deploy/ftp-put && docker build -t pcmt/ftp-put .
+
 .PHONY: scalyr
 scalyr:
 	cd deploy/scalyr && docker build -t pcmt/scalyr .

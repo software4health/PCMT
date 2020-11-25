@@ -218,6 +218,22 @@ ftp-get docker build:
     - docker push pcmt/cron:latest
     - docker push pcmt/ftp-get:latest
 
+ftp-put docker build:
+  stage: build
+  only:
+    refs:
+      - master@pcmt/pcmt
+    changes:
+      - deploy/ftp-put/**/*
+      - deploy/cron/**/*
+  except:
+    variables:
+      - $CI_SELENIUM == "true"
+  script:
+    - make ftp-put
+    - docker push pcmt/cron:latest
+    - docker push pcmt/ftp-put:latest
+
 scalyr docker build:
   stage: build
   only:
