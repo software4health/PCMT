@@ -23,6 +23,7 @@ class PcmtRulesExtension extends Extension
         $loader->load('controllers.yml');
         $loader->load('data_sources.yml');
         $loader->load('jobs.yml');
+        $loader->load('malawi.yml');
         $loader->load('savers.yml');
         $loader->load('services.yml');
         $loader->load('steps.yml');
