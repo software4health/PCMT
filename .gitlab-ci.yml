@@ -20,7 +20,7 @@ default:
     - docker:dind
   before_script:
     - docker info
-    - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS hub.docker.com
+    - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
     - apk add bash make git curl libxml2-utils bc
     - bash --version
 
@@ -265,9 +265,9 @@ scalyr docker build:
 .env-showcase_script-deploy:
   script:
     - ./bin/ci-deploy.sh showcase
-
+    
 .env-showcase_script-destroy:
-  script:
+  script: 
     - ./deploy/terraform/run-docker.sh showcase destroy -auto-approve
 
 env-showcase (WIPE DB):
@@ -311,7 +311,7 @@ env-showcase-destroy:
 .env-test_script-deploy:
   script:
     - ./bin/ci-deploy.sh test
-
+    
 .env-test_script-destroy:
   script:
     - ./deploy/terraform/run-docker.sh test destroy -auto-approve
@@ -337,7 +337,7 @@ env-test-destroy:
     - .env-test_script-destroy
   when: manual
   environment:
-    name: test
+    name: test 
     action: stop
 
 ############### GFPVAN Prod Environment ###############
@@ -358,7 +358,7 @@ env-test-destroy:
   script:
     - source .ci-gfpvan.env
     - ./bin/ci-deploy.sh gfpvan
-
+    
 env-gfpvan (WIPE DB):
   extends:
     - .env-gfpvan
@@ -380,7 +380,7 @@ env-gfpvan (KEEP DB):
 env-gfpvan-destroy:
   extends:
     - .env-gfpvan
-  script:
+  script: 
     - ./deploy/terraform/run-docker.sh gfpvan destroy -auto-approve
   environment:
     name: gfpvan
@@ -404,7 +404,7 @@ env-gfpvan-destroy:
   script:
     - source .ci-gfpvan-uat.env
     - ./bin/ci-deploy.sh gfpvan-uat
-
+    
 env-gfpvan-uat (WIPE DB):
   extends:
     - .env-gfpvan-uat
@@ -426,7 +426,7 @@ env-gfpvan-uat (KEEP DB):
 env-gfpvan-uat-destroy:
   extends:
     - .env-gfpvan-uat
-  script:
+  script: 
     - ./deploy/terraform/run-docker.sh gfpvan-uat destroy -auto-approve
   environment:
     name: gfpvan-uat
@@ -447,7 +447,7 @@ env-gfpvan-uat-destroy:
   script:
     - source .ci-chai.env
     - ./bin/ci-deploy.sh covid-ref
-
+    
 env-covid-ref (WIPE DB):
   extends:
     - .env-covid-ref
@@ -469,7 +469,7 @@ env-covid-ref (KEEP DB):
 env-covid-ref-destroy:
   extends:
     - .env-covid-ref
-  script:
+  script: 
     - ./deploy/terraform/run-docker.sh covid-ref destroy -auto-approve
   environment:
     name: covid-ref
@@ -490,7 +490,7 @@ env-covid-ref-destroy:
   script:
     - source .ci-chai.env
     - ./bin/ci-deploy.sh cameroon-covid
-
+    
 env-cameroon-covid (WIPE DB):
   extends:
     - .env-cameroon-covid
@@ -512,7 +512,7 @@ env-cameroon-covid (KEEP DB):
 env-cameroon-covid-destroy:
   extends:
     - .env-cameroon-covid
-  script:
+  script: 
     - ./deploy/terraform/run-docker.sh cameroon-covid destroy -auto-approve
   environment:
     name: cameroon-covid
@@ -533,7 +533,7 @@ env-cameroon-covid-destroy:
   script:
     - source .ci-chai.env
     - ./bin/ci-deploy.sh zimbabwe-covid
-
+    
 env-zimbabwe-covid (WIPE DB):
   extends:
     - .env-zimbabwe-covid
@@ -555,7 +555,7 @@ env-zimbabwe-covid (KEEP DB):
 env-zimbabwe-covid-destroy:
   extends:
     - .env-zimbabwe-covid
-  script:
+  script: 
     - ./deploy/terraform/run-docker.sh zimbabwe-covid destroy -auto-approve
   environment:
     name: zimbabwe-covid
@@ -574,7 +574,7 @@ env-zimbabwe-covid-destroy:
 .env-malawi_script-deploy:
   script:
     - ./bin/ci-deploy.sh malawi
-
+    
 env-malawi (WIPE DB):
   extends:
     - .env-malawi
@@ -596,7 +596,7 @@ env-malawi (KEEP DB):
 env-malawi-destroy:
   extends:
     - .env-malawi
-  script:
+  script: 
     - ./deploy/terraform/run-docker.sh malawi destroy -auto-approve
   environment:
     name: malawi
