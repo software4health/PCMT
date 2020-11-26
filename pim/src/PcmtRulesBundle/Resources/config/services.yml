@@ -56,7 +56,6 @@ services:
             - '@pim_catalog.builder.product'
             - '@pcmt.service.rule_processor_copier'
 
-
     pcmt.service.rule_processor_copier:
         class: PcmtRulesBundle\Service\RuleProcessorCopier
         arguments:
