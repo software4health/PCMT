@@ -3,6 +3,13 @@ VER 2.2.0 / unreleased
 
 **Added**
 * [&47](https://gitlab.com/pcmt/-/epics/47): GDSN CIS
+* [#714](https://gitlab.com/pcmt/pcmt/-/issues/714): Easy and mistake-proof way to map products for Rules 
+
+**Changed**
+* [#713](https://gitlab.com/pcmt/pcmt/-/issues/713): Bypass Draft+Approval when creating new Product (/Model) and mark them with a Category
+
+**Fixed**
+* [#712](https://gitlab.com/pcmt/pcmt/-/issues/712): F2F Copying doesn't copy table attributes
 
 VER 2.1.0 / 2020-11-13
 ==================
