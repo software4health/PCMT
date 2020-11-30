@@ -3,4 +3,4 @@ Akeneo\Pim\Enrichment\Component\Product\Model\Product:
     family:
       - NotBlank:
           message: 'The family must not be blank.'
-          groups: [creation]
+          groups: [creation, Product]
