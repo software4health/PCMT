@@ -18,11 +18,15 @@ pcmt:
         create:
           success: A new subscription successfully created
           fail: A new subscription has not been created.
-          file_is_waiting_for_upload: There is an existing subscription file which is waiting for upload
+          file_is_waiting_for_upload: There is an existing subscription file which is waiting for upload. Try again after a few minutes.
         resubmit:
           success: Subscription file has been re-submitted.
           fail: Subscription file re-submitting failed.
-          file_is_waiting_for_upload: There is an existing subscription file which is waiting for upload
+          file_is_waiting_for_upload: There is an existing subscription file which is waiting for upload.
+        delete:
+          success: The subscription has been successfully deleted.
+          fail: The subscription has not been deleted.
+          file_is_waiting_for_upload: There is an existing subscription file which is waiting for upload. Try again after a few minutes.
       page_title:
         index: "]-Inf, 1]{{ count }} subscription|]1, Inf[{{ count }} subscriptions"
   cis:

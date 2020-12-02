@@ -92,30 +92,14 @@ class SubscriptionController
             return new JsonResponse(['values' => $normalizedViolations], 400);
         }
 
-        $this->saver->save($subscription);
-
         try {
             $this->fileService->createFileCommandAdd($subscription);
+
+            $this->saver->save($subscription);
         } catch (FileIsWaitingForUploadException $e) {
-            return new JsonResponse(
-                [
-                    'successful' => false,
-                    'message'    => 'pcmt.entity.subscription.flash.create.file_is_waiting_for_upload',
-                ],
-                Response::HTTP_BAD_REQUEST
-            );
+            return $this->getGlobalErrorJsonResponse('pcmt.entity.subscription.flash.create.file_is_waiting_for_upload');
         } catch (\Throwable $e) {
-            return new JsonResponse(
-                [
-                    'values' => [
-                        [
-                            'global'  => true,
-                            'message' => 'pcmt.entity.subscription.flash.create.fail',
-                        ],
-                    ],
-                ],
-                Response::HTTP_BAD_REQUEST
-            );
+            return $this->getGlobalErrorJsonResponse('pcmt.entity.subscription.flash.create.fail');
         }
 
         return new JsonResponse(
@@ -123,6 +107,21 @@ class SubscriptionController
                 $subscription,
                 'internal_api'
             )
+        );
+    }
+
+    private function getGlobalErrorJsonResponse(string $message): JsonResponse
+    {
+        return new JsonResponse(
+            [
+                'values' => [
+                    [
+                        'global'  => true,
+                        'message' => $message,
+                    ],
+                ],
+            ],
+            Response::HTTP_BAD_REQUEST
         );
     }
 
@@ -166,10 +165,21 @@ class SubscriptionController
             return new RedirectResponse('/');
         }
 
-        $this->fileService->createFileCommandDelete($subscription);
+        try {
+            $this->fileService->createFileCommandDelete($subscription);
 
-        $this->remover->remove($subscription);
+            $this->remover->remove($subscription);
+        } catch (FileIsWaitingForUploadException $e) {
+            return $this->getGlobalErrorJsonResponse('pcmt.entity.subscription.flash.delete.file_is_waiting_for_upload');
+        } catch (\Throwable $e) {
+            return $this->getGlobalErrorJsonResponse('pcmt.entity.subscription.flash.delete.fail');
+        }
 
-        return new JsonResponse();
+        return new JsonResponse(
+            [
+                'successful' => true,
+                'message'    => 'pcmt.entity.subscription.flash.delete.success',
+            ]
+        );
     }
 }
