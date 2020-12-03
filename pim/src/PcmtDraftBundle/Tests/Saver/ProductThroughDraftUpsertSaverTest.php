@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Tests\Saver;
 
+use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtDraftBundle\Entity\AttributeChange;
 use PcmtDraftBundle\Repository\DraftRepository;
@@ -42,6 +43,9 @@ class ProductThroughDraftUpsertSaverTest extends TestCase
     /** @var DraftRepository|MockObject */
     private $draftRepositoryMock;
 
+    /** @var ConverterInterface|MockObject */
+    private $valueConverterMock;
+
     protected function setUp(): void
     {
         $this->entitySaverMock = $this->createMock(SaverInterface::class);
@@ -50,6 +54,8 @@ class ProductThroughDraftUpsertSaverTest extends TestCase
         $this->baseEntityCreatorMock = $this->createMock(BaseEntityCreatorInterface::class);
         $this->draftCreatorMock = $this->createMock(DraftCreatorInterface::class);
         $this->draftRepositoryMock = $this->createMock(DraftRepository::class);
+        $this->valueConverterMock = $this->createMock(ConverterInterface::class);
+        $this->valueConverterMock->method('convert')->willReturnArgument(0);
 
         parent::setUp();
     }
@@ -62,7 +68,8 @@ class ProductThroughDraftUpsertSaverTest extends TestCase
             $this->draftSaverMock,
             $this->baseEntityCreatorMock,
             $this->draftCreatorMock,
-            $this->draftRepositoryMock
+            $this->draftRepositoryMock,
+            $this->valueConverterMock
         );
     }
 

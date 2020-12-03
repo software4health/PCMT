@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Tests\Connector\Job\Writer\Database;
 
+use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Normalizer\Standard\Product\PropertiesNormalizer;
 use Akeneo\Tool\Bundle\VersioningBundle\Manager\VersionManager;
 use Akeneo\Tool\Component\Batch\Job\JobParameters;
@@ -63,6 +64,9 @@ class DraftWriterTest extends TestCase
     /** @var CategoryPermissionsCheckerInterface|MockObject */
     private $accessCheckerMock;
 
+    /** @var ConverterInterface|MockObject */
+    private $valueConverterMock;
+
     protected function setUp(): void
     {
         $this->versionManagerMock = $this->createMock(VersionManager::class);
@@ -82,6 +86,9 @@ class DraftWriterTest extends TestCase
             ->method('getJobParameters')
             ->willReturn($this->jobParametersMock);
 
+        $this->valueConverterMock = $this->createMock(ConverterInterface::class);
+        $this->valueConverterMock->method('convert')->willReturnArgument(0);
+
         $this->draftWriter = new DraftWriter(
             $this->versionManagerMock,
             $this->entitySaverMock,
@@ -89,7 +96,8 @@ class DraftWriterTest extends TestCase
             $this->draftSaverMock,
             $this->baseEntityCreatorMock,
             $this->draftCreatorMock,
-            $this->accessCheckerMock
+            $this->accessCheckerMock,
+            $this->valueConverterMock
         );
 
         $this->draftWriter->setStepExecution($this->stepExecutionMock);

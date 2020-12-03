@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Saver;
 
+use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
@@ -40,13 +41,17 @@ class ProductThroughDraftUpsertSaver implements SaverInterface
     /** @var DraftRepository */
     private $draftRepository;
 
+    /** @var ConverterInterface */
+    private $valueConverter;
+
     public function __construct(
         SaverInterface $entitySaver,
         NormalizerInterface $standardNormalizer,
         SaverInterface $draftSaver,
         BaseEntityCreatorInterface $baseEntityCreator,
         DraftCreatorInterface $draftCreator,
-        DraftRepository $draftRepository
+        DraftRepository $draftRepository,
+        ConverterInterface $valueConverter
     ) {
         $this->entitySaver = $entitySaver;
         $this->standardNormalizer = $standardNormalizer;
@@ -54,6 +59,7 @@ class ProductThroughDraftUpsertSaver implements SaverInterface
         $this->baseEntityCreator = $baseEntityCreator;
         $this->draftCreator = $draftCreator;
         $this->draftRepository = $draftRepository;
+        $this->valueConverter = $valueConverter;
     }
 
     /**
@@ -73,6 +79,7 @@ class ProductThroughDraftUpsertSaver implements SaverInterface
             $object->setId($baseObject->getId());
         }
         $data = $this->standardNormalizer->normalize($object, 'standard', ['import_via_drafts']);
+        $data['values'] = $this->valueConverter->convert($data['values'] ?? []);
 
         $criteria = [
             'status'  => AbstractDraft::STATUS_NEW,

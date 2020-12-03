@@ -27,3 +27,4 @@ services:
             - '@pcmt.service.draft.base_entity_creator.product'
             - '@pcmt.service.creator.product'
             - '@pcmt_catalog.repository.draft'
+            - '@pim_enrich.converter.standard_to_enrich.product_value'

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Connector\Job\Writer\Database;
 
+use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Tool\Bundle\VersioningBundle\Manager\VersionManager;
@@ -58,6 +59,9 @@ class DraftWriter implements PcmtDraftWriterInterface, InitializableInterface, S
     /** @var CategoryPermissionsCheckerInterface */
     private $accessChecker;
 
+    /** @var ConverterInterface */
+    private $valueConverter;
+
     public function __construct(
         VersionManager $versionManager,
         SaverInterface $entitySaver,
@@ -65,7 +69,8 @@ class DraftWriter implements PcmtDraftWriterInterface, InitializableInterface, S
         SaverInterface $draftSaver,
         BaseEntityCreatorInterface $baseEntityCreator,
         DraftCreatorInterface $draftCreator,
-        CategoryPermissionsCheckerInterface $accessChecker
+        CategoryPermissionsCheckerInterface $accessChecker,
+        ConverterInterface $valueConverter
     ) {
         $this->versionManager = $versionManager;
         $this->entitySaver = $entitySaver;
@@ -74,6 +79,7 @@ class DraftWriter implements PcmtDraftWriterInterface, InitializableInterface, S
         $this->baseEntityCreator = $baseEntityCreator;
         $this->draftCreator = $draftCreator;
         $this->accessChecker = $accessChecker;
+        $this->valueConverter = $valueConverter;
     }
 
     public function setUser(UserInterface $user): void
@@ -104,6 +110,7 @@ class DraftWriter implements PcmtDraftWriterInterface, InitializableInterface, S
                 $entity->setCreated(new \DateTime());
                 $entity->setUpdated(new \DateTime());
                 $data = $this->standardNormalizer->normalize($entity, 'standard', ['import_via_drafts']);
+                $data['values'] = $this->valueConverter->convert($data['values']);
 
                 if (!$this->accessChecker->hasAccessToProduct(CategoryPermissionsCheckerInterface::EDIT_LEVEL, $entity, $this->user)) {
                     throw $this->skipItemAndReturnException($data, 'No edit access to entity category');
