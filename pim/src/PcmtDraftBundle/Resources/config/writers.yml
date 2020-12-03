@@ -9,6 +9,7 @@ services:
             - '@pcmt.service.draft.base_entity_creator.product'
             - '@pcmt.service.creator.product'
             - '@pcmt.service.category_permissions_checker'
+            - '@pim_enrich.converter.standard_to_enrich.product_value'
 
     pcmt_connector.job.writer.database.draft.product_model:
         class: 'PcmtDraftBundle\Connector\Job\Writer\Database\DraftWriter'
@@ -20,3 +21,4 @@ services:
             - '@pcmt.service.draft.base_entity_creator.product_model'
             - '@pcmt.service.creator.product_model'
             - '@pcmt.service.category_permissions_checker'
+            - '@pim_enrich.converter.standard_to_enrich.product_value'
