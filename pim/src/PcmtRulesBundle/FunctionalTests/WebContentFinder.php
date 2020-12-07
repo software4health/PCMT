@@ -47,9 +47,19 @@ class WebContentFinder
         return '.alert-error.AknFlash--error';
     }
 
-    public static function getFamilySelectLocator(): string
+    public static function getSelectFieldLocator(): string
     {
         return '.select2-choice';
+    }
+
+    public static function getGridRowsLocator(): string
+    {
+        return '.AknGrid-body > .AknGrid-bodyRow';
+    }
+
+    public static function getGridCellLocator(): string
+    {
+        return '.AknGrid-bodyRow > .AknGrid-bodyCell';
     }
 
     public static function getSelectorForLocator(string $locator): string

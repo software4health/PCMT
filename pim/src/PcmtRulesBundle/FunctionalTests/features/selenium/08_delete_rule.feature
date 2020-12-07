@@ -9,7 +9,7 @@ Feature: Deleting a rule
     When I wait and follow link "System"
     When I wait and follow link "Rules"
     And I read number of rules
-    And I wait and click delete on last draft
+    And I wait and click delete on last rule
     And I confirm delete
     Then the number of rules should be lower by 1
 
