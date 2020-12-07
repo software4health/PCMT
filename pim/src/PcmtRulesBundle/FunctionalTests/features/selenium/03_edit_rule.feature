@@ -8,8 +8,7 @@ Feature: Editing a rule
     Given I log in as a test user
     When I wait and follow link "System"
     And I wait and follow link "Rules"
-    And I read number of rules
-    And I wait and click edit on last draft
+    And I wait and click edit on last rule
     And I wait
     And I fill in "unique_id" with ""
     And I save edit form
@@ -25,6 +24,7 @@ Feature: Editing a rule
     And I choose "MD - HUB" option
     And I click on destination family
     And I choose "MD - RECIPIENT MAPPING" option
+    And I wait
     And I save edit form
     Then I should get success message
 
