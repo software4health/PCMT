@@ -42,7 +42,7 @@ class WebContentFinder implements WebContentFinderInterface
     {
         switch ($element) {
             case self::LOGIN_FORM_EXISTS:
-                return "document.querySelector('.AknLogin-form').children.length >= 2";
+                return "document.querySelector('.AknLogin-form') && document.querySelector('.AknLogin-form').children.length >= 2";
             case self::BREADCRUMB_EXISTS:
                 return "document.querySelector('.AknBreadcrumb') != null";
             case self::BREADCRUMB_ENDS_WITH:

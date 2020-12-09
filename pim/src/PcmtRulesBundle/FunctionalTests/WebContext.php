@@ -11,6 +11,9 @@ declare(strict_types=1);
 namespace PcmtRulesBundle\FunctionalTests;
 
 use Behat\Behat\Context\Context;
+use Behat\Mink\Element\NodeElement;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\ExpectationFailedException;
 
 class WebContext extends \SeleniumBaseContext implements Context
 {
@@ -72,7 +75,7 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iClickOnSourceFamily(): void
     {
-        $elements = $this->getAllFamilySelectElements();
+        $elements = $this->getAllSelectFields();
         if (!$elements) {
             throw new \Exception('Source family not found');
         }
@@ -85,7 +88,7 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iClickOnDestinationFamily(): void
     {
-        $elements = $this->getAllFamilySelectElements();
+        $elements = $this->getAllSelectFields();
         if (!$elements) {
             throw new \Exception('Source family not found');
         }
@@ -94,9 +97,27 @@ class WebContext extends \SeleniumBaseContext implements Context
         $element->click();
     }
 
-    private function getAllFamilySelectElements(): array
+    /**
+     * @Then I click on key attribute field
+     */
+    public function iClickOnKeyAttributeField(): void
     {
-        $locator = WebContentFinder::getFamilySelectLocator();
+        $this->iWait();
+        $elements = $this->getAllSelectFields();
+        if (!$elements) {
+            throw new \Exception('No select fields found');
+        }
+        $elements = array_slice($elements, 2, 1);
+        if (!$elements) {
+            throw new \Exception('No third select found');
+        }
+        $element = reset($elements);
+        $element->click();
+    }
+
+    private function getAllSelectFields(): array
+    {
+        $locator = WebContentFinder::getSelectFieldLocator();
         $this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator));
 
         return $this->getSession()->getPage()->findAll('css', $locator);
@@ -193,22 +214,30 @@ class WebContext extends \SeleniumBaseContext implements Context
     }
 
     /**
-     * @When I wait and click delete on last draft
+     * @When I wait and click delete on last rule
      */
-    public function iWaitAndClickDeleteOnLastDraft(): void
+    public function iWaitAndClickDeleteOnLastRule(): void
     {
-        $this->iWaitAndClickIconOnLastDraft('trash');
+        $this->iWaitAndClickIconOnLastRule('trash');
     }
 
     /**
-     * @When I wait and click edit on last draft
+     * @When I wait and click edit on last rule
      */
-    public function iWaitAndClickEditOnLastDraft(): void
+    public function iWaitAndClickEditOnLastRule(): void
     {
-        $this->iWaitAndClickIconOnLastDraft('edit');
+        $this->iWaitAndClickIconOnLastRule('edit');
     }
 
-    private function iWaitAndClickIconOnLastDraft(string $type): void
+    /**
+     * @When I wait and click run on last rule
+     */
+    public function iWaitAndClickRunOnLastRule(): void
+    {
+        $this->iWaitAndClickIconOnLastRule('play');
+    }
+
+    private function iWaitAndClickIconOnLastRule(string $type): void
     {
         $locator = WebContentFinder::getIconLocator($type);
         $result = $this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator));
@@ -260,5 +289,99 @@ class WebContext extends \SeleniumBaseContext implements Context
             self::WAIT_TIME_MAX,
             $expression
         );
+    }
+
+    /**
+     * @Then first job on the list should be :text with status :status
+     */
+    public function firstJobOnTheListShouldBe(string $text, string $status): void
+    {
+        $attempts = 3;
+        // we make a number of attempts, as the job in background may last for some time
+        for ($i = 1; $i <= $attempts; $i++) {
+            if ($this->firstJobOnTheListShouldBeMakeAttempt($text, $status)) {
+                break;
+            }
+            if ($i === $attempts) {
+                throw new ExpectationFailedException('First job on the process tracker does not match criteria.');
+            }
+            $this->waitForThePageToLoad();
+        }
+    }
+
+    private function firstJobOnTheListShouldBeMakeAttempt(string $text, string $status): bool
+    {
+        $this->waitAndFollowLink('Activity');
+        $this->waitAndFollowLink('Process tracker');
+        $row = $this->getFirstGridRow();
+        try {
+            Assert::assertStringContainsString($text, $row->getHtml());
+            Assert::assertStringContainsString($status, $row->getHtml());
+
+            return true;
+        } catch (ExpectationFailedException $e) {
+            return false;
+        }
+    }
+
+    private function getFirstGridRow(): ?NodeElement
+    {
+        $locator = WebContentFinder::getGridRowsLocator();
+        $result = $this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator));
+        if (!$result) {
+            throw new \Exception('No grid rows found.');
+        }
+
+        $rows = $this->getSession()->getPage()->findAll('css', $locator);
+        if (!$rows) {
+            throw new \Exception('No grid row elements found.');
+        }
+
+        return reset($rows);
+    }
+
+    /**
+     * @When I click on first job
+     */
+    public function iClickOnFirstJob(): void
+    {
+        $row = $this->getFirstGridRow();
+        $row->click();
+        $this->waitForThePageToLoad();
+    }
+
+    /**
+     * @Then I should see the :text row with value :value
+     */
+    public function iShouldSeeTheRow(string $text, string $value): void
+    {
+        if (!$this->findRowWithValue($text, $value)) {
+            throw new \Exception('Row with value not found.');
+        }
+    }
+
+    private function findRowWithValue(string $text, string $value): bool
+    {
+        $locator = WebContentFinder::getGridCellLocator();
+        $result = $this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator));
+        if (!$result) {
+            throw new \Exception('No grid cells found.');
+        }
+        $cells = $this->getSession()->getPage()->findAll('css', $locator);
+        if (!$cells) {
+            throw new \Exception('No grid cells found.');
+        }
+        foreach ($cells as $i => $cell) {
+            if ($text === $cell->getText()) {
+                $nextCell = $cells[$i + 1];
+                if ($nextCell) {
+                    if ($value === $nextCell->getText()) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }
