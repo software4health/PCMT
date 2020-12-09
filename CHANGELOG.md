@@ -1,4 +1,4 @@
-VER 2.2.1 / unreleased
+VER 2.3.0 / unreleased
 ==================
 
 **Added**
@@ -6,6 +6,18 @@ VER 2.2.1 / unreleased
 **Changed**
 
 **Fixed**
+
+VER 2.2.1 / unreleased
+==================
+
+**Added**
+* [#700](https://gitlab.com/pcmt/pcmt/-/issues/714) Functional test - Running a rule
+
+**Changed**
+
+**Fixed**
+* [#722](https://gitlab.com/pcmt/pcmt/-/issues/722) Handle creating a new subscription after deleting the previous one with the same data
+* [#723](https://gitlab.com/pcmt/pcmt/-/issues/723) Batch image upload error with drafts
 
 VER 2.2.0 / 2020-12-01
 ==================
