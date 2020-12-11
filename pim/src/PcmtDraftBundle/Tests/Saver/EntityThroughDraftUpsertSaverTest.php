@@ -14,7 +14,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtDraftBundle\Entity\AttributeChange;
 use PcmtDraftBundle\Repository\DraftRepository;
-use PcmtDraftBundle\Saver\ProductThroughDraftUpsertSaver;
+use PcmtDraftBundle\Saver\EntityThroughDraftUpsertSaver;
 use PcmtDraftBundle\Service\Draft\BaseEntityCreatorInterface;
 use PcmtDraftBundle\Service\Draft\DraftCreatorInterface;
 use PcmtDraftBundle\Tests\TestDataBuilder\ExistingProductDraftBuilder;
@@ -23,7 +23,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class ProductThroughDraftUpsertSaverTest extends TestCase
+class EntityThroughDraftUpsertSaverTest extends TestCase
 {
     /** @var SaverInterface|MockObject */
     private $entitySaverMock;
@@ -60,9 +60,9 @@ class ProductThroughDraftUpsertSaverTest extends TestCase
         parent::setUp();
     }
 
-    private function getTestedObject(): ProductThroughDraftUpsertSaver
+    private function getTestedObject(): EntityThroughDraftUpsertSaver
     {
-        return new ProductThroughDraftUpsertSaver(
+        return new EntityThroughDraftUpsertSaver(
             $this->entitySaverMock,
             $this->standardNormalizerMock,
             $this->draftSaverMock,

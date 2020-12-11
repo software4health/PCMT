@@ -11,17 +11,19 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Saver;
 
 use Akeneo\Pim\Enrichment\Component\Product\Converter\ConverterInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithValuesInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
-use PcmtDraftBundle\Entity\ExistingProductDraft;
+use PcmtDraftBundle\Entity\ExistingObjectDraftInterface;
 use PcmtDraftBundle\Exception\DraftWithNoChangesException;
 use PcmtDraftBundle\Repository\DraftRepository;
 use PcmtDraftBundle\Service\Draft\BaseEntityCreatorInterface;
 use PcmtDraftBundle\Service\Draft\DraftCreatorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class ProductThroughDraftUpsertSaver implements SaverInterface
+class EntityThroughDraftUpsertSaver implements SaverInterface
 {
     /** @var SaverInterface */
     private $entitySaver;
@@ -67,10 +69,10 @@ class ProductThroughDraftUpsertSaver implements SaverInterface
      */
     public function save($object, array $options = []): void
     {
-        if (!$object instanceof ProductInterface) {
+        if (!$object instanceof ProductInterface && !$object instanceof ProductModelInterface) {
             throw new \InvalidArgumentException('Wrong object class in '. self::class.': '. get_class($object));
         }
-        /** @var ProductInterface $object */
+        /** @var EntityWithValuesInterface $object */
         // following is needed, as normalizer will throw an exception otherwise
         $object->setCreated(new \DateTime());
         $object->setUpdated(new \DateTime());
@@ -83,10 +85,14 @@ class ProductThroughDraftUpsertSaver implements SaverInterface
 
         $criteria = [
             'status'  => AbstractDraft::STATUS_NEW,
-            'product' => $baseObject,
         ];
+        if ($baseObject instanceof ProductInterface) {
+            $criteria['product'] = $baseObject;
+        } elseif ($baseObject instanceof ProductModelInterface) {
+            $criteria['productModel'] = $baseObject;
+        }
 
-        /** @var ExistingProductDraft $draft */
+        /** @var ExistingObjectDraftInterface $draft */
         $draft = $this->draftRepository->findOneBy($criteria);
         if (!$draft) {
             $draft = $this->draftCreator->create($baseObject, $data);
@@ -103,7 +109,7 @@ class ProductThroughDraftUpsertSaver implements SaverInterface
         }
     }
 
-    private function getEntityOrCreateIfNotExists(ProductInterface $object): ProductInterface
+    private function getEntityOrCreateIfNotExists(EntityWithValuesInterface $object): EntityWithValuesInterface
     {
         if ($object->getId()) {
             return $object;

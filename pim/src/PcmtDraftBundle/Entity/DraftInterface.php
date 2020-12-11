@@ -44,4 +44,6 @@ interface DraftInterface
     public function approve(UserInterface $approver): void;
 
     public function reject(): void;
+
+    public function setProductData(array $productData): void;
 }

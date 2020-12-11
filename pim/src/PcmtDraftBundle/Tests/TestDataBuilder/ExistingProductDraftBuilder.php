@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Tests\TestDataBuilder;
 
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 
@@ -59,9 +60,9 @@ class ExistingProductDraftBuilder extends AbstractDraftBuilder
         return $this->existingProductDraft;
     }
 
-    public function withNoProduct(): self
+    public function withProduct(?ProductInterface $product): self
     {
-        $this->existingProductDraft->setProduct();
+        $this->existingProductDraft->setProduct($product);
 
         return $this;
     }

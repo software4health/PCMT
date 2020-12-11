@@ -14,6 +14,7 @@ use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
 use PcmtDraftBundle\Saver\DraftSaver;
+use PcmtDraftBundle\Service\Associations\BiDirectionalAssociationUpdater;
 use PcmtDraftBundle\Service\Draft\DraftApprover;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
 use PcmtDraftBundle\Service\Draft\DraftRejecter;
@@ -40,6 +41,7 @@ class DraftFacadeTest extends TestCase
         $this->productModelDraftApproverMock = $this->createMock(DraftApprover::class);
         $this->draftSaverMock = $this->createMock(DraftSaver::class);
         $this->draftRejecterMock = $this->createMock(DraftRejecter::class);
+        $this->biDirectionAssociationUpdaterMock = $this->createMock(BiDirectionalAssociationUpdater::class);
     }
 
     /**

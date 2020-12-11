@@ -16,9 +16,12 @@ class AssociationTypeBuilder
     /** @var AssociationType */
     private $associationType;
 
+    public const DEFAULT_TYPE_ID = 12;
+
     public function __construct()
     {
         $this->associationType = new AssociationType();
+        $this->withId(self::DEFAULT_TYPE_ID);
     }
 
     public function withId(int $id): self
