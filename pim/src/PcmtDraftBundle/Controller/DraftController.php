@@ -21,6 +21,7 @@ use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\MassActions\DraftsBulkActionOperation;
 use PcmtDraftBundle\Normalizer\DraftViolationNormalizer;
 use PcmtDraftBundle\Repository\DraftRepositoryInterface;
+use PcmtDraftBundle\Service\Associations\BiDirectionalAssociationUpdater;
 use PcmtDraftBundle\Service\Builder\ResponseBuilder;
 use PcmtDraftBundle\Service\Draft\DraftFacade;
 use PcmtDraftBundle\Service\Draft\DraftStatusListService;
@@ -54,6 +55,9 @@ class DraftController
     /** @var CategoryPermissionsCheckerInterface */
     private $categoryPermissionsChecker;
 
+    /** @var BiDirectionalAssociationUpdater */
+    private $biDirectionalAssociationUpdater;
+
     public function __construct(
         DraftStatusListService $draftStatusListService,
         DraftFacade $draftFacade,
@@ -61,7 +65,8 @@ class DraftController
         OperationJobLauncher $operationJobLauncher,
         DraftRepositoryInterface $draftRepository,
         DraftViolationNormalizer $draftViolationNormalizer,
-        CategoryPermissionsCheckerInterface $categoryPermissionsChecker
+        CategoryPermissionsCheckerInterface $categoryPermissionsChecker,
+        BiDirectionalAssociationUpdater $biDirectionalAssociationUpdater
     ) {
         $this->draftStatusListService = $draftStatusListService;
         $this->draftFacade = $draftFacade;
@@ -70,6 +75,7 @@ class DraftController
         $this->draftRepository = $draftRepository;
         $this->draftViolationNormalizer = $draftViolationNormalizer;
         $this->categoryPermissionsChecker = $categoryPermissionsChecker;
+        $this->biDirectionalAssociationUpdater = $biDirectionalAssociationUpdater;
     }
 
     /**
@@ -150,6 +156,9 @@ class DraftController
             $options = [];
             if (isset($data['lastUpdatedAtTimestamp'])) {
                 $options['lastUpdatedAt'] = $data['lastUpdatedAtTimestamp'];
+            }
+            if (0) {
+                $this->biDirectionalAssociationUpdater->update($draft);
             }
             $this->draftFacade->updateDraft($draft, $options);
         } catch (DraftViolationException $e) {

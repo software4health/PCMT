@@ -14,8 +14,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Exception\DraftSavingFailedException;
 use PcmtDraftBundle\Exception\DraftViolationException;
+use PcmtDraftBundle\Exception\DraftWithNoChangesException;
 use PcmtDraftBundle\Saver\DraftSaver;
-use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
+use PcmtDraftBundle\Service\Draft\ChangesChecker;
 use PcmtDraftBundle\Service\Draft\DraftExistenceChecker;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use PcmtDraftBundle\Tests\TestDataBuilder\AttributeBuilder;
@@ -55,8 +56,8 @@ class DraftSaverTest extends TestCase
     /** @var GeneralObjectFromDraftCreator|MockObject */
     private $generalObjectFromDraftCreatorMock;
 
-    /** @var AttributeChangeService|MockObject */
-    private $attributeChangeServiceMock;
+    /** @var ChangesChecker|MockObject */
+    private $changesCheckerMock;
 
     protected function setUp(): void
     {
@@ -66,7 +67,7 @@ class DraftSaverTest extends TestCase
         $this->productValidatorMock = $this->createMock(ValidatorInterface::class);
         $this->productModelValidatorMock = $this->createMock(ValidatorInterface::class);
         $this->generalObjectFromDraftCreatorMock = $this->createMock(GeneralObjectFromDraftCreator::class);
-        $this->attributeChangeServiceMock = $this->createMock(AttributeChangeService::class);
+        $this->changesCheckerMock = $this->createMock(ChangesChecker::class);
 
         $this->draftSaver = new DraftSaver(
             $this->entityManagerMock,
@@ -75,7 +76,7 @@ class DraftSaverTest extends TestCase
             $this->productValidatorMock,
             $this->productModelValidatorMock,
             $this->generalObjectFromDraftCreatorMock,
-            $this->attributeChangeServiceMock
+            $this->changesCheckerMock
         );
     }
 
@@ -279,5 +280,26 @@ class DraftSaverTest extends TestCase
         $this->eventDispatcherMock->expects($this->exactly(2))->method('dispatch');
 
         $this->draftSaver->save($draft, [DraftSaver::OPTION_NO_VALIDATION => true]);
+    }
+
+    public function testSaveWhenNoChanges(): void
+    {
+        $draft = (new ExistingProductDraftBuilder())->withId(0)->build();
+
+        $this->generalObjectFromDraftCreatorMock
+            ->method('getObjectToSave')
+            ->willReturn((new ProductBuilder())->build());
+
+        $this->productValidatorMock
+            ->expects($this->once())
+            ->method('validate')
+            ->willReturn((new ConstraintViolationListBuilder())->build());
+
+        $this->changesCheckerMock->expects($this->once())->method('checkIfChanges')->willReturn(false);
+
+        $this->expectException(DraftWithNoChangesException::class);
+
+        $options = [DraftSaver::OPTION_DONT_SAVE_IF_NO_CHANGES => true];
+        $this->draftSaver->save($draft, $options);
     }
 }

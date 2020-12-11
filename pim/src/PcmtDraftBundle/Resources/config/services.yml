@@ -18,6 +18,7 @@ services:
             - '@pcmt.service.product_model_draft_approver'
             - '@pcmt.saver.draft'
             - '@pcmt.service.draft_rejecter'
+            - '@pcmt.service.associations.bi_directional_association_updater'
 
     pcmt.service.draft_rejecter:
         class: PcmtDraftBundle\Service\Draft\DraftRejecter
@@ -139,3 +140,24 @@ services:
         class: 'PcmtDraftBundle\Service\Helper\SpecialCategoryUpdater'
         arguments:
             - '@pim_catalog.updater.product_model'
+
+    pcmt.service.associations.bi_directional_association_updater:
+        class: 'PcmtDraftBundle\Service\Associations\BiDirectionalAssociationUpdater'
+        arguments:
+            - '@pcmt.service.general_object_from_draft_creator'
+            - '@pcmt.service.associations.association_through_draft_adding'
+
+    pcmt.service.associations.association_through_draft_adding:
+        class: 'PcmtDraftBundle\Service\Associations\AssociationThroughDraftAdding'
+        arguments:
+            - '@pcmt.saver.product_through_draft'
+            - '@pcmt.saver.product_model_through_draft'
+            - '@pcmt.service.general_object_from_draft_creator'
+            - '@pcmt_catalog.repository.draft'
+
+    pcmt.service.draft.changes_checker:
+        class: 'PcmtDraftBundle\Service\Draft\ChangesChecker'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@pcmt.service.general_object_from_draft_creator'
+            - '@pcmt.service.attribute_change'

@@ -42,7 +42,7 @@ services:
     pcmt_connector.tasklet.pcmt_e2open_import:
         class: PcmtCoreBundle\Connector\Job\E2OpenFromXmlTasklet
         arguments:
-            - '@pcmt.saver.product_import'
+            - '@pcmt.saver.product_through_draft'
             - '@pim_catalog.builder.product'
             - '@pcmt_core.service.e2Open.trade_item_xml_processor'
             - '@pim_catalog.query.product_query_builder_factory'

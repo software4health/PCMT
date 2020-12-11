@@ -224,7 +224,7 @@ class DraftApproverTest extends TestCase
 
     public function testApproveWhenThereIsNoCorrespondingObject(): void
     {
-        $draftToApprove = (new ExistingProductDraftBuilder())->withNoProduct()->build();
+        $draftToApprove = (new ExistingProductDraftBuilder())->withProduct(null)->build();
 
         $this->expectException(\Throwable::class);
         $this->expectExceptionMessage('pcmt.entity.draft.error.no_corresponding_object');

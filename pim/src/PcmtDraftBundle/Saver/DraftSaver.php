@@ -17,11 +17,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use PcmtDraftBundle\Entity\AbstractDraft;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Entity\ExistingObjectDraftInterface;
-use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Exception\DraftSavingFailedException;
 use PcmtDraftBundle\Exception\DraftViolationException;
 use PcmtDraftBundle\Exception\DraftWithNoChangesException;
-use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
+use PcmtDraftBundle\Service\Draft\ChangesChecker;
 use PcmtDraftBundle\Service\Draft\DraftExistenceChecker;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -52,8 +51,8 @@ class DraftSaver implements SaverInterface
     /** @var GeneralObjectFromDraftCreator */
     private $generalObjectFromDraftCreator;
 
-    /** @var AttributeChangeService */
-    private $attributeChangeService;
+    /** @var ChangesChecker */
+    private $changesChecker;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -62,7 +61,7 @@ class DraftSaver implements SaverInterface
         ValidatorInterface $productValidator,
         ValidatorInterface $productModelValidator,
         GeneralObjectFromDraftCreator $generalObjectFromDraftCreator,
-        AttributeChangeService $attributeChangeService
+        ChangesChecker $changesChecker
     ) {
         $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
@@ -70,7 +69,7 @@ class DraftSaver implements SaverInterface
         $this->productValidator = $productValidator;
         $this->productModelValidator = $productModelValidator;
         $this->generalObjectFromDraftCreator = $generalObjectFromDraftCreator;
-        $this->attributeChangeService = $attributeChangeService;
+        $this->changesChecker = $changesChecker;
     }
 
     /**
@@ -79,33 +78,15 @@ class DraftSaver implements SaverInterface
     public function save($draft, array $options = []): void
     {
         $this->validateDraft($draft, $options);
-        if ($draft instanceof ProductDraftInterface) {
-            $this->checkIfDraftHasAnyChanges($draft, $options);
+        if (!$draft->getId() && !empty($options[self::OPTION_DONT_SAVE_IF_NO_CHANGES])) {
+            if (!$this->changesChecker->checkIfChanges($draft)) {
+                throw new DraftWithNoChangesException('Draft does not contain any changes.');
+            }
         }
         $this->eventDispatcher->dispatch(StorageEvents::PRE_SAVE, new GenericEvent($draft, $options));
         $this->entityManager->persist($draft);
         $this->entityManager->flush();
         $this->eventDispatcher->dispatch(StorageEvents::POST_SAVE, new GenericEvent($draft, $options));
-    }
-
-    private function checkIfDraftHasAnyChanges(ProductDraftInterface $draft, array $options): void
-    {
-        if (empty($options[self::OPTION_DONT_SAVE_IF_NO_CHANGES])) {
-            return;
-        }
-
-        if ($draft->getId()) {
-            // the draft is already there, we should update it whatever data
-            return;
-        }
-
-        $this->entityManager->refresh($draft->getProduct());
-
-        $newProduct = $this->generalObjectFromDraftCreator->getObjectToCompare($draft);
-        $changes = $this->attributeChangeService->get($newProduct, $draft->getProduct());
-        if (!$changes) {
-            throw new DraftWithNoChangesException('Draft does not contain any changes.');
-        }
     }
 
     protected function validateDraft(object $draft, array $options = []): void

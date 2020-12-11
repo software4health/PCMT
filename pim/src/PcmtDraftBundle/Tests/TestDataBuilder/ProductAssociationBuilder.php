@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PcmtDraftBundle\Tests\TestDataBuilder;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductAssociation;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Structure\Component\Model\AssociationType;
 
 class ProductAssociationBuilder
@@ -20,11 +21,19 @@ class ProductAssociationBuilder
     public function __construct()
     {
         $this->association = new ProductAssociation();
+        $this->withType((new AssociationTypeBuilder())->build());
     }
 
     public function withType(AssociationType $type): self
     {
         $this->association->setAssociationType($type);
+
+        return $this;
+    }
+
+    public function withProduct(ProductInterface $product): self
+    {
+        $this->association->addProduct($product);
 
         return $this;
     }
