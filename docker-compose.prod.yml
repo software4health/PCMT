@@ -9,6 +9,7 @@ services:
   fpm:
     volumes:
       - 'ftp-get:/srv/pim/src/PcmtCoreBundle/Resources/E2OpenImport/work/'
+      - 'ftp-put:/srv/pim/src/PcmtCISBundle/Resources/E2OpenCIS/'
 
   mysql:
     ports:
@@ -70,12 +71,10 @@ services:
     environment:
       CRON_SCHEDULE: '*/10 * * * *'
       SFTP_PRIVKEY_FILENAME: '/run/secrets/sftp-privkey'
-      SFTP_LOCAL_DIR: '/srv/pim/src/PcmtCISBundle/Resources/E2OpenCIS/work/'
-      SFTP_LOCAL_ARCHIVE_DIR: '/srv/pim/src/PcmtCISBundle/Resources/E2OpenCIS/done/'
-      SFTP_REMOTE_DIR: '/in/.sftp/'
-      SFTP_REMOTE_ARCHIVE_DIR: '/in/'
+      SFTP_LOCAL_DIR: '/uploads/work/'
+      SFTP_LOCAL_ARCHIVE_DIR: '/uploads/done/'
     volumes:
-      - 'ftp-put:/srv/pim/src/PcmtCoreBundle/Resources/E2OpenImport/'
+      - 'ftp-put:/uploads'
     secrets:
       - ftp-put-creds
       - sftp-privkey
