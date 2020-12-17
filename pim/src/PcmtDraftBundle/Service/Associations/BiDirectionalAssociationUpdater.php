@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Service\Associations;
 
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 
@@ -29,19 +31,31 @@ class BiDirectionalAssociationUpdater
         $this->associationThroughDraftAdding = $associationThroughDraftAdding;
     }
 
-    public function update(DraftInterface $draft): void
+    public function update(DraftInterface $draft, array $associationData): void
     {
         $object = $this->generalObjectFromDraftCreator->getObjectToCompare($draft);
+
         $associations = $object->getAllAssociations();
         foreach ($associations as $association) {
+            $associationType = $association->getAssociationType();
             $products = $association->getProducts();
             foreach ($products as $product) {
-                $this->associationThroughDraftAdding->add($object, $product, $association->getAssociationType());
+                /** @var ProductInterface $product */
+                if (!empty($associationData[$associationType->getCode()]['products_bi_directional'])) {
+                    if (in_array($product->getIdentifier(), $associationData[$associationType->getCode()]['products_bi_directional'])) {
+                        $this->associationThroughDraftAdding->add($object, $product, $associationType);
+                    }
+                }
             }
 
             $productModels = $association->getProductModels();
             foreach ($productModels as $productModel) {
-                $this->associationThroughDraftAdding->add($object, $productModel, $association->getAssociationType());
+                /** @var ProductModelInterface $productModel */
+                if (!empty($associationData[$associationType->getCode()]['product_models_bi_directional'])) {
+                    if (in_array($productModel->getCode(), $associationData[$associationType->getCode()]['product_models_bi_directional'])) {
+                        $this->associationThroughDraftAdding->add($object, $productModel, $associationType);
+                    }
+                }
             }
         }
     }

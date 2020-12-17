@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace PcmtDraftBundle\Tests\Service\Associations;
 
+use PcmtDraftBundle\Entity\DraftInterface;
 use PcmtDraftBundle\Service\Associations\AssociationThroughDraftAdding;
 use PcmtDraftBundle\Service\Associations\BiDirectionalAssociationUpdater;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
 use PcmtDraftBundle\Tests\TestDataBuilder\AssociationCollectionBuilder;
+use PcmtDraftBundle\Tests\TestDataBuilder\AssociationTypeBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ExistingProductDraftBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductAssociationBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductBuilder;
@@ -36,25 +38,77 @@ class BiDirectionalAssociationUpdaterTest extends TestCase
         $this->associationThroughDraftAddingMock = $this->createMock(AssociationThroughDraftAdding::class);
     }
 
-    public function testUpdate(): void
+    public function dataUpdate(): array
     {
-        $connectedProduct = (new ProductBuilder())->build();
-        $connectedProductModel = (new ProductModelBuilder())->build();
+        $associationTypeCode = 'example_code';
+        $productIdentifier2 = 'sdfdgfhdh';
+        $productModelCode1 = 'sdfdsdsgdfhghg';
+
+        $connectedProduct1 = (new ProductBuilder())->withIdentifier('aaaa')->build();
+        $connectedProduct2 = (new ProductBuilder())->withIdentifier($productIdentifier2)->build();
+        $connectedProductModel1 = (new ProductModelBuilder())->withCode($productModelCode1)->build();
+        $connectedProductModel2 = (new ProductModelBuilder())->withCode('a')->build();
+
+        $associationType = (new AssociationTypeBuilder())->withCode($associationTypeCode)->build();
+        $association1 = (new ProductAssociationBuilder())
+            ->withType($associationType)
+            ->withProduct($connectedProduct1)
+            ->withProduct($connectedProduct2)
+            ->build();
+        $association2 = (new ProductModelAssociationBuilder())
+            ->withType($associationType)
+            ->withProductModel($connectedProductModel1)
+            ->withProductModel($connectedProductModel2)
+            ->build();
+
         $product = (new ProductBuilder())->withAssociations(
             (new AssociationCollectionBuilder())
-                ->withAssociation((new ProductAssociationBuilder())->withProduct($connectedProduct)->build())
-                ->withAssociation((new ProductAssociationBuilder())->withProduct($connectedProduct)->build())
-                ->withAssociation((new ProductModelAssociationBuilder())->withProductModel($connectedProductModel)->build())
+                ->withAssociation($association1)
+                ->withAssociation($association2)
                 ->build()
         )->build();
         $draft = (new ExistingProductDraftBuilder())->withProduct($product)->build();
 
-        $this->objectFromDraftCreatorMock->method('getObjectToCompare')->willReturn($product);
+        $associationData = [
+            $associationTypeCode => [
+                'products_bi_directional' => [
+                    $productIdentifier2,
+                ],
+                'product_models_bi_directional' => [
+                    $productModelCode1,
+                ],
+            ],
+        ];
 
-        $this->associationThroughDraftAddingMock->expects($this->exactly(3))->method('add');
+        return [
+            [$draft, $associationData],
+        ];
+    }
+
+    /**
+     * @dataProvider dataUpdate
+     */
+    public function testUpdate(DraftInterface $draft, array $associationData): void
+    {
+        $this->objectFromDraftCreatorMock->method('getObjectToCompare')->willReturn($draft->getObject());
+
+        $this->associationThroughDraftAddingMock->expects($this->exactly(2))->method('add');
 
         $updater = $this->getUpdater();
-        $updater->update($draft);
+        $updater->update($draft, $associationData);
+    }
+
+    /**
+     * @dataProvider dataUpdate
+     */
+    public function testUpdateEmptyParameter(DraftInterface $draft, array $associationData): void
+    {
+        $this->objectFromDraftCreatorMock->method('getObjectToCompare')->willReturn($draft->getObject());
+
+        $this->associationThroughDraftAddingMock->expects($this->exactly(0))->method('add');
+
+        $updater = $this->getUpdater();
+        $updater->update($draft, []);
     }
 
     private function getUpdater(): BiDirectionalAssociationUpdater

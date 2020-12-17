@@ -18,15 +18,25 @@ class AssociationTypeBuilder
 
     public const DEFAULT_TYPE_ID = 12;
 
+    public const DEFAULT_CODE = 'EXAMPLE_CODE';
+
     public function __construct()
     {
         $this->associationType = new AssociationType();
         $this->withId(self::DEFAULT_TYPE_ID);
+        $this->withCode(self::DEFAULT_CODE);
     }
 
     public function withId(int $id): self
     {
         $this->associationType->setId($id);
+
+        return $this;
+    }
+
+    public function withCode(?string $code): self
+    {
+        $this->associationType->setCode($code);
 
         return $this;
     }
