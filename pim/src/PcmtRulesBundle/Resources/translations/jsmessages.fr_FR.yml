@@ -1,10 +1,10 @@
 pim_title:
-    pcmt_rules_index: FR Rules
-    pcmt_rules_edit: FR Rules
+    pcmt_rules_index: FR Family to family mapping rules
+    pcmt_rules_edit: FR Family to family mapping rules
 
 pim_menu:
     item:
-        rules: FR Rules
+        rules: FR Family to family mapping rules
 
 pim_enrich:
     entity:
