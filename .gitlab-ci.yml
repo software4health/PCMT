@@ -34,6 +34,10 @@ include:
   variables:
     PCMT_VER: '2.2.1'
     PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v2.2.1/pcmt-v2.2.1.tar.gz'
+.pcmt_v_2_0_2:
+  variables:
+    PCMT_VER: '2.0.2'
+    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v2.0.2/pcmt-v2.0.2.tar.gz'
 
 ############### PIM ###############
 
@@ -351,11 +355,12 @@ env-test-destroy:
 
 .env-gfpvan:
   extends:
-    - .pim_only_changes
+    - pcmt_v_2_0_2
   stage: deploy
   only:
     - master@pcmt/pcmt
   when: manual
+  needs: []
   environment:
     name: gfpvan
     url: http://gfpvan-prod.productcatalog.io
@@ -372,8 +377,6 @@ env-gfpvan (WIPE DB):
     - .env-gfpvan_script-deploy
   variables:
     PCMT_PROFILE: dev
-    PCMT_VER: '2.0.2'
-    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v2.0.2/pcmt-v2.0.2.tar.gz'
 
 env-gfpvan (KEEP DB):
   extends:
@@ -381,8 +384,6 @@ env-gfpvan (KEEP DB):
     - .env-gfpvan_script-deploy
   variables:
     PCMT_PROFILE: production
-    PCMT_VER: '2.0.2'
-    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v2.0.2/pcmt-v2.0.2.tar.gz'
 
 env-gfpvan-destroy:
   extends:
@@ -397,12 +398,12 @@ env-gfpvan-destroy:
 
 .env-gfpvan-uat:
   extends:
-    - .pim_only_changes
     - .pcmt_v_2_2_1
   stage: deploy
   only:
     - master@pcmt/pcmt
   when: manual
+  needs: []
   environment:
     name: gfpvan-uat
     url: http://gfpvan-uat.pcmt.villagereach.org
