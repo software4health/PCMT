@@ -97,6 +97,7 @@ config:
         pcmt/product/template/product/form/status-switcher-disabled: pcmtdraft/templates/product/form/status-switcher-disabled.html
         pcmt/draft/template/mass-actions: pcmtdraft/templates/draft/mass-actions.html
         pcmt/draft/template/actions-panel: pcmtdraft/templates/draft/actions-panel.html
+        pcmt/draft/template/product/form/modal-associations-add: pcmtdraft/templates/product/form/modal-associations-add.html
 
         ### controllers ###
         pcmt/product/drafts/index: pcmtdraft/js/controller/drafts_index
