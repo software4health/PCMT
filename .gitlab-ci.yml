@@ -50,10 +50,6 @@ include:
   variables:
     PCMT_VER: '1.1.4'
     PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v1.1.4/pcmt-v1.1.4.tar.gz'
-.pcmt_v_1_1_0:
-  variables:
-    PCMT_VER: '1.1.0'
-    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v1.1.0/pcmt-v1.1.0.tar.gz'
 
 ############### PIM ###############
 
@@ -616,4 +612,44 @@ env-malawi-destroy:
     - ./deploy/terraform/run-docker.sh malawi destroy -auto-approve
   environment:
     name: malawi
+    action: stop
+
+############### Malawi UAT Environment ###############
+
+.env-malawi-uat:
+  extends:
+    - .pcmt_v_2_2_0
+  stage: deploy
+  when: manual
+  needs: []
+  environment:
+    name: malawi-uat
+    url: http://malawi-uat.productcatalog.io
+    on_stop: env-malawi-uat-destroy
+
+.env-malawi-uat_script-deploy:
+  script:
+    - ./bin/ci-deploy.sh malawi-uat
+    
+env-malawi-uat (WIPE DB):
+  extends:
+    - .env-malawi-uat
+    - .env-malawi-uat_script-deploy
+  variables:
+    PCMT_PROFILE: dev
+
+env-malawi-uat (KEEP DB):
+  extends:
+    - .env-malawi-uat
+    - .env-malawi-uat_script-deploy
+  variables:
+    PCMT_PROFILE: production
+
+env-malawi-uat-destroy:
+  extends:
+    - .env-malawi-uat
+  script: 
+    - ./deploy/terraform/run-docker.sh malawi-uat destroy -auto-approve
+  environment:
+    name: malawi-uat
     action: stop
