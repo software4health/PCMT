@@ -21,9 +21,7 @@ These may be operated from the [Environments][gitlab-env] screen.
 | [test][test]                   | Every change to `master`     | CD/Test the latest           |
 | [showcase][show]               | Manually, at sprint showcase | Sprint Showcases             |
 | [beta][beta]                   | Alias for demo               | Alias for demo               |
-| [rwanda-demo][rwanda-demo]     | Manually as desired          | 1.x demo for Ethiopia        |
-| [ethiopia-demo][ethiopia-demo] | Manually as desired          | 1.x demo for Ethiopia        |
-| [undp-demo][undp-demo]         | Manually as desired          | 1.x demo for Ethiopia        |
+| [undp-demo][undp-demo]         | Manually as desired          | demo for UNDP                |
 | [covid-dev][covid-dev]         | Manually as desired          | 1.x dev for COVID products   |
 
 [gitlab-env]: https://gitlab.com/pcmt/pcmt/environments
@@ -31,6 +29,4 @@ These may be operated from the [Environments][gitlab-env] screen.
 [test]: https://test.pcmt.villagereach.org
 [show]: https://showcase.pcmt.villagereach.org
 [beta]: http://beta.pcmt.villagereach.org
-[rwanda-demo]: https://rwanda-demo.productcatalog.io
-[ethiopia-demo]: https://ethiopia-demo.productcatalog.io
 [covid-dev]: https://covid-dev.productcatalog.io
