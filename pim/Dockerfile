@@ -18,10 +18,12 @@ RUN mkdir -p /srv/pim && \
     apt-get clean && \
     apt-get autoremove
 
+ADD ini/xdebug.ini /etc/php/7.2/mods-available/xdebug.ini
+
 USER docker
 ADD --chown=docker:docker ${AKENEO_URL}${AKENEO_VER}.tar.gz /home/docker/pim.tar.gz
 RUN tar xvzf /home/docker/pim.tar.gz -C /srv/pim --strip-components=1
-WORKDIR /srv/pim    
+WORKDIR /srv/pim
 
 #--- PCMT PIM BUILD ---
 FROM akeneo as pim-build

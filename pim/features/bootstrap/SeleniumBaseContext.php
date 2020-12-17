@@ -16,7 +16,7 @@ class SeleniumBaseContext extends MinkContext implements Context
     /** @var AppKernel */
     private $kernel;
 
-    public const WAIT_TIME_MAX = 10000;
+    public const WAIT_TIME_MAX = 20000;
 
     public const WAIT_TIME_MEDIUM = 4000;
 
