@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace PcmtCoreBundle\FunctionalTests;
 
 use Behat\Behat\Context\Context;
+use Carbon\Carbon;
 
 class WebContext extends \SeleniumBaseContext implements Context
 {
@@ -215,5 +216,126 @@ class WebContext extends \SeleniumBaseContext implements Context
         $this->waitUntil(\WebContentFinder::LOCATOR_EXISTS, $moduleLocator);
         $deleteButton = $page->find('css', $moduleLocator);
         $deleteButton->click();
+    }
+
+    /**
+     * @Given I go to the Settings page
+     */
+    public function goToTheSettingsPage(): void
+    {
+        $this->clickLink('Settings');
+
+        if (!$this->waitUntil(\WebContentFinder::BREADCRUMB_EXISTS)) {
+            throw new \RuntimeException('Can not load the Settings page.');
+        }
+    }
+
+    /**
+     * @Given I go to the Family page
+     */
+    public function goToTheFamilyPage(): void
+    {
+        $this->clickLink('Families');
+
+        if (!$this->waitUntil(\WebContentFinder::BREADCRUMB_EXISTS)) {
+            throw new \RuntimeException('Can not load the Families page.');
+        }
+    }
+
+    /**
+     * @Given I click on create family
+     */
+    public function iClickOnCreateFamily(): void
+    {
+        $locator = '//*[@id="create-button-extension"]';
+        $button = $this->getSession()->getPage()->find('xpath', $locator);
+
+        $button->click();
+
+        if (!$this->waitUntil(\WebContentFinder::LOCATOR_EXISTS, '#creation_code')) {
+            throw new \RuntimeException('Can not open form for creating the family.');
+        }
+    }
+
+    /**
+     * @When I fill in the family code with the value
+     */
+    public function iFillTheFamilyCodeWithTheValue(): void
+    {
+        $fieldLocator = 'creation_code';
+        $value = 'Family_' . Carbon::now()->getTimestamp();
+
+        $this->getSession()->getPage()->fillField($fieldLocator, $value);
+    }
+
+    /**
+     * @When I click save button
+     */
+    public function iClickSaveButton(): void
+    {
+        $locator = 'div.AknButtonList > div.AknButton.AknButtonList-item.AknButton--apply.ok';
+
+        $this->waitUntil(\WebContentFinder::SAVE_BUTTON_EXISTS, $locator);
+        $button = $this->getSession()->getPage()->find('css', $locator);
+
+        $button->click();
+    }
+
+    /**
+     * @Then I should see the flash message with success
+     */
+    public function iShouldSeeTheFlashMessageWithSuccess(): void
+    {
+        if (!$this->waitUntil(\WebContentFinder::FLASH_SUCCESS_MESSAGE_EXISTS)) {
+            throw new \RuntimeException('The form has not been saved.');
+        }
+    }
+
+    /**
+     * @Given I click on the MD_HUB family
+     */
+    public function iClickOnTheFirstFamily(): void
+    {
+        $locator = '.AknGrid';
+        if (!$this->waitUntil(\WebContentFinder::LOCATOR_EXISTS, $locator)) {
+            throw new \RuntimeException('The Datagrid has not been loaded yet.');
+        }
+
+        $locator = '.AknGrid > tbody > tr:nth-child(1)';
+
+        $row = $this->getSession()->getPage()->find('css', $locator);
+
+        $row->click();
+
+        if (!$this->waitUntil(\WebContentFinder::BREADCRUMB_EXISTS)) {
+            throw new \RuntimeException('Can not load the form.');
+        }
+    }
+
+    /**
+     * @When I add a French translation
+     */
+    public function iAddAFrenchTranslation(): void
+    {
+        $locator = '#pim_enrich_family_form_label_fr_FR';
+        if (!$this->waitUntil(\WebContentFinder::LOCATOR_EXISTS, $locator)) {
+            throw new \RuntimeException('Can not load the form.');
+        }
+
+        $fieldLocator = 'pim_enrich_family_form_label_fr_FR';
+        $value = 'FR Test';
+
+        $this->getSession()->getPage()->fillField($fieldLocator, $value);
+    }
+
+    /**
+     * @Given /^I click the Save button$/
+     */
+    public function iClickTheSaveButton(): void
+    {
+        $locator = '.save';
+        $button = $this->getSession()->getPage()->find('css', $locator);
+
+        $button->click();
     }
 }
