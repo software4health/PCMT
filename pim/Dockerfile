@@ -18,8 +18,6 @@ RUN mkdir -p /srv/pim && \
     apt-get clean && \
     apt-get autoremove
 
-ADD ini/xdebug.ini /etc/php/7.2/mods-available/xdebug.ini
-
 USER docker
 ADD --chown=docker:docker ${AKENEO_URL}${AKENEO_VER}.tar.gz /home/docker/pim.tar.gz
 RUN tar xvzf /home/docker/pim.tar.gz -C /srv/pim --strip-components=1
@@ -74,6 +72,11 @@ COPY --from=node --chown=root:www-data /srv/pim/docker/akeneo.conf /usr/local/ap
 
 # pim
 FROM pim-build as pim
+
+# xdebug.ini file is in some way overwritten later, so we needed to put our config directly into conf.d.
+# ADD --chown=docker:docker ini/xdebug.ini /etc/php/7.2/mods-available/xdebug.ini
+ADD --chown=docker:docker ini/xdebug.ini /etc/php/7.2/cli/conf.d/35-xdebug.ini
+
 COPY --from=node --chown=docker:docker /srv/pim /srv/pim
 VOLUME /srv/pim
 VOLUME /srv/pim/app/file_storage
