@@ -18,7 +18,10 @@ use PcmtRulesBundle\Service\RuleAttributeProvider;
 
 class RuleProcessStep
 {
-    public const KEY_ATTRIBUTE_NAME = 'MANUFACTURER_NAME';
+    public const KEY_ATTRIBUTE_NAME_FIRST_AXIS = 'MANUFACTURER_NAME';
+
+    public const KEY_ATTRIBUTE_NAME_SECOND_AXIS_SOURCE = 'GTIN';
+    public const KEY_ATTRIBUTE_NAME_SECOND_AXIS_DESTINATION = 'KNOWN_GTIN';
 
     /** @var RuleAttributeProvider */
     private $attributeProvider;
@@ -65,7 +68,7 @@ class RuleProcessStep
 
         $attributes = $this->attributeProvider->getAllForFamilies($rule->getSourceFamily(), $rule->getDestinationFamily());
         foreach ($attributes as $attribute) {
-            if (self::KEY_ATTRIBUTE_NAME === $attribute->getCode()) {
+            if (self::KEY_ATTRIBUTE_NAME_FIRST_AXIS === $attribute->getCode()) {
                 $rule->setKeyAttribute($attribute);
             }
         }
@@ -99,6 +102,7 @@ class RuleProcessStep
 
         foreach ($entityCursor as $entity) {
             $count++;
+            echo($count + $offset) .".\n";
             if ($entity instanceof ProductInterface) {
                 echo 'Source product found: '. $entity->getLabel(). "\n";
                 $this->ruleProductProcessor->process($rule, $entity);
