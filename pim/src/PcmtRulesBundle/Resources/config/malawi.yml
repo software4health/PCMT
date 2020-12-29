@@ -5,7 +5,9 @@ services:
         arguments:
             - '@pcmt.service.rule_attribute_provider'
             - '@pim_catalog.saver.product'
+            - '@pim_catalog.saver.product_model'
             - '@pim_catalog.builder.product'
+            - '@pim_catalog.updater.product_model'
             - '@pcmt.service.rule_processor_copier'
 
     pcmt.malawi.rule_process_step:
