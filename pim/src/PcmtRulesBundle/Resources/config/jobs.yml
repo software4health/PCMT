@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
+parameters:
+    pcmt_connector.job.rules_type: rules
+
 services:
 
     pcmt.rules.job.rule_process:
@@ -16,7 +19,6 @@ services:
                 - '@pcmt.connector.job.step.rule_process'
         tags:
             - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.import_type%' }
-
 
     pcmt.rules.job.constraint_collection_provider.rule_process:
         class: PcmtRulesBundle\Connector\Job\ConstraintCollectionProvider\RuleProcessConstraintCollectionProvider

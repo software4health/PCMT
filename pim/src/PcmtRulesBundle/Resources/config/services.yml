@@ -66,5 +66,10 @@ services:
             - '@pim_enrich.filter.product_model_attribute_filter'
             - '@pim_internal_api_serializer'
 
+    pcmt_rules.datagrid.provider.job:
+        class: PcmtRulesBundle\Provider\PcmtJobDatagridProvider
+        arguments:
+            - '@akeneo_batch.job.job_registry'
+
 
 
