@@ -1,5 +1,7 @@
 config:
   paths:
+    pim/controller/job-instance: pcmtrules/js/controller/job-instance
+
     pcmt/rules/index: pcmtrules/js/controller/rule_index
     pcmt/rules/edit: pcmtrules/js/controller/rule_edit
     pcmt/rules/fetcher: pcmtrules/js/fetcher/rule_fetcher
@@ -20,6 +22,17 @@ config:
           module: pcmt/rules/index
         pcmt_rules_edit:
           module: pcmt/rules/edit
+        pcmt_rules_profile_index:
+          module: pim/controller/common/index
+          aclResourceId: pcmt_permission_rules_view
+          config:
+            entity: rules-profile
+        pcmt_rules_profile_edit:
+          module: pim/controller/job-instance
+          aclResourceId: pcmt_permission_rules_edit
+        pcmt_rules_profile_show:
+          module: pim/controller/job-instance
+          aclResourceId: pcmt_permission_rules_view
     pim/fetcher-registry:
       fetchers:
         default: pim/base-fetcher
@@ -35,3 +48,8 @@ config:
             urls:
               list: pcmt_rules_attributes_for_families
               get: pim_enrich_attribute_rest_get
+        job-instance-rules:
+          module: pim/base-fetcher
+          options:
+            urls:
+              get: pcmt_rules_job_instance_rest_rules_get

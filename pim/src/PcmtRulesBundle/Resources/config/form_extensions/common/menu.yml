@@ -1,4 +1,15 @@
 extensions:
+  pim-menu-rules:
+    module: pim/menu/tab
+    parent: pim-menu
+    position: 55
+    targetZone: mainMenu
+    aclResourceId: pcmt_permission_rules_view
+    config:
+      title: pim_menu.tab.rules
+      iconModifier: iconReferenceEntity
+      to: pcmt_rules_profile_index
+
   pim-menu-system-rules:
     module: pim/menu/item
     parent: pim-menu-system-navigation-block
