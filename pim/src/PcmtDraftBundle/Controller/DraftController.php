@@ -158,7 +158,8 @@ class DraftController
                 $options['lastUpdatedAt'] = $data['lastUpdatedAtTimestamp'];
             }
 
-            $this->biDirectionalAssociationUpdater->update($draft, $data['associations']);
+            $dataAssociations = $data['associations'] ?: [];
+            $this->biDirectionalAssociationUpdater->update($draft, $dataAssociations);
             $this->draftFacade->updateDraft($draft, $options);
         } catch (DraftViolationException $e) {
             return new JsonResponse(

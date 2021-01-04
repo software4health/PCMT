@@ -11,6 +11,7 @@ namespace PcmtRulesBundle\Tests\TestDataBuilder;
 
 use Akeneo\Pim\Structure\Component\AttributeTypes;
 use Akeneo\Pim\Structure\Component\Model\Attribute;
+use Akeneo\Pim\Structure\Component\Model\AttributeOption;
 
 class AttributeBuilder
 {
@@ -50,6 +51,13 @@ class AttributeBuilder
     public function withMetricFamily(string $family): self
     {
         $this->attribute->setMetricFamily($family);
+
+        return $this;
+    }
+
+    public function withOption(AttributeOption $option): self
+    {
+        $this->attribute->addOption($option);
 
         return $this;
     }

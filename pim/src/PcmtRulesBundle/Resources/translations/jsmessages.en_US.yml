@@ -41,6 +41,21 @@ pcmt:
             key_attribute: Key attribute
         info:
             key_attribute: Only not unique attributes of text and simple select type that are added to both families are available
+        select_options_job:
+            properties:
+                destination_attribute:
+                    title: Destination attribute
+                    help: Destination attribute
+                source_family:
+                    title: Source family
+                    help: Source family
+                attribute_code:
+                    title: Attribute for CODE
+                    help: Attribute for CODE
+                attribute_value:
+                    title: Attribute for VALUE
+                    help: Attribute for VALUE
+
     rules.action.run.label: Run a rule
     entity:
         rules:
@@ -75,5 +90,13 @@ pcmt.rules.flash:
 batch_jobs:
     default_steps:
         rule_process_step: Rule process step
+        select_options_rule_step: Select options step
+
+    pcmt_select_options_rule:
+        validation.label: Validation
+        label: Pcmt Select options rule
 
 error.removing.rule: The rule could not be removed
+
+
+

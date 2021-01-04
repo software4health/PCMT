@@ -71,5 +71,18 @@ services:
         arguments:
             - '@akeneo_batch.job.job_registry'
 
+    pcmt_rules.service.select_options_remover:
+        class: PcmtRulesBundle\Service\SelectOptionsRemover
+        arguments:
+            - '@pim_catalog.remover.attribute_option'
+
+    pcmt_rules.service.select_options_creator:
+        class: PcmtRulesBundle\Service\SelectOptionsCreator
+        arguments:
+            - '@pim_enrich.query.product_and_product_model_query_builder_from_size_factory'
+            - '@pim_catalog.repository.locale'
+            - '@pim_catalog.factory.attribute_option'
+            - '@pim_catalog.saver.attribute_option'
+
 
 

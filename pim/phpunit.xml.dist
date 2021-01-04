@@ -33,6 +33,7 @@
                 <directory>./src/PcmtRulesBundle/Malawi</directory>
                 <directory>./src/*/Command</directory>
                 <directory>./src/*/Constraint</directory>
+                <directory>./src/PcmtRulesBundle/Connector/Job/DefaultValueProvider</directory>
                 <file>./src/PcmtDraftBundle/Controller/DraftController.php</file>
             </exclude>
         </whitelist>
