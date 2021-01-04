@@ -34,6 +34,7 @@ define([
                 FetcherRegistry.getFetcher(this.config.fetcher).fetchForFamily(this.family_key).then(function (options) {
                     this.selectOptions = options;
                     this.render();
+                    this.updateState();
                 }.bind(this));
             } else {
                 this.selectOptions = [];
@@ -41,12 +42,8 @@ define([
         },
 
         onUpdateField: function() {
-            console.log('on update field');
-
             let newFamilyKey = propertyAccessor.accessProperty(this.getFormData(), 'configuration.sourceFamily');
-            console.log(this.family_key);
             if (newFamilyKey !== this.family_key) {
-                console.log('updating!');
                 this.family_key = newFamilyKey;
                 this.fetch();
             }
