@@ -29,3 +29,6 @@ job_execution.summary:
     destination_products_found_and_saved: FR Destination products found and saved
     destination_product_models_found_and_saved: FR Destination product models found and saved
     destination_products_created: FR Destination products created
+    options_found_and_removed: FR Options found and removed
+    options_added: FR Options added
+    parameters: FR Parameters

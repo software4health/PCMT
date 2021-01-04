@@ -40,6 +40,21 @@ pcmt:
             key_attribute: FR Key attribute
         info:
             key_attribute: FR Only not unique attributes of text and simple select type that are added to both families are available
+        select_options_job:
+            properties:
+                destination_attribute:
+                    title: FR Destination attribute
+                    help: FR Destination attribute
+                source_family:
+                    title: FR Source family
+                    help: FR Source family
+                attribute_code:
+                    title: FR Attribute for CODE
+                    help: FR Attribute for CODE
+                attribute_value:
+                    title: FR Attribute for VALUE
+                    help: FR Attribute for VALUE
+
     rules.action.run.label: FR Run a rule
     entity.rules:
         label: FR Rule
@@ -67,5 +82,6 @@ pcmt.rules.flash:
 batch_jobs:
     default_steps:
         rule_process_step: FR Rule process step
+        select_options_rule_step: FR Select options step
 
 error.removing.rule: FR The rule could not be removed

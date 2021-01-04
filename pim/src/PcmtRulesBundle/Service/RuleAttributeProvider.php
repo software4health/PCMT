@@ -87,4 +87,9 @@ class RuleAttributeProvider
 
         return array_intersect($attributes1, $attributes2);
     }
+
+    public function getForFamily(FamilyInterface $family): array
+    {
+        return $this->attributeRepository->findAttributesByFamily($family);
+    }
 }

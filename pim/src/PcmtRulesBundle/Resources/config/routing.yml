@@ -14,6 +14,11 @@ pcmt_rules_attributes_for_families:
     defaults: { _controller: pcmt.controller.rest.attributes:getForFamiliesAction }
     methods: [GET]
 
+pcmt_rules_attributes_for_family:
+    path: /rest/attributes-for-family/
+    defaults: { _controller: pcmt.controller.rest.attributes:getForFamilyAction }
+    methods: [GET]
+
 pcmt_rules_index_new:
     resource: '@PcmtRulesBundle/Resources/config/routing/rules_profile.yml'
     prefix: /rules
@@ -21,3 +26,8 @@ pcmt_rules_index_new:
 pcmt_rules_job_instance:
     resource: '@PcmtRulesBundle/Resources/config/routing/job_instance.yml'
     prefix: /job-instance/rest/rules
+
+pim_importexport_rules_execution_show:
+    path: /collect/import_execution/{id}
+    requirements:
+        id: \d+

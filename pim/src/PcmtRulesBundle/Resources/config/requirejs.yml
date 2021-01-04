@@ -6,14 +6,22 @@ config:
     pcmt/rules/edit: pcmtrules/js/controller/rule_edit
     pcmt/rules/fetcher: pcmtrules/js/fetcher/rule_fetcher
     pcmt/rules/fetcher/key-attribute-for-rules: pcmtrules/js/fetcher/key-attribute-for-rules-fetcher
+    pcmt/rules/fetcher/attributes-for-rules-job: pcmtrules/js/fetcher/attributes-for-rules-job-fetcher
 
     pcmt/rules/form/common/creation/modal: pcmtrules/js/form/common/creation/modal
     pcmt/rules/form/common/save-rule-form: pcmtrules/js/form/common/save-rule-form
 
     pcmt/rules/form/properties/family: pcmtrules/js/form/properties/family
     pcmt/rules/form/properties/key-attribute: pcmtrules/js/form/properties/key-attribute
+    pcmt/rules/job/field/select: pcmtrules/js/job/field/select
+    pcmt/rules/job/field/attribute-select: pcmtrules/js/job/field/attribute-select
+    pcmt/rules/job/field/destination-attribute-select: pcmtrules/js/job/field/destination-attribute-select
 
+    # Templates
     pcmt/rules/template/group: pcmtrules/templates/group.html
+
+    pcmt/rules/template/job/field/select: pcmtrules/templates/job/field/select.html
+
 
   config:
     pim/controller-registry:
@@ -47,6 +55,13 @@ config:
             identifier_type: pim_catalog_identifier
             urls:
               list: pcmt_rules_attributes_for_families
+              get: pim_enrich_attribute_rest_get
+        attributes-for-rules-job:
+          module: pcmt/rules/fetcher/attributes-for-rules-job
+          options:
+            identifier_type: pim_catalog_identifier
+            urls:
+              list: pcmt_rules_attributes_for_family
               get: pim_enrich_attribute_rest_get
         job-instance-rules:
           module: pim/base-fetcher

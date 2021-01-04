@@ -115,6 +115,13 @@ class RuleAttributeProviderTest extends TestCase
         $this->assertEquals($expectedAttributes, $attributes);
     }
 
+    public function testGetForFamily(): void
+    {
+        $family = (new FamilyBuilder())->build();
+        $this->attributeRepositoryMock->expects($this->once())->method('findAttributesByFamily')->willReturn([]);
+        $this->getRuleAttributeProviderInstance()->getForFamily($family);
+    }
+
     private function getRuleAttributeProviderInstance(): RuleAttributeProvider
     {
         return new RuleAttributeProvider($this->attributeRepositoryMock);

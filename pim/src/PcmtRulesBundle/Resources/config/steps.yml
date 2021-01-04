@@ -11,3 +11,15 @@ services:
             - [setRuleProductProcessor, ['@pcmt.service.rule_product_processor']]
             - [setPqbFactory, ['@pim_enrich.query.product_and_product_model_query_builder_from_size_factory']]
 
+    pcmt.connector.job.step.select_options_rule:
+        class: PcmtRulesBundle\Connector\Job\Step\SelectOptionsRuleStep
+        arguments:
+            - 'select_options_rule_step'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+        calls:
+            - [ setAttributeRepository, [ '@pim_catalog.repository.attribute' ] ]
+            - [ setSelectOptionsRemover, [ '@pcmt_rules.service.select_options_remover' ] ]
+            - [ setSelectOptionsCreator, [ '@pcmt_rules.service.select_options_creator' ] ]
+
+

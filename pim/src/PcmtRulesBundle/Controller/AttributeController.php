@@ -66,4 +66,25 @@ class AttributeController
 
         return new JsonResponse($normalizedAttributes);
     }
+
+    public function getForFamilyAction(Request $request): Response
+    {
+        $familyCode = $request->query->get('family');
+        $family = $familyCode ? $this->familyRepository->findOneByIdentifier($familyCode) : null;
+        if (!$family) {
+            return new JsonResponse([]);
+        }
+
+        $attributes = $this->ruleAttributeProvider->getForFamily($family);
+
+        $normalizedAttributes = array_map(function ($attribute) {
+            return $this->lightAttributeNormalizer->normalize(
+                $attribute,
+                'internal_api',
+                ['locale' => $this->userContext->getUiLocale()->getCode()]
+            );
+        }, $attributes);
+
+        return new JsonResponse($normalizedAttributes);
+    }
 }
