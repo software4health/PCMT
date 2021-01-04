@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace PcmtRulesBundle\Tests\Connector\Job\Step;
 
+use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Job\JobRepositoryInterface;
@@ -17,6 +18,7 @@ use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use PcmtRulesBundle\Connector\Job\Step\SelectOptionsRuleStep;
 use PcmtRulesBundle\Service\SelectOptionsCreator;
 use PcmtRulesBundle\Service\SelectOptionsRemover;
+use PcmtRulesBundle\Tests\TestDataBuilder\AttributeBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -51,22 +53,55 @@ class SelectOptionsRuleStepTest extends TestCase
         $this->jobRepositoryMock = $this->createMock(JobRepositoryInterface::class);
         $this->stepExecutionMock = $this->createMock(StepExecution::class);
         $this->jobParametersMock = $this->createMock(JobParameters::class);
-        $this->jobParametersMock->method('all')->willReturn([]);
+        $this->jobParametersMock->method('all')->willReturn(['sss' => 'sdsfsd']);
         $this->stepExecutionMock->method('getJobParameters')->willReturn($this->jobParametersMock);
         $this->attributeRepositoryMock = $this->createMock(AttributeRepositoryInterface::class);
         $this->selectOptionsCreatorMock = $this->createMock(SelectOptionsCreator::class);
         $this->selectOptionsRemoverMock = $this->createMock(SelectOptionsRemover::class);
     }
 
-    public function testDoExecute(): void
+    public function dataDoExecute(): array
     {
+        $destinationAttributeWrongType = (new AttributeBuilder())->withCode('dest_attr')->withType('asdsad')->build();
+        $destinationAttributeCorrectType = (new AttributeBuilder())->withCode('dest_attr')->withType('pim_catalog_simpleselect')->build();
+        $attributeValue = (new AttributeBuilder())->withCode('attr_value')->build();
+        $sourceFamilyCode = 'fsdfdsfdsf';
+
+        return [
+            [null, $attributeValue, $sourceFamilyCode, false],
+            [$destinationAttributeWrongType, $attributeValue, $sourceFamilyCode, false],
+            [$destinationAttributeCorrectType, null, $sourceFamilyCode, false],
+            [$destinationAttributeCorrectType, $attributeValue, null, false],
+            [$destinationAttributeCorrectType, $attributeValue, $sourceFamilyCode, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dataDoExecute
+     */
+    public function testDoExecute(
+        ?AttributeInterface $destinationAttribute,
+        ?AttributeInterface $attributeValue,
+        ?string $sourceFamilyCode,
+        bool $ifSuccess
+    ): void {
+        $this->attributeRepositoryMock->method('findOneByIdentifier')->willReturnOnConsecutiveCalls(
+            $destinationAttribute,
+            $attributeValue
+        );
+        $this->jobParametersMock->method('get')->willReturn($sourceFamilyCode);
         $class = new \ReflectionClass(SelectOptionsRuleStep::class);
         $method = $class->getMethod('doExecute');
         $method->setAccessible(true);
 
         $step = $this->getSelectOptionsRuleStepInstance();
 
-        $this->expectException(\Throwable::class);
+        if (!$ifSuccess) {
+            $this->expectException(\Throwable::class);
+        } else {
+            $this->selectOptionsRemoverMock->expects($this->once())->method('remove');
+            $this->selectOptionsCreatorMock->expects($this->once())->method('create');
+        }
 
         $method->invokeArgs($step, [$this->stepExecutionMock]);
     }
