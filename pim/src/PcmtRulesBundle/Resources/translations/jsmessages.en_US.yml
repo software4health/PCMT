@@ -2,6 +2,8 @@ pim_title:
     pcmt_rules_index: Family to family mapping rules
     pcmt_rules_edit: Family to family mapping rules
     pcmt_rules_profile_index: Rules
+    pcmt_rules_profile_show: Rules
+    pcmt_rules_profile_edit: Rules
 
 pim_menu:
     tab:
@@ -26,6 +28,11 @@ pim_enrich:
             flash:
                 delete:
                     success: Rule successfully deleted
+
+pim_import_export:
+    entity:
+        rules_profile:
+            uppercase_label: Rules profile
 
 pcmt:
     rules:

@@ -22,7 +22,7 @@ extensions:
         parent: pcmt-rules-select-options-job-edit
         targetZone: breadcrumbs
         config:
-            tab: pim-menu-imports
+            tab: pim-menu-rules
 
     pcmt-rules-select-options-job-edit-cache-invalidator:
         module: pim/cache-invalidator
@@ -38,7 +38,7 @@ extensions:
     pcmt-rules-select-options-job-edit-properties:
         module: pim/job/common/edit/properties
         parent: pcmt-rules-select-options-job-edit-tabs
-        aclResourceId: pim_importexport_export_profile_property_edit
+        aclResourceId: pcmt_permission_rules_edit
         targetZone: container
         position: 100
         config:
@@ -49,7 +49,7 @@ extensions:
         module: pim/common/tab/history
         parent: pcmt-rules-select-options-job-edit-tabs
         targetZone: container
-        aclResourceId: pim_importexport_import_profile_history
+        aclResourceId: pcmt_permission_rules_view
         position: 130
         config:
             class: Akeneo\Tool\Component\Batch\Model\JobInstance
@@ -146,15 +146,15 @@ extensions:
         module: pim/job/import/edit/delete
         parent: pcmt-rules-select-options-job-edit-secondary-actions
         targetZone: secondary-actions
-        aclResourceId: pim_importexport_import_profile_remove
+        aclResourceId: pcmt_permission_rules_delete
         position: 100
         config:
             trans:
-                title: confirmation.remove.import_profilesw
+                title: confirmation.remove.import_profile
                 content: pim_common.confirm_deletion
                 success: pim_import_export.entity.job_instance.flash.delete.success
                 failed: error.removing.job_instance
-            redirect: pim_importexport_import_profile_index
+            redirect: pcmt_rules_profile_index
 
     pcmt-rules-select-options-job-edit-save-buttons:
         module: pim/form/common/save-buttons
@@ -168,7 +168,7 @@ extensions:
         targetZone: buttons
         position: 0
         config:
-            redirectPath: pim_importexport_import_profile_show
+            redirectPath: pcmt_rules_profile_show
 
     pcmt-rules-select-options-job-edit-state:
         module: pim/form/common/state
