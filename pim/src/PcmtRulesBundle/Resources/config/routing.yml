@@ -27,6 +27,10 @@ pcmt_rules_job_instance:
     resource: '@PcmtRulesBundle/Resources/config/routing/job_instance.yml'
     prefix: /job-instance/rest/rules
 
+pcmt_rules_report:
+    resource: '@PcmtRulesBundle/Resources/config/routing/rules_executions.yml'
+    prefix: /rest/rules/execution
+
 pim_importexport_rules_execution_show:
     path: /collect/import_execution/{id}
     requirements:

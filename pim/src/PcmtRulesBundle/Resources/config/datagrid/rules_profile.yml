@@ -23,7 +23,7 @@ datagrid:
     properties:
       code: ~
       edit_link:
-        route: pim_importexport_import_profile_edit
+        route: pcmt_rules_profile_edit
         type: url
         params:
           - code

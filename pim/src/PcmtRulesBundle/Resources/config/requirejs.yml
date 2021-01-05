@@ -41,6 +41,14 @@ config:
         pcmt_rules_profile_show:
           module: pim/controller/job-instance
           aclResourceId: pcmt_permission_rules_view
+        pcmt_rules_execution_index:
+          module: pim/controller/common/index
+          aclResourceId: pcmt_permission_rules_view
+          config:
+            entity: import-execution
+        pcmt_rules_execution_show:
+          module: pim/controller/job-execution
+          aclResourceId: pcmt_permission_rules_view
     pim/fetcher-registry:
       fetchers:
         default: pim/base-fetcher

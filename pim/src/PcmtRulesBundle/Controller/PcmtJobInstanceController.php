@@ -65,4 +65,18 @@ class PcmtJobInstanceController extends JobInstanceController
 
         return $this->deleteAction($code);
     }
+
+    /**
+     * Launch an rules job
+     *
+     * @AclAncestor("pcmt_permission_rules_launch")
+     */
+    public function launchRulesAction(Request $request, string $code): Response
+    {
+        if (!$request->isXmlHttpRequest()) {
+            return new RedirectResponse('/');
+        }
+
+        return $this->launchAction($request, $code);
+    }
 }

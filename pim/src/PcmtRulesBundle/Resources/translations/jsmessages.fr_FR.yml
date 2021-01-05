@@ -1,13 +1,16 @@
 pim_title:
     pcmt_rules_index: FR Family to family mapping rules
     pcmt_rules_edit: FR Family to family mapping rules
+    pcmt_rules_profile_index: FR Rules
+    pcmt_rules_profile_show: FR Rules
+    pcmt_rules_profile_edit: FR Rules
 
 pim_menu:
     tab:
         rules: FR Rules
     item:
         rules: FR Family to family mapping rules
-        rules_profile: Rules profile
+        rules_profile: FR Rules profile
 
 pim_enrich:
     entity:
@@ -25,6 +28,11 @@ pim_enrich:
             flash:
                 delete:
                     success: FR Rule successfully deleted
+
+pim_import_export:
+    entity:
+        rules_profile:
+            uppercase_label: FR Rules profile
 
 pcmt:
     rules:

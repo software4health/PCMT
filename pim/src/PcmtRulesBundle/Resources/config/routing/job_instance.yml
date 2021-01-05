@@ -18,6 +18,11 @@ pcmt_rules_job_instance_rest_rules_delete:
   defaults: { _controller: pcmt.controller.rest.rules_profile_job_instance:deleteRulesAction }
   methods: [DELETE]
 
+pcmt_rules_job_instance_rest_rules_launch:
+    path: /{code}/launch
+    defaults: { _controller: pcmt.controller.rest.rules_profile_job_instance:launchRulesAction }
+    methods: [POST, GET]
+
 pim_importexport_rules_execution_show:
   path: /collect/import_execution/{id}
   requirements:
