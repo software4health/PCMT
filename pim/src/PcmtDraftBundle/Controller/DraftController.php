@@ -158,7 +158,7 @@ class DraftController
                 $options['lastUpdatedAt'] = $data['lastUpdatedAtTimestamp'];
             }
 
-            $dataAssociations = $data['associations'] ?: [];
+            $dataAssociations = empty($data['associations']) ? [] : $data['associations'];
             $this->biDirectionalAssociationUpdater->update($draft, $dataAssociations);
             $this->draftFacade->updateDraft($draft, $options);
         } catch (DraftViolationException $e) {
