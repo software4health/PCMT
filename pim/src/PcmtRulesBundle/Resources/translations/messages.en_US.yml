@@ -33,4 +33,9 @@ job_execution.summary:
     options_added: Options added
     parameters: Parameters
 
+pim_datagrid:
+    cells:
+        type:
+            rules: Rules
+
 
