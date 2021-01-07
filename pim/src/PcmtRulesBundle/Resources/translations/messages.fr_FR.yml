@@ -32,3 +32,8 @@ job_execution.summary:
     options_found_and_removed: FR Options found and removed
     options_added: FR Options added
     parameters: FR Parameters
+
+pim_datagrid:
+    cells:
+        type:
+            rules: FR Rules
