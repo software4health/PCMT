@@ -88,8 +88,20 @@ class RuleAttributeProvider
         return array_intersect($attributes1, $attributes2);
     }
 
-    public function getForFamily(FamilyInterface $family): array
+    public function getForOptions(FamilyInterface $family, array $types = [], ?string $validationRule = null): array
     {
-        return $this->attributeRepository->findAttributesByFamily($family);
+        $attributes = $this->attributeRepository->findAttributesByFamily($family);
+        if ($types) {
+            $attributes = array_filter($attributes, function (AttributeInterface $attribute) use ($types) {
+                return in_array($attribute->getType(), $types);
+            });
+        }
+        if ($validationRule) {
+            $attributes = array_filter($attributes, function (AttributeInterface $attribute) use ($validationRule) {
+                return $attribute->getValidationRule() === $validationRule;
+            });
+        }
+
+        return $attributes;
     }
 }

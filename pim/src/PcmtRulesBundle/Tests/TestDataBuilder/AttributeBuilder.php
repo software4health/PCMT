@@ -41,6 +41,13 @@ class AttributeBuilder
         return $this;
     }
 
+    public function withValidationRule(string $rule): self
+    {
+        $this->attribute->setValidationRule($rule);
+
+        return $this;
+    }
+
     public function withProperties(array $properties): self
     {
         $this->attribute->setProperties($properties);

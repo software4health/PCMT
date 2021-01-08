@@ -34,6 +34,7 @@
                 <directory>./src/*/Command</directory>
                 <directory>./src/*/Constraint</directory>
                 <directory>./src/PcmtRulesBundle/Connector/Job/DefaultValueProvider</directory>
+                <directory>./src/PcmtRulesBundle/Connector/Job/ConstraintCollectionProvider</directory>
                 <file>./src/PcmtDraftBundle/Controller/DraftController.php</file>
             </exclude>
         </whitelist>

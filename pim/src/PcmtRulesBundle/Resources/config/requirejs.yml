@@ -69,7 +69,7 @@ config:
           options:
             identifier_type: pim_catalog_identifier
             urls:
-              list: pcmt_rules_attributes_for_family
+              list: pcmt_rules_attributes_for_options
               get: pim_enrich_attribute_rest_get
         job-instance-rules:
           module: pim/base-fetcher

@@ -1,0 +1,25 @@
+services:
+
+    pcmt.rules.job.default_values_provider.select_options:
+        class: PcmtRulesBundle\Connector\Job\DefaultValueProvider\SelectOptionsDefaultValueProvider
+        arguments:
+            -
+                - 'pcmt_select_options_rule'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.default_values_provider }
+
+    pcmt.rules.job.default_values_provider.pull_images:
+        class: PcmtRulesBundle\Connector\Job\DefaultValueProvider\PullImagesDefaultValueProvider
+        arguments:
+            -
+                - 'pcmt_pull_images_rule'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.default_values_provider }
+
+    pcmt.rules.job.default_values_provider.rule_process:
+        class: PcmtRulesBundle\Connector\Job\DefaultValueProvider\RuleProcessDefaultValueProvider
+        arguments:
+            -
+                - 'pcmt_rule_process'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.default_values_provider }

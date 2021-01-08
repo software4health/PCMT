@@ -23,6 +23,8 @@ class PcmtRulesExtension extends Extension
         $loader->load('controllers.yml');
         $loader->load('data_sources.yml');
         $loader->load('datagrid_listeners.yml');
+        $loader->load('job_constraints.yml');
+        $loader->load('job_defaults.yml');
         $loader->load('jobs.yml');
         $loader->load('forms.yml');
         $loader->load('malawi.yml');

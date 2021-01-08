@@ -22,4 +22,12 @@ services:
             - [ setSelectOptionsRemover, [ '@pcmt_rules.service.select_options_remover' ] ]
             - [ setSelectOptionsCreator, [ '@pcmt_rules.service.select_options_creator' ] ]
 
+    pcmt.connector.job.step.pull_images_rule:
+        class: PcmtRulesBundle\Connector\Job\Step\PullImagesRuleStep
+        arguments:
+            - 'pull_images_rule_step'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+
+
 

@@ -107,6 +107,7 @@ extensions:
         targetZone: properties
         config:
             fetcher: attributes-for-rules-job
+            sourceFamily: 'configuration.sourceFamily'
             fieldCode: configuration.attributeCode
             readOnly: false
             label: pcmt.rules.select_options_job.properties.attribute_code.title
@@ -119,6 +120,7 @@ extensions:
         targetZone: properties
         config:
             fetcher: attributes-for-rules-job
+            sourceFamily: 'configuration.sourceFamily'
             fieldCode: configuration.attributeValue
             readOnly: false
             label: pcmt.rules.select_options_job.properties.attribute_value.title
