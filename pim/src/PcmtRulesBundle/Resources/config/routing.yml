@@ -14,9 +14,9 @@ pcmt_rules_attributes_for_families:
     defaults: { _controller: pcmt.controller.rest.attributes:getForFamiliesAction }
     methods: [GET]
 
-pcmt_rules_attributes_for_family:
+pcmt_rules_attributes_for_options:
     path: /rest/attributes-for-family/
-    defaults: { _controller: pcmt.controller.rest.attributes:getForFamilyAction }
+    defaults: { _controller: pcmt.controller.rest.attributes:getForOptionsAction }
     methods: [GET]
 
 pcmt_rules_index_new:

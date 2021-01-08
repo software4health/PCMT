@@ -68,6 +68,17 @@ pcmt:
                 attribute_value:
                     title: Attribute for VALUE
                     help: Attribute for VALUE
+        pull_images_job:
+            properties:
+                family:
+                    title: Family
+                    help: Family
+                destination_attribute:
+                    title: Destination attribute
+                    help: Destination attribute
+                source_attribute:
+                    title: Source attribute
+                    help: Source attribute
 
     rules.action.run.label: Run a rule
     entity:
@@ -104,10 +115,15 @@ batch_jobs:
     default_steps:
         rule_process_step: Rule process step
         select_options_rule_step: Select options step
+        pull_images_rule_step: Pull images step
 
     pcmt_select_options_rule:
         validation.label: Validation
         label: Pcmt Select options rule
+
+    pcmt_pull_images_rule:
+        validation.label: Validation
+        label: Pcmt Pull images rule
 
 error.removing.rule: The rule could not be removed
 

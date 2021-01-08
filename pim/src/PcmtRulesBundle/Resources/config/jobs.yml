@@ -20,37 +20,7 @@ services:
         tags:
             - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.import_type%' }
 
-    pcmt.rules.job.constraint_collection_provider.rule_process:
-        class: PcmtRulesBundle\Connector\Job\ConstraintCollectionProvider\RuleProcessConstraintCollectionProvider
-        arguments:
-            -
-                - 'pcmt_rule_process'
-        tags:
-            - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
 
-    pcmt.rules.job.constraint_collection_provider.select_options:
-        class: PcmtRulesBundle\Connector\Job\ConstraintCollectionProvider\SelectOptionsConstraintCollectionProvider
-        arguments:
-            -
-                - 'pcmt_select_options_rule'
-        tags:
-            - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
-
-    pcmt.rules.job.default_values_provider.rule_process:
-        class: PcmtRulesBundle\Connector\Job\DefaultValueProvider\RuleProcessDefaultValueProvider
-        arguments:
-            -
-                - 'pcmt_rule_process'
-        tags:
-            - { name: akeneo_batch.job.job_parameters.default_values_provider }
-
-    pcmt.rules.job.default_values_provider.select_options:
-        class: PcmtRulesBundle\Connector\Job\DefaultValueProvider\SelectOptionsDefaultValueProvider
-        arguments:
-            -
-                - 'pcmt_select_options_rule'
-        tags:
-            - { name: akeneo_batch.job.job_parameters.default_values_provider }
 
     pcmt.rules.job.select_options_rule:
         class: '%pim_connector.job.simple_job.class%'
@@ -63,10 +33,22 @@ services:
         tags:
             - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pcmt_connector.job.rules_type%' }
 
+    pcmt.rules.job.pull_images_rule:
+        class: '%pim_connector.job.simple_job.class%'
+        arguments:
+            - 'pcmt_pull_images_rule'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            -
+                - '@pcmt.connector.job.step.pull_images_rule'
+        tags:
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pcmt_connector.job.rules_type%' }
+
     pcmt.rules.provider.form.job_instance:
         class: 'Akeneo\Platform\Bundle\ImportExportBundle\Provider\Form\JobInstanceFormProvider'
         arguments:
             -
                 pcmt_select_options_rule: pcmt-rules-select-options-job
+                pcmt_pull_images_rule: pcmt-rules-pull-images-job
         tags:
             - { name: pim_enrich.provider.form, priority: 110 }

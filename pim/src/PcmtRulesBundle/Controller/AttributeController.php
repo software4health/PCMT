@@ -67,7 +67,7 @@ class AttributeController
         return new JsonResponse($normalizedAttributes);
     }
 
-    public function getForFamilyAction(Request $request): Response
+    public function getForOptionsAction(Request $request): Response
     {
         $familyCode = $request->query->get('family');
         $family = $familyCode ? $this->familyRepository->findOneByIdentifier($familyCode) : null;
@@ -75,7 +75,10 @@ class AttributeController
             return new JsonResponse([]);
         }
 
-        $attributes = $this->ruleAttributeProvider->getForFamily($family);
+        $types = (array) $request->query->get('types');
+        $validationRule = $request->query->get('validationRule');
+
+        $attributes = $this->ruleAttributeProvider->getForOptions($family, $types, $validationRule);
 
         $normalizedAttributes = array_map(function ($attribute) {
             return $this->lightAttributeNormalizer->normalize(

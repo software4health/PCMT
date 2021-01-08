@@ -8,10 +8,14 @@ define(['jquery', 'underscore', 'pim/base-fetcher', 'routing'], function($, _, B
      *
      * @return {Promise}
      */
-    fetchForFamily: function (family) {
-      let searchOptions = {
-        family: family,
-      };
+    fetchForOptions: function (options) {
+      let searchOptions = {};
+      let possibleOptions = ['family', 'types', 'validationRule'];
+      _.each(possibleOptions, function(option) {
+        if (options[option]) {
+          searchOptions[option] = options[option];
+        }
+      });
       return this.search(searchOptions);
     },
 

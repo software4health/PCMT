@@ -31,18 +31,29 @@ define([
 
         fetch: function() {
             if (this.family_key) {
-                FetcherRegistry.getFetcher(this.config.fetcher).fetchForFamily(this.family_key).then(function (options) {
-                    this.selectOptions = options;
-                    this.render();
-                    this.updateState();
-                }.bind(this));
+                let options = {
+                    family: this.family_key
+                };
+                if (typeof this.config.types !== 'undefined') {
+                    options.types = this.config.types;
+                }
+                if (typeof this.config.validationRule !== 'undefined') {
+                    options.validationRule = this.config.validationRule;
+                }
+                FetcherRegistry.getFetcher(this.config.fetcher).fetchForOptions(options).then(
+                    function (options) {
+                        this.selectOptions = options;
+                        this.render();
+                        this.updateState();
+                    }.bind(this)
+                );
             } else {
                 this.selectOptions = [];
             }
         },
 
         onUpdateField: function() {
-            let newFamilyKey = propertyAccessor.accessProperty(this.getFormData(), 'configuration.sourceFamily');
+            let newFamilyKey = propertyAccessor.accessProperty(this.getFormData(), this.config.sourceFamily);
             if (newFamilyKey !== this.family_key) {
                 this.family_key = newFamilyKey;
                 this.fetch();

@@ -115,11 +115,39 @@ class RuleAttributeProviderTest extends TestCase
         $this->assertEquals($expectedAttributes, $attributes);
     }
 
-    public function testGetForFamily(): void
+    public function dataGetForOptions(): array
+    {
+        $type1 = 'example_type';
+        $type2 = 'example_type_2';
+        $validationRule = 'url';
+        $attributes = [
+            (new AttributeBuilder())->withType($type1)->build(),
+            (new AttributeBuilder())->withType($type1)->withValidationRule($validationRule)->build(),
+            (new AttributeBuilder())->withType($type2)->build(),
+        ];
+
+        return [
+            [[$type1], $validationRule, $attributes, 1],
+            [[$type2], $validationRule, $attributes, 0],
+            [[$type1], null, $attributes, 2],
+            [[$type2], null, $attributes, 1],
+            [[], null, $attributes, 3],
+            [[$type1, $type2], null, $attributes, 3],
+        ];
+    }
+
+    /** @dataProvider dataGetForOptions */
+    public function testGetForOptions(array $types, ?string $validationRule, array $attributes, int $expectedCount): void
     {
         $family = (new FamilyBuilder())->build();
-        $this->attributeRepositoryMock->expects($this->once())->method('findAttributesByFamily')->willReturn([]);
-        $this->getRuleAttributeProviderInstance()->getForFamily($family);
+        $this->attributeRepositoryMock
+            ->expects($this->once())
+            ->method('findAttributesByFamily')
+            ->willReturn($attributes);
+
+        $resultAttributes = $this->getRuleAttributeProviderInstance()->getForOptions($family, $types, $validationRule);
+
+        $this->assertCount($expectedCount, $resultAttributes);
     }
 
     private function getRuleAttributeProviderInstance(): RuleAttributeProvider
