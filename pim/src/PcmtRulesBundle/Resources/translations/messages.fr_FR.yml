@@ -37,3 +37,10 @@ pim_datagrid:
     cells:
         type:
             rules: FR Rules
+
+pim_import_export:
+    notification:
+        rules:
+            error: FR Rule job <strong>%label%</strong> failed
+            warning: FR Rule job <strong>%label%</strong> finished with some warnings
+            success: FR Rule job <strong>%label%</strong> finished
