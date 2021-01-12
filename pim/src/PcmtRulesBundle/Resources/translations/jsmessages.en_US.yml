@@ -125,7 +125,5 @@ batch_jobs:
         validation.label: Validation
         label: Pcmt Pull images rule
 
-error.removing.rule: The rule could not be removed
-
 
 

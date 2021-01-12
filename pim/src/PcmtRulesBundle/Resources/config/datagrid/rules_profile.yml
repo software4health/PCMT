@@ -14,12 +14,6 @@ datagrid:
       job_name:
         label:     Job
         type:      job_name
-      connector:
-        label: Connector
-      status:
-        label:     Status
-        type:      translateable
-        data_name: statusLabel
     properties:
       code: ~
       edit_link:
@@ -41,10 +35,6 @@ datagrid:
       columns:
         label:
           data_name: j.label
-        connector:
-          data_name: j.connector
-        status:
-          data_name: statusLabel
       default:
         label: '%oro_datagrid.extension.orm_sorter.class%::DIRECTION_ASC'
     actions:
@@ -82,18 +72,3 @@ datagrid:
             field_options:
               choices: '@pcmt_rules.datagrid.provider.job->getRulesJobChoices'
               multiple: true
-        connector:
-          type:      choice
-          data_name: j.connector
-          options:
-            field_options:
-              choices: '@pcmt_rules.datagrid.provider.job->getRulesConnectorChoices'
-              multiple: true
-        status:
-          type:      choice
-          data_name: j.status
-          options:
-            field_options:
-              multiple: true
-              choices:
-                pim_import_export.status.0: 0

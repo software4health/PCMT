@@ -38,4 +38,11 @@ pim_datagrid:
         type:
             rules: Rules
 
+pim_import_export:
+    notification:
+        rules:
+            error: Rule job <strong>%label%</strong> failed
+            warning: Rule job <strong>%label%</strong> finished with some warnings
+            success: Rule job <strong>%label%</strong> finished
+
 

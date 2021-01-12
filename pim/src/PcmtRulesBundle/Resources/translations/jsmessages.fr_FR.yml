@@ -117,5 +117,3 @@ batch_jobs:
     pcmt_pull_images_rule:
         validation.label: FR Validation
         label: FR Pcmt Pull images rule
-
-error.removing.rule: FR The rule could not be removed
