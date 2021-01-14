@@ -59,10 +59,9 @@ class PullImageService
         $this->stepExecution->incrementSummaryInfo('source_urls_found', 1);
 
         $url = $sourceValue->getData();
-        $parts = explode('/', $url);
-        $originalFilename = end($parts);
-        $originalFilename = $originalFilename ?: 'name';
-        $filePath = $this->tmpStorageDir . '/' . $originalFilename;
+        $path = parse_url($url, PHP_URL_PATH);
+        $pathParts = pathinfo($path);
+        $filePath = $this->tmpStorageDir . '/' . $pathParts['basename'];
 
         $this->httpClient->get($url, [
             RequestOptions::SINK            => $filePath,
