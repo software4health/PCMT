@@ -18,8 +18,8 @@ use Akeneo\Pim\Enrichment\Component\Product\Query\Filter\Operators;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderFactoryInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
-use PcmtCoreBundle\Connector\Job\InvalidItems\SimpleInvalidItem;
 use PcmtRulesBundle\Entity\Rule;
+use PcmtSharedBundle\Connector\Job\InvalidItems\SimpleInvalidItem;
 use Ramsey\Uuid\Uuid;
 
 class RuleProcessor

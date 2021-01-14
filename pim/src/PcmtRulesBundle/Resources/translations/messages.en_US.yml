@@ -32,6 +32,11 @@ job_execution.summary:
     options_found_and_removed: Options found and removed
     options_added: Options added
     parameters: Parameters
+    entities_found: Entities found
+    entities_processed: Entities processed
+    source_urls_found: Source URLs found
+    files_downloaded: Files downloaded
+    entities_updated: Entities updated
 
 pim_datagrid:
     cells:

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace PcmtCoreBundle\Tests\Connector\Job\InvalidItems;
 
-use PcmtCoreBundle\Connector\Job\InvalidItems\SimpleInvalidItem;
+use PcmtSharedBundle\Connector\Job\InvalidItems\SimpleInvalidItem;
 use PHPUnit\Framework\TestCase;
 
 class SimpleInvalidItemTest extends TestCase

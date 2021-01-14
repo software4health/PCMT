@@ -92,5 +92,26 @@ services:
         tags:
             - { name: pim_notification.factory.notification }
 
+    pcmt_rules.service.pull_image_service:
+        class: PcmtRulesBundle\Service\PullImageService
+        arguments:
+            - '%tmp_storage_dir%'
+            - '@akeneo_file_storage.file_storage.file.file_storer'
 
+    pcmt_rules.service.update_image_service.product:
+        class: PcmtRulesBundle\Service\UpdateImageService
+        arguments:
+            - '@pim_catalog.updater.product'
+            - '@pim_catalog.saver.product'
+            - '@pim_catalog.validator.product'
+
+    pcmt_rules.service.update_image_service.product_model:
+        class: PcmtRulesBundle\Service\UpdateImageService
+        arguments:
+            - '@pim_catalog.updater.product_model'
+            - '@pim_catalog.saver.product_model'
+            - '@pim_catalog.validator.product_model'
+            -
+    pcmt_rules.service.attributes_level_validator:
+        class: PcmtRulesBundle\Service\AttributesLevelValidator
 

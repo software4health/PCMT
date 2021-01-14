@@ -13,6 +13,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
+use Akeneo\Pim\Structure\Component\Model\FamilyVariant;
 use Doctrine\Common\Collections\Collection;
 
 class ProductModelBuilder
@@ -52,6 +53,13 @@ class ProductModelBuilder
     public function addProductVariant(ProductInterface $product): self
     {
         $this->productModel->addProduct($product);
+
+        return $this;
+    }
+
+    public function withFamilyVariant(FamilyVariant $familyVariant): self
+    {
+        $this->productModel->setFamilyVariant($familyVariant);
 
         return $this;
     }
