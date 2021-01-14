@@ -35,6 +35,9 @@ pim_import_export:
     entity:
         rules_profile:
             uppercase_label: Rules profile
+            flash:
+                create:
+                    success: Rules profile successfully created
     widget:
         last_operations:
             job_type:
@@ -54,6 +57,17 @@ pcmt:
             key_attribute: Key attribute
         info:
             key_attribute: Only not unique attributes of text and simple select type that are added to both families are available
+        family_to_family_job:
+            properties:
+                source_family:
+                    title: Source family
+                    help: Source family
+                destination_family:
+                    title: Destination family
+                    help: Destination family
+                key_attribute:
+                    title: Key Attribute
+                    help: Key Attribute
         select_options_job:
             properties:
                 destination_attribute:
@@ -113,9 +127,13 @@ pcmt.rules.flash:
 
 batch_jobs:
     default_steps:
-        rule_process_step: Rule process step
+        family_to_family_step: Family to family step
         select_options_rule_step: Select options step
         pull_images_rule_step: Pull images step
+
+    pcmt_family_to_family_rule:
+        validation.label: Validation
+        label: Pcmt Family to family rule
 
     pcmt_select_options_rule:
         validation.label: Validation

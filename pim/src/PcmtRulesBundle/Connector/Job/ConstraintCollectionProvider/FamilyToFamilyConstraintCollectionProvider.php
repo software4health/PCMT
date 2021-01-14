@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
-class RuleProcessConstraintCollectionProvider implements ConstraintCollectionProviderInterface
+class FamilyToFamilyConstraintCollectionProvider implements ConstraintCollectionProviderInterface
 {
     use SupportedJobsTrait;
 
@@ -26,13 +26,26 @@ class RuleProcessConstraintCollectionProvider implements ConstraintCollectionPro
 
     public function getConstraintCollection(): Collection
     {
-        return new Collection([
-            'fields' => [
-                'ruleId'  => [
-                    new NotBlank(),
-                    new Type('int'),
+        return new Collection(
+            [
+                'fields' => [
+                    'sourceFamily'      => [
+                        new NotBlank(),
+                        new Type('string'),
+                    ],
+                    'destinationFamily' => [
+                        new NotBlank(),
+                        new Type('string'),
+                    ],
+                    'keyAttribute'      => [
+                        new NotBlank(),
+                        new Type('string'),
+                    ],
+                    'user_to_notify' => [
+                        new Type('string'),
+                    ],
                 ],
-            ],
-        ]);
+            ]
+        );
     }
 }

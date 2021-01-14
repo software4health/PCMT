@@ -9,18 +9,16 @@ parameters:
 
 services:
 
-    pcmt.rules.job.rule_process:
+    pcmt.rules.job.family_to_family:
         class: '%pim_connector.job.simple_job.class%'
         arguments:
-            - 'pcmt_rule_process'
+            - 'pcmt_family_to_family_rule'
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             -
-                - '@pcmt.connector.job.step.rule_process'
+                - '@pcmt.connector.job.step.family_to_family'
         tags:
-            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pim_connector.job.import_type%' }
-
-
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pcmt_connector.job.rules_type%' }
 
     pcmt.rules.job.select_options_rule:
         class: '%pim_connector.job.simple_job.class%'
@@ -50,5 +48,6 @@ services:
             -
                 pcmt_select_options_rule: pcmt-rules-select-options-job
                 pcmt_pull_images_rule: pcmt-rules-pull-images-job
+                pcmt_family_to_family_rule: pcmt-rules-family-to-family-job
         tags:
             - { name: pim_enrich.provider.form, priority: 110 }

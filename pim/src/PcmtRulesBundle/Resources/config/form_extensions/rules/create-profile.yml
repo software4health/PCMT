@@ -6,8 +6,8 @@ extensions:
         title: pim_common.create
         subTitle: pim_menu.item.rules_profile
       picture: illustrations/Import.svg
-      successMessage: pim_import_export.entity.import_profile.flash.create.success
-      editRoute: pim_importexport_import_profile_edit
+      successMessage: pim_import_export.entity.rules_profile.flash.create.success
+      editRoute: pcmt_rules_profile_edit
       postUrl: pcmt_rules_job_instance_rest_rules_create
       routerKey: code
 

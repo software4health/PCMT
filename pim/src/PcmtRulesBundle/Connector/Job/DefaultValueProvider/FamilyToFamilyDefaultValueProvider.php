@@ -12,7 +12,7 @@ namespace PcmtRulesBundle\Connector\Job\DefaultValueProvider;
 use Akeneo\Tool\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface;
 use PcmtCoreBundle\Connector\Job\JobParameters\SupportedJobsTrait;
 
-class RuleProcessDefaultValueProvider implements DefaultValuesProviderInterface
+class FamilyToFamilyDefaultValueProvider implements DefaultValuesProviderInterface
 {
     use SupportedJobsTrait;
 
@@ -24,7 +24,10 @@ class RuleProcessDefaultValueProvider implements DefaultValuesProviderInterface
     public function getDefaultValues(): array
     {
         return [
-            'ruleId' => null,
+            'sourceFamily'      => '',
+            'destinationFamily' => '',
+            'keyAttribute'      => '',
+            'user_to_notify'    => null,
         ];
     }
 }

@@ -4,47 +4,13 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 parameters:
-    pcmt.entity.rule.class:  PcmtRulesBundle\Entity\Rule
     pim_datagrid.event_listener.add_username_to_grid_listener.class: PcmtRulesBundle\Listener\AddUsernameToGridListener
 
 services:
-
-    pcmt.rule.normalizer:
-        class: PcmtRulesBundle\Normalizer\RuleNormalizer
-        autowire: true
-        tags:
-            - { name: pim_internal_api_serializer.normalizer, priority: 80 }
-
-    pcmt.repository.rule:
-        class: PcmtRulesBundle\Repository\RuleRepository
-        factory: 'doctrine.orm.entity_manager:getRepository'
-        arguments: ['%pcmt.entity.rule.class%']
-        tags:
-            - { name: 'pim_repository' }
-
-    pcmt.remover.rule:
-        class: '%pim_catalog.remover.base.class%'
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@event_dispatcher'
-            - '%pcmt.entity.rule.class%'
-
     pcmt.service.rule_attribute_provider:
         class: PcmtRulesBundle\Service\RuleAttributeProvider
         arguments:
             - '@pim_catalog.repository.attribute'
-
-    pcmt.constraints.attribute_exists_in_both_families_constraint_validator:
-        class: PcmtRulesBundle\Validators\AttributeExistsInBothFamiliesConstraintValidator
-        arguments:
-            - '@pcmt.service.rule_attribute_provider'
-        tags:
-            - { name: validator.constraint_validator, alias: pcmt_attribute_exists_in_both_families_constraint_validator }
-
-    pcmt.constraints.different_family_constraint_validator:
-        class: PcmtRulesBundle\Validators\DifferentFamilyConstraintValidator
-        tags:
-            - { name: validator.constraint_validator, alias: pcmt_attribute_different_family_constraint_validator }
 
     pcmt.service.rule_product_processor:
         class: PcmtRulesBundle\Service\RuleProcessor

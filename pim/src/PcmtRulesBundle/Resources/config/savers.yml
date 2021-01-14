@@ -1,6 +1,0 @@
-services:
-    pcmt.saver.rule:
-        class: 'PcmtRulesBundle\Saver\RuleSaver'
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@event_dispatcher'

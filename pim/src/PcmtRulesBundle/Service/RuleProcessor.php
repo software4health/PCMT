@@ -16,9 +16,9 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\Filter\Operators;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderFactoryInterface;
+use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
-use PcmtRulesBundle\Entity\Rule;
 use PcmtSharedBundle\Connector\Job\InvalidItems\SimpleInvalidItem;
 use Ramsey\Uuid\Uuid;
 
@@ -72,14 +72,15 @@ class RuleProcessor
         $this->ruleProcessorCopier = $ruleProcessorCopier;
     }
 
-    public function process(StepExecution $stepExecution, Rule $rule, EntityWithValuesInterface $sourceProduct): void
+    public function process(StepExecution $stepExecution, FamilyInterface $sourceFamily, FamilyInterface $destinationFamily, EntityWithValuesInterface $sourceProduct): void
     {
         $this->productsToSave = [];
         $this->productModelsToSave = [];
 
-        $attributes = $this->ruleAttributeProvider->getAllForFamilies($rule->getSourceFamily(), $rule->getDestinationFamily());
+        $attributes = $this->ruleAttributeProvider->getAllForFamilies($sourceFamily, $destinationFamily);
+        $keyAttributeCode = $stepExecution->getJobParameters()->get('keyAttribute');
 
-        $keyValue = $sourceProduct->getValue($rule->getKeyAttribute()->getCode());
+        $keyValue = $sourceProduct->getValue($keyAttributeCode);
         if (!$keyValue) {
             return;
         }
@@ -91,23 +92,23 @@ class RuleProcessor
             'limit'          => self::MAX_DESTINATION_PRODUCTS,
         ]);
         try {
-            $pqb->addFilter($rule->getKeyAttribute()->getCode(), Operators::EQUALS, $keyValue->getData());
+            $pqb->addFilter($keyAttributeCode, Operators::EQUALS, $keyValue->getData());
         } catch (\Throwable $e) {
             try {
-                $pqb->addFilter($rule->getKeyAttribute()->getCode(), Operators::IN_LIST, [$keyValue->getData()]);
+                $pqb->addFilter($keyAttributeCode, Operators::IN_LIST, [$keyValue->getData()]);
             } catch (\Throwable $e) {
-                throw new \Exception('Unsupported attribute type used as key attribute in a rule: ' . $rule->getKeyAttribute()->getCode());
+                throw new \Exception('Unsupported attribute type used as key attribute in a rule: ' . $keyAttributeCode);
             }
         }
-        $pqb->addFilter('family', Operators::IN_LIST, [$rule->getDestinationFamily()->getCode()]);
+        $pqb->addFilter('family', Operators::IN_LIST, [$destinationFamily->getCode()]);
 
         $destinationProducts = $pqb->execute();
         foreach ($destinationProducts as $destinationProduct) {
             $this->copy($sourceProduct, $destinationProduct, $attributes, $stepExecution);
         }
 
-        if (0 === count($destinationProducts) && 0 === count($rule->getDestinationFamily()->getFamilyVariants())) {
-            $this->createNewDestinationProduct($sourceProduct, $rule, $attributes, $stepExecution);
+        if (0 === count($destinationProducts) && 0 === count($destinationFamily->getFamilyVariants())) {
+            $this->createNewDestinationProduct($sourceProduct, $destinationFamily, $attributes, $stepExecution);
 
             foreach ($this->productsToSave as $product) {
                 $this->productSaver->save($product);
@@ -178,11 +179,11 @@ class RuleProcessor
         }
     }
 
-    private function createNewDestinationProduct(EntityWithValuesInterface $sourceEntity, Rule $rule, array $attributes, StepExecution $stepExecution): void
+    private function createNewDestinationProduct(EntityWithValuesInterface $sourceEntity, FamilyInterface $destinationFamily, array $attributes, StepExecution $stepExecution): void
     {
         $destinationProduct = $this->productBuilder->createProduct(
             Uuid::uuid4()->toString(),
-            $rule->getDestinationFamily()->getCode()
+            $destinationFamily->getCode()
         );
 
         $this->addEntityToSave($destinationProduct);

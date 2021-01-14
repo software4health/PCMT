@@ -1,21 +1,17 @@
 config:
   paths:
     pim/controller/job-instance: pcmtrules/js/controller/job-instance
+    pim/saver/job-instance-rules: pcmtrules/js/saver/job-instance-rules-saver
 
-    pcmt/rules/index: pcmtrules/js/controller/rule_index
-    pcmt/rules/edit: pcmtrules/js/controller/rule_edit
-    pcmt/rules/fetcher: pcmtrules/js/fetcher/rule_fetcher
     pcmt/rules/fetcher/key-attribute-for-rules: pcmtrules/js/fetcher/key-attribute-for-rules-fetcher
     pcmt/rules/fetcher/attributes-for-rules-job: pcmtrules/js/fetcher/attributes-for-rules-job-fetcher
 
-    pcmt/rules/form/common/creation/modal: pcmtrules/js/form/common/creation/modal
-    pcmt/rules/form/common/save-rule-form: pcmtrules/js/form/common/save-rule-form
-
-    pcmt/rules/form/properties/family: pcmtrules/js/form/properties/family
-    pcmt/rules/form/properties/key-attribute: pcmtrules/js/form/properties/key-attribute
     pcmt/rules/job/field/select: pcmtrules/js/job/field/select
     pcmt/rules/job/field/attribute-select: pcmtrules/js/job/field/attribute-select
+    pcmt/rules/job/field/key-attribute-select: pcmtrules/js/job/field/key-attribute-select
     pcmt/rules/job/field/destination-attribute-select: pcmtrules/js/job/field/destination-attribute-select
+
+    pcmt/rules/job/rules/edit/save: pcmtrules/js/job/rules/edit/save
 
     # Templates
     pcmt/rules/template/group: pcmtrules/templates/group.html
@@ -24,6 +20,8 @@ config:
 
 
   config:
+    pim/saver/job-instance-rules:
+      url: pcmt_rules_job_instance_rest_rules_put
     pim/controller-registry:
       controllers:
         pcmt_rules_index:
@@ -52,11 +50,6 @@ config:
     pim/fetcher-registry:
       fetchers:
         default: pim/base-fetcher
-        rule:
-          module: pcmt/rules/fetcher
-          options:
-            urls:
-              get: pcmt_rule_rest_get
         key-attribute-for-rule:
           module: pcmt/rules/fetcher/key-attribute-for-rules
           options:
