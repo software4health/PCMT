@@ -16,16 +16,17 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderFactoryInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Value\ScalarValue;
+use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
+use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
-use PcmtRulesBundle\Entity\Rule;
 use PcmtRulesBundle\Service\RuleAttributeProvider;
 use PcmtRulesBundle\Service\RuleProcessor;
 use PcmtRulesBundle\Service\RuleProcessorCopier;
 use PcmtRulesBundle\Tests\TestDataBuilder\AttributeBuilder;
+use PcmtRulesBundle\Tests\TestDataBuilder\FamilyBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\ProductBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\ProductModelBuilder;
-use PcmtRulesBundle\Tests\TestDataBuilder\RuleBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -58,6 +59,9 @@ class RuleProcessorTest extends TestCase
     /** @var RuleProcessorCopier|MockObject */
     private $ruleProcessorCopierMock;
 
+    /** @var JobParameters|MockObject */
+    private $jobParametersMock;
+
     protected function setUp(): void
     {
         $this->productQueryBuilderFactoryMock = $this->createMock(ProductQueryBuilderFactory::class);
@@ -69,6 +73,11 @@ class RuleProcessorTest extends TestCase
         $this->stepExecutionMock = $this->createMock(StepExecution::class);
         $this->productBuilderMock = $this->createMock(ProductBuilderInterface::class);
         $this->ruleProcessorCopierMock = $this->createMock(RuleProcessorCopier::class);
+        $this->jobParametersMock = $this->createMock(JobParameters::class);
+
+        $this->stepExecutionMock
+            ->method('getJobParameters')
+            ->willReturn($this->jobParametersMock);
     }
 
     public function dataProcess(): array
@@ -81,8 +90,7 @@ class RuleProcessorTest extends TestCase
         $attributes = [
             (new AttributeBuilder())->build(),
         ];
-        $rule = (new RuleBuilder())->build();
-        $value = ScalarValue::value($rule->getKeyAttribute()->getCode(), 'xxx');
+        $value = ScalarValue::value('test', 'xxx');
         $product = (new ProductBuilder())->addValue($value)->build();
 
         $productModel1 = (new ProductModelBuilder())->addProductVariant($product1)->build();
@@ -92,25 +100,31 @@ class RuleProcessorTest extends TestCase
             $productModel2,
         ];
 
+        $sourceFamily = (new FamilyBuilder())->withCode('SOURCE')->build();
+        $destinationFamily = (new FamilyBuilder())->withCode('DESTINATION')->build();
+
         return [
-            [$rule, $product, $destinationProducts, $attributes, 2],
-            [$rule, $product, $destinationProductModels, $attributes, 3],
+            [$sourceFamily, $destinationFamily, $product, $destinationProducts, $attributes, 2],
+            [$sourceFamily, $destinationFamily, $product, $destinationProductModels, $attributes, 3],
         ];
     }
 
     /**
      * @dataProvider dataProcess
      */
-    public function testProcess(Rule $rule, ProductInterface $sourceProduct, array $destinationProducts, array $attributes, int $expectedCalls): void
+    public function testProcess(FamilyInterface $sourceFamily, FamilyInterface $destinationFamily, ProductInterface $sourceProduct, array $destinationProducts, array $attributes, int $expectedCalls): void
     {
         $this->productBuilderMock->method('createProduct')->willReturn(
             (new ProductBuilder())->withId(2332)->build()
         );
+        $this->jobParametersMock
+            ->method('get')
+            ->willReturn('test');
         $this->ruleAttributeProviderMock->expects($this->once())->method('getAllForFamilies')->willReturn($attributes);
         $this->productQueryBuilderMock->method('execute')->willReturn($destinationProducts);
         $this->ruleProcessorCopierMock->expects($this->exactly($expectedCalls))->method('copy')->willReturn(true);
         $processor = $this->getRuleProductProcessorInstance();
-        $processor->process($this->stepExecutionMock, $rule, $sourceProduct);
+        $processor->process($this->stepExecutionMock, $sourceFamily, $destinationFamily, $sourceProduct);
     }
 
     public function dataProcessNoDestinationProduct(): array
@@ -118,75 +132,93 @@ class RuleProcessorTest extends TestCase
         $attributes = [
             (new AttributeBuilder())->build(),
         ];
-        $rule = (new RuleBuilder())->build();
-        $value = ScalarValue::value($rule->getKeyAttribute()->getCode(), 'xxx');
+
+        $value = ScalarValue::value('test', 'xxx');
         $product = (new ProductBuilder())->addValue($value)->build();
 
+        $sourceFamily = (new FamilyBuilder())->withCode('SOURCE')->build();
+        $destinationFamily = (new FamilyBuilder())->withCode('DESTINATION')->build();
+
         return [
-            [$rule, $product, $attributes],
+            [$sourceFamily, $destinationFamily, $product, $attributes],
         ];
     }
 
     /**
      * @dataProvider dataProcessNoDestinationProduct
      */
-    public function testProcessNoDestinationProduct(Rule $rule, ProductInterface $sourceProduct, array $attributes): void
+    public function testProcessNoDestinationProduct(FamilyInterface $sourceFamily, FamilyInterface $destinationFamily, ProductInterface $sourceProduct, array $attributes): void
     {
         $this->productBuilderMock->expects($this->once())->method('createProduct')->willReturn(
             (new ProductBuilder())->withId(2332)->build()
         );
+        $this->jobParametersMock
+            ->method('get')
+            ->willReturn('test');
         $this->ruleAttributeProviderMock->expects($this->once())->method('getAllForFamilies')->willReturn($attributes);
         $this->productQueryBuilderMock->method('execute')->willReturn([]);
         $this->ruleProcessorCopierMock->expects($this->exactly(1))->method('copy')->willReturn(true);
         $processor = $this->getRuleProductProcessorInstance();
-        $processor->process($this->stepExecutionMock, $rule, $sourceProduct);
+        $processor->process($this->stepExecutionMock, $sourceFamily, $destinationFamily, $sourceProduct);
     }
 
     /**
      * @dataProvider dataProcess
      */
-    public function testProcessException(Rule $rule, ProductInterface $sourceProduct, array $destinationProducts, array $attributes): void
+    public function testProcessException(FamilyInterface $sourceFamily, FamilyInterface $destinationFamily, ProductInterface $sourceProduct, array $destinationProducts, array $attributes): void
     {
         $this->ruleAttributeProviderMock->expects($this->once())->method('getAllForFamilies')->willReturn($attributes);
+        $this->jobParametersMock
+            ->method('get')
+            ->willReturn('test');
         $this->productQueryBuilderMock->method('execute')->willReturn($destinationProducts);
         $this->ruleProcessorCopierMock->method('copy')->willThrowException(new \Exception());
         $this->stepExecutionMock->expects($this->atLeastOnce())->method('addWarning');
         $processor = $this->getRuleProductProcessorInstance();
-        $processor->process($this->stepExecutionMock, $rule, $sourceProduct);
+        $processor->process($this->stepExecutionMock, $sourceFamily, $destinationFamily, $sourceProduct);
     }
 
     /**
      * @dataProvider dataProcess
      */
-    public function testProcessFilterException(Rule $rule, ProductInterface $sourceProduct, array $destinationProducts, array $attributes): void
+    public function testProcessFilterException(FamilyInterface $sourceFamily, FamilyInterface $destinationFamily, ProductInterface $sourceProduct, array $destinationProducts, array $attributes): void
     {
         $this->ruleAttributeProviderMock->expects($this->once())->method('getAllForFamilies')->willReturn($attributes);
+        $this->jobParametersMock
+            ->method('get')
+            ->willReturn('test');
         $this->productQueryBuilderMock->method('addFilter')->willThrowException(new \Exception());
         $this->expectException(\Throwable::class);
         $processor = $this->getRuleProductProcessorInstance();
-        $processor->process($this->stepExecutionMock, $rule, $sourceProduct);
+        $processor->process($this->stepExecutionMock, $sourceFamily, $destinationFamily, $sourceProduct);
     }
 
     /**
      * @dataProvider dataProcess
      */
-    public function testProcessNoKeyValue(Rule $rule, ProductInterface $sourceProduct, array $destinationProducts, array $attributes): void
+    public function testProcessNoKeyValue(FamilyInterface $sourceFamily, FamilyInterface $destinationFamily, ProductInterface $sourceProduct, array $destinationProducts, array $attributes): void
     {
         $sourceProduct = (new ProductBuilder())->build();
         $this->productQueryBuilderMock->expects($this->never())->method('execute');
+        $this->jobParametersMock
+            ->method('get')
+            ->willReturn('test');
         $processor = $this->getRuleProductProcessorInstance();
-        $processor->process($this->stepExecutionMock, $rule, $sourceProduct);
+        $processor->process($this->stepExecutionMock, $sourceFamily, $destinationFamily, $sourceProduct);
     }
 
     /**
      * @dataProvider dataProcess
      */
-    public function testProcessWarning(Rule $rule, ProductInterface $sourceProduct, array $destinationProducts, array $attributes): void
+    public function testProcessWarning(FamilyInterface $sourceFamily, FamilyInterface $destinationFamily, ProductInterface $sourceProduct, array $destinationProducts, array $attributes): void
     {
         $sourceProduct = (new ProductBuilder())->build();
         $this->productQueryBuilderMock->expects($this->never())->method('execute');
+        $this->jobParametersMock
+            ->method('get')
+            ->willReturn('test');
         $processor = $this->getRuleProductProcessorInstance();
-        $processor->process($this->stepExecutionMock, $rule, $sourceProduct);
+        $processor->process($this->stepExecutionMock, $sourceFamily, $destinationFamily, $sourceProduct);
     }
 
     private function getRuleProductProcessorInstance(): RuleProcessor

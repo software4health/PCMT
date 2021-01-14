@@ -12,21 +12,21 @@ namespace PcmtRulesBundle\Tests\Connector\Job\Step;
 
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderFactoryInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderInterface;
+use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Job\JobRepositoryInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
-use PcmtRulesBundle\Connector\Job\Step\RuleProcessStep;
-use PcmtRulesBundle\Repository\RuleRepository;
+use PcmtRulesBundle\Connector\Job\Step\FamilyToFamilyStep;
 use PcmtRulesBundle\Service\RuleAttributeProvider;
 use PcmtRulesBundle\Service\RuleProcessor;
+use PcmtRulesBundle\Tests\TestDataBuilder\FamilyBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\ProductBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\ProductModelBuilder;
-use PcmtRulesBundle\Tests\TestDataBuilder\RuleBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class RuleProcessStepTest extends TestCase
+class FamilyToFamilyStepTest extends TestCase
 {
     /** @var EventDispatcherInterface|MockObject */
     private $eventDispatcherMock;
@@ -40,9 +40,6 @@ class RuleProcessStepTest extends TestCase
     /** @var JobParameters|MockObject */
     private $jobParametersMock;
 
-    /** @var RuleRepository|MockObject */
-    private $ruleRepositoryMock;
-
     /** @var RuleAttributeProvider|MockObject */
     private $attributeProviderMock;
 
@@ -55,6 +52,9 @@ class RuleProcessStepTest extends TestCase
     /** @var RuleProcessor|MockObject */
     private $ruleProductProcessorMock;
 
+    /** @var FamilyRepositoryInterface|MockObject */
+    private $familyRepositoryMock;
+
     protected function setUp(): void
     {
         $this->eventDispatcherMock = $this->createMock(EventDispatcherInterface::class);
@@ -62,12 +62,12 @@ class RuleProcessStepTest extends TestCase
         $this->stepExecutionMock = $this->createMock(StepExecution::class);
         $this->jobParametersMock = $this->createMock(JobParameters::class);
         $this->stepExecutionMock->method('getJobParameters')->willReturn($this->jobParametersMock);
-        $this->ruleRepositoryMock = $this->createMock(RuleRepository::class);
         $this->attributeProviderMock = $this->createMock(RuleAttributeProvider::class);
         $this->pqbFactoryMock = $this->createMock(ProductQueryBuilderFactoryInterface::class);
         $this->productQueryBuilderMock = $this->createMock(ProductQueryBuilderInterface::class);
         $this->pqbFactoryMock->method('create')->willReturn($this->productQueryBuilderMock);
         $this->ruleProductProcessorMock = $this->createMock(RuleProcessor::class);
+        $this->familyRepositoryMock = $this->createMock(FamilyRepositoryInterface::class);
     }
 
     /**
@@ -75,12 +75,22 @@ class RuleProcessStepTest extends TestCase
      */
     public function testDoExecute(array $products, int $expectedCalls): void
     {
-        $rule = (new RuleBuilder())->build();
-        $this->ruleRepositoryMock->expects($this->once())->method('find')->willReturn($rule);
-
         $this->productQueryBuilderMock->method('execute')->willReturnOnConsecutiveCalls($products, []);
 
-        $class = new \ReflectionClass(RuleProcessStep::class);
+        $sourceFamily = (new FamilyBuilder())->withCode('SOURCE')->build();
+        $destinationFamily = (new FamilyBuilder())->withCode('DESTINATION')->build();
+
+        $this->familyRepositoryMock
+            ->expects($this->at(0))
+            ->method('findOneBy')
+            ->willReturn($sourceFamily);
+
+        $this->familyRepositoryMock
+            ->expects($this->at(1))
+            ->method('findOneBy')
+            ->willReturn($destinationFamily);
+
+        $class = new \ReflectionClass(FamilyToFamilyStep::class);
         $method = $class->getMethod('doExecute');
         $method->setAccessible(true);
 
@@ -104,17 +114,17 @@ class RuleProcessStepTest extends TestCase
         ];
     }
 
-    private function getRuleProcessStepInstance(): RuleProcessStep
+    private function getRuleProcessStepInstance(): FamilyToFamilyStep
     {
-        $step = new RuleProcessStep(
+        $step = new FamilyToFamilyStep(
             'name',
             $this->eventDispatcherMock,
             $this->jobRepositoryMock
         );
-        $step->setRuleRepository($this->ruleRepositoryMock);
         $step->setAttributeProvider($this->attributeProviderMock);
         $step->setPqbFactory($this->pqbFactoryMock);
         $step->setRuleProductProcessor($this->ruleProductProcessorMock);
+        $step->setFamilyRepository($this->familyRepositoryMock);
 
         return $step;
     }

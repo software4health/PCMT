@@ -1,14 +1,3 @@
-
-internal_api_rule:
-    resource: '@PcmtRulesBundle/Resources/config/routing/rules.yml'
-    prefix: /rest/rule
-
-pcmt_rules_index:
-    path: /rule
-
-pcmt_rules_edit:
-    path: /rule/edit/{id}
-
 pcmt_rules_attributes_for_families:
     path: /rest/attributes-for-families/
     defaults: { _controller: pcmt.controller.rest.attributes:getForFamiliesAction }
@@ -30,8 +19,3 @@ pcmt_rules_job_instance:
 pcmt_rules_report:
     resource: '@PcmtRulesBundle/Resources/config/routing/rules_executions.yml'
     prefix: /rest/rules/execution
-
-pim_importexport_rules_execution_show:
-    path: /collect/import_execution/{id}
-    requirements:
-        id: \d+

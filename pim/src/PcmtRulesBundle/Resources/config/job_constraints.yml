@@ -1,10 +1,10 @@
 services:
 
-    pcmt.rules.job.constraint_collection_provider.rule_process:
-        class: PcmtRulesBundle\Connector\Job\ConstraintCollectionProvider\RuleProcessConstraintCollectionProvider
+    pcmt.rules.job.constraint_collection_provider.family_to_family:
+        class: PcmtRulesBundle\Connector\Job\ConstraintCollectionProvider\FamilyToFamilyConstraintCollectionProvider
         arguments:
             -
-                - 'pcmt_rule_process'
+                - 'pcmt_family_to_family_rule'
         tags:
             - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
 

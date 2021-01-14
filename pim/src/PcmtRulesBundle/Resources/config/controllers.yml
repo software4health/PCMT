@@ -1,19 +1,5 @@
 services:
 
-    pcmt.controller.rest.rules:
-        class: 'PcmtRulesBundle\Controller\RuleController'
-        arguments:
-            - '@pim_internal_api_serializer'
-            - '@pcmt.updater.rule'
-            - '@validator'
-            - '@pcmt.saver.rule'
-            - '@pim_enrich.normalizer.violation'
-            - '@pcmt.repository.rule'
-            - '@akeneo_batch_queue.launcher.queue_job_launcher'
-            - '@security.token_storage'
-            - '@akeneo_batch.job.job_instance_repository'
-            - '@pcmt.remover.rule'
-
     pcmt.controller.rest.attributes:
         class: 'PcmtRulesBundle\Controller\AttributeController'
         arguments:

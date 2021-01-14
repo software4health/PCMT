@@ -13,20 +13,17 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\Filter\Operators;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderFactoryInterface;
+use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
+use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Batch\Step\AbstractStep;
-use PcmtRulesBundle\Entity\Rule;
-use PcmtRulesBundle\Repository\RuleRepository;
 use PcmtRulesBundle\Service\RuleAttributeProvider;
 use PcmtRulesBundle\Service\RuleProcessor;
 
-class RuleProcessStep extends AbstractStep
+class FamilyToFamilyStep extends AbstractStep
 {
     /** @var RuleAttributeProvider */
     private $attributeProvider;
-
-    /** @var RuleRepository */
-    private $ruleRepository;
 
     /** @var RuleProcessor */
     private $ruleProductProcessor;
@@ -34,16 +31,14 @@ class RuleProcessStep extends AbstractStep
     /** @var ProductQueryBuilderFactoryInterface */
     private $pqbFactory;
 
+    /** @var FamilyRepositoryInterface */
+    private $familyRepository;
+
     public const BATCH_SIZE = 20;
 
     public function setAttributeProvider(RuleAttributeProvider $attributeProvider): void
     {
         $this->attributeProvider = $attributeProvider;
-    }
-
-    public function setRuleRepository(RuleRepository $ruleRepository): void
-    {
-        $this->ruleRepository = $ruleRepository;
     }
 
     public function setRuleProductProcessor(RuleProcessor $ruleProductProcessor): void
@@ -56,15 +51,21 @@ class RuleProcessStep extends AbstractStep
         $this->pqbFactory = $pqbFactory;
     }
 
+    public function setFamilyRepository(FamilyRepositoryInterface $familyRepository): void
+    {
+        $this->familyRepository = $familyRepository;
+    }
+
     protected function doExecute(StepExecution $stepExecution): void
     {
-        $ruleId = $stepExecution->getJobParameters()->get('ruleId');
+        $parameters = $stepExecution->getJobParameters();
 
-        $stepExecution->addSummaryInfo('rule_id', $ruleId);
+        /** @var FamilyInterface $sourceFamily */
+        $sourceFamily = $this->familyRepository->findOneBy(['code' => $parameters->get('sourceFamily')]);
+        /** @var FamilyInterface $destinationFamily */
+        $destinationFamily = $this->familyRepository->findOneBy(['code' => $parameters->get('destinationFamily')]);
 
-        /** @var Rule $rule */
-        $rule = $this->ruleRepository->find($ruleId);
-        $attributes = $this->attributeProvider->getAllForFamilies($rule->getSourceFamily(), $rule->getDestinationFamily());
+        $attributes = $this->attributeProvider->getAllForFamilies($sourceFamily, $destinationFamily);
 
         $stepExecution->addSummaryInfo('attributes_found', count($attributes));
         $stepExecution->addSummaryInfo('source_products_found', 0);
@@ -78,12 +79,12 @@ class RuleProcessStep extends AbstractStep
         $result = true;
         $offset = 0;
         while ($result) {
-            $result = $this->processBatch($stepExecution, $rule, $offset);
+            $result = $this->processBatch($stepExecution, $sourceFamily, $destinationFamily, $offset);
             $offset += self::BATCH_SIZE;
         }
     }
 
-    private function processBatch(StepExecution $stepExecution, Rule $rule, int $offset): bool
+    private function processBatch(StepExecution $stepExecution, FamilyInterface $sourceFamily, FamilyInterface $destinationFamily, int $offset): bool
     {
         $count = 0;
         // look in ElasticSearch index
@@ -93,7 +94,7 @@ class RuleProcessStep extends AbstractStep
             'limit'          => self::BATCH_SIZE,
             'from'           => $offset,
         ]);
-        $pqb->addFilter('family', Operators::IN_LIST, [$rule->getSourceFamily()->getCode()]);
+        $pqb->addFilter('family', Operators::IN_LIST, [$sourceFamily->getCode()]);
 
         $entityCursor = $pqb->execute();
 
@@ -101,31 +102,31 @@ class RuleProcessStep extends AbstractStep
             $count++;
             if ($entity instanceof ProductModelInterface) {
                 $stepExecution->incrementSummaryInfo('source_product_models_found', 1);
-                $this->processProductModel($stepExecution, $rule, $entity);
+                $this->processProductModel($stepExecution, $sourceFamily, $destinationFamily, $entity);
             } else {
                 $stepExecution->incrementSummaryInfo('source_products_found', 1);
-                $this->processProduct($stepExecution, $rule, $entity);
+                $this->processProduct($stepExecution, $sourceFamily, $destinationFamily, $entity);
             }
         }
 
         return $count ? true : false;
     }
 
-    private function processProductModel(StepExecution $stepExecution, Rule $rule, ProductModelInterface $productModel): void
+    private function processProductModel(StepExecution $stepExecution, FamilyInterface $sourceFamily, FamilyInterface $destinationFamily, ProductModelInterface $productModel): void
     {
         $stepExecution->incrementSummaryInfo('source_product_models_processed', 1);
-        $this->ruleProductProcessor->process($stepExecution, $rule, $productModel);
+        $this->ruleProductProcessor->process($stepExecution, $sourceFamily, $destinationFamily, $productModel);
         foreach ($productModel->getProductModels() as $subProductModel) {
-            $this->processProductModel($stepExecution, $rule, $subProductModel);
+            $this->processProductModel($stepExecution, $sourceFamily, $destinationFamily, $subProductModel);
         }
         foreach ($productModel->getProducts() as $productVariant) {
-            $this->processProduct($stepExecution, $rule, $productVariant);
+            $this->processProduct($stepExecution, $sourceFamily, $destinationFamily, $productVariant);
         }
     }
 
-    private function processProduct(StepExecution $stepExecution, Rule $rule, ProductInterface $product): void
+    private function processProduct(StepExecution $stepExecution, FamilyInterface $sourceFamily, FamilyInterface $destinationFamily, ProductInterface $product): void
     {
         $stepExecution->incrementSummaryInfo('source_products_processed', 1);
-        $this->ruleProductProcessor->process($stepExecution, $rule, $product);
+        $this->ruleProductProcessor->process($stepExecution, $sourceFamily, $destinationFamily, $product);
     }
 }

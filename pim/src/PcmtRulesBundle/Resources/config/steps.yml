@@ -1,15 +1,15 @@
 services:
-    pcmt.connector.job.step.rule_process:
-        class: PcmtRulesBundle\Connector\Job\Step\RuleProcessStep
+    pcmt.connector.job.step.family_to_family:
+        class: PcmtRulesBundle\Connector\Job\Step\FamilyToFamilyStep
         arguments:
-            - 'rule_process_step'
+            - 'family_to_family_step'
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
         calls:
             - [setAttributeProvider, ['@pcmt.service.rule_attribute_provider']]
-            - [setRuleRepository, ['@pcmt.repository.rule']]
             - [setRuleProductProcessor, ['@pcmt.service.rule_product_processor']]
             - [setPqbFactory, ['@pim_enrich.query.product_and_product_model_query_builder_from_size_factory']]
+            - [setFamilyRepository, ['@pim_catalog.repository.family']]
 
     pcmt.connector.job.step.select_options_rule:
         class: PcmtRulesBundle\Connector\Job\Step\SelectOptionsRuleStep

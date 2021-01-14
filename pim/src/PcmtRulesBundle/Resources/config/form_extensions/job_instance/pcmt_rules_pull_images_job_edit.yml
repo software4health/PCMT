@@ -158,7 +158,7 @@ extensions:
         position: 120
 
     pcmt-rules-pull-images-job-edit-save:
-        module: pim/job-instance-import-edit-form/save
+        module: pcmt/rules/job/rules/edit/save
         parent: pcmt-rules-pull-images-job-edit
         targetZone: buttons
         position: 0

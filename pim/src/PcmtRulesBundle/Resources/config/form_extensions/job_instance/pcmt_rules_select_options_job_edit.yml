@@ -165,7 +165,7 @@ extensions:
         position: 120
 
     pcmt-rules-select-options-job-edit-save:
-        module: pim/job-instance-import-edit-form/save
+        module: pcmt/rules/job/rules/edit/save
         parent: pcmt-rules-select-options-job-edit
         targetZone: buttons
         position: 0

@@ -9,12 +9,3 @@ extensions:
       title: pim_menu.tab.rules
       iconModifier: iconReferenceEntity
       to: pcmt_rules_profile_index
-
-  pim-menu-system-rules:
-    module: pim/menu/item
-    parent: pim-menu-system-navigation-block
-    aclResourceId: pcmt_permission_rules_view
-    position: 130
-    config:
-      title: pim_menu.item.rules
-      to: pcmt_rules_index
