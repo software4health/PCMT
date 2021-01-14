@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PcmtRulesBundle\Tests\TestDataBuilder;
 
 use Akeneo\Pim\Structure\Component\Model\Family;
+use Doctrine\Common\Collections\Collection;
 
 class FamilyBuilder
 {
@@ -37,6 +38,13 @@ class FamilyBuilder
         $property = $reflection->getProperty('id');
         $property->setAccessible(true);
         $property->setValue($this->family, $id);
+
+        return $this;
+    }
+
+    public function withFamilyVariants(Collection $collection): self
+    {
+        $this->family->setFamilyVariants($collection);
 
         return $this;
     }

@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace PcmtCoreBundle\Connector\Job\InvalidItems;
+namespace PcmtSharedBundle\Connector\Job\InvalidItems;
 
 use Akeneo\Tool\Component\Batch\Item\InvalidItemInterface;
 

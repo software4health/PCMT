@@ -28,6 +28,12 @@ services:
             - 'pull_images_rule_step'
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
+        calls:
+            - [ setPullImageService, [ '@pcmt_rules.service.pull_image_service' ] ]
+            - [ setProductUpdateImageService, [ '@pcmt_rules.service.update_image_service.product' ] ]
+            - [ setProductModelUpdateImageService, [ '@pcmt_rules.service.update_image_service.product_model' ] ]
+            - [ setPqbFactory, [ '@pim_enrich.query.product_and_product_model_query_builder_from_size_factory' ] ]
+            - [ setAttributesLevelValidator, [ '@pcmt_rules.service.attributes_level_validator'] ]
 
 
 

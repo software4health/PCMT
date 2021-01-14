@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace PcmtDraftBundle\Tests\TestDataBuilder;
+namespace PcmtSharedBundle\Tests\TestDataBuilder;
 
 use Symfony\Component\Validator\ConstraintViolation;
 

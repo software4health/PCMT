@@ -32,6 +32,11 @@ job_execution.summary:
     options_found_and_removed: FR Options found and removed
     options_added: FR Options added
     parameters: FR Parameters
+    entities_found: FR Entities found
+    entities_processed: FR Entities processed
+    source_urls_found: FR Source URLs found
+    files_downloaded: FR Files downloaded
+    entities_updated: FR Entities updated
 
 pim_datagrid:
     cells:
