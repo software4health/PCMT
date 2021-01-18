@@ -26,7 +26,6 @@ class WebContext extends \SeleniumBaseContext implements Context
     public function iSaveCreateForm(): void
     {
         $locator = WebContentFinder::getSaveButtonLocatorOnCreateForm();
-        $this->waitForThePageToLoad();
         if (!$this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator))) {
             throw new \Exception('Save element not found');
         }
@@ -71,6 +70,19 @@ class WebContext extends \SeleniumBaseContext implements Context
     }
 
     /**
+     * @When I click launch button
+     */
+    public function iClickLaunchButton(): void
+    {
+        $locator = WebContentFinder::getLaunchRuleButtonLocator();
+        if (!$this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator))) {
+            throw new \Exception('Launch button not found.');
+        }
+        $saveBtn = $this->getSession()->getPage()->find('css', $locator);
+        $saveBtn->click();
+    }
+
+    /**
      * @Then I click on source family
      */
     public function iClickOnSourceFamily(): void
@@ -81,6 +93,36 @@ class WebContext extends \SeleniumBaseContext implements Context
         }
         $element = reset($elements);
         $element->click();
+    }
+
+    /**
+     * @When I click on select field no :number
+     */
+    public function iClickOnSelectFieldNumber(int $number): void
+    {
+        $elements = $this->getAllSelectFields();
+        if (!$elements) {
+            throw new \Exception('Select field no ' . $number . ' not found.');
+        }
+        $elements = array_slice($elements, $number - 1, 1);
+        $element = reset($elements);
+        $element->click();
+    }
+
+    /**
+     * @When I choose :option option
+     */
+    public function iChooseOption(string $option): void
+    {
+        $attributeGroupSelect = $this->getSession()->getPage()->findAll('css', '#select2-drop > ul > li');
+        foreach ($attributeGroupSelect as $selectOption) {
+            if (false !== mb_strpos($selectOption->getText(), $option)) {
+                $selectOption->click();
+
+                return;
+            }
+        }
+        throw new \Exception('Did not find option matching to: ' . $option);
     }
 
     /**
@@ -136,23 +178,6 @@ class WebContext extends \SeleniumBaseContext implements Context
                 sprintf('Wrong number of errors. Should be %d, in test: %d', $count, count($selectors))
             );
         }
-    }
-
-    /**
-     * @When I choose :group option
-     * @And I choose :group option
-     */
-    public function iChooseOption(string $option): void
-    {
-        $attributeGroupSelect = $this->getSession()->getPage()->findAll('css', '#select2-drop > ul > li');
-        foreach ($attributeGroupSelect as $selectOption) {
-            if ($selectOption->getText() === $option) {
-                $selectOption->click();
-
-                return;
-            }
-        }
-        throw new \Exception('Did not find option matching to: ' . $option);
     }
 
     /**
@@ -237,6 +262,14 @@ class WebContext extends \SeleniumBaseContext implements Context
         $this->iWaitAndClickIconOnLastRule('play');
     }
 
+    /**
+     * @When I wait and click view on last rule
+     */
+    public function iWaitAndClickViewOnLastRule(): void
+    {
+        $this->iWaitAndClickIconOnLastRule('view');
+    }
+
     private function iWaitAndClickIconOnLastRule(string $type): void
     {
         $locator = WebContentFinder::getIconLocator($type);
@@ -296,7 +329,7 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function firstJobOnTheListShouldBe(string $text, string $status): void
     {
-        $attempts = 3;
+        $attempts = 5;
         // we make a number of attempts, as the job in background may last for some time
         for ($i = 1; $i <= $attempts; $i++) {
             if ($this->firstJobOnTheListShouldBeMakeAttempt($text, $status)) {

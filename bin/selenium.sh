@@ -23,3 +23,7 @@ echo "STARTING SELENIUM TESTS..."
 #./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtRulesBundle/FunctionalTests/features/selenium/05_run_rule.feature
 #./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtCoreBundle/FunctionalTests/features/selenium/create_family.feature
 #./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtCoreBundle/FunctionalTests/features/selenium/edit_family.feature
+#./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtRulesBundle/FunctionalTests/features/selenium/11_create_select_options_rule.feature
+#./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtRulesBundle/FunctionalTests/features/selenium/13_edit_select_options_rule.feature
+#./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtRulesBundle/FunctionalTests/features/selenium/15_run_select_options_rule.feature
+#./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtRulesBundle/FunctionalTests/features/selenium/18_delete_select_options_rule.feature
