@@ -7,6 +7,7 @@ Feature: Deleting a 'select options' rule
   Scenario:
     Given I log in as a test user
     When I wait and follow link "Rules"
+    And I filter rules to "test select options rule"
     And I read number of rules
     And I wait and click delete on last rule
     And I confirm delete

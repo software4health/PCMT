@@ -1,4 +1,4 @@
-Feature: Deleting a rule
+Feature: Deleting a 'family to family' rule
   As a Catalog Manager
   When I click to delete the rule
   I want to have it removed
@@ -6,8 +6,8 @@ Feature: Deleting a rule
   @javascript
   Scenario:
     Given I log in as a test user
-    When I wait and follow link "System"
     When I wait and follow link "Rules"
+    And I filter rules to "test family to family rule"
     And I read number of rules
     And I wait and click delete on last rule
     And I confirm delete

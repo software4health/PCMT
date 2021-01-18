@@ -83,19 +83,6 @@ class WebContext extends \SeleniumBaseContext implements Context
     }
 
     /**
-     * @Then I click on source family
-     */
-    public function iClickOnSourceFamily(): void
-    {
-        $elements = $this->getAllSelectFields();
-        if (!$elements) {
-            throw new \Exception('Source family not found');
-        }
-        $element = reset($elements);
-        $element->click();
-    }
-
-    /**
      * @When I click on select field no :number
      */
     public function iClickOnSelectFieldNumber(int $number): void
@@ -114,7 +101,7 @@ class WebContext extends \SeleniumBaseContext implements Context
      */
     public function iChooseOption(string $option): void
     {
-        $attributeGroupSelect = $this->getSession()->getPage()->findAll('css', '#select2-drop > ul > li');
+        $attributeGroupSelect = $this->getSession()->getPage()->findAll('css', '#select2-drop  ul > li > div.select2-result-label');
         foreach ($attributeGroupSelect as $selectOption) {
             if (false !== mb_strpos($selectOption->getText(), $option)) {
                 $selectOption->click();
@@ -123,38 +110,6 @@ class WebContext extends \SeleniumBaseContext implements Context
             }
         }
         throw new \Exception('Did not find option matching to: ' . $option);
-    }
-
-    /**
-     * @Then I click on destination family
-     */
-    public function iClickOnDestinationFamily(): void
-    {
-        $elements = $this->getAllSelectFields();
-        if (!$elements) {
-            throw new \Exception('Source family not found');
-        }
-        $elements = array_slice($elements, 1, 1);
-        $element = reset($elements);
-        $element->click();
-    }
-
-    /**
-     * @Then I click on key attribute field
-     */
-    public function iClickOnKeyAttributeField(): void
-    {
-        $this->iWait();
-        $elements = $this->getAllSelectFields();
-        if (!$elements) {
-            throw new \Exception('No select fields found');
-        }
-        $elements = array_slice($elements, 2, 1);
-        if (!$elements) {
-            throw new \Exception('No third select found');
-        }
-        $element = reset($elements);
-        $element->click();
     }
 
     private function getAllSelectFields(): array
@@ -255,11 +210,20 @@ class WebContext extends \SeleniumBaseContext implements Context
     }
 
     /**
-     * @When I wait and click run on last rule
+     * @When I filter rules to :text
      */
-    public function iWaitAndClickRunOnLastRule(): void
+    public function iFilterRulesTo(string $text): void
     {
-        $this->iWaitAndClickIconOnLastRule('play');
+        $locator = WebContentFinder::getFilterInput();
+        if (!$this->waitUntilExpression(WebContentFinder::getSelectorForLocator($locator))) {
+            throw new \Exception('Filter input not found.');
+        }
+        $buttonDiv = $this->getSession()->getPage()->find('css', $locator);
+        $buttonDiv->click();
+
+        $buttonDiv->setValue($text);
+
+        $this->getSession()->wait(self::WAIT_TIME_SHORT);
     }
 
     /**

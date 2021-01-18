@@ -1,4 +1,4 @@
-Feature: Concatenated attribute
+Feature: Create concatenated attribute
   In order to have data about one or more attributes
   As Catalog Manager
   I want to be able to create concatenated attribute
