@@ -32,6 +32,11 @@ class WebContentFinder
         return 'div.AknButton.AknButtonList-item.AknButton--apply.ok.ok';
     }
 
+    public static function getFilterInput(): string
+    {
+        return 'input.AknFilterBox-search';
+    }
+
     public static function getIconLocator(string $type): string
     {
         return 'a.AknIconButton.AknIconButton--'. $type;

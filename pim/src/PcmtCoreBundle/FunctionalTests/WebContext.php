@@ -206,14 +206,18 @@ class WebContext extends \SeleniumBaseContext implements Context
     public function iShouldDeleteCreatedAttribute(): void
     {
         $locator = 'a.AknIconButton.AknIconButton--small.AknIconButton--trash.AknButtonList-item';
-        $this->waitUntil(\WebContentFinder::LOCATOR_EXISTS, $locator);
+        if (!$this->waitUntil(\WebContentFinder::LOCATOR_EXISTS, $locator)) {
+            throw new \Exception('Delete icon not found.');
+        }
         $page = $this->getSession()->getPage();
         $deleteSelector = $page->find('css', $locator);
         $deleteSelector->click();
 
         // once modal appears
         $moduleLocator = 'div.AknButton.AknButtonList-item.AknButton--apply.AknButton--important.ok';
-        $this->waitUntil(\WebContentFinder::LOCATOR_EXISTS, $moduleLocator);
+        if (!$this->waitUntil(\WebContentFinder::LOCATOR_EXISTS, $moduleLocator)) {
+            throw new \Exception('Confirmation button not found.');
+        }
         $deleteButton = $page->find('css', $moduleLocator);
         $deleteButton->click();
     }
