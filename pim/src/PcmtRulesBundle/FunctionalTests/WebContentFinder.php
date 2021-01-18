@@ -17,6 +17,11 @@ class WebContentFinder
         return 'button.AknButton.AknButton--apply.save';
     }
 
+    public static function getLaunchRuleButtonLocator(): string
+    {
+        return 'button.AknButton.AknButton--apply';
+    }
+
     public static function getSaveButtonLocatorOnCreateForm(): string
     {
         return 'div.AknButton.AknButton--apply.ok';
