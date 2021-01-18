@@ -95,24 +95,31 @@ pcmt:
                     help: FR Source attribute
 
     rules.action.run.label: FR Run a rule
-    entity.rules:
-        label: FR Rule
-        module:
-            create:
-                button: FR Create Rule
-            edit:
-                common: FR General Parameters
-        flash:
-            create:
-                success: FR Rule successfully created
-            update:
-                success: FR Rule successfully updated
-                fail: FR Rule could not be updated
-                fields_not_ready: "FR Rule cannot be saved right now. The following fields are not ready: {{ fields }}"
-        page_title:
-            index: "]-Inf, 1]{{ count }} FR rule|]1, Inf[{{ count }} FR rules"
-        property.family.choose: FR Choose the family
-        property.attribute.choose: FR Choose the attribute
+    entity:
+        rules:
+            label: FR Rule
+            module:
+                create:
+                    button: FR Create Rule
+                edit:
+                    common: FR General Parameters
+            flash:
+                create:
+                    success: FR Rule successfully created
+                update:
+                    success: FR Rule successfully updated
+                    fail: FR Rule could not be updated
+                    fields_not_ready: "FR Rule cannot be saved right now. The following fields are not ready: {{ fields }}"
+            page_title:
+                index: "]-Inf, 1]{{ count }} FR rule|]1, Inf[{{ count }} FR rules"
+            property.family.choose: FR Choose the family
+            property.attribute.choose: FR Choose the attribute
+        rules_profile:
+            page_title:
+                index: "]-Inf, 1] {{ count }} FR rules profile|]1, Inf [{{ count }} FR rules profiles"
+            module:
+                create:
+                    button: FR Create rule profile
 
 pcmt.rules.flash:
     running_started: FR The rule processing has been started.
