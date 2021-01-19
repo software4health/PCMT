@@ -27,6 +27,9 @@ class PullImageService
     private $sourceAttributeCode;
 
     /** @var string */
+    private $destinationAttributeCode;
+
+    /** @var string */
     private $tmpStorageDir;
 
     /** @var FileStorer */
@@ -35,13 +38,18 @@ class PullImageService
     /** @var Client */
     private $httpClient;
 
+    /** @var ImageVerificationService */
+    private $imageVerificationService;
+
     public function __construct(
         string $tmpStorageDir,
-        FileStorer $fileStorer
+        FileStorer $fileStorer,
+        ImageVerificationService $imageVerificationService
     ) {
         $this->tmpStorageDir = $tmpStorageDir;
         $this->fileStorer = $fileStorer;
         $this->httpClient = new Client();
+        $this->imageVerificationService = $imageVerificationService;
     }
 
     public function setSourceAttributeCode(string $sourceAttributeCode): void
@@ -71,7 +79,21 @@ class PullImageService
 
         $downloadedFile = new \SplFileInfo($filePath);
 
-        return $this->fileStorer->store($downloadedFile, FileStorage::CATALOG_STORAGE_ALIAS, true);
+        if (!$this->checkIfSameImageAlreadyExists($entity, $downloadedFile)) {
+            return $this->fileStorer->store($downloadedFile, FileStorage::CATALOG_STORAGE_ALIAS, true);
+        }
+
+        return null;
+    }
+
+    private function checkIfSameImageAlreadyExists(EntityWithValuesInterface $entity, \SplFileInfo $downloadedFile): bool
+    {
+        $destinationValue = $entity->getValue($this->destinationAttributeCode);
+        if (!$destinationValue || !$destinationValue->getData()) {
+            return false;
+        }
+
+        return $this->imageVerificationService->verifyIfSame($destinationValue->getData(), $downloadedFile);
     }
 
     public function setStepExecution(StepExecution $stepExecution): void
@@ -82,5 +104,10 @@ class PullImageService
     public function setHttpClient(Client $httpClient): void
     {
         $this->httpClient = $httpClient;
+    }
+
+    public function setDestinationAttributeCode(string $destinationAttributeCode): void
+    {
+        $this->destinationAttributeCode = $destinationAttributeCode;
     }
 }

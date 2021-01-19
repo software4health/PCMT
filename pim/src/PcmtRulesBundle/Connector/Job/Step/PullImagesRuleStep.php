@@ -98,6 +98,7 @@ class PullImagesRuleStep extends AbstractStep
 
         $this->pullImageService->setStepExecution($stepExecution);
         $this->pullImageService->setSourceAttributeCode($jobParameters->get(self::PARAM_SOURCE_ATTRIBUTE));
+        $this->pullImageService->setDestinationAttributeCode($jobParameters->get(self::PARAM_DESTINATION_ATTRIBUTE));
 
         $this->productUpdateImageService->setDestinationAttributeCode($jobParameters->get(self::PARAM_DESTINATION_ATTRIBUTE));
         $this->productModelUpdateImageService->setDestinationAttributeCode($jobParameters->get(self::PARAM_DESTINATION_ATTRIBUTE));

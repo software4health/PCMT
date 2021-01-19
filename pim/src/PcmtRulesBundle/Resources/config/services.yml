@@ -63,6 +63,7 @@ services:
         arguments:
             - '%tmp_storage_dir%'
             - '@akeneo_file_storage.file_storage.file.file_storer'
+            - '@pcmt_rules.service.image_verification_service'
 
     pcmt_rules.service.update_image_service.product:
         class: PcmtRulesBundle\Service\UpdateImageService
@@ -80,4 +81,7 @@ services:
             -
     pcmt_rules.service.attributes_level_validator:
         class: PcmtRulesBundle\Service\AttributesLevelValidator
+
+    pcmt_rules.service.image_verification_service:
+        class: PcmtRulesBundle\Service\ImageVerificationService
 
