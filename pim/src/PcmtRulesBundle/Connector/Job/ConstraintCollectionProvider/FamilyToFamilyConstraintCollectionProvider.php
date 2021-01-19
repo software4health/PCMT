@@ -11,6 +11,8 @@ namespace PcmtRulesBundle\Connector\Job\ConstraintCollectionProvider;
 
 use Akeneo\Tool\Component\Batch\Job\JobParameters\ConstraintCollectionProviderInterface;
 use PcmtCoreBundle\Connector\Job\JobParameters\SupportedJobsTrait;
+use PcmtRulesBundle\Constraints\AttributeExistsInBothFamiliesConstraint;
+use PcmtRulesBundle\Constraints\DifferentFamilyConstraint;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -32,16 +34,19 @@ class FamilyToFamilyConstraintCollectionProvider implements ConstraintCollection
                     'sourceFamily'      => [
                         new NotBlank(),
                         new Type('string'),
+                        new DifferentFamilyConstraint(),
                     ],
                     'destinationFamily' => [
                         new NotBlank(),
                         new Type('string'),
+                        new DifferentFamilyConstraint(),
                     ],
                     'keyAttribute'      => [
                         new NotBlank(),
                         new Type('string'),
+                        new AttributeExistsInBothFamiliesConstraint(),
                     ],
-                    'user_to_notify' => [
+                    'user_to_notify'    => [
                         new Type('string'),
                     ],
                 ],

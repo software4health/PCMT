@@ -13,7 +13,6 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\Filter\Operators;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderFactoryInterface;
 use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
-use PcmtRulesBundle\Entity\Rule;
 use PcmtRulesBundle\Service\RuleAttributeProvider;
 
 class RuleProcessStep
@@ -26,7 +25,7 @@ class RuleProcessStep
     /** @var RuleAttributeProvider */
     private $attributeProvider;
 
-    /** @var \PcmtRulesBundle\Malawi\RuleProductProcessor */
+    /** @var RuleProductProcessor */
     private $ruleProductProcessor;
 
     /** @var ProductQueryBuilderFactoryInterface */
@@ -54,60 +53,68 @@ class RuleProcessStep
 
     public function execute(): void
     {
-        $rule = new Rule();
         $sourceFamily = $this->familyRepository->findOneBy(['code' => 'Malawi_Products_and_Trade_Items_Flat']);
         if (!$sourceFamily) {
             throw new \Exception('Malawi: source family not existing.');
         }
-        $rule->setSourceFamily($sourceFamily);
         $destinationFamily = $this->familyRepository->findOneBy(['code' => 'Malawi_Products_and_Trade_Items']);
         if (!$destinationFamily) {
             throw new \Exception('Malawi: destination family not existing.');
         }
-        $rule->setDestinationFamily($destinationFamily);
 
-        $attributes = $this->attributeProvider->getAllForFamilies($rule->getSourceFamily(), $rule->getDestinationFamily());
+        $attributes = $this->attributeProvider->getAllForFamilies($sourceFamily, $destinationFamily);
+        $keyAttribute = null;
         foreach ($attributes as $attribute) {
             if (self::KEY_ATTRIBUTE_NAME_FIRST_AXIS === $attribute->getCode()) {
-                $rule->setKeyAttribute($attribute);
+                $keyAttribute = $attribute;
             }
         }
-        if (!$rule->getKeyAttribute()) {
+        if (!$keyAttribute) {
             throw new \Exception('Malawi: key attribute not found.');
         }
 
-        echo 'Attributes_found: '. count($attributes). "\n";
+        echo 'Attributes_found: ' . count($attributes) . "\n";
 
         $result = true;
         $offset = 0;
         while ($result) {
-            $result = $this->processBatch($rule, $offset);
+            $result = $this->processBatch(
+                [
+                    'sourceFamily'      => $sourceFamily,
+                    'destinationFamily' => $destinationFamily,
+                    'keyAttribute'      => $keyAttribute,
+                ],
+                $offset
+            );
             $offset += self::BATCH_SIZE;
         }
     }
 
-    private function processBatch(Rule $rule, int $offset): bool
+    private function processBatch(array $rule, int $offset): bool
     {
         $count = 0;
         // look in ElasticSearch index
-        $pqb = $this->pqbFactory->create([
-            'default_locale' => null,
-            'default_scope'  => null,
-            'limit'          => self::BATCH_SIZE,
-            'from'           => $offset,
-        ]);
-        $pqb->addFilter('family', Operators::IN_LIST, [$rule->getSourceFamily()->getCode()]);
+        $pqb = $this->pqbFactory->create(
+            [
+                'default_locale' => null,
+                'default_scope'  => null,
+                'limit'          => self::BATCH_SIZE,
+                'from'           => $offset,
+            ]
+        );
+        $pqb->addFilter('family', Operators::IN_LIST, [$rule['sourceFamily']->getCode()]);
 
         $entityCursor = $pqb->execute();
 
         foreach ($entityCursor as $entity) {
             $count++;
-            echo($count + $offset) .".\n";
+            $result = $count + $offset;
+            echo $result . ".\n";
             if ($entity instanceof ProductInterface) {
-                echo 'Source product found: '. $entity->getLabel(). "\n";
+                echo 'Source product found: ' . $entity->getLabel() . "\n";
                 $this->ruleProductProcessor->process($rule, $entity);
             } else {
-                echo 'Found source entity that is not a product! '. $entity->getLabel()."\n";
+                echo 'Found source entity that is not a product! ' . $entity->getLabel() . "\n";
             }
         }
 
