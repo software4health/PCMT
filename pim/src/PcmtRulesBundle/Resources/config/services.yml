@@ -85,3 +85,19 @@ services:
     pcmt_rules.service.image_verification_service:
         class: PcmtRulesBundle\Service\ImageVerificationService
 
+    pcmt.constraints.attribute_exists_in_both_families_constraint_validator:
+        class: PcmtRulesBundle\Validators\AttributeExistsInBothFamiliesConstraintValidator
+        arguments:
+            - '@pcmt.service.rule_attribute_provider'
+            - '@pim_catalog.repository.family'
+            - '@pim_catalog.repository.attribute'
+        tags:
+            - { name: validator.constraint_validator, alias: pcmt_attribute_exists_in_both_families_constraint_validator }
+
+    pcmt.constraints.different_family_constraint_validator:
+        class: PcmtRulesBundle\Validators\DifferentFamilyConstraintValidator
+        arguments:
+            - '@pim_catalog.repository.family'
+        tags:
+            - { name: validator.constraint_validator, alias: pcmt_attribute_different_family_constraint_validator }
+

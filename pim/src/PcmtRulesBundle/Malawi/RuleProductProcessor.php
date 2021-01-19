@@ -22,7 +22,6 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Updater\ProductModelUpdater;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
-use PcmtRulesBundle\Entity\Rule;
 use PcmtRulesBundle\Service\RuleAttributeProvider;
 use PcmtRulesBundle\Service\RuleProcessorCopier;
 use Ramsey\Uuid\Uuid;
@@ -63,9 +62,11 @@ class RuleProductProcessor
         $this->ruleProcessorCopier = $ruleProcessorCopier;
     }
 
-    public function process(Rule $rule, ProductInterface $sourceProduct): void
-    {
-        $keyValue = $sourceProduct->getValue($rule->getKeyAttribute()->getCode());
+    public function process(
+        array $rule,
+        ProductInterface $sourceProduct
+    ): void {
+        $keyValue = $sourceProduct->getValue($rule['keyAttribute']->getCode());
         if (!$keyValue) {
             return;
         }
@@ -82,9 +83,15 @@ class RuleProductProcessor
         }
     }
 
-    private function processDestinationProductModel(Rule $rule, ProductInterface $sourceProduct, ProductModelInterface $destinationProductModel): void
-    {
-        $attributes = $this->ruleAttributeProvider->getAllForFamilies($rule->getSourceFamily(), $rule->getDestinationFamily());
+    private function processDestinationProductModel(
+        array $rule,
+        ProductInterface $sourceProduct,
+        ProductModelInterface $destinationProductModel
+    ): void {
+        $attributes = $this->ruleAttributeProvider->getAllForFamilies(
+            $rule['sourceFamily'],
+            $rule['destinationFamily']
+        );
 
         $sourceKeyAttributeValue = $sourceProduct->getValue(RuleProcessStep::KEY_ATTRIBUTE_NAME_FIRST_AXIS);
         echo 'key attribute value: ' . $sourceKeyAttributeValue->getData() . "\n";
@@ -105,19 +112,29 @@ class RuleProductProcessor
         }
 
         echo "Sub product does not exists, creating.\n";
-        $subProductModel = $this->createNewDestinationProductModel($sourceProduct, $destinationProductModel, $attributes);
+        $subProductModel = $this->createNewDestinationProductModel(
+            $sourceProduct,
+            $destinationProductModel,
+            $attributes
+        );
         $this->processDestinationSubProductModel($rule, $sourceProduct, $subProductModel);
     }
 
-    private function processDestinationSubProductModel(Rule $rule, ProductInterface $sourceProduct, ProductModelInterface $destinationSubProductModel): void
-    {
-        $attributes = $this->ruleAttributeProvider->getAllForFamilies($rule->getSourceFamily(), $rule->getDestinationFamily());
+    private function processDestinationSubProductModel(
+        array $rule,
+        ProductInterface $sourceProduct,
+        ProductModelInterface $destinationSubProductModel
+    ): void {
+        $attributes = $this->ruleAttributeProvider->getAllForFamilies(
+            $rule['sourceFamily'],
+            $rule['destinationFamily']
+        );
         $sourceKeyAttributeValue = $sourceProduct->getValue(RuleProcessStep::KEY_ATTRIBUTE_NAME_SECOND_AXIS_SOURCE);
         $destinationProducts = $destinationSubProductModel->getProducts();
         foreach ($destinationProducts as $product) {
             /** @var ProductInterface $product */
             $value = $product->getValue(RuleProcessStep::KEY_ATTRIBUTE_NAME_SECOND_AXIS_DESTINATION);
-            echo '- found variant: '. $value->getData()."\n";
+            echo '- found variant: ' . $value->getData() . "\n";
 
             if ($sourceKeyAttributeValue->getData() === $value->getData()) {
                 echo "Matching variant exists, copying data.\n";
@@ -154,8 +171,11 @@ class RuleProductProcessor
         }
     }
 
-    private function createNewDestinationProduct(ProductInterface $sourceProduct, ProductModelInterface $productModel, array $attributes): void
-    {
+    private function createNewDestinationProduct(
+        ProductInterface $sourceProduct,
+        ProductModelInterface $productModel,
+        array $attributes
+    ): void {
         $destinationProduct = $this->variantProductBuilder->createProduct(
             Uuid::uuid4()->toString(),
             $productModel->getFamily()->getCode()
@@ -168,8 +188,11 @@ class RuleProductProcessor
         $this->copy($sourceProduct, $destinationProduct, $attributes);
     }
 
-    private function createNewDestinationProductModel(ProductInterface $sourceProduct, ProductModelInterface $productModel, array $attributes): ProductModelInterface
-    {
+    private function createNewDestinationProductModel(
+        ProductInterface $sourceProduct,
+        ProductModelInterface $productModel,
+        array $attributes
+    ): ProductModelInterface {
         $subProductModel = new ProductModel();
         $subProductModel->setCreated(new \DateTime());
         $subProductModel->setUpdated(new \DateTime());
