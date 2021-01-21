@@ -366,7 +366,7 @@ env-test-destroy:
 
 .env-gfpvan:
   extends:
-    - .pcmt_v_2_0_2
+    - .pcmt_v_2_2_1
   stage: deploy
   only:
     - master@pcmt/pcmt
