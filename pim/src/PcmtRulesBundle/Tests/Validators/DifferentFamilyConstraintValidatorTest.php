@@ -103,6 +103,36 @@ class DifferentFamilyConstraintValidatorTest extends TestCase
         $validator->validate('xxx', $constraint);
     }
 
+    public function testValidateWhenOneFamilyIsNotFound(): void
+    {
+        $family1 = (new FamilyBuilder())->withCode('xxx')->withId(1)->build();
+
+        $this->familyRepositoryMock
+            ->method('findOneBy')
+            ->willReturnOnConsecutiveCalls(
+                $family1,
+                null
+            );
+
+        $constraint = (new DifferentFamilyConstraintBuilder())->build();
+
+        $this->contextMock->expects($this->never())->method('buildViolation');
+
+        $root = [
+            'sourceFamily'      => $family1->getCode(),
+            'destinationFamily' => '',
+            'keyAttribute'      => 'test',
+            'user_to_notify'    => '',
+        ];
+
+        $this->contextMock
+            ->method('getRoot')
+            ->willReturn($root);
+
+        $validator = $this->getValidatorInstance();
+        $validator->validate('xxx', $constraint);
+    }
+
     public function testValidateThrowsException(): void
     {
         $this->expectException(UnexpectedTypeException::class);
