@@ -31,3 +31,7 @@ echo "STARTING SELENIUM TESTS..."
 #./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtRulesBundle/FunctionalTests/features/selenium/23_edit_family_to_family_rule.feature
 #./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtRulesBundle/FunctionalTests/features/selenium/25_run_family_to_family_rule.feature
 #./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtRulesBundle/FunctionalTests/features/selenium/28_delete_family_to_family_rule.feature
+#./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtRulesBundle/FunctionalTests/features/selenium/31_create_pull_images_rule.feature
+#./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtRulesBundle/FunctionalTests/features/selenium/33_edit_pull_images_rule.feature
+#./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtRulesBundle/FunctionalTests/features/selenium/35_run_pull_images_rule.feature
+#./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors src/PcmtRulesBundle/FunctionalTests/features/selenium/38_delete_pull_images_rule.feature
