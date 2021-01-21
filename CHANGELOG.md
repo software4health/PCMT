@@ -7,6 +7,17 @@ VER 2.3.0 / unreleased
 
 **Fixed**
 
+VER 2.2.2 / 2021-01-21
+==================
+
+**Added**
+
+**Changed**
+
+**Fixed**
+- [#724](https://gitlab.com/pcmt/pcmt/-/issues/724) Fixed docker volume path issue for ftp-put container.  _cherry-picked_ 
+  from mainline
+
 VER 2.2.1 / 2020-12-10
 ==================
 
