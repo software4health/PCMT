@@ -24,7 +24,6 @@ use PcmtRulesBundle\Service\RuleAttributeProvider;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 class AttributeExistsInBothFamiliesConstraintValidator extends ConstraintValidator
 {
@@ -85,21 +84,15 @@ class AttributeExistsInBothFamiliesConstraintValidator extends ConstraintValidat
     {
         $root = $this->context->getRoot();
 
-        $value = $root[$code] ?? '';
-
-        if (!$value) {
-            throw new ConstraintDefinitionException(sprintf('There is no %s code provided', $code), 0);
-        }
-
-        return $value;
+        return $root[$code] ?? '';
     }
 
-    private function getFamilyByCode(string $code): FamilyInterface
+    private function getFamilyByCode(string $code): ?FamilyInterface
     {
         return $this->familyRepository->findOneBy(['code' => $code]);
     }
 
-    private function getAttributeByCode(string $code): AttributeInterface
+    private function getAttributeByCode(string $code): ?AttributeInterface
     {
         return $this->attributeRepository->findOneBy(['code' => $code]);
     }

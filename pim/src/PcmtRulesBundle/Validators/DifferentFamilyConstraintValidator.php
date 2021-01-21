@@ -21,7 +21,6 @@ use PcmtRulesBundle\Constraints\DifferentFamilyConstraint;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 class DifferentFamilyConstraintValidator extends ConstraintValidator
 {
@@ -63,16 +62,10 @@ class DifferentFamilyConstraintValidator extends ConstraintValidator
     {
         $root = $this->context->getRoot();
 
-        $value = $root[$code] ?? '';
-
-        if (!$value) {
-            throw new ConstraintDefinitionException(sprintf('There is no %s code provided', $code), 0);
-        }
-
-        return $value;
+        return $root[$code] ?? '';
     }
 
-    private function getFamilyByCode(string $code): FamilyInterface
+    private function getFamilyByCode(string $code): ?FamilyInterface
     {
         return $this->familyRepository->findOneBy(['code' => $code]);
     }

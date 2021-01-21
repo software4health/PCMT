@@ -148,6 +148,45 @@ class AttributeExistsInBothFamiliesConstraintValidatorTest extends TestCase
         $validator->validate($value, $constraint);
     }
 
+    public function testValidateWhenKeyAttributeIsNotFound(): void
+    {
+        $this->attributeRepositoryMock
+            ->method('findOneBy')
+            ->willReturn(null);
+
+        $root = [
+            'sourceFamily'      => 'SOURCE',
+            'destinationFamily' => 'DESTINATION',
+            'keyAttribute'      => '',
+            'user_to_notify'    => '',
+        ];
+        $this->contextMock
+            ->method('getRoot')
+            ->willReturn($root);
+
+        $this->ruleAttributeProviderMock
+            ->expects($this->never())
+            ->method('getPossibleForKeyAttribute');
+
+        $constraint = (new AttributeExistsInBothFamiliesConstraintBuilder())->build();
+        $sourceFamily = (new FamilyBuilder())->withCode('SOURCE')->build();
+        $destinationFamily = (new FamilyBuilder())->withCode('DESTINATION')->build();
+
+        $this->familyRepositoryMock
+            ->method('findOneBy')
+            ->withConsecutive(
+                [['code' => 'SOURCE']],
+                [['code' => 'DESTINATION']]
+            )
+            ->willReturnOnConsecutiveCalls(
+                $sourceFamily,
+                $destinationFamily
+            );
+
+        $validator = $this->getValidatorInstance();
+        $validator->validate('', $constraint);
+    }
+
     private function getValidatorInstance(): AttributeExistsInBothFamiliesConstraintValidator
     {
         $validator = new AttributeExistsInBothFamiliesConstraintValidator(
