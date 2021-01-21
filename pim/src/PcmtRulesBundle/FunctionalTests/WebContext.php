@@ -97,6 +97,20 @@ class WebContext extends \SeleniumBaseContext implements Context
     }
 
     /**
+     * @When I choose the first option
+     */
+    public function iChooseTheFirstOption(): void
+    {
+        $attributeGroupSelect = $this->getSession()->getPage()->findAll('css', '#select2-drop > ul > li');
+        foreach ($attributeGroupSelect as $selectOption) {
+            $selectOption->click();
+
+            return;
+        }
+        throw new \Exception('Did not find any option.');
+    }
+
+    /**
      * @When I choose :option option
      */
     public function iChooseOption(string $option): void
