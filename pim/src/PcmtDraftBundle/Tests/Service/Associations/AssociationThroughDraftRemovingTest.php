@@ -52,7 +52,7 @@ class AssociationThroughDraftRemovingTest extends TestCase
 
     public function dataRemoveProductExistingDraft(): array
     {
-        $product1 = (new ProductBuilder())->build();
+        $product1 = (new ProductBuilder())->withId(111)->build();
         $associationType = (new AssociationTypeBuilder())->build();
 
         $association = (new ProductAssociationBuilder())
@@ -65,6 +65,7 @@ class AssociationThroughDraftRemovingTest extends TestCase
             ->build();
 
         $productToBeChanged = (new ProductBuilder())
+            ->withId(56)
             ->withAssociations($associations)
             ->build();
 
@@ -91,10 +92,28 @@ class AssociationThroughDraftRemovingTest extends TestCase
         $service->remove($objectToBeRemovedFromAssociation, $objectToBeChanged, $associationType);
     }
 
+    /**
+     * @dataProvider dataRemoveProductExistingDraft
+     */
+    public function testRemoveProductSameProduct(
+        EntityWithAssociationsInterface $objectToBeRemovedFromAssociation,
+        ProductInterface $objectToBeChanged,
+        AssociationType $associationType
+    ): void {
+        $objectToBeChanged->setId($objectToBeRemovedFromAssociation->getId());
+
+        $this->productSaverMock->expects($this->never())->method('save');
+        $this->draftRepositoryMock->expects($this->never())->method('findOneBy');
+        $this->objectFromDraftCreatorMock->expects($this->never())->method('getObjectToCompare');
+
+        $service = $this->getRemovingService();
+        $service->remove($objectToBeRemovedFromAssociation, $objectToBeChanged, $associationType);
+    }
+
     public function dataRemoveProductModel(): array
     {
-        $productModel1 = (new ProductModelBuilder())->build();
-        $product1 = (new ProductBuilder())->build();
+        $productModel1 = (new ProductModelBuilder())->withId(222)->build();
+        $product1 = (new ProductBuilder())->withId(34)->build();
         $associationType = (new AssociationTypeBuilder())->build();
 
         $association1 = (new ProductAssociationBuilder())
