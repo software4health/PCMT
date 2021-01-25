@@ -146,9 +146,18 @@ services:
         arguments:
             - '@pcmt.service.general_object_from_draft_creator'
             - '@pcmt.service.associations.association_through_draft_adding'
+            - '@pcmt.service.associations.association_through_draft_removing'
 
     pcmt.service.associations.association_through_draft_adding:
         class: 'PcmtDraftBundle\Service\Associations\AssociationThroughDraftAdding'
+        arguments:
+            - '@pcmt.saver.product_through_draft'
+            - '@pcmt.saver.product_model_through_draft'
+            - '@pcmt.service.general_object_from_draft_creator'
+            - '@pcmt_catalog.repository.draft'
+            -
+    pcmt.service.associations.association_through_draft_removing:
+        class: 'PcmtDraftBundle\Service\Associations\AssociationThroughDraftRemoving'
         arguments:
             - '@pcmt.saver.product_through_draft'
             - '@pcmt.saver.product_model_through_draft'
