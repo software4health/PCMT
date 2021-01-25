@@ -22,6 +22,7 @@ VER 2.3.0 / 2021-01-25
 - [#760](https://gitlab.com/pcmt/pcmt/-/issues/760) Handle repeated downloads in 'Pull Images' rule
 
 - [#716](https://gitlab.com/pcmt/pcmt/-/issues/716) Adding bi-directional association
+- [#734](https://gitlab.com/pcmt/pcmt/-/issues/734) Delete bi-directional association
 - [#703](https://gitlab.com/pcmt/pcmt/-/issues/703) Families: Creating and editing families automatic test
 
 **Changed**
