@@ -48,8 +48,8 @@ class AssociationThroughDraftAddingTest extends TestCase
 
     public function testAddProductExistingDraft(): void
     {
-        $objectToBeChanged = (new ProductBuilder())->build();
-        $objectToBeAssociated = (new ProductBuilder())->build();
+        $objectToBeChanged = (new ProductBuilder())->withId(2234)->build();
+        $objectToBeAssociated = (new ProductBuilder())->withId(176)->build();
         $associationType = (new AssociationTypeBuilder())->build();
 
         $this->productSaverMock->expects($this->once())->method('save');
@@ -62,11 +62,25 @@ class AssociationThroughDraftAddingTest extends TestCase
         $adding->add($objectToBeAssociated, $objectToBeChanged, $associationType);
     }
 
+    public function testAddProductSameProduct(): void
+    {
+        $objectToBeChanged = (new ProductBuilder())->withId(22)->build();
+        $objectToBeAssociated = (new ProductBuilder())->withId(22)->build();
+        $associationType = (new AssociationTypeBuilder())->build();
+
+        $this->productSaverMock->expects($this->never())->method('save');
+        $this->draftRepositoryMock->expects($this->never())->method('findOneBy');
+        $this->objectFromDraftCreatorMock->expects($this->never())->method('getObjectToCompare');
+
+        $adding = $this->getAdding();
+        $adding->add($objectToBeAssociated, $objectToBeChanged, $associationType);
+    }
+
     public function dataAddProductModel(): array
     {
-        $productModel1 = (new ProductModelBuilder())->build();
-        $productModel2 = (new ProductModelBuilder())->build();
-        $product1 = (new ProductBuilder())->build();
+        $productModel1 = (new ProductModelBuilder())->withId(234)->build();
+        $productModel2 = (new ProductModelBuilder())->withId(1123)->build();
+        $product1 = (new ProductBuilder())->withId(456)->build();
         $associationType = (new AssociationTypeBuilder())->build();
 
         return [

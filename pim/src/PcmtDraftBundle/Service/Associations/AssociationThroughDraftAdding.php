@@ -53,6 +53,9 @@ class AssociationThroughDraftAdding
         EntityWithAssociationsInterface $objectToBeChanged,
         AssociationTypeInterface $associationType
     ): void {
+        if ($objectToBeAssociated->getId() === $objectToBeChanged->getId()) {
+            return;
+        }
         $criteria = [
             'status'  => AbstractDraft::STATUS_NEW,
         ];
