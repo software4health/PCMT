@@ -13,6 +13,7 @@ VER 2.3.0 / unreleased
 **Added**
 - [#726](https://gitlab.com/pcmt/pcmt/-/issues/726) Framework for rules jobs with user interface
 - [#729](https://gitlab.com/pcmt/pcmt/-/issues/729) Move the 'Family To Family' rule to the new system
+  * Note: **existing 'Family to Family' rules need to be re-created manually in the new system**
 - [#749](https://gitlab.com/pcmt/pcmt/-/issues/749) Adjust job datagrid for rules
 - [#727](https://gitlab.com/pcmt/pcmt/-/issues/727) Create the 'Select Options' rule job
 - [#759](https://gitlab.com/pcmt/pcmt/-/issues/759) Create functional test for 'Select Options' rule
