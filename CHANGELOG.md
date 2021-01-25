@@ -1,4 +1,4 @@
-VER 2.3.0 / unreleased
+VER 2.4.0 / unreleased
 ==================
 
 **Added**
@@ -7,12 +7,34 @@ VER 2.3.0 / unreleased
 
 **Fixed**
 
-VER 2.2.2 / 2021-01-21
+VER 2.3.0 / unreleased
 ==================
 
 **Added**
+- [#726](https://gitlab.com/pcmt/pcmt/-/issues/726) Framework for rules jobs with user interface
+- [#729](https://gitlab.com/pcmt/pcmt/-/issues/729) Move the 'Family To Family' rule to the new system
+- [#749](https://gitlab.com/pcmt/pcmt/-/issues/749) Adjust job datagrid for rules
+- [#727](https://gitlab.com/pcmt/pcmt/-/issues/727) Create the 'Select Options' rule job
+- [#759](https://gitlab.com/pcmt/pcmt/-/issues/759) Create functional test for 'Select Options' rule
+- [#655](https://gitlab.com/pcmt/pcmt/-/issues/655) Create the 'Pull Images' rule job
+- [#761](https://gitlab.com/pcmt/pcmt/-/issues/761) Create functional test for 'Pull Images' rule
+- [#760](https://gitlab.com/pcmt/pcmt/-/issues/760) Handle repeated downloads in 'Pull Images' rule
+
+- [#716](https://gitlab.com/pcmt/pcmt/-/issues/716) Adding bi-directional association
+- [#703](https://gitlab.com/pcmt/pcmt/-/issues/703) Families: Creating and editing families automatic test
 
 **Changed**
+- [#728](https://gitlab.com/pcmt/pcmt/-/issues/728) Change the name of the 'Family to Family' rules
+- [#730](https://gitlab.com/pcmt/pcmt/-/issues/730) Update current functional tests for rules
+
+**Fixed**
+- [#739](https://gitlab.com/pcmt/pcmt/-/issues/739) Fix the pipeline - issue with yarn
+- [#747](https://gitlab.com/pcmt/pcmt/-/issues/747) Problem with saving the draft
+- [#744](https://gitlab.com/pcmt/pcmt/-/issues/744) Failing build because of unit test config
+- [#750](https://gitlab.com/pcmt/pcmt/-/issues/750) Too many job executions rows on the rules details view
+
+VER 2.2.2 / 2021-01-21
+==================
 
 **Fixed**
 - [#724](https://gitlab.com/pcmt/pcmt/-/issues/724) Fixed docker volume path issue for ftp-put container.  _cherry-picked_ 
