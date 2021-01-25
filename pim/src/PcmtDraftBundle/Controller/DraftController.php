@@ -159,7 +159,8 @@ class DraftController
             }
 
             $dataAssociations = empty($data['associations']) ? [] : $data['associations'];
-            $this->biDirectionalAssociationUpdater->update($draft, $dataAssociations);
+            $this->biDirectionalAssociationUpdater->addNewAssociations($draft, $dataAssociations);
+            $this->biDirectionalAssociationUpdater->removeAssociations($draft);
             $this->draftFacade->updateDraft($draft, $options);
         } catch (DraftViolationException $e) {
             return new JsonResponse(
