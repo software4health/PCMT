@@ -7,7 +7,7 @@ VER 2.4.0 / unreleased
 
 **Fixed**
 
-VER 2.3.0 / unreleased
+VER 2.3.0 / 2021-01-25
 ==================
 
 **Added**
