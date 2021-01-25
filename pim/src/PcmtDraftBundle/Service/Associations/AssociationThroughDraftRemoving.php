@@ -51,6 +51,9 @@ class AssociationThroughDraftRemoving
         EntityWithAssociationsInterface $objectToBeChanged,
         AssociationTypeInterface $associationType
     ): void {
+        if ($objectToBeRemovedFromAssociation->getId() === $objectToBeChanged->getId()) {
+            return;
+        }
         $criteria = [
             'status'  => AbstractDraft::STATUS_NEW,
         ];
