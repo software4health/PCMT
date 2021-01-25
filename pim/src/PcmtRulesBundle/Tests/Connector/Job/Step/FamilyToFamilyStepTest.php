@@ -61,6 +61,7 @@ class FamilyToFamilyStepTest extends TestCase
         $this->jobRepositoryMock = $this->createMock(JobRepositoryInterface::class);
         $this->stepExecutionMock = $this->createMock(StepExecution::class);
         $this->jobParametersMock = $this->createMock(JobParameters::class);
+        $this->jobParametersMock->method('all')->willReturn(['sss' => 'sdsfsd']);
         $this->stepExecutionMock->method('getJobParameters')->willReturn($this->jobParametersMock);
         $this->attributeProviderMock = $this->createMock(RuleAttributeProvider::class);
         $this->pqbFactoryMock = $this->createMock(ProductQueryBuilderFactoryInterface::class);

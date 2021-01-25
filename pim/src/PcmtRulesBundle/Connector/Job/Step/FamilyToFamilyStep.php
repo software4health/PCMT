@@ -60,6 +60,12 @@ class FamilyToFamilyStep extends AbstractStep
     {
         $parameters = $stepExecution->getJobParameters();
 
+        $text = [];
+        foreach ($parameters->all() as $key => $value) {
+            $text[] = $key.' : '. $value;
+        }
+        $stepExecution->addSummaryInfo('parameters', implode(', ', $text));
+
         /** @var FamilyInterface $sourceFamily */
         $sourceFamily = $this->familyRepository->findOneBy(['code' => $parameters->get('sourceFamily')]);
         /** @var FamilyInterface $destinationFamily */
