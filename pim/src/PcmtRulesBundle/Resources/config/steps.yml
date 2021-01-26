@@ -1,4 +1,12 @@
 services:
+
+    pcmt.connector.job.step.copy_products_rule:
+        class: PcmtRulesBundle\Connector\Job\Step\CopyProductsRuleStep
+        arguments:
+            - 'copy_products_rule_step'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+
     pcmt.connector.job.step.family_to_family:
         class: PcmtRulesBundle\Connector\Job\Step\FamilyToFamilyStep
         arguments:

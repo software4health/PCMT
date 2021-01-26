@@ -1,5 +1,13 @@
 services:
 
+    pcmt.rules.job.constraint_collection_provider.copy_products:
+        class: PcmtRulesBundle\Connector\Job\ConstraintCollectionProvider\CopyProductsConstraintCollectionProvider
+        arguments:
+            -
+                - 'pcmt_copy_products_rule'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
+
     pcmt.rules.job.constraint_collection_provider.family_to_family:
         class: PcmtRulesBundle\Connector\Job\ConstraintCollectionProvider\FamilyToFamilyConstraintCollectionProvider
         arguments:
