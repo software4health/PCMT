@@ -15,6 +15,11 @@ export COMPOSE_INTERACTIVE_NO_CLI=1
 export DOCKER_CLIENT_TIMEOUT=120
 export COMPOSE_HTTP_TIMEOUT=120
 
-source $DIR/ci-up.sh
-./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --suite=api
+#source $DIR/ci-up.sh
+#./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --suite=api
+
+pcmt_profile='test'
+
+$DIR/../ddev.sh up -d fpm
+
 source $DIR/selenium.sh
