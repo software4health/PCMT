@@ -101,3 +101,17 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: pcmt_attribute_different_family_constraint_validator }
 
+    pcmt.constraints.family_has_variants_constraint_validator:
+        class: PcmtRulesBundle\Validators\FamilyHasVariantsConstraintValidator
+        arguments:
+            - '@pim_catalog.repository.family'
+        tags:
+            - { name: validator.constraint_validator, alias: pcmt_family_has_variants_constraint_validator }
+
+    pcmt.constraints.family_has_no_variants_constraint_validator:
+        class: PcmtRulesBundle\Validators\FamilyHasNoVariantsConstraintValidator
+        arguments:
+            - '@pim_catalog.repository.family'
+        tags:
+            - { name: validator.constraint_validator, alias: pcmt_family_has_no_variants_constraint_validator }
+

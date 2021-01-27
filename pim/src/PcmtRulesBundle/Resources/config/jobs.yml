@@ -9,6 +9,17 @@ parameters:
 
 services:
 
+    pcmt.rules.job.copy_products:
+        class: '%pim_connector.job.simple_job.class%'
+        arguments:
+            - 'pcmt_copy_products_rule'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            -
+                - '@pcmt.connector.job.step.copy_products_rule'
+        tags:
+            - { name: akeneo_batch.job, connector: 'Pcmt Connector', type: '%pcmt_connector.job.rules_type%' }
+
     pcmt.rules.job.family_to_family:
         class: '%pim_connector.job.simple_job.class%'
         arguments:
@@ -46,6 +57,7 @@ services:
         class: 'Akeneo\Platform\Bundle\ImportExportBundle\Provider\Form\JobInstanceFormProvider'
         arguments:
             -
+                pcmt_copy_products_rule: pcmt-rules-copy-products-job
                 pcmt_select_options_rule: pcmt-rules-select-options-job
                 pcmt_pull_images_rule: pcmt-rules-pull-images-job
                 pcmt_family_to_family_rule: pcmt-rules-family-to-family-job

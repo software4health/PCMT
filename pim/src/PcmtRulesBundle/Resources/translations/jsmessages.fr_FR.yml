@@ -57,6 +57,14 @@ pcmt:
             key_attribute: FR Key attribute
         info:
             key_attribute: FR Only not unique attributes of text and simple select type that are added to both families are available
+        copy_products_job:
+            properties:
+                source_family:
+                    title: FR Source family
+                    help: FR Source family
+                destination_family:
+                    title: FR Destination family
+                    help: FR Destination family
         family_to_family_job:
             properties:
                 source_family:
@@ -127,9 +135,14 @@ pcmt.rules.flash:
 
 batch_jobs:
     default_steps:
+        copy_products_rule_step: FR Copy products step
         rule_process_step: FR Rule process step
         select_options_rule_step: FR Select options step
         pull_images_rule_step: FR Pull images step
+
+    pcmt_copy_products_rule:
+        validation.label: FR Validation
+        label: FR Pcmt Copy products rule
 
     pcmt_family_to_family_rule:
         validation.label: FR Validation
