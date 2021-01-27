@@ -7,8 +7,6 @@
 
 echo "STARTING SELENIUM TESTS..."
 
-./ddev.sh exec -T -d fpm bin/console --env=test akeneo:batch:job-queue-consumer-daemon
-
 ./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors --suite=selenium-core
 ./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors --suite=selenium-drafts
 ./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors --suite=selenium-permissions
