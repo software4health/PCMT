@@ -54,4 +54,10 @@ default:
           selenium2:
             wd_host: 'http://selenium:4444/wd/hub'
             capabilities: { "browserName": "chrome", "browser": "chrome", "version": "*", 'chrome': {'switches':['--no-sandbox', '--test-type', '--disable-dev-shm-usage']}}
+      base_url: 'http://httpd/'
+
+test:
+  extensions:
+    Behat\MinkExtension:
       base_url: 'https://test.pcmt.villagereach.org/'
+

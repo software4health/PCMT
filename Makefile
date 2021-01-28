@@ -99,13 +99,17 @@ fast-test-unit:
 dev-test-mutation:
 	bin/mutation.sh
 
-.PHONY: dev-test-selenium
-dev-test-selenium:
-	bin/selenium.sh
+.PHONY: run-selenium-local
+run-selenium-local:
+	PROFILE=default bin/selenium.sh
+
+.PHONY: run-selenium-test
+run-selenium-test:
+	PROFILE=test bin/selenium.sh
 
 .PHONY: dev-test-api
 dev-test-api:
-	./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --suite=api
+	./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors --suite=api --profile test
 
 .PHONY: terraform
 terraform:

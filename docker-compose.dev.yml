@@ -37,7 +37,7 @@ services:
     working_dir: '/srv/pim'
     networks:
      - akeneo
-    depends_on: 
+    depends_on:
      - fpm
 
   mysql:
