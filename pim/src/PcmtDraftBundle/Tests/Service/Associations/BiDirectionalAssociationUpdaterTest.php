@@ -16,13 +16,13 @@ use PcmtDraftBundle\Service\Associations\AssociationThroughDraftAdding;
 use PcmtDraftBundle\Service\Associations\AssociationThroughDraftRemoving;
 use PcmtDraftBundle\Service\Associations\BiDirectionalAssociationUpdater;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
-use PcmtDraftBundle\Tests\TestDataBuilder\AssociationCollectionBuilder;
-use PcmtDraftBundle\Tests\TestDataBuilder\AssociationTypeBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ExistingProductDraftBuilder;
-use PcmtDraftBundle\Tests\TestDataBuilder\ProductAssociationBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductBuilder;
-use PcmtDraftBundle\Tests\TestDataBuilder\ProductModelAssociationBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductModelBuilder;
+use PcmtSharedBundle\Tests\TestDataBuilder\AssociationCollectionBuilder;
+use PcmtSharedBundle\Tests\TestDataBuilder\AssociationTypeBuilder;
+use PcmtSharedBundle\Tests\TestDataBuilder\ProductAssociationBuilder;
+use PcmtSharedBundle\Tests\TestDataBuilder\ProductModelAssociationBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

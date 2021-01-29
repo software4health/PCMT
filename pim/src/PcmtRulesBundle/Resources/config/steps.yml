@@ -6,6 +6,10 @@ services:
             - 'copy_products_rule_step'
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
+        calls:
+            - [setFamilyRepository, ['@pim_catalog.repository.family']]
+            - [setPqbFactory, ['@pim_enrich.query.product_and_product_model_query_builder_from_size_factory']]
+            - [setProductProcessor, ['@pcmt_rules.service.copy_products_rule.copy_products_rule_processor']]
 
     pcmt.connector.job.step.family_to_family:
         class: PcmtRulesBundle\Connector\Job\Step\FamilyToFamilyStep
@@ -42,6 +46,7 @@ services:
             - [ setProductModelUpdateImageService, [ '@pcmt_rules.service.update_image_service.product_model' ] ]
             - [ setPqbFactory, [ '@pim_enrich.query.product_and_product_model_query_builder_from_size_factory' ] ]
             - [ setAttributesLevelValidator, [ '@pcmt_rules.service.attributes_level_validator'] ]
+
 
 
 

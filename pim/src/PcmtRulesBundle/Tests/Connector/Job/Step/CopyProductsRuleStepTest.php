@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace PcmtRulesBundle\Tests\Connector\Job\Step;
 
+use Akeneo\Pim\Structure\Bundle\Doctrine\ORM\Repository\FamilyRepository;
 use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Job\JobRepositoryInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
@@ -32,6 +33,9 @@ class CopyProductsRuleStepTest extends TestCase
     /** @var JobParameters|MockObject */
     private $jobParametersMock;
 
+    /** @var FamilyRepository|MockObject */
+    private $familyRepositoryMock;
+
     protected function setUp(): void
     {
         $this->eventDispatcherMock = $this->createMock(EventDispatcherInterface::class);
@@ -40,6 +44,7 @@ class CopyProductsRuleStepTest extends TestCase
         $this->jobParametersMock = $this->createMock(JobParameters::class);
         $this->jobParametersMock->method('all')->willReturn(['sss' => 'sdsfsd']);
         $this->stepExecutionMock->method('getJobParameters')->willReturn($this->jobParametersMock);
+        $this->familyRepositoryMock = $this->createMock(FamilyRepository::class);
     }
 
     public function testDoExecute(): void
@@ -57,10 +62,13 @@ class CopyProductsRuleStepTest extends TestCase
 
     private function getRuleStepInstance(): CopyProductsRuleStep
     {
-        return new CopyProductsRuleStep(
+        $step = new CopyProductsRuleStep(
             'name',
             $this->eventDispatcherMock,
             $this->jobRepositoryMock
         );
+        $step->setFamilyRepository($this->familyRepositoryMock);
+
+        return $step;
     }
 }

@@ -85,6 +85,24 @@ services:
     pcmt_rules.service.image_verification_service:
         class: PcmtRulesBundle\Service\ImageVerificationService
 
+    pcmt_rules.service.copy_products_rule.copy_products_rule_processor:
+        class: PcmtRulesBundle\Service\CopyProductsRule\CopyProductsRuleProcessor
+        arguments:
+            - '@pcmt_rules.service.copy_products_rule.copy_product_to_product_model'
+
+    pcmt_rules.service.copy_products_rule.copy_product_to_product_model:
+        class: PcmtRulesBundle\Service\CopyProductsRule\CopyProductToProductModel
+        arguments:
+            - '@pcmt.service.rule_attribute_provider'
+            - '@pim_catalog.saver.product'
+            - '@pim_catalog.saver.product_model'
+            - '@pim_catalog.builder.product'
+            - '@pcmt.service.rule_processor_copier'
+            - '@pcmt_rules.service.copy_products_rule.sub_entity_finder'
+
+    pcmt_rules.service.copy_products_rule.sub_entity_finder:
+        class: PcmtRulesBundle\Service\CopyProductsRule\SubEntityFinder
+
     pcmt.constraints.attribute_exists_in_both_families_constraint_validator:
         class: PcmtRulesBundle\Validators\AttributeExistsInBothFamiliesConstraintValidator
         arguments:

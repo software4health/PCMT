@@ -1,13 +1,13 @@
 <?php
-/**
- * Copyright (c) 2020, VillageReach
+/*
+ * Copyright (c) 2021, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace PcmtDraftBundle\Tests\TestDataBuilder;
+namespace PcmtSharedBundle\Tests\TestDataBuilder;
 
 use Akeneo\Pim\Structure\Component\Model\AssociationType;
 
