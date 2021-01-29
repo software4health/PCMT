@@ -30,6 +30,13 @@ class VariantAttributeSetBuilder
         return $this;
     }
 
+    public function withAxes(array $arrayOfAttributes): self
+    {
+        $this->set->setAxes($arrayOfAttributes);
+
+        return $this;
+    }
+
     public function addAttribute(AttributeInterface $attribute): self
     {
         $this->set->addAttribute($attribute);

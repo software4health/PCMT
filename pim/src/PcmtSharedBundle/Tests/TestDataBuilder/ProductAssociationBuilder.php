@@ -1,26 +1,26 @@
 <?php
-/**
- * Copyright (c) 2020, VillageReach
+/*
+ * Copyright (c) 2021, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace PcmtDraftBundle\Tests\TestDataBuilder;
+namespace PcmtSharedBundle\Tests\TestDataBuilder;
 
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelAssociation;
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductAssociation;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Structure\Component\Model\AssociationType;
 
-class ProductModelAssociationBuilder
+class ProductAssociationBuilder
 {
-    /** @var ProductModelAssociation */
+    /** @var ProductAssociation */
     private $association;
 
     public function __construct()
     {
-        $this->association = new ProductModelAssociation();
+        $this->association = new ProductAssociation();
         $this->withType((new AssociationTypeBuilder())->build());
     }
 
@@ -31,14 +31,14 @@ class ProductModelAssociationBuilder
         return $this;
     }
 
-    public function withProductModel(ProductModelInterface $productModel): self
+    public function withProduct(ProductInterface $product): self
     {
-        $this->association->addProductModel($productModel);
+        $this->association->addProduct($product);
 
         return $this;
     }
 
-    public function build(): ProductModelAssociation
+    public function build(): ProductAssociation
     {
         return $this->association;
     }

@@ -17,10 +17,10 @@ use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtDraftBundle\Repository\DraftRepository;
 use PcmtDraftBundle\Service\Associations\AssociationThroughDraftAdding;
 use PcmtDraftBundle\Service\Draft\GeneralObjectFromDraftCreator;
-use PcmtDraftBundle\Tests\TestDataBuilder\AssociationTypeBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ExistingProductDraftBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductBuilder;
 use PcmtDraftBundle\Tests\TestDataBuilder\ProductModelBuilder;
+use PcmtSharedBundle\Tests\TestDataBuilder\AssociationTypeBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
