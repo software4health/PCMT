@@ -131,13 +131,17 @@ class AssociationThroughDraftRemovingTest extends TestCase
             ->withAssociation($association2)
             ->build();
 
-        $productModelToBeChanged = (new ProductModelBuilder())
+        $productModelToBeChanged1 = (new ProductModelBuilder())
             ->withAssociations($associations)
             ->build();
 
+        $productModelToBeChanged2 = (new ProductModelBuilder())
+            ->build();
+
         return [
-            [$product1, $productModelToBeChanged, $associationType],
-            [$productModel1, $productModelToBeChanged, $associationType],
+            [$product1, $productModelToBeChanged1, $associationType, 1],
+            [$productModel1, $productModelToBeChanged1, $associationType, 1],
+            [$productModel1, $productModelToBeChanged2, $associationType, 0],
         ];
     }
 
@@ -147,9 +151,10 @@ class AssociationThroughDraftRemovingTest extends TestCase
     public function testRemoveProductModel(
         EntityWithAssociationsInterface $objectToBeRemovedFromAssociation,
         ProductModelInterface $objectToBeChanged,
-        AssociationType $associationType
+        AssociationType $associationType,
+        int $expectedSaveCalls
     ): void {
-        $this->productModelSaverMock->expects($this->once())->method('save');
+        $this->productModelSaverMock->expects($this->exactly($expectedSaveCalls))->method('save');
 
         $service = $this->getRemovingService();
         $service->remove($objectToBeRemovedFromAssociation, $objectToBeChanged, $associationType);
