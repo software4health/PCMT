@@ -71,6 +71,9 @@ class AssociationThroughDraftRemoving
         }
 
         $association = $objectToBeChanged->getAssociationForType($associationType);
+        if (!$association) {
+            return;
+        }
 
         if ($objectToBeRemovedFromAssociation instanceof ProductInterface) {
             $association->removeProduct($objectToBeRemovedFromAssociation);
