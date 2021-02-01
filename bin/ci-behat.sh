@@ -19,5 +19,4 @@ pcmt_profile='test'
 
 $DIR/../ddev.sh up -d fpm
 
-./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --suite=api --profile $pcmt_profile
 PROFILE=$pcmt_profile $DIR/selenium.sh
