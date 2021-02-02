@@ -14,7 +14,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Connector\Reader\Database\ProductRea
 use Akeneo\Pim\Enrichment\Component\Product\Query\Filter\Operators;
 use Akeneo\Tool\Component\StorageUtils\Cursor\CursorInterface;
 use Akeneo\UserManagement\Component\Repository\UserRepositoryInterface;
-use PcmtPermissionsBundle\Service\CategoryWithPermissionsRepository;
+use PcmtSharedBundle\Service\CategoryWithPermissionsRepositoryInterface;
 use PcmtSharedBundle\Service\Checker\CategoryPermissionsCheckerInterface;
 
 class MstSupplierExportReader extends ProductReader implements CrossJoinExportReaderInterface
@@ -25,14 +25,14 @@ class MstSupplierExportReader extends ProductReader implements CrossJoinExportRe
     /** @var bool */
     private $firstCrossRead = true;
 
-    /** @var CategoryWithPermissionsRepository */
+    /** @var CategoryWithPermissionsRepositoryInterface */
     private $categoryWithPermissionsRepository;
 
     /** @var UserRepositoryInterface */
     private $userRepository;
 
     public function setCategoryWithPermissionsRepository(
-        CategoryWithPermissionsRepository $categoryWithPermissionsRepository
+        CategoryWithPermissionsRepositoryInterface $categoryWithPermissionsRepository
     ): void {
         $this->categoryWithPermissionsRepository = $categoryWithPermissionsRepository;
     }

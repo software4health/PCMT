@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace PcmtRulesBundle\Connector\Job\ConstraintCollectionProvider;
 
 use Akeneo\Tool\Component\Batch\Job\JobParameters\ConstraintCollectionProviderInterface;
-use PcmtCoreBundle\Connector\Job\JobParameters\SupportedJobsTrait;
 use PcmtRulesBundle\Constraints\AttributeExistsInBothFamiliesConstraint;
 use PcmtRulesBundle\Constraints\DifferentFamilyConstraint;
+use PcmtSharedBundle\Connector\Job\JobParameters\SupportedJobsTrait;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;

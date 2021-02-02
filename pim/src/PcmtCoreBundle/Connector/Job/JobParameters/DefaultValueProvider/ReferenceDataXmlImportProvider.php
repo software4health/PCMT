@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace PcmtCoreBundle\Connector\Job\JobParameters\DefaultValueProvider;
 
 use Akeneo\Tool\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface;
-use PcmtCoreBundle\Connector\Job\JobParameters\SupportedJobsTrait;
+use PcmtSharedBundle\Connector\Job\JobParameters\SupportedJobsTrait;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
