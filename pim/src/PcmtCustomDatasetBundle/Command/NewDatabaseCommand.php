@@ -23,9 +23,10 @@ class NewDatabaseCommand extends DatabaseCommand
     protected function launchCommands(): self
     {
         parent::launchCommands();
-        // in following command we use already imported xmls stored in code repository
-        $this->commandExecutor->runCommand('pcmt:handler:import_reference_data');
+
         if ('PcmtCustomDatasetBundle:pcmt_global' === $this->getContainer()->getParameter('installer_data')) {
+            // in following command we use already imported xmls stored in code repository
+            $this->commandExecutor->runCommand('pcmt:handler:import_reference_data');
             $this->commandExecutor->runCommand('pcmt:custom-dataset:create');
             $this->getEventDispatcher()->dispatch(
                 InstallerEvents::POST_DATA_IMPORTED,

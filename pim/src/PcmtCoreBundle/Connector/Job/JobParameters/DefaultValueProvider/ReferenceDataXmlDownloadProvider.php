@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace PcmtCoreBundle\Connector\Job\JobParameters\DefaultValueProvider;
 
 use Akeneo\Tool\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface;
-use PcmtCoreBundle\Connector\Job\JobParameters\SupportedJobsTrait;
+use PcmtSharedBundle\Connector\Job\JobParameters\SupportedJobsTrait;
 
 class ReferenceDataXmlDownloadProvider implements DefaultValuesProviderInterface
 {

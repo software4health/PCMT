@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace PcmtCoreBundle\Connector\Job\JobParameters;
+namespace PcmtSharedBundle\Connector\Job\JobParameters;
 
 use Akeneo\Tool\Component\Batch\Job\JobInterface;
 
