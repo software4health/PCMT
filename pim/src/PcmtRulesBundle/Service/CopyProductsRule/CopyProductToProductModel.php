@@ -107,7 +107,7 @@ class CopyProductToProductModel
 
         $subEntity = $this->subEntityFinder->findByAxisAttributes($destinationProductModel, $axisAttributes, $sourceProduct);
         if ($subEntity) {
-            $this->stepExecution->incrementSummaryInfo('subentities_found', 1);
+            $this->stepExecution->incrementSummaryInfo('sub_entities_found', 1);
 
             $this->copy($sourceProduct, $subEntity, $attributes);
             if ($subEntity instanceof ProductModelInterface) {

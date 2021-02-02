@@ -66,9 +66,6 @@ class CopyProductsRuleStep extends AbstractStep
             return;
         }
 
-        $stepExecution->addSummaryInfo('sf', $sourceFamily->getCode());
-        $stepExecution->addSummaryInfo('df', $destinationFamily->getCode());
-
         $pqb = $this->pqbFactory->create([
             'default_locale' => null,
             'default_scope'  => null,
