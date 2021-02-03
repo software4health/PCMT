@@ -35,8 +35,6 @@ class CopyProductsRuleProcessor
         FamilyInterface $destinationFamily,
         ProductInterface $sourceProduct
     ): void {
-        $stepExecution->incrementSummaryInfo('processed', 1);
-
         $associations = $sourceProduct->getAssociations();
         foreach ($associations as $association) {
             $models = $association->getProductModels();

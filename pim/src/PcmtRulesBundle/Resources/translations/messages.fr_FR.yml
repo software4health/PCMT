@@ -37,6 +37,12 @@ job_execution.summary:
     source_urls_found: FR Source URLs found
     files_downloaded: FR Files downloaded
     entities_updated: FR Entities updated
+    associated_product_models_found: FR Associated product models found
+    associated_product_models_found_in_correct_family: FR Associated product models in correct family
+    axis_attribute_not_exists_in_source_product: FR Axis attribute not found in source product
+    sub_entities_found: FR Sub entities found
+    sub_product_models_created: FR Sub product models created
+    sub_products_created: FR Sub products created
 
 pim_datagrid:
     cells:
