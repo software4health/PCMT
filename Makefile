@@ -109,7 +109,7 @@ run-selenium-test:
 
 .PHONY: dev-test-api
 dev-test-api:
-	./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors --suite=api --profile test
+	./ddev.sh exec -T fpm /srv/pim/vendor/bin/behat --colors --suite=api --profile default
 
 .PHONY: terraform
 terraform:
