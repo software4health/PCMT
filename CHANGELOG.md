@@ -7,6 +7,23 @@ VER 2.4.0 / unreleased
 
 **Fixed**
 
+
+VER 2.3.2 / unreleased
+==================
+
+**Added**
+- [#768](https://gitlab.com/pcmt/pcmt/-/issues/768) Copy products rule job - frame
+- [#767](https://gitlab.com/pcmt/pcmt/-/issues/767) Copy products into family variants
+
+**Changed**
+- [#765](https://gitlab.com/pcmt/pcmt/-/issues/765) Running Selenium tests on test instance
+
+VER 2.3.1 / 2021-02-01
+==================
+
+**Fixed**
+- [#775](https://gitlab.com/pcmt/pcmt/-/issues/775) Error 500 when trying to remove association
+
 VER 2.3.0 / 2021-01-25
 ==================
 
