@@ -1,0 +1,31 @@
+<!--
+  ~ Copyright (c) 2021, VillageReach
+  ~ Licensed under the Non-Profit Open Software License version 3.0.
+  ~ SPDX-License-Identifier: NPOSL-3.0
+  -->
+
+<tr class="AknGrid-bodyRow">
+
+    <td class="AknGrid-bodyCell">
+        <input class="AknTextField" title="Source attribute" value="<%- element.sourceValue %>"
+               type="text" name="sourceValue" data-index="<%- element.index %>">
+    </td>
+
+    <td class="AknGrid-bodyCell">
+        =>
+    </td>
+
+    <td class="AknGrid-bodyCell">
+        <input class="AknTextField" title="Destination attribute" value="<%- element.destinationValue %>"
+           type="text" name="destinationValue" data-index="<%- element.index %>">
+
+    </td>
+
+    <td class="AknGrid-bodyCell AknGrid-bodyCell--actions">
+        <a href="javascript:void(0);" data-index="<%- element.index %>" class="remove-row AknIconButton AknIconButton--small AknIconButton--trash AknButtonList-item" title="Remove row">
+            Remove row
+        </a>
+    </td>
+
+</tr>
+

@@ -49,6 +49,9 @@ class FamilyToFamilyConstraintCollectionProvider implements ConstraintCollection
                     'user_to_notify'    => [
                         new Type('string'),
                     ],
+                    'attributeMapping' => [
+                        new Type('array'),
+                    ],
                 ],
             ]
         );

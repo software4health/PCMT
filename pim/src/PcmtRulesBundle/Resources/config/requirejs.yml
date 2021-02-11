@@ -10,6 +10,7 @@ config:
     pcmt/rules/job/field/attribute-select: pcmtrules/js/job/field/attribute-select
     pcmt/rules/job/field/key-attribute-select: pcmtrules/js/job/field/key-attribute-select
     pcmt/rules/job/field/destination-attribute-select: pcmtrules/js/job/field/destination-attribute-select
+    pcmt/rules/job/rules/edit/attribute-mapping: pcmtrules/js/job/rules/edit/attribute-mapping
 
     pcmt/rules/job/rules/edit/save: pcmtrules/js/job/rules/edit/save
 
@@ -17,6 +18,8 @@ config:
     pcmt/rules/template/group: pcmtrules/templates/group.html
 
     pcmt/rules/template/job/field/select: pcmtrules/templates/job/field/select.html
+    pcmt/rules/template/job/rules/edit/attribute-mapping: pcmtrules/templates/job/rules/edit/attribute-mapping.html
+    pcmt/rules/template/job/rules/edit/attribute-mapping-row: pcmtrules/templates/job/rules/edit/attribute-mapping-row.html
 
 
   config:
