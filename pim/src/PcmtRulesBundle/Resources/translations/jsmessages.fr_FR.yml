@@ -76,6 +76,8 @@ pcmt:
                 key_attribute:
                     title: FR Key Attribute
                     help: FR Key Attribute
+            tab:
+                attribute_mapping: FR Attribute mapping
         select_options_job:
             properties:
                 destination_attribute:

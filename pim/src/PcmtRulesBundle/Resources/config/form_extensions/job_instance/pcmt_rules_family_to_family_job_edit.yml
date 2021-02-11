@@ -45,6 +45,24 @@ extensions:
       tabTitle: pim_common.properties
       tabCode: pim-job-instance-properties
 
+  pcmt-rules-family-to-family-job-edit-mapping-tab:
+    module: pim/job/common/edit/properties
+    parent: pcmt-rules-family-to-family-job-edit-tabs
+    aclResourceId: pcmt_permission_rules_edit
+    targetZone: container
+    position: 120
+    config:
+      tabTitle: pcmt.rules.family_to_family_job.tab.attribute_mapping
+      tabCode: pcmt-rules-family-to-family-job-edit-mapping
+
+  pcmt-rules-family-to-family-job-edit-mapping:
+    module: pcmt/rules/job/rules/edit/attribute-mapping
+    parent: pcmt-rules-family-to-family-job-edit-mapping-tab
+    targetZone: properties
+    position: 120
+    config:
+      fieldCode: configuration.attributeMapping
+
   pcmt-rules-family-to-family-job-edit-history:
     module: pim/common/tab/history
     parent: pcmt-rules-family-to-family-job-edit-tabs
