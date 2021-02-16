@@ -46,7 +46,7 @@ extensions:
       tabCode: pim-job-instance-properties
 
   pcmt-rules-family-to-family-job-edit-mapping-tab:
-    module: pim/job/common/edit/properties
+    module: pcmt/rules/job/rules/edit/mapping-tab
     parent: pcmt-rules-family-to-family-job-edit-tabs
     aclResourceId: pcmt_permission_rules_edit
     targetZone: container

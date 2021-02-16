@@ -11,6 +11,7 @@ namespace PcmtRulesBundle\Connector\Job\ConstraintCollectionProvider;
 
 use Akeneo\Tool\Component\Batch\Job\JobParameters\ConstraintCollectionProviderInterface;
 use PcmtRulesBundle\Constraints\AttributeExistsInBothFamiliesConstraint;
+use PcmtRulesBundle\Constraints\CorrectAttributeMappingConstraint;
 use PcmtRulesBundle\Constraints\DifferentFamilyConstraint;
 use PcmtSharedBundle\Connector\Job\JobParameters\SupportedJobsTrait;
 use Symfony\Component\Validator\Constraints\Collection;
@@ -51,6 +52,7 @@ class FamilyToFamilyConstraintCollectionProvider implements ConstraintCollection
                     ],
                     'attributeMapping' => [
                         new Type('array'),
+                        new CorrectAttributeMappingConstraint(),
                     ],
                 ],
             ]

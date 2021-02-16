@@ -7,8 +7,19 @@
 <tr class="AknGrid-bodyRow">
 
     <td class="AknGrid-bodyCell">
-        <input class="AknTextField" title="Source attribute" value="<%- element.sourceValue %>"
-               type="text" name="sourceValue" data-index="<%- element.index %>">
+
+        <select class="select2" title="Source attribute" name="sourceValue" data-index="<%- element.index %>">
+
+            <option value="" <% if (_.isEmpty(element.sourceValue)) { %> selected<% } %> ></option>
+            <% _.each(sourceAttributeList, function (option) { %>
+            <option value="<%- option.code %>"
+                <% if (option.code === element.sourceValue) { %> selected<% } %>
+            >
+            <%- i18n.getLabel(option.labels, locale, option.code) %>
+            </option>
+            <% }); %>
+        </select>
+
     </td>
 
     <td class="AknGrid-bodyCell">
@@ -16,8 +27,18 @@
     </td>
 
     <td class="AknGrid-bodyCell">
-        <input class="AknTextField" title="Destination attribute" value="<%- element.destinationValue %>"
-           type="text" name="destinationValue" data-index="<%- element.index %>">
+
+        <select class="select2" title="Destination attribute" name="destinationValue" data-index="<%- element.index %>">
+
+            <option value="" <% if (_.isEmpty(element.destinationValue)) { %> selected<% } %> ></option>
+            <% _.each(destinationAttributeList, function (option) { %>
+            <option value="<%- option.code %>"
+            <% if (option.code === element.destinationValue) { %> selected<% } %>
+            >
+            <%- i18n.getLabel(option.labels, locale, option.code) %>
+            </option>
+            <% }); %>
+        </select>
 
     </td>
 

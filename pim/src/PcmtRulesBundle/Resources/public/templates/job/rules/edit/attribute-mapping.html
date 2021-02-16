@@ -7,14 +7,29 @@
 <table class="AknGrid">
     <tbody class="AknGrid-body">
 
-        <% _.each(data, function(element) { %>
-            <%= rowTemplate({element: element}) %>
+        <% _.each(mappingValues, function(element) { %>
+            <%= rowTemplate({
+                element: element,
+                sourceAttributeList: sourceAttributeList,
+                destinationAttributeList: destinationAttributeList,
+                i18n: i18n,
+                locale: locale
+            }) %>
         <% }); %>
 
     </tbody>
 </table>
 
+<% if (error) { %>
+    <div class="AknFieldContainer-footer AknFieldContainer-validationErrors validation-errors">
+        <span class="AknFieldContainer-validationError">
+            <span class="error-message"><%- error %></span>
+        </span>
+    </div>
+<% } %>
 
-<button class="add-row AknButton AknButton--apply">Add row</button>
+<div class="AknFormContainer--withPadding">
+    <button class="add-row AknButton AknButton--apply">Add row</button>
+</div>
 
 
