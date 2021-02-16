@@ -15,24 +15,34 @@ define(
         'underscore',
         'pim/job/common/edit/field/field',
         'pcmt/rules/template/job/rules/edit/attribute-mapping',
-        'pcmt/rules/template/job/rules/edit/attribute-mapping-row'
+        'pcmt/rules/template/job/rules/edit/attribute-mapping-row',
+        'pim/fetcher-registry',
+        'pim/i18n',
+        'pim/user-context',
     ],
     function (
         $,
         _,
         BaseForm,
         template,
-        rowTemplate
+        rowTemplate,
+        FetcherRegistry,
+        i18n,
+        UserContext
     ) {
 
         return BaseForm.extend({
             events: {
                 "click .add-row": "addRow",
                 "click .remove-row": "removeRow",
-                "change input": "updateModelAfterChange",
+                "change select": "updateModelAfterChange",
             },
             template: _.template(template),
             rowTemplate: _.template(rowTemplate),
+            sourceFamily: '',
+            destinationFamily: '',
+            sourceAttributeList: [],
+            destinationAttributeList: [],
             mappingValues: [],
             initialize: function(config) {
                 BaseForm.prototype.initialize.apply(this, arguments);
@@ -43,6 +53,7 @@ define(
             configure: function() {
                 BaseForm.prototype.configure.apply(this, arguments);
                 this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_fetch', this.postFetch);
+                this.listenTo(this.getRoot(), this.postUpdateEventName, this.postUpdate);
             },
             postFetch: function(data) {
                 let value = this.getValue();
@@ -52,6 +63,39 @@ define(
                 if (_.isEmpty(this.mappingValues)) {
                     this.addRow();
                 }
+            },
+            postUpdate: function(data) {
+                if (data.configuration.sourceFamily !== this.sourceFamily) {
+                    this.sourceFamily = data.configuration.sourceFamily;
+                    this.fetchSourceAttributes();
+                }
+                if (data.configuration.destinationFamily !== this.destinationFamily) {
+                    this.destinationFamily = data.configuration.destinationFamily;
+                    this.fetchDestinationAttributes();
+                }
+
+            },
+            fetchSourceAttributes: function() {
+                let options = {
+                    family: this.sourceFamily
+                };
+                FetcherRegistry.getFetcher('attributes-for-rules-job').fetchForOptions(options).then(
+                    function (options) {
+                        this.sourceAttributeList = options;
+                        this.render();
+                    }.bind(this)
+                );
+            },
+            fetchDestinationAttributes: function() {
+                let options = {
+                    family: this.destinationFamily
+                };
+                FetcherRegistry.getFetcher('attributes-for-rules-job').fetchForOptions(options).then(
+                    function (options) {
+                        this.destinationAttributeList = options;
+                        this.render();
+                    }.bind(this)
+                );
             },
             addRow: function() {
                 let index = this.getMaxIndex() + 1;
@@ -75,8 +119,14 @@ define(
                 this.$el.html(this.template({
                     rowCount : this.rowCount,
                     rowTemplate: this.rowTemplate,
-                    data: this.mappingValues,
+                    mappingValues: this.mappingValues,
+                    sourceAttributeList: this.sourceAttributeList,
+                    destinationAttributeList: this.destinationAttributeList,
+                    i18n: i18n,
+                    locale: UserContext.get('catalogLocale'),
+                    error: this.getParent().getValidationErrorsForField(this.getFieldCode()),
                 }));
+                this.$('.select2').select2();
                 this.delegateEvents();
                 return this;
             },
