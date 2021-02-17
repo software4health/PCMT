@@ -18,6 +18,7 @@ use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\ProductAttribute
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\ProductModelAttributeFilter;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\PropertyCopierInterface;
+use PcmtRulesBundle\Value\AttributeMapping;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class RuleProcessorCopier
@@ -59,12 +60,12 @@ class RuleProcessorCopier
     public function copy(
         EntityWithValuesInterface $sourceProduct,
         EntityWithValuesInterface $destinationProduct,
-        array $attributes
+        array $mappings
     ): bool {
         $productData = $this->normalizer->normalize($destinationProduct, 'standard');
-        $attributeCodes = array_map(function (AttributeInterface $attribute) {
-            return $attribute->getCode();
-        }, $attributes);
+        $attributeCodes = array_map(function (AttributeMapping $attributeMapping) {
+            return $attributeMapping->getDestinationAttribute()->getCode();
+        }, $mappings);
 
         $productData['values'] = [];
         foreach ($attributeCodes as $code) {
@@ -80,9 +81,9 @@ class RuleProcessorCopier
         if (0 === count($productData['values'])) {
             return false;
         }
-        foreach ($attributes as $attribute) {
-            if (isset($productData['values'][$attribute->getCode()])) {
-                $this->copyOneAttribute($sourceProduct, $destinationProduct, $attribute);
+        foreach ($mappings as $mapping) {
+            if (isset($productData['values'][$mapping->getDestinationAttribute()->getCode()])) {
+                $this->copyOneAttribute($sourceProduct, $destinationProduct, $mapping->getSourceAttribute(), $mapping->getDestinationAttribute());
             }
         }
 
@@ -92,10 +93,11 @@ class RuleProcessorCopier
     private function copyOneAttribute(
         EntityWithValuesInterface $sourceProduct,
         EntityWithValuesInterface $destinationProduct,
-        AttributeInterface $attribute
+        AttributeInterface $sourceAttribute,
+        AttributeInterface $destinationAttribute
     ): void {
-        $scopes = $attribute->isScopable() ? $this->channelRepository->getChannelCodes() : null;
-        $locales = $attribute->isLocalizable() ? $this->localeRepository->getActivatedLocaleCodes() : null;
+        $scopes = $sourceAttribute->isScopable() ? $this->channelRepository->getChannelCodes() : null;
+        $locales = $sourceAttribute->isLocalizable() ? $this->localeRepository->getActivatedLocaleCodes() : null;
 
         $scopes = $scopes ?? [null];
         $locales = $locales ?? [null];
@@ -111,8 +113,8 @@ class RuleProcessorCopier
                 $this->propertyCopier->copyData(
                     $sourceProduct,
                     $destinationProduct,
-                    $attribute->getCode(),
-                    $attribute->getCode(),
+                    $sourceAttribute->getCode(),
+                    $destinationAttribute->getCode(),
                     $options
                 );
             }

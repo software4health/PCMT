@@ -19,6 +19,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderFactoryInte
 use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
+use PcmtRulesBundle\Value\AttributeMapping;
 use PcmtSharedBundle\Connector\Job\InvalidItems\SimpleInvalidItem;
 use Ramsey\Uuid\Uuid;
 
@@ -77,7 +78,8 @@ class RuleProcessor
         $this->productsToSave = [];
         $this->productModelsToSave = [];
 
-        $attributes = $this->ruleAttributeProvider->getAllForFamilies($sourceFamily, $destinationFamily);
+        $mappings = $this->getMappings($sourceFamily, $destinationFamily, $stepExecution);
+
         $keyAttributeCode = $stepExecution->getJobParameters()->get('keyAttribute');
 
         $keyValue = $sourceProduct->getValue($keyAttributeCode);
@@ -104,11 +106,11 @@ class RuleProcessor
 
         $destinationProducts = $pqb->execute();
         foreach ($destinationProducts as $destinationProduct) {
-            $this->copy($sourceProduct, $destinationProduct, $attributes, $stepExecution);
+            $this->copy($sourceProduct, $destinationProduct, $mappings, $stepExecution);
         }
 
         if (0 === count($destinationProducts) && 0 === count($destinationFamily->getFamilyVariants())) {
-            $this->createNewDestinationProduct($sourceProduct, $destinationFamily, $attributes, $stepExecution);
+            $this->createNewDestinationProduct($sourceProduct, $destinationFamily, $mappings, $stepExecution);
 
             foreach ($this->productsToSave as $product) {
                 $this->productSaver->save($product);
@@ -136,21 +138,21 @@ class RuleProcessor
     private function copy(
         EntityWithValuesInterface $sourceProduct,
         EntityWithValuesInterface $destinationProduct,
-        array $attributes,
+        array $mappings,
         StepExecution $stepExecution
     ): void {
         try {
-            $result = $this->ruleProcessorCopier->copy($sourceProduct, $destinationProduct, $attributes);
+            $result = $this->ruleProcessorCopier->copy($sourceProduct, $destinationProduct, $mappings);
             if ($result) {
                 $this->addEntityToSave($destinationProduct);
             }
 
             if ($destinationProduct instanceof ProductModelInterface) {
                 foreach ($destinationProduct->getProductModels() as $productModel) {
-                    $this->copy($sourceProduct, $productModel, $attributes, $stepExecution);
+                    $this->copy($sourceProduct, $productModel, $mappings, $stepExecution);
                 }
                 foreach ($destinationProduct->getProducts() as $product) {
-                    $this->copy($sourceProduct, $product, $attributes, $stepExecution);
+                    $this->copy($sourceProduct, $product, $mappings, $stepExecution);
                 }
             }
         } catch (\Throwable $e) {
@@ -179,7 +181,7 @@ class RuleProcessor
         }
     }
 
-    private function createNewDestinationProduct(EntityWithValuesInterface $sourceEntity, FamilyInterface $destinationFamily, array $attributes, StepExecution $stepExecution): void
+    private function createNewDestinationProduct(EntityWithValuesInterface $sourceEntity, FamilyInterface $destinationFamily, array $mappings, StepExecution $stepExecution): void
     {
         $destinationProduct = $this->productBuilder->createProduct(
             Uuid::uuid4()->toString(),
@@ -188,6 +190,29 @@ class RuleProcessor
 
         $this->addEntityToSave($destinationProduct);
 
-        $this->copy($sourceEntity, $destinationProduct, $attributes, $stepExecution);
+        $this->copy($sourceEntity, $destinationProduct, $mappings, $stepExecution);
+    }
+
+    private function getMappings(FamilyInterface $sourceFamily, FamilyInterface $destinationFamily, StepExecution $stepExecution): array
+    {
+        $mappings = [];
+
+        foreach ($this->ruleAttributeProvider->getAllForFamilies($sourceFamily, $destinationFamily) as $attribute) {
+            $mappings[] = new AttributeMapping($attribute, $attribute);
+        }
+
+        foreach ($stepExecution->getJobParameters()->get('attributeMapping') as $mapping) {
+            $sourceAttribute = $this->ruleAttributeProvider->getAttributeByCode($mapping['sourceValue']);
+            $destinationAttribute = $this->ruleAttributeProvider->getAttributeByCode($mapping['destinationValue']);
+
+            if (null !== $sourceAttribute && null !== $destinationAttribute) {
+                $mappings[] = new AttributeMapping(
+                    $sourceAttribute,
+                    $destinationAttribute
+                );
+            }
+        }
+
+        return $mappings;
     }
 }

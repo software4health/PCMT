@@ -19,6 +19,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Value\ScalarValue;
 use Akeneo\Tool\Component\StorageUtils\Updater\PropertyCopierInterface;
 use PcmtRulesBundle\Service\RuleProcessorCopier;
 use PcmtRulesBundle\Tests\TestDataBuilder\AttributeBuilder;
+use PcmtRulesBundle\Tests\TestDataBuilder\AttributeMappingBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\ProductBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\ProductModelBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -59,6 +60,11 @@ class RuleProcessorCopierTest extends TestCase
     {
         $attribute1 = (new AttributeBuilder())->withCode('attributeCode')->build();
 
+        $mapping = (new AttributeMappingBuilder())
+            ->withSourceAttribute($attribute1)
+            ->withDestinationAttribute($attribute1)
+            ->build();
+
         $value = ScalarValue::value($attribute1->getCode(), 'xxx');
         $product1 = (new ProductBuilder())->addValue($value)->build();
 
@@ -67,15 +73,15 @@ class RuleProcessorCopierTest extends TestCase
         $productModel1 = (new ProductModelBuilder())->build();
 
         return [
-            [$product1, $product2, [$attribute1]],
-            [$product1, $productModel1, [$attribute1]],
+            [$product1, $product2, [$mapping]],
+            [$product1, $productModel1, [$mapping]],
         ];
     }
 
     /**
      * @dataProvider dataCopy
      */
-    public function testCopy(EntityWithValuesInterface $sourceProduct, EntityWithValuesInterface $destinationProduct, array $attributes): void
+    public function testCopy(EntityWithValuesInterface $sourceProduct, EntityWithValuesInterface $destinationProduct, array $mappings): void
     {
         $this->productAttributeFilterMock->method('filter')->willReturn([
             'values' => [
@@ -90,7 +96,7 @@ class RuleProcessorCopierTest extends TestCase
 
         $this->propertyCopierMock->expects($this->exactly(1))->method('copyData');
         $processor = $this->getRuleProcessorCopierInstance();
-        $result = $processor->copy($sourceProduct, $destinationProduct, $attributes);
+        $result = $processor->copy($sourceProduct, $destinationProduct, $mappings);
         $this->assertTrue($result);
     }
 

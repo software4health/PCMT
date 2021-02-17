@@ -104,4 +104,9 @@ class RuleAttributeProvider
 
         return $attributes;
     }
+
+    public function getAttributeByCode(string $code): ?AttributeInterface
+    {
+        return $this->attributeRepository->findOneBy(['code' => $code]);
+    }
 }

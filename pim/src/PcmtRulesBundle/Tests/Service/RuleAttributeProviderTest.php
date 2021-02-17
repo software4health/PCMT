@@ -150,6 +150,24 @@ class RuleAttributeProviderTest extends TestCase
         $this->assertCount($expectedCount, $resultAttributes);
     }
 
+    public function testGetAttributeByCode(): void
+    {
+        $code = 'CODE';
+        $attribute = (new AttributeBuilder())->withCode($code)->build();
+
+        $this->attributeRepositoryMock
+            ->expects($this->once())
+            ->method('findOneBy')
+            ->with(['code' => $code])
+            ->willReturn($attribute);
+
+        $provider = $this->getRuleAttributeProviderInstance();
+
+        $result = $provider->getAttributeByCode($code);
+
+        $this->assertEquals($attribute->getCode(), $result->getCode());
+    }
+
     private function getRuleAttributeProviderInstance(): RuleAttributeProvider
     {
         return new RuleAttributeProvider($this->attributeRepositoryMock);
