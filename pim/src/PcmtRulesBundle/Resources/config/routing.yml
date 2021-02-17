@@ -8,6 +8,11 @@ pcmt_rules_attributes_for_options:
     defaults: { _controller: pcmt.controller.rest.attributes:getForOptionsAction }
     methods: [GET]
 
+pcmt_rules_attributes_for_f2f_mapping:
+    path: /rest/attributes-for-f2f-mapping/
+    defaults: { _controller: pcmt.controller.rest.attributes:getForF2FMappingAction }
+    methods: [GET]
+
 pcmt_rules_index_new:
     resource: '@PcmtRulesBundle/Resources/config/routing/rules_profile.yml'
     prefix: /rules

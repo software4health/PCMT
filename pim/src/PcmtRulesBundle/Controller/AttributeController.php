@@ -90,4 +90,35 @@ class AttributeController
 
         return new JsonResponse($normalizedAttributes);
     }
+
+    public function getForF2FMappingAction(Request $request): Response
+    {
+        $sourceFamilyCode = $request->query->get('sourceFamily');
+        $destinationFamilyCode = $request->query->get('destinationFamily');
+
+        [$sourceAttributeList, $destinationAttributeList] = $this->ruleAttributeProvider->getForF2FAttributeMapping(
+            $sourceFamilyCode ? $this->familyRepository->findOneBy(['code' => $sourceFamilyCode]) : null,
+            $destinationFamilyCode ? $this->familyRepository->findOneBy(['code' => $destinationFamilyCode]) : null
+        );
+
+        $normalizedSourceAttributes = array_map(function ($attribute) {
+            return $this->lightAttributeNormalizer->normalize(
+                $attribute,
+                'internal_api',
+                ['locale' => $this->userContext->getUiLocale()->getCode()]
+            );
+        }, $sourceAttributeList);
+        $normalizedDestinationAttributes = array_map(function ($attribute) {
+            return $this->lightAttributeNormalizer->normalize(
+                $attribute,
+                'internal_api',
+                ['locale' => $this->userContext->getUiLocale()->getCode()]
+            );
+        }, $destinationAttributeList);
+
+        return new JsonResponse([
+            'sourceAttributeList'      => $normalizedSourceAttributes,
+            'destinationAttributeList' => $normalizedDestinationAttributes,
+        ]);
+    }
 }
