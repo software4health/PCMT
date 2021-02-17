@@ -217,8 +217,9 @@ In case of issues related to the lack of access to the Akeneo's `package.json` f
 
 #### How to update Akeneo PIM version?
 
+1. Update Akeneo version in `composer.json`
 1. Go to container with `make dev-fpm` and update dependencies with `COMPOSER_MEMORY_LIMIT=-1 composer update`
-1. Update `AKENEO_VER` in `pim/build-images.sh` according to value from freshly generated `composer.lock` 
+1. Update `AKENEO_VER` in `pim/build-images.sh`
 1. In `pim/Dockerfile` comment out the `ADD --chown=docker:docker package.json /srv/pim/` line.
 1. Run `make dev-clean` command, which will clean up your local environment (so be sure if you are able to do it, and that you have all your changes saved).
 1. Run `make` command to build the newest version of the PCMT Docker image.
