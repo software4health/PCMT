@@ -28,6 +28,7 @@ class FamilyToFamilyDefaultValueProvider implements DefaultValuesProviderInterfa
             'destinationFamily' => '',
             'keyAttribute'      => '',
             'user_to_notify'    => null,
+            'attributeMapping'  => [],
         ];
     }
 }
