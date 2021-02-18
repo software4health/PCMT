@@ -12,6 +12,7 @@ namespace PcmtRulesBundle\Tests\Service;
 
 use Akeneo\Pim\Structure\Component\AttributeTypes;
 use Akeneo\Pim\Structure\Component\Model\Family;
+use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use PcmtRulesBundle\Service\RuleAttributeProvider;
 use PcmtRulesBundle\Tests\TestDataBuilder\AttributeBuilder;
@@ -166,6 +167,39 @@ class RuleAttributeProviderTest extends TestCase
         $result = $provider->getAttributeByCode($code);
 
         $this->assertEquals($attribute->getCode(), $result->getCode());
+    }
+
+    public function dataGetForF2FAttributeMapping(): array
+    {
+        $attribute1 = (new AttributeBuilder())->withCode('a1')->build();
+        $attribute2 = (new AttributeBuilder())->withCode('a2')->build();
+        $attribute3 = (new AttributeBuilder())->withCode('a3')->build();
+        $attribute4 = (new AttributeBuilder())->withCode('a4')->build();
+        $sourceFamily = (new FamilyBuilder())->build();
+        $sourceFamily->addAttribute($attribute1);
+        $sourceFamily->addAttribute($attribute2);
+        $destinationFamily = (new FamilyBuilder())->build();
+        $destinationFamily->addAttribute($attribute2);
+        $destinationFamily->addAttribute($attribute3);
+        $destinationFamily->addAttribute($attribute4);
+        $result = [[$attribute1], [$attribute3, $attribute4]];
+
+        return [
+            [$sourceFamily, $destinationFamily, $result],
+        ];
+    }
+
+    /** @dataProvider dataGetForF2FAttributeMapping */
+    public function testGetForF2FAttributeMapping(
+        ?FamilyInterface $sourceFamily,
+        ?FamilyInterface $destinationFamily,
+        array $expectedResult
+    ): void {
+        $provider = $this->getRuleAttributeProviderInstance();
+
+        $result = $provider->getForF2FAttributeMapping($sourceFamily, $destinationFamily);
+
+        $this->assertEquals($expectedResult, $result);
     }
 
     private function getRuleAttributeProviderInstance(): RuleAttributeProvider

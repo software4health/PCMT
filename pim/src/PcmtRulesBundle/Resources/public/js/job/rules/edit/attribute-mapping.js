@@ -65,34 +65,29 @@ define(
                 }
             },
             postUpdate: function(data) {
+                var changed = false;
                 if (data.configuration.sourceFamily !== this.sourceFamily) {
                     this.sourceFamily = data.configuration.sourceFamily;
-                    this.fetchSourceAttributes();
+                    changed = true;
                 }
                 if (data.configuration.destinationFamily !== this.destinationFamily) {
                     this.destinationFamily = data.configuration.destinationFamily;
-                    this.fetchDestinationAttributes();
+                    changed = true;
+                }
+                if (changed) {
+                    this.fetchAttributes();
                 }
 
             },
-            fetchSourceAttributes: function() {
+            fetchAttributes: function() {
                 let options = {
-                    family: this.sourceFamily
+                    sourceFamily: this.sourceFamily,
+                    destinationFamily: this.destinationFamily
                 };
-                FetcherRegistry.getFetcher('attributes-for-rules-job').fetchForOptions(options).then(
-                    function (options) {
-                        this.sourceAttributeList = options;
-                        this.render();
-                    }.bind(this)
-                );
-            },
-            fetchDestinationAttributes: function() {
-                let options = {
-                    family: this.destinationFamily
-                };
-                FetcherRegistry.getFetcher('attributes-for-rules-job').fetchForOptions(options).then(
-                    function (options) {
-                        this.destinationAttributeList = options;
+                FetcherRegistry.getFetcher('attributes-for-f2f-mapping').fetchForOptions(options).then(
+                    function (result) {
+                        this.sourceAttributeList = result.sourceAttributeList;
+                        this.destinationAttributeList = result.destinationAttributeList;
                         this.render();
                     }.bind(this)
                 );

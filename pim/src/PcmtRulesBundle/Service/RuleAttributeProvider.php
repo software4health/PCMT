@@ -109,4 +109,21 @@ class RuleAttributeProvider
     {
         return $this->attributeRepository->findOneBy(['code' => $code]);
     }
+
+    public function getForF2FAttributeMapping(?FamilyInterface $sourceFamily, ?FamilyInterface $destinationFamily): array
+    {
+        $sourceAttributeList = $sourceFamily ? $sourceFamily->getAttributes()->getValues() : [];
+        $destinationAttributeList = $destinationFamily ? $destinationFamily->getAttributes()->getValues() : [];
+
+        // removing those attributes that are in both families
+        foreach ($sourceAttributeList as $sKey => $sourceAttribute) {
+            foreach ($destinationAttributeList as $dKey => $destinationAttribute) {
+                if ($sourceAttribute->getCode() === $destinationAttribute->getCode()) {
+                    unset($sourceAttributeList[$sKey], $destinationAttributeList[$dKey]);
+                }
+            }
+        }
+
+        return [array_values($sourceAttributeList), array_values($destinationAttributeList)];
+    }
 }
