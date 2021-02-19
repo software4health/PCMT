@@ -10,11 +10,17 @@ declare(strict_types=1);
 
 namespace PcmtRulesBundle\Tests\Connector\Job\Step;
 
+use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderFactoryInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderInterface;
 use Akeneo\Pim\Structure\Bundle\Doctrine\ORM\Repository\FamilyRepository;
+use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Job\JobRepositoryInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use PcmtRulesBundle\Connector\Job\Step\CopyProductsRuleStep;
+use PcmtRulesBundle\Service\CopyProductsRule\CopyProductsRuleProcessor;
+use PcmtRulesBundle\Tests\TestDataBuilder\FamilyBuilder;
+use PcmtRulesBundle\Tests\TestDataBuilder\ProductBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -36,6 +42,15 @@ class CopyProductsRuleStepTest extends TestCase
     /** @var FamilyRepository|MockObject */
     private $familyRepositoryMock;
 
+    /** @var ProductQueryBuilderFactoryInterface|MockObject */
+    private $pqbFactoryMock;
+
+    /** @var ProductQueryBuilderInterface|MockObject */
+    private $productQueryBuilderMock;
+
+    /** @var CopyProductsRuleProcessor|MockObject */
+    private $productProcessorMock;
+
     protected function setUp(): void
     {
         $this->eventDispatcherMock = $this->createMock(EventDispatcherInterface::class);
@@ -45,17 +60,44 @@ class CopyProductsRuleStepTest extends TestCase
         $this->jobParametersMock->method('all')->willReturn(['sss' => 'sdsfsd']);
         $this->stepExecutionMock->method('getJobParameters')->willReturn($this->jobParametersMock);
         $this->familyRepositoryMock = $this->createMock(FamilyRepository::class);
+        $this->pqbFactoryMock = $this->createMock(ProductQueryBuilderFactoryInterface::class);
+        $this->productQueryBuilderMock = $this->createMock(ProductQueryBuilderInterface::class);
+        $this->pqbFactoryMock->method('create')->willReturn($this->productQueryBuilderMock);
+        $this->productProcessorMock = $this->createMock(CopyProductsRuleProcessor::class);
     }
 
-    public function testDoExecute(): void
+    public function dataDoExecute(): array
+    {
+        $family1 = (new FamilyBuilder())->build();
+        $family2 = (new FamilyBuilder())->build();
+        $product1 = (new ProductBuilder())->build();
+        $product2 = (new ProductBuilder())->build();
+
+        return [
+            [null, null, [$product1], 0],
+            [$family1, $family2, [], 0],
+            [$family1, $family2, [$product1], 1],
+            [$family1, $family2, [$product1, $product2], 2],
+        ];
+    }
+
+    /** @dataProvider dataDoExecute */
+    public function testDoExecute(?FamilyInterface $sourceFamily, ?FamilyInterface $destinationFamily, array $products, int $calls): void
     {
         $class = new \ReflectionClass(CopyProductsRuleStep::class);
         $method = $class->getMethod('doExecute');
         $method->setAccessible(true);
 
+        $this->familyRepositoryMock->method('findOneBy')->willReturnOnConsecutiveCalls(
+            $sourceFamily,
+            $destinationFamily
+        );
+
+        $this->productQueryBuilderMock->method('execute')->willReturn($products);
+
         $step = $this->getRuleStepInstance();
 
-        $this->stepExecutionMock->expects($this->once())->method('addSummaryInfo');
+        $this->productProcessorMock->expects($this->exactly($calls))->method('process');
 
         $method->invokeArgs($step, [$this->stepExecutionMock]);
     }
@@ -68,6 +110,8 @@ class CopyProductsRuleStepTest extends TestCase
             $this->jobRepositoryMock
         );
         $step->setFamilyRepository($this->familyRepositoryMock);
+        $step->setPqbFactory($this->pqbFactoryMock);
+        $step->setProductProcessor($this->productProcessorMock);
 
         return $step;
     }
