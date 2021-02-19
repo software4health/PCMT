@@ -28,4 +28,5 @@
 #   m   h   dom mon dow command
 
 */15 * * * * /usr/bin/php /srv/pim/bin/console pim:pcmt:e2Open:import_from_files
+5 0 * * * /usr/bin/php /srv/pim/bin/console akeneo:batch:purge-job-execution --days=7
 * * * * *    /srv/pim/write-env-reverse-proxy.sh
