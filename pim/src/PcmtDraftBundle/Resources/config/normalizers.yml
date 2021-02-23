@@ -39,6 +39,7 @@ services:
             - '@pcmt.service.general_object_from_draft_creator'
             - '@pim_catalog.normalizer.standard.product.product_value'
             - '@pcmt_draft.normalizer.permissions_helper'
+            - '@pim_user.context.user'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 110 }
 
@@ -53,6 +54,7 @@ services:
             - '@pcmt.service.general_object_from_draft_creator'
             - '@pim_catalog.normalizer.standard.product.product_value'
             - '@pcmt_draft.normalizer.permissions_helper'
+            - '@pim_user.context.user'
         tags:
             - { name: pim_internal_api_serializer.normalizer, priority: 110 }
 

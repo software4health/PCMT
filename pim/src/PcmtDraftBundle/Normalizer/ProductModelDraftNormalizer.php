@@ -12,6 +12,7 @@ namespace PcmtDraftBundle\Normalizer;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
+use Akeneo\UserManagement\Bundle\Context\UserContext;
 use PcmtDraftBundle\Entity\ExistingProductModelDraft;
 use PcmtDraftBundle\Entity\ProductModelDraftInterface;
 use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
@@ -45,6 +46,9 @@ class ProductModelDraftNormalizer implements NormalizerInterface
     /** @var PermissionsHelper */
     private $permissionsHelper;
 
+    /** @var UserContext */
+    private $userContext;
+
     public function __construct(
         AttributeChangeService $attributeChangeService,
         AttributeChangeNormalizer $attributeChangeNormalizer,
@@ -53,7 +57,8 @@ class ProductModelDraftNormalizer implements NormalizerInterface
         GeneralDraftNormalizer $generalDraftNormalizer,
         GeneralObjectFromDraftCreator $productModelFromDraftCreator,
         NormalizerInterface $valuesNormalizer,
-        PermissionsHelper $permissionsHelper
+        PermissionsHelper $permissionsHelper,
+        UserContext $userContext
     ) {
         $this->attributeChangeService = $attributeChangeService;
         $this->attributeChangeNormalizer = $attributeChangeNormalizer;
@@ -63,6 +68,7 @@ class ProductModelDraftNormalizer implements NormalizerInterface
         $this->productModelFromDraftCreator = $productModelFromDraftCreator;
         $this->valuesNormalizer = $valuesNormalizer;
         $this->permissionsHelper = $permissionsHelper;
+        $this->userContext = $userContext;
     }
 
     /**
@@ -94,6 +100,7 @@ class ProductModelDraftNormalizer implements NormalizerInterface
             'family_variant' => $newProductModel->getFamilyVariant()->getCode(),
             'parentId'       => $newProductModel->getParent() ? $newProductModel->getParent()->getId() : null,
             'parent'         => $newProductModel->getParent() ? $newProductModel->getParent()->getCode() : null,
+            'identifier'     => $newProductModel->getCode(),
         ];
 
         if ($context['include_product'] ?? false) {
@@ -118,10 +125,10 @@ class ProductModelDraftNormalizer implements NormalizerInterface
     private function getLabel(ProductModelDraftInterface $draft, ProductModelInterface $newProductModel): string
     {
         if ($draft instanceof ExistingProductModelDraft) {
-            return $draft->getProductModel()->getCode() ?? '-';
+            return $draft->getProductModel()->getLabel($this->userContext->getUiLocaleCode());
         }
 
-        return $newProductModel->getCode() ?? '-';
+        return $newProductModel->getLabel($this->userContext->getUiLocaleCode()) ?? '-';
     }
 
     /**

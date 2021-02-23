@@ -31,6 +31,9 @@
                 <%- __('pcmt_core.drafts_list.product') %>
             </th>
             <th class="AknGrid-headerCell">
+                <%- __('pcmt_core.drafts_list.label') %>
+            </th>
+            <th class="AknGrid-headerCell">
                 <%- __('pcmt_core.drafts_list.author') %>
             </th>
             <th class="AknGrid-headerCell">
@@ -61,64 +64,69 @@
             </td>
             <td class="AknGrid-bodyCell">
                 <%- __(draft.typeName) %><br>
-                <%- draft.label %>
+                <%- draft.values.identifier %>
             </td>
+            <td class="AknGrid-bodyCell"><%- draft.label %></td>
             <td class="AknGrid-bodyCell"><%- draft.author %></td>
             <td class="AknGrid-bodyCell">
-                <div id="draft-changes-shortcut-<%- draft.id %>"
-                     class="draft-changes-shortcut"
-                     data-draft-id="<%- draft.id %>"
-                     style="cursor:pointer">
+                <% if (draft.changes.length > 0) { %>
+                    <div id="draft-changes-shortcut-<%- draft.id %>"
+                         class="draft-changes-shortcut"
+                         data-draft-id="<%- draft.id %>"
+                         style="cursor:pointer">
 
-                    <div class="AknButtonList AknButtonList--right" style="float:right;">
-                        <button class="AknActionButton">
-                            <%- __('pcmt_core.drafts_list.show_more') %>
-                            <span class="AknActionButton-caret AknCaret"></span>
-                        </button>
+                        <div class="AknButtonList AknButtonList--right">
+                            <button class="AknActionButton">
+                                <%- __('pcmt_core.drafts_list.show_more') %>
+                                <span class="AknActionButton-caret AknCaret"></span>
+                            </button>
+                        </div>
+
+                        <% firstChange = _.first(draft.changes) %>
+                        <% if (firstChange) { %>
+                        <div style="margin-bottom:10px;">
+                            <b><%- firstChange.attribute %></b><br>
+                            <span class="AknDiff--remove">
+                            <%- __('pcmt_core.drafts_list.previous_value') %>:
+                        </span>
+                            <%- firstChange.previousValue %><br>
+                            <span class="AknDiff--add">
+                            <%- __('pcmt_core.drafts_list.new_value') %>:
+                        </span>
+                            <%- firstChange.newValue %>
+                        </div>
+                        <% } %>
                     </div>
+                    <div id="draft-changes-full-<%- draft.id %>"
+                         class="draft-changes-full"
+                         data-draft-id="<%- draft.id %>"
+                         style="cursor:pointer; display:none">
 
-                    <% firstChange = _.first(draft.changes) %>
-                    <% if (firstChange) { %>
-                    <div style="margin-bottom:10px;">
-                        <b><%- firstChange.attribute %></b><br>
-                        <span class="AknDiff--remove">
-                        <%- __('pcmt_core.drafts_list.previous_value') %>:
-                    </span>
-                        <%- firstChange.previousValue %><br>
-                        <span class="AknDiff--add">
+                        <div class="AknButtonList AknButtonList--right" style="float:right;">
+                            <button class="AknActionButton" data-toggle="dropdown">
+                                <%- __('pcmt_core.drafts_list.collapse') %>
+                                <span class="AknActionButton-caret AknCaret"></span>
+                            </button>
+                        </div>
+
+                        <% _.each(draft.changes, function (change) { %>
+                        <div style="margin-bottom:10px;">
+                            <b><%- change.attribute %></b><br>
+                            <span class="AknDiff--remove">
+                            <%- __('pcmt_core.drafts_list.previous_value') %>:
+                        </span>
+                            <%- change.previousValue %><br>
+                            <span class="AknDiff--add">
                         <%- __('pcmt_core.drafts_list.new_value') %>:
-                    </span>
-                        <%- firstChange.newValue %>
-                    </div>
-                    <% } %>
-                </div>
-                <div id="draft-changes-full-<%- draft.id %>"
-                     class="draft-changes-full"
-                     data-draft-id="<%- draft.id %>"
-                     style="cursor:pointer; display:none">
+                        </span>
+                            <%- change.newValue %>
+                        </div>
+                        <% }); %>
 
-                    <div class="AknButtonList AknButtonList--right" style="float:right;">
-                        <button class="AknActionButton" data-toggle="dropdown">
-                            <%- __('pcmt_core.drafts_list.collapse') %>
-                            <span class="AknActionButton-caret AknCaret"></span>
-                        </button>
                     </div>
-
-                    <% _.each(draft.changes, function (change) { %>
-                    <div style="margin-bottom:10px;">
-                        <b><%- change.attribute %></b><br>
-                        <span class="AknDiff--remove">
-                        <%- __('pcmt_core.drafts_list.previous_value') %>:
-                    </span>
-                        <%- change.previousValue %><br>
-                        <span class="AknDiff--add">
-                    <%- __('pcmt_core.drafts_list.new_value') %>:
-                    </span>
-                        <%- change.newValue %>
-                    </div>
-                    <% }); %>
-
-                </div>
+                <% } else { %>
+                    <%- __('pcmt_core.drafts_list.no_changes') %>
+                <% } %>
             </td>
             <td class="AknGrid-bodyCell"><%- draft.createdAt %></td>
             <td class="AknGrid-bodyCell">

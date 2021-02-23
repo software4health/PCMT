@@ -19,6 +19,8 @@ pcmt_core:
         show_more: FR Show more
         page_title:
             index: "]-Inf, 1]{{ count }} FR draft|]1, Inf[{{ count }} FR drafts"
+        label: FR Label
+        no_changes: FR No changes
     drafts_editing:
         new_product_draft:
             breadcrumb: FR New product draft

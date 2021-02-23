@@ -12,6 +12,7 @@ namespace PcmtDraftBundle\Normalizer;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Platform\Bundle\UIBundle\Provider\Form\FormProviderInterface;
+use Akeneo\UserManagement\Bundle\Context\UserContext;
 use PcmtDraftBundle\Entity\ExistingProductDraft;
 use PcmtDraftBundle\Entity\ProductDraftInterface;
 use PcmtDraftBundle\Service\AttributeChange\AttributeChangeService;
@@ -45,6 +46,9 @@ class ProductDraftNormalizer implements NormalizerInterface
     /** @var PermissionsHelper */
     private $permissionsHelper;
 
+    /** @var UserContext */
+    private $userContext;
+
     public function __construct(
         AttributeChangeService $attributeChangeService,
         AttributeChangeNormalizer $attributeChangeNormalizer,
@@ -53,7 +57,8 @@ class ProductDraftNormalizer implements NormalizerInterface
         GeneralDraftNormalizer $generalDraftNormalizer,
         GeneralObjectFromDraftCreator $productFromDraftCreator,
         NormalizerInterface $valuesNormalizer,
-        PermissionsHelper $permissionsHelper
+        PermissionsHelper $permissionsHelper,
+        UserContext $userContext
     ) {
         $this->attributeChangeService = $attributeChangeService;
         $this->attributeChangeNormalizer = $attributeChangeNormalizer;
@@ -63,6 +68,7 @@ class ProductDraftNormalizer implements NormalizerInterface
         $this->productFromDraftCreator = $productFromDraftCreator;
         $this->valuesNormalizer = $valuesNormalizer;
         $this->permissionsHelper = $permissionsHelper;
+        $this->userContext = $userContext;
     }
 
     /**
@@ -116,10 +122,10 @@ class ProductDraftNormalizer implements NormalizerInterface
     private function getLabel(ProductDraftInterface $draft, ProductInterface $newProduct): string
     {
         if ($draft instanceof ExistingProductDraft) {
-            return $draft->getProduct()->getIdentifier() ?? '-';
+            return $draft->getProduct()->getLabel($this->userContext->getUiLocaleCode()) ?? '-';
         }
 
-        return $newProduct->getIdentifier() ?? '-';
+        return $newProduct->getLabel($this->userContext->getUiLocaleCode()) ?? '-';
     }
 
     /**
