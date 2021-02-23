@@ -16,7 +16,6 @@ define(['jquery', 'underscore', 'pim/base-fetcher', 'routing'], function($, _, B
           searchOptions[option] = options[option];
         }
       });
-      console.log(searchOptions);
       return this.search(searchOptions);
     },
 

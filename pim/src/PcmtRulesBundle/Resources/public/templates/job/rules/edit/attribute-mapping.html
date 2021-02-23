@@ -7,14 +7,8 @@
 <table class="AknGrid">
     <tbody class="AknGrid-body">
 
-        <% _.each(mappingValues, function(element) { %>
-            <%= rowTemplate({
-                element: element,
-                sourceAttributeList: sourceAttributeList,
-                destinationAttributeList: destinationAttributeList,
-                i18n: i18n,
-                locale: locale
-            }) %>
+        <% _.each(rows, function(row) { %>
+            <%= row %>
         <% }); %>
 
     </tbody>

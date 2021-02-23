@@ -111,22 +111,44 @@ define(
                 this.render();
             },
             render: function () {
+                let rows = [];
+                _.each(this.mappingValues, function(element) {
+                    rows.push(this.renderRow(element));
+                }.bind(this));
+
                 this.$el.html(this.template({
-                    rowCount : this.rowCount,
-                    rowTemplate: this.rowTemplate,
-                    mappingValues: this.mappingValues,
-                    sourceAttributeList: this.sourceAttributeList,
-                    destinationAttributeList: this.destinationAttributeList,
-                    i18n: i18n,
-                    locale: UserContext.get('catalogLocale'),
+                    rows: rows,
                     error: this.getParent().getValidationErrorsForField(this.getFieldCode()),
                 }));
                 this.$('.select2').select2();
                 this.delegateEvents();
                 return this;
             },
+            renderRow: function(element) {
+                let sourceAttribute = this.getSourceAttribute(element.sourceValue);
+                // show only those matching the type of source attribute
+                let destinationAttributeList = sourceAttribute ?
+                    _.filter(this.destinationAttributeList, function(attr) {
+                        return attr.type === sourceAttribute.type;
+                    }) :
+                    [];
+
+                return this.rowTemplate({
+                    element: element,
+                    sourceAttributeList: this.sourceAttributeList,
+                    destinationAttributeList: destinationAttributeList,
+                    i18n: i18n,
+                    locale: UserContext.get('catalogLocale'),
+                });
+            },
+            getSourceAttribute: function(code) {
+                return _.find(this.sourceAttributeList, function(attr) {
+                    return attr.code === code;
+                });
+            },
             updateModelAfterChange: function (event) {
                 this.updateModelValue(parseInt(event.target.dataset.index), event.target.name, event.target.value);
+                this.render();
             },
             updateModelValue: function (index, type, value) {
                 let mappingValue = _.find(this.mappingValues, function(element) {
