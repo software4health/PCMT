@@ -24,6 +24,7 @@ use PcmtRulesBundle\Tests\TestDataBuilder\ProductBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\ProductModelBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class RuleProcessorCopierTest extends TestCase
@@ -46,6 +47,9 @@ class RuleProcessorCopierTest extends TestCase
     /** @var NormalizerInterface|MockObject */
     private $normalizerMock;
 
+    /** @var EventDispatcherInterface|MockObject */
+    private $eventDispatcherMock;
+
     protected function setUp(): void
     {
         $this->propertyCopierMock = $this->createMock(PropertyCopierInterface::class);
@@ -54,6 +58,7 @@ class RuleProcessorCopierTest extends TestCase
         $this->productAttributeFilterMock = $this->createMock(ProductAttributeFilter::class);
         $this->productModelAttributeFilterMock = $this->createMock(ProductModelAttributeFilter::class);
         $this->normalizerMock = $this->createMock(NormalizerInterface::class);
+        $this->eventDispatcherMock = $this->createMock(EventDispatcherInterface::class);
     }
 
     public function dataCopy(): array
@@ -126,7 +131,8 @@ class RuleProcessorCopierTest extends TestCase
             $this->localeRepositoryMock,
             $this->productAttributeFilterMock,
             $this->productModelAttributeFilterMock,
-            $this->normalizerMock
+            $this->normalizerMock,
+            $this->eventDispatcherMock
         );
     }
 }
