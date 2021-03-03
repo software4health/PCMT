@@ -14,11 +14,15 @@ use Akeneo\Channel\Component\Repository\ChannelRepositoryInterface;
 use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithValuesInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\ProductAttributeFilter;
 use Akeneo\Pim\Enrichment\Component\Product\ProductModel\Filter\ProductModelAttributeFilter;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\PropertyCopierInterface;
+use PcmtRulesBundle\Event\ProductChangedEvent;
+use PcmtRulesBundle\Event\ProductModelChangedEvent;
 use PcmtRulesBundle\Value\AttributeMapping;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class RuleProcessorCopier
@@ -41,13 +45,17 @@ class RuleProcessorCopier
     /** @var NormalizerInterface */
     private $normalizer;
 
+    /** @var EventDispatcherInterface */
+    protected $eventDispatcher;
+
     public function __construct(
         PropertyCopierInterface $propertyCopier,
         ChannelRepositoryInterface $channelRepository,
         LocaleRepositoryInterface $localeRepository,
         ProductAttributeFilter $productAttributeFilter,
         ProductModelAttributeFilter $productModelAttributeFilter,
-        NormalizerInterface $normalizer
+        NormalizerInterface $normalizer,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->propertyCopier = $propertyCopier;
         $this->channelRepository = $channelRepository;
@@ -55,6 +63,7 @@ class RuleProcessorCopier
         $this->productAttributeFilter = $productAttributeFilter;
         $this->productModelAttributeFilter = $productModelAttributeFilter;
         $this->normalizer = $normalizer;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function copy(
@@ -110,13 +119,40 @@ class RuleProcessorCopier
                     'from_scope'  => $scopeCode,
                     'to_scope'    => $scopeCode,
                 ];
-                $this->propertyCopier->copyData(
-                    $sourceProduct,
-                    $destinationProduct,
-                    $sourceAttribute->getCode(),
-                    $destinationAttribute->getCode(),
-                    $options
-                );
+                $previousValue = $destinationProduct->getValue($destinationAttribute->getCode(), $localeCode, $scopeCode);
+                $newValue = $sourceProduct->getValue($sourceAttribute->getCode(), $localeCode, $scopeCode);
+
+                if ((!$previousValue && $newValue) || ($previousValue && !$previousValue->isEqual($newValue))) {
+                    $this->propertyCopier->copyData(
+                        $sourceProduct,
+                        $destinationProduct,
+                        $sourceAttribute->getCode(),
+                        $destinationAttribute->getCode(),
+                        $options
+                    );
+
+                    if ($destinationProduct instanceof ProductModelInterface) {
+                        $event = new ProductModelChangedEvent(
+                            $destinationProduct,
+                            $destinationAttribute,
+                            $localeCode,
+                            $scopeCode,
+                            $previousValue,
+                            $newValue
+                        );
+                        $this->eventDispatcher->dispatch(ProductModelChangedEvent::NAME, $event);
+                    } else {
+                        $event = new ProductChangedEvent(
+                            $destinationProduct,
+                            $destinationAttribute,
+                            $localeCode,
+                            $scopeCode,
+                            $previousValue,
+                            $newValue
+                        );
+                        $this->eventDispatcher->dispatch(ProductChangedEvent::NAME, $event);
+                    }
+                }
             }
         }
     }

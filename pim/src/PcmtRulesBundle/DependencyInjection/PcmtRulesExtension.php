@@ -22,6 +22,7 @@ class PcmtRulesExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('controllers.yml');
         $loader->load('datagrid_listeners.yml');
+        $loader->load('event_listeners.yml');
         $loader->load('job_constraints.yml');
         $loader->load('job_defaults.yml');
         $loader->load('jobs.yml');
