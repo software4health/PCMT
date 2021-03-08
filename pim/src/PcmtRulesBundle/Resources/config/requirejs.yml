@@ -23,7 +23,8 @@ config:
     pcmt/rules/template/job/rules/edit/mapping-tab: pcmtrules/templates/job/rules/edit/mapping-tab.html
     pcmt/rules/template/job/rules/edit/attribute-mapping: pcmtrules/templates/job/rules/edit/attribute-mapping.html
     pcmt/rules/template/job/rules/edit/attribute-mapping-row: pcmtrules/templates/job/rules/edit/attribute-mapping-row.html
-
+    pcmt/rules/template/job/rules/family-copy-by-association-description: pcmtrules/templates/job/rules/family-copy-by-association-description.html
+    pcmt/rules/template/job/rules/family-copy-by-attribute-description: pcmtrules/templates/job/rules/family-copy-by-attribute-description.html
 
   config:
     pim/saver/job-instance-rules:

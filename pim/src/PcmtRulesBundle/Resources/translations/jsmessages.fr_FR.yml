@@ -144,16 +144,16 @@ batch_jobs:
 
     pcmt_copy_products_rule:
         validation.label: FR Validation
-        label: FR Pcmt Copy products rule
+        label: FR Family Copy by Association
 
     pcmt_family_to_family_rule:
         validation.label: FR Validation
-        label: FR Pcmt Family to family rule
+        label: FR Family Copy by Attribute
 
     pcmt_select_options_rule:
         validation.label: FR Validation
-        label: FR Pcmt Select options rule
+        label: FR Set Select Attribute from Family
 
     pcmt_pull_images_rule:
         validation.label: FR Validation
-        label: FR Pcmt Pull images rule
+        label: FR Set image from URL

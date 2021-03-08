@@ -11,7 +11,7 @@ Feature: Creating a 'family to family' rule
     And I fill in "code" with timestamp
     And I fill in "label" with "test family to family rule"
     And I click on select field no 1
-    And I choose "Pcmt Family to family rule" option
+    And I choose "Family Copy by Attribute" option
     And I save create form
     Then I should get success message
 
