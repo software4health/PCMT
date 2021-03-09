@@ -141,3 +141,23 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: pcmt_family_has_no_variants_constraint_validator }
 
+    pcmt.rules.service.copier.select_to_text:
+        class: PcmtRulesBundle\Service\DifferentTypesAttributeCopier
+        parent: pim_catalog.updater.copier.abstract
+        arguments:
+            - '@pim_standard_format_serializer'
+            - [ 'pim_catalog_simpleselect' ]
+            - [ 'pim_catalog_text' ]
+        tags:
+            - { name: 'pim_catalog.updater.copier' }
+
+    pcmt.rules.service.copier.text_to_select:
+        class: PcmtRulesBundle\Service\DifferentTypesAttributeCopier
+        parent: pim_catalog.updater.copier.abstract
+        arguments:
+            - '@pim_standard_format_serializer'
+            - [ 'pim_catalog_text' ]
+            - [ 'pim_catalog_simpleselect' ]
+        tags:
+            - { name: 'pim_catalog.updater.copier' }
+

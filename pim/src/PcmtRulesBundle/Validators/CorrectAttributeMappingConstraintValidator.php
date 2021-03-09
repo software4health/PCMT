@@ -89,6 +89,14 @@ class CorrectAttributeMappingConstraintValidator extends ConstraintValidator
         $destinationAttribute = $destinationAttributes->filter(function (AttributeInterface $attribute) use ($destinationAttributeCode) {
             return $attribute->getCode() === $destinationAttributeCode;
         })->first();
+
+        $types = [
+            'pim_catalog_text',
+            'pim_catalog_simpleselect',
+        ];
+        if (in_array($sourceAttribute->getType(), $types) && in_array($destinationAttribute->getType(), $types)) {
+            return;
+        }
         if ($sourceAttribute->getType() !== $destinationAttribute->getType()) {
             throw new \Exception(sprintf(
                 'Attributes %s and %s are of different types.',
