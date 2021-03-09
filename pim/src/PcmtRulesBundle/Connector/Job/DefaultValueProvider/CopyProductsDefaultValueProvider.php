@@ -28,6 +28,7 @@ class CopyProductsDefaultValueProvider implements DefaultValuesProviderInterface
             CopyProductsRuleStep::PARAM_SOURCE_FAMILY      => '',
             CopyProductsRuleStep::PARAM_DESTINATION_FAMILY => '',
             'user_to_notify'                               => null,
+            CopyProductsRuleStep::PARAM_ATTRIBUTE_MAPPING  => [],
         ];
     }
 }

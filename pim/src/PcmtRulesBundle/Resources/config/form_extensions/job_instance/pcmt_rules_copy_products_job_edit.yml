@@ -52,6 +52,24 @@ extensions:
     config:
       template: pcmt/rules/template/job/rules/family-copy-by-association-description
 
+  pcmt-rules-copy-products-job-edit-mapping-tab:
+    module: pcmt/rules/job/rules/edit/mapping-tab
+    parent: pcmt-rules-copy-products-job-edit-tabs
+    aclResourceId: pcmt_permission_rules_edit
+    targetZone: container
+    position: 120
+    config:
+      tabTitle: pcmt.rules.copy_products_job.tab.attribute_mapping
+      tabCode: pcmt-rules-copy-products-job-edit-mapping
+
+  pcmt-rules-copy-products-job-edit-mapping:
+    module: pcmt/rules/job/rules/edit/attribute-mapping
+    parent: pcmt-rules-copy-products-job-edit-mapping-tab
+    targetZone: properties
+    position: 120
+    config:
+      fieldCode: configuration.attributeMapping
+
   pcmt-rules-copy-products-job-edit-history:
     module: pim/common/tab/history
     parent: pcmt-rules-copy-products-job-edit-tabs

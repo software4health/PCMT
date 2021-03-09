@@ -65,6 +65,8 @@ pcmt:
                 destination_family:
                     title: Destination family
                     help: Destination family
+            tab:
+                attribute_mapping: Attribute mapping
         family_to_family_job:
             properties:
                 source_family:

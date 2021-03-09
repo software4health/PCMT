@@ -22,6 +22,8 @@ class CopyProductsRuleStep extends AbstractStep
 
     public const PARAM_DESTINATION_FAMILY = 'destinationFamily';
 
+    public const PARAM_ATTRIBUTE_MAPPING = 'attributeMapping';
+
     /** @var FamilyRepositoryInterface */
     private $familyRepository;
 

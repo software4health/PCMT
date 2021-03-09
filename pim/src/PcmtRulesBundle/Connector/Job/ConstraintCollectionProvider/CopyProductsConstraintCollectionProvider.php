@@ -11,6 +11,7 @@ namespace PcmtRulesBundle\Connector\Job\ConstraintCollectionProvider;
 
 use Akeneo\Tool\Component\Batch\Job\JobParameters\ConstraintCollectionProviderInterface;
 use PcmtRulesBundle\Connector\Job\Step\CopyProductsRuleStep;
+use PcmtRulesBundle\Constraints\CorrectAttributeMappingConstraint;
 use PcmtRulesBundle\Constraints\DifferentFamilyConstraint;
 use PcmtRulesBundle\Constraints\FamilyHasNoVariantsConstraint;
 use PcmtRulesBundle\Constraints\FamilyHasVariantsConstraint;
@@ -47,6 +48,10 @@ class CopyProductsConstraintCollectionProvider implements ConstraintCollectionPr
                     ],
                     'user_to_notify'    => [
                         new Type('string'),
+                    ],
+                    CopyProductsRuleStep::PARAM_ATTRIBUTE_MAPPING => [
+                        new Type('array'),
+                        new CorrectAttributeMappingConstraint(),
                     ],
                 ],
             ]
