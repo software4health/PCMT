@@ -129,6 +129,13 @@ define(
                 // show only those matching the type of source attribute
                 let destinationAttributeList = sourceAttribute ?
                     _.filter(this.destinationAttributeList, function(attr) {
+                        let types = [
+                            'pim_catalog_text',
+                            'pim_catalog_simpleselect'
+                        ];
+                        if (types.indexOf(sourceAttribute.type) !== -1 && types.indexOf(attr.type) !== -1) {
+                            return true;
+                        }
                         return attr.type === sourceAttribute.type;
                     }) :
                     [];
