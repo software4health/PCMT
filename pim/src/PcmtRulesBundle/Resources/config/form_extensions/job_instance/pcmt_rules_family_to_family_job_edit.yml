@@ -45,6 +45,13 @@ extensions:
       tabTitle: pim_common.properties
       tabCode: pim-job-instance-properties
 
+  pcmt-rules-family-to-family-job-description:
+    module: pim/common/simple-view
+    parent: pcmt-rules-family-to-family-job-edit-properties
+    position: 200
+    config:
+      template: pcmt/rules/template/job/rules/family-copy-by-attribute-description
+
   pcmt-rules-family-to-family-job-edit-mapping-tab:
     module: pcmt/rules/job/rules/edit/mapping-tab
     parent: pcmt-rules-family-to-family-job-edit-tabs

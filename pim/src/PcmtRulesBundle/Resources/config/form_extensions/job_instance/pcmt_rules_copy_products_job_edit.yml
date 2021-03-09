@@ -45,6 +45,13 @@ extensions:
       tabTitle: pim_common.properties
       tabCode: pim-job-instance-properties
 
+  pcmt-rules-copy-products-job-description:
+    module: pim/common/simple-view
+    parent: pcmt-rules-copy-products-job-edit-properties
+    position: 200
+    config:
+      template: pcmt/rules/template/job/rules/family-copy-by-association-description
+
   pcmt-rules-copy-products-job-edit-history:
     module: pim/common/tab/history
     parent: pcmt-rules-copy-products-job-edit-tabs

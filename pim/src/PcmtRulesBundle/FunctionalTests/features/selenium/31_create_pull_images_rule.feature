@@ -11,7 +11,7 @@ Feature: Creating a 'pull images' rule
     And I fill in "code" with timestamp
     And I fill in "label" with "test pull images rule"
     And I click on select field no 1
-    And I choose "Pcmt Pull images rule" option
+    And I choose "Set image from URL" option
     And I save create form
     Then I should get success message
 
