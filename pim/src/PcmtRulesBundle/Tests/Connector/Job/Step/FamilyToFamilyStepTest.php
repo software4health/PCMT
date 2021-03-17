@@ -17,6 +17,7 @@ use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Job\JobRepositoryInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use PcmtRulesBundle\Connector\Job\Step\FamilyToFamilyStep;
+use PcmtRulesBundle\Service\JobParametersTextCreator;
 use PcmtRulesBundle\Service\RuleAttributeProvider;
 use PcmtRulesBundle\Service\RuleProcessor;
 use PcmtRulesBundle\Tests\TestDataBuilder\FamilyBuilder;
@@ -55,13 +56,15 @@ class FamilyToFamilyStepTest extends TestCase
     /** @var FamilyRepositoryInterface|MockObject */
     private $familyRepositoryMock;
 
+    /** @var JobParametersTextCreator|MockObject */
+    private $jobParametersTextCreatorMock;
+
     protected function setUp(): void
     {
         $this->eventDispatcherMock = $this->createMock(EventDispatcherInterface::class);
         $this->jobRepositoryMock = $this->createMock(JobRepositoryInterface::class);
         $this->stepExecutionMock = $this->createMock(StepExecution::class);
         $this->jobParametersMock = $this->createMock(JobParameters::class);
-        $this->jobParametersMock->method('all')->willReturn(['sss' => 'sdsfsd']);
         $this->stepExecutionMock->method('getJobParameters')->willReturn($this->jobParametersMock);
         $this->attributeProviderMock = $this->createMock(RuleAttributeProvider::class);
         $this->pqbFactoryMock = $this->createMock(ProductQueryBuilderFactoryInterface::class);
@@ -69,6 +72,7 @@ class FamilyToFamilyStepTest extends TestCase
         $this->pqbFactoryMock->method('create')->willReturn($this->productQueryBuilderMock);
         $this->ruleProductProcessorMock = $this->createMock(RuleProcessor::class);
         $this->familyRepositoryMock = $this->createMock(FamilyRepositoryInterface::class);
+        $this->jobParametersTextCreatorMock = $this->createMock(JobParametersTextCreator::class);
     }
 
     /**
@@ -126,6 +130,7 @@ class FamilyToFamilyStepTest extends TestCase
         $step->setPqbFactory($this->pqbFactoryMock);
         $step->setRuleProductProcessor($this->ruleProductProcessorMock);
         $step->setFamilyRepository($this->familyRepositoryMock);
+        $step->setJobParametersTextCreator($this->jobParametersTextCreatorMock);
 
         return $step;
     }

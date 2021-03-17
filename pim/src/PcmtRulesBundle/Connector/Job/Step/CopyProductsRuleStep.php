@@ -15,6 +15,7 @@ use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Batch\Step\AbstractStep;
 use PcmtRulesBundle\Service\CopyProductsRule\CopyProductsRuleProcessor;
+use PcmtRulesBundle\Service\JobParametersTextCreator;
 
 class CopyProductsRuleStep extends AbstractStep
 {
@@ -33,6 +34,9 @@ class CopyProductsRuleStep extends AbstractStep
     /** @var CopyProductsRuleProcessor */
     private $productProcessor;
 
+    /** @var JobParametersTextCreator */
+    private $jobParametersTextCreator;
+
     public function setFamilyRepository(FamilyRepositoryInterface $familyRepository): void
     {
         $this->familyRepository = $familyRepository;
@@ -48,15 +52,16 @@ class CopyProductsRuleStep extends AbstractStep
         $this->productProcessor = $productProcessor;
     }
 
+    public function setJobParametersTextCreator(JobParametersTextCreator $jobParametersTextCreator): void
+    {
+        $this->jobParametersTextCreator = $jobParametersTextCreator;
+    }
+
     protected function doExecute(StepExecution $stepExecution): void
     {
         $jobParameters = $stepExecution->getJobParameters();
 
-        $text = [];
-        foreach ($jobParameters->all() as $key => $value) {
-            $text[] = $key.' : '. $value;
-        }
-        $stepExecution->addSummaryInfo('parameters', implode(', ', $text));
+        $stepExecution->addSummaryInfo('parameters', $this->jobParametersTextCreator->create($jobParameters));
 
         $sourceFamilyCode = $jobParameters->get(self::PARAM_SOURCE_FAMILY);
         $destinationFamilyCode = $jobParameters->get(self::PARAM_DESTINATION_FAMILY);

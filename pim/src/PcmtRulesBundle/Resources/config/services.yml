@@ -12,15 +12,20 @@ services:
         arguments:
             - '@pim_catalog.repository.attribute'
 
+    pcmt.service.attribute_mapping_generator:
+        class: PcmtRulesBundle\Service\AttributeMappingGenerator
+        arguments:
+            - '@pcmt.service.rule_attribute_provider'
+
     pcmt.service.rule_product_processor:
         class: PcmtRulesBundle\Service\RuleProcessor
         arguments:
             - '@pim_enrich.query.product_and_product_model_query_builder_from_size_factory'
-            - '@pcmt.service.rule_attribute_provider'
             - '@pim_catalog.saver.product'
             - '@pim_catalog.saver.product_model'
             - '@pim_catalog.builder.product'
             - '@pcmt.service.rule_processor_copier'
+            - '@pcmt.service.attribute_mapping_generator'
 
     pcmt.service.rule_processor_copier:
         class: PcmtRulesBundle\Service\RuleProcessorCopier
@@ -90,11 +95,11 @@ services:
         class: PcmtRulesBundle\Service\CopyProductsRule\CopyProductsRuleProcessor
         arguments:
             - '@pcmt_rules.service.copy_products_rule.copy_product_to_product_model'
+            - '@pcmt.service.attribute_mapping_generator'
 
     pcmt_rules.service.copy_products_rule.copy_product_to_product_model:
         class: PcmtRulesBundle\Service\CopyProductsRule\CopyProductToProductModel
         arguments:
-            - '@pcmt.service.rule_attribute_provider'
             - '@pim_catalog.saver.product'
             - '@pim_catalog.saver.product_model'
             - '@pim_catalog.builder.product'
@@ -160,4 +165,8 @@ services:
             - [ 'pim_catalog_simpleselect' ]
         tags:
             - { name: 'pim_catalog.updater.copier' }
+
+    pcmt.rules.service.job_parameters_text_creator:
+        class: PcmtRulesBundle\Service\JobParametersTextCreator
+
 

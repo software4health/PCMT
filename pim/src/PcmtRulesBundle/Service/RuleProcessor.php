@@ -6,6 +6,8 @@ declare(strict_types=1);
  * Copyright (c) 2020, VillageReach
  * Licensed under the Non-Profit Open Software License version 3.0.
  * SPDX-License-Identifier: NPOSL-3.0
+ *
+ * This a rule processor for F2F mapping ("Family copy by attribute")
  */
 
 namespace PcmtRulesBundle\Service;
@@ -19,7 +21,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderFactoryInte
 use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
-use PcmtRulesBundle\Value\AttributeMapping;
+use PcmtRulesBundle\Value\AttributeMappingCollection;
 use PcmtSharedBundle\Connector\Job\InvalidItems\SimpleInvalidItem;
 use Ramsey\Uuid\Uuid;
 
@@ -29,9 +31,6 @@ class RuleProcessor
 
     /** @var ProductQueryBuilderFactoryInterface */
     private $pqbFactory;
-
-    /** @var RuleAttributeProvider */
-    private $ruleAttributeProvider;
 
     /** @var SaverInterface */
     private $productSaver;
@@ -57,20 +56,23 @@ class RuleProcessor
     /** @var RuleProcessorCopier */
     private $ruleProcessorCopier;
 
+    /** @var AttributeMappingGenerator */
+    private $attributeMappingGenerator;
+
     public function __construct(
         ProductQueryBuilderFactoryInterface $pqbFactory,
-        RuleAttributeProvider $ruleAttributeProvider,
         SaverInterface $productSaver,
         SaverInterface $productModelSaver,
         ProductBuilderInterface $productBuilder,
-        RuleProcessorCopier $ruleProcessorCopier
+        RuleProcessorCopier $ruleProcessorCopier,
+        AttributeMappingGenerator $attributeMappingGenerator
     ) {
         $this->pqbFactory = $pqbFactory;
-        $this->ruleAttributeProvider = $ruleAttributeProvider;
         $this->productSaver = $productSaver;
         $this->productModelSaver = $productModelSaver;
         $this->productBuilder = $productBuilder;
         $this->ruleProcessorCopier = $ruleProcessorCopier;
+        $this->attributeMappingGenerator = $attributeMappingGenerator;
     }
 
     public function process(StepExecution $stepExecution, FamilyInterface $sourceFamily, FamilyInterface $destinationFamily, EntityWithValuesInterface $sourceProduct): void
@@ -78,7 +80,11 @@ class RuleProcessor
         $this->productsToSave = [];
         $this->productModelsToSave = [];
 
-        $mappings = $this->getMappings($sourceFamily, $destinationFamily, $stepExecution);
+        $mappings = $this->attributeMappingGenerator->get(
+            $sourceFamily,
+            $destinationFamily,
+            $stepExecution->getJobParameters()->get('attributeMapping')
+        );
 
         $keyAttributeCode = $stepExecution->getJobParameters()->get('keyAttribute');
 
@@ -138,21 +144,21 @@ class RuleProcessor
     private function copy(
         EntityWithValuesInterface $sourceProduct,
         EntityWithValuesInterface $destinationProduct,
-        array $mappings,
+        AttributeMappingCollection $attributeMappingCollection,
         StepExecution $stepExecution
     ): void {
         try {
-            $result = $this->ruleProcessorCopier->copy($sourceProduct, $destinationProduct, $mappings);
+            $result = $this->ruleProcessorCopier->copy($sourceProduct, $destinationProduct, $attributeMappingCollection);
             if ($result) {
                 $this->addEntityToSave($destinationProduct);
             }
 
             if ($destinationProduct instanceof ProductModelInterface) {
                 foreach ($destinationProduct->getProductModels() as $productModel) {
-                    $this->copy($sourceProduct, $productModel, $mappings, $stepExecution);
+                    $this->copy($sourceProduct, $productModel, $attributeMappingCollection, $stepExecution);
                 }
                 foreach ($destinationProduct->getProducts() as $product) {
-                    $this->copy($sourceProduct, $product, $mappings, $stepExecution);
+                    $this->copy($sourceProduct, $product, $attributeMappingCollection, $stepExecution);
                 }
             }
         } catch (\Throwable $e) {
@@ -181,8 +187,12 @@ class RuleProcessor
         }
     }
 
-    private function createNewDestinationProduct(EntityWithValuesInterface $sourceEntity, FamilyInterface $destinationFamily, array $mappings, StepExecution $stepExecution): void
-    {
+    private function createNewDestinationProduct(
+        EntityWithValuesInterface $sourceEntity,
+        FamilyInterface $destinationFamily,
+        AttributeMappingCollection $attributeMappingCollection,
+        StepExecution $stepExecution
+    ): void {
         $destinationProduct = $this->productBuilder->createProduct(
             Uuid::uuid4()->toString(),
             $destinationFamily->getCode()
@@ -190,29 +200,6 @@ class RuleProcessor
 
         $this->addEntityToSave($destinationProduct);
 
-        $this->copy($sourceEntity, $destinationProduct, $mappings, $stepExecution);
-    }
-
-    private function getMappings(FamilyInterface $sourceFamily, FamilyInterface $destinationFamily, StepExecution $stepExecution): array
-    {
-        $mappings = [];
-
-        foreach ($this->ruleAttributeProvider->getAllForFamilies($sourceFamily, $destinationFamily) as $attribute) {
-            $mappings[] = new AttributeMapping($attribute, $attribute);
-        }
-
-        foreach ($stepExecution->getJobParameters()->get('attributeMapping') as $mapping) {
-            $sourceAttribute = $this->ruleAttributeProvider->getAttributeByCode($mapping['sourceValue']);
-            $destinationAttribute = $this->ruleAttributeProvider->getAttributeByCode($mapping['destinationValue']);
-
-            if (null !== $sourceAttribute && null !== $destinationAttribute) {
-                $mappings[] = new AttributeMapping(
-                    $sourceAttribute,
-                    $destinationAttribute
-                );
-            }
-        }
-
-        return $mappings;
+        $this->copy($sourceEntity, $destinationProduct, $attributeMappingCollection, $stepExecution);
     }
 }
