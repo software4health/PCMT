@@ -20,8 +20,10 @@ use Akeneo\Tool\Component\StorageUtils\Updater\PropertyCopierInterface;
 use PcmtRulesBundle\Service\RuleProcessorCopier;
 use PcmtRulesBundle\Tests\TestDataBuilder\AttributeBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\AttributeMappingBuilder;
+use PcmtRulesBundle\Tests\TestDataBuilder\AttributeMappingCollectionBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\ProductBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\ProductModelBuilder;
+use PcmtRulesBundle\Value\AttributeMappingCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -77,17 +79,22 @@ class RuleProcessorCopierTest extends TestCase
 
         $productModel1 = (new ProductModelBuilder())->build();
 
+        $mappingCollection = (new AttributeMappingCollectionBuilder())->withAttributeMapping($mapping)->build();
+
         return [
-            [$product1, $product2, [$mapping]],
-            [$product1, $productModel1, [$mapping]],
+            [$product1, $product2, $mappingCollection],
+            [$product1, $productModel1, $mappingCollection],
         ];
     }
 
     /**
      * @dataProvider dataCopy
      */
-    public function testCopy(EntityWithValuesInterface $sourceProduct, EntityWithValuesInterface $destinationProduct, array $mappings): void
-    {
+    public function testCopy(
+        EntityWithValuesInterface $sourceProduct,
+        EntityWithValuesInterface $destinationProduct,
+        AttributeMappingCollection $mappingCollection
+    ): void {
         $this->productAttributeFilterMock->method('filter')->willReturn([
             'values' => [
                 'attributeCode' => 'example value',
@@ -101,15 +108,18 @@ class RuleProcessorCopierTest extends TestCase
 
         $this->propertyCopierMock->expects($this->exactly(1))->method('copyData');
         $processor = $this->getRuleProcessorCopierInstance();
-        $result = $processor->copy($sourceProduct, $destinationProduct, $mappings);
+        $result = $processor->copy($sourceProduct, $destinationProduct, $mappingCollection);
         $this->assertTrue($result);
     }
 
     /**
      * @dataProvider dataCopy
      */
-    public function testCopyFilteredOut(EntityWithValuesInterface $sourceProduct, EntityWithValuesInterface $destinationProduct, array $attributes): void
-    {
+    public function testCopyFilteredOut(
+        EntityWithValuesInterface $sourceProduct,
+        EntityWithValuesInterface $destinationProduct,
+        AttributeMappingCollection $mappingCollection
+    ): void {
         $this->productAttributeFilterMock->method('filter')->willReturn([
             'values' => [],
         ]);
@@ -119,7 +129,7 @@ class RuleProcessorCopierTest extends TestCase
 
         $this->propertyCopierMock->expects($this->exactly(0))->method('copyData');
         $processor = $this->getRuleProcessorCopierInstance();
-        $result = $processor->copy($sourceProduct, $destinationProduct, $attributes);
+        $result = $processor->copy($sourceProduct, $destinationProduct, $mappingCollection);
         $this->assertFalse($result);
     }
 

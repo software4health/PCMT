@@ -19,15 +19,22 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
+use PcmtRulesBundle\Service\AttributeMappingGenerator;
 
 class CopyProductsRuleProcessor
 {
     /** @var CopyProductToProductModel */
     private $copyProductToProductModel;
 
-    public function __construct(CopyProductToProductModel $copyProductToProductModel)
-    {
+    /** @var AttributeMappingGenerator */
+    private $attributeMappingGenerator;
+
+    public function __construct(
+        CopyProductToProductModel $copyProductToProductModel,
+        AttributeMappingGenerator $attributeMappingGenerator
+    ) {
         $this->copyProductToProductModel = $copyProductToProductModel;
+        $this->attributeMappingGenerator = $attributeMappingGenerator;
     }
 
     public function process(
@@ -35,6 +42,12 @@ class CopyProductsRuleProcessor
         FamilyInterface $destinationFamily,
         ProductInterface $sourceProduct
     ): void {
+        $mappings = $this->attributeMappingGenerator->get(
+            $sourceProduct->getFamily(),
+            $destinationFamily,
+            $stepExecution->getJobParameters()->get('attributeMapping')
+        );
+
         $associations = $sourceProduct->getAssociations();
         foreach ($associations as $association) {
             $models = $association->getProductModels();
@@ -43,7 +56,7 @@ class CopyProductsRuleProcessor
                 $stepExecution->incrementSummaryInfo('associated_product_models_found', 1);
                 if ($model->getFamily()->getCode() === $destinationFamily->getCode()) {
                     $stepExecution->incrementSummaryInfo('associated_product_models_found_in_correct_family', 1);
-                    $this->copyProductToProductModel->process($stepExecution, $sourceProduct, $model);
+                    $this->copyProductToProductModel->process($stepExecution, $sourceProduct, $model, $mappings);
                 }
             }
         }

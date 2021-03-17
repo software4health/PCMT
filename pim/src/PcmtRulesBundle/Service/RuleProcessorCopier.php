@@ -22,6 +22,7 @@ use Akeneo\Tool\Component\StorageUtils\Updater\PropertyCopierInterface;
 use PcmtRulesBundle\Event\ProductChangedEvent;
 use PcmtRulesBundle\Event\ProductModelChangedEvent;
 use PcmtRulesBundle\Value\AttributeMapping;
+use PcmtRulesBundle\Value\AttributeMappingCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -69,12 +70,12 @@ class RuleProcessorCopier
     public function copy(
         EntityWithValuesInterface $sourceProduct,
         EntityWithValuesInterface $destinationProduct,
-        array $mappings
+        AttributeMappingCollection $attributeMappingCollection
     ): bool {
         $productData = $this->normalizer->normalize($destinationProduct, 'standard');
         $attributeCodes = array_map(function (AttributeMapping $attributeMapping) {
             return $attributeMapping->getDestinationAttribute()->getCode();
-        }, $mappings);
+        }, $attributeMappingCollection->toArray());
 
         $productData['values'] = [];
         foreach ($attributeCodes as $code) {
@@ -90,7 +91,7 @@ class RuleProcessorCopier
         if (0 === count($productData['values'])) {
             return false;
         }
-        foreach ($mappings as $mapping) {
+        foreach ($attributeMappingCollection as $mapping) {
             if (isset($productData['values'][$mapping->getDestinationAttribute()->getCode()])) {
                 $this->copyOneAttribute($sourceProduct, $destinationProduct, $mapping->getSourceAttribute(), $mapping->getDestinationAttribute());
             }

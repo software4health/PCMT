@@ -17,6 +17,7 @@ use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Batch\Step\AbstractStep;
+use PcmtRulesBundle\Service\JobParametersTextCreator;
 use PcmtRulesBundle\Service\RuleAttributeProvider;
 use PcmtRulesBundle\Service\RuleProcessor;
 
@@ -35,6 +36,9 @@ class FamilyToFamilyStep extends AbstractStep
     private $familyRepository;
 
     public const BATCH_SIZE = 20;
+
+    /** @var JobParametersTextCreator */
+    private $jobParametersTextCreator;
 
     public function setAttributeProvider(RuleAttributeProvider $attributeProvider): void
     {
@@ -56,15 +60,16 @@ class FamilyToFamilyStep extends AbstractStep
         $this->familyRepository = $familyRepository;
     }
 
+    public function setJobParametersTextCreator(JobParametersTextCreator $jobParametersTextCreator): void
+    {
+        $this->jobParametersTextCreator = $jobParametersTextCreator;
+    }
+
     protected function doExecute(StepExecution $stepExecution): void
     {
         $parameters = $stepExecution->getJobParameters();
 
-        $text = [];
-        foreach ($parameters->all() as $key => $value) {
-            $text[] = $key.' : '. $value;
-        }
-        $stepExecution->addSummaryInfo('parameters', implode(', ', $text));
+        $stepExecution->addSummaryInfo('parameters', $this->jobParametersTextCreator->create($parameters));
 
         /** @var FamilyInterface $sourceFamily */
         $sourceFamily = $this->familyRepository->findOneBy(['code' => $parameters->get('sourceFamily')]);

@@ -17,7 +17,9 @@ namespace PcmtRulesBundle\Tests\Service\CopyProductsRule;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
+use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
+use PcmtRulesBundle\Service\AttributeMappingGenerator;
 use PcmtRulesBundle\Service\CopyProductsRule\CopyProductsRuleProcessor;
 use PcmtRulesBundle\Service\CopyProductsRule\CopyProductToProductModel;
 use PcmtRulesBundle\Tests\TestDataBuilder\FamilyBuilder;
@@ -38,10 +40,17 @@ class CopyProductsRuleProcessorTest extends TestCase
     /** @var CopyProductToProductModel|MockObject */
     private $copyProductToProductModelMock;
 
+    /** @var AttributeMappingGenerator|MockObject */
+    private $attributeMappingGeneratorMock;
+
     protected function setUp(): void
     {
-        $this->copyProductToProductModelMock = $this->createMock(\PcmtRulesBundle\Service\CopyProductsRule\CopyProductToProductModel::class);
+        $this->copyProductToProductModelMock = $this->createMock(CopyProductToProductModel::class);
+        $this->attributeMappingGeneratorMock = $this->createMock(AttributeMappingGenerator::class);
         $this->stepExecutionMock = $this->createMock(StepExecution::class);
+        $jobParametersMock = $this->createMock(JobParameters::class);
+        $jobParametersMock->method('get')->willReturn([]);
+        $this->stepExecutionMock->method('getJobParameters')->willReturn($jobParametersMock);
     }
 
     public function dataProcess(): array
@@ -124,8 +133,9 @@ class CopyProductsRuleProcessorTest extends TestCase
 
     private function getProcessorInstance(): CopyProductsRuleProcessor
     {
-        return new \PcmtRulesBundle\Service\CopyProductsRule\CopyProductsRuleProcessor(
-            $this->copyProductToProductModelMock
+        return new CopyProductsRuleProcessor(
+            $this->copyProductToProductModelMock,
+            $this->attributeMappingGeneratorMock
         );
     }
 }

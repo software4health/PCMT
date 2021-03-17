@@ -24,17 +24,15 @@ use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Pim\Structure\Component\Model\VariantAttributeSetInterface;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
-use PcmtRulesBundle\Service\RuleAttributeProvider;
 use PcmtRulesBundle\Service\RuleProcessorCopier;
+use PcmtRulesBundle\Value\AttributeMapping;
+use PcmtRulesBundle\Value\AttributeMappingCollection;
 use Ramsey\Uuid\Uuid;
 
 class CopyProductToProductModel
 {
     /** @var StepExecution */
     private $stepExecution;
-
-    /** @var RuleAttributeProvider */
-    private $ruleAttributeProvider;
 
     /** @var SaverInterface */
     private $productSaver;
@@ -51,15 +49,16 @@ class CopyProductToProductModel
     /** @var SubEntityFinder */
     private $subEntityFinder;
 
+    /** @var AttributeMappingCollection */
+    private $attributeMappingCollection;
+
     public function __construct(
-        RuleAttributeProvider $ruleAttributeProvider,
         SaverInterface $productSaver,
         SaverInterface $productModelSaver,
         ProductBuilderInterface $variantProductBuilder,
         RuleProcessorCopier $ruleProcessorCopier,
         SubEntityFinder $subEntityFinder
     ) {
-        $this->ruleAttributeProvider = $ruleAttributeProvider;
         $this->productSaver = $productSaver;
         $this->productModelSaver = $productModelSaver;
         $this->variantProductBuilder = $variantProductBuilder;
@@ -70,8 +69,10 @@ class CopyProductToProductModel
     public function process(
         StepExecution $stepExecution,
         ProductInterface $sourceProduct,
-        ProductModelInterface $destinationProductModel
+        ProductModelInterface $destinationProductModel,
+        AttributeMappingCollection $attributeMappingCollection
     ): void {
+        $this->attributeMappingCollection = $attributeMappingCollection;
         $this->stepExecution = $stepExecution;
         $this->processDestinationProductModel($sourceProduct, $destinationProductModel, 1);
     }
@@ -85,23 +86,24 @@ class CopyProductToProductModel
         $set = $variant->getVariantAttributeSet($level);
         /** @var VariantAttributeSetInterface $set */
         $axisAttributes = $set->getAxes();
-        foreach ($axisAttributes as $attribute) {
-            /** @var AttributeInterface $attribute */
-            $value = $sourceProduct->getValue($attribute->getCode());
-            if (!$value || !$value->getData()) {
+        foreach ($axisAttributes as $destinationAttribute) {
+            /** @var AttributeInterface $destinationAttribute */
+            $sourceAttribute = $this->attributeMappingCollection->getSourceAttributeForDestinationOne($destinationAttribute);
+            if ($sourceAttribute) {
+                $value = $sourceProduct->getValue($sourceAttribute->getCode());
+            }
+            if (empty($value) || !$value->getData()) {
                 $this->stepExecution->incrementSummaryInfo('axis_attribute_not_exists_in_source_product', 1);
 
                 return;
             }
         }
 
-        $attributes = $this->ruleAttributeProvider->getAllForFamilies(
-            $sourceProduct->getFamily(),
-            $destinationProductModel->getFamily()
-        );
-        foreach ($attributes as $key => $attribute) {
-            if (!$set->hasAttribute($attribute)) {
-                unset($attributes[$key]);
+        $collection = clone$this->attributeMappingCollection;
+        foreach ($collection as $key => $attributeMapping) {
+            /** @var AttributeMapping $attributeMapping */
+            if (!$set->hasAttribute($attributeMapping->getDestinationAttribute())) {
+                $collection->remove($key);
             }
         }
 
@@ -109,7 +111,7 @@ class CopyProductToProductModel
         if ($subEntity) {
             $this->stepExecution->incrementSummaryInfo('sub_entities_found', 1);
 
-            $this->copy($sourceProduct, $subEntity, $attributes);
+            $this->copy($sourceProduct, $subEntity, $collection);
             if ($subEntity instanceof ProductModelInterface) {
                 $this->processDestinationProductModel($sourceProduct, $subEntity, ++$level);
             }
@@ -118,7 +120,7 @@ class CopyProductToProductModel
                 $subProductModel = $this->createNewSubProductModel(
                     $sourceProduct,
                     $destinationProductModel,
-                    $attributes
+                    $collection
                 );
                 $this->stepExecution->incrementSummaryInfo('sub_product_models_created', 1);
                 $this->processDestinationProductModel($sourceProduct, $subProductModel, ++$level);
@@ -126,7 +128,7 @@ class CopyProductToProductModel
                 $this->createNewSubProduct(
                     $sourceProduct,
                     $destinationProductModel,
-                    $attributes
+                    $collection
                 );
                 $this->stepExecution->incrementSummaryInfo('sub_products_created', 1);
             }
@@ -136,16 +138,16 @@ class CopyProductToProductModel
     private function copy(
         ProductInterface $sourceProduct,
         EntityWithValuesInterface $destinationEntity,
-        array $attributes
+        AttributeMappingCollection $collection
     ): void {
-        foreach ($attributes as $key => $attribute) {
-            /** @var AttributeInterface $attribute */
-            if (!$sourceProduct->getValue($attribute->getCode())) {
-                unset($attributes[$key]);
+        foreach ($collection as $key => $attributeMapping) {
+            /** @var AttributeMapping $attributeMapping */
+            if (!$sourceProduct->getValue($attributeMapping->getSourceAttribute()->getCode())) {
+                unset($collection[$key]);
             }
         }
 
-        $result = $this->ruleProcessorCopier->copy($sourceProduct, $destinationEntity, $attributes);
+        $result = $this->ruleProcessorCopier->copy($sourceProduct, $destinationEntity, $collection);
         if ($result) {
             if ($destinationEntity instanceof ProductInterface) {
                 $this->productSaver->save($destinationEntity);
@@ -158,7 +160,7 @@ class CopyProductToProductModel
     private function createNewSubProduct(
         ProductInterface $sourceProduct,
         ProductModelInterface $productModel,
-        array $attributes
+        AttributeMappingCollection $attributeMappingCollection
     ): void {
         $destinationProduct = $this->variantProductBuilder->createProduct(
             Uuid::uuid4()->toString(),
@@ -167,13 +169,13 @@ class CopyProductToProductModel
 
         $destinationProduct->setFamilyVariant($productModel->getFamilyVariant());
         $destinationProduct->setParent($productModel);
-        $this->copy($sourceProduct, $destinationProduct, $attributes);
+        $this->copy($sourceProduct, $destinationProduct, $attributeMappingCollection);
     }
 
     private function createNewSubProductModel(
         ProductInterface $sourceProduct,
         ProductModelInterface $productModel,
-        array $attributes
+        AttributeMappingCollection $attributeMappingCollection
     ): ProductModelInterface {
         $subProductModel = new ProductModel();
         $subProductModel->setCreated(new \DateTime());
@@ -181,7 +183,7 @@ class CopyProductToProductModel
         $subProductModel->setCode(Uuid::uuid4()->toString());
         $subProductModel->setFamilyVariant($productModel->getFamilyVariant());
         $subProductModel->setParent($productModel);
-        $this->copy($sourceProduct, $subProductModel, $attributes);
+        $this->copy($sourceProduct, $subProductModel, $attributeMappingCollection);
 
         return $subProductModel;
     }

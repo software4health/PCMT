@@ -10,6 +10,7 @@ services:
             - [setFamilyRepository, ['@pim_catalog.repository.family']]
             - [setPqbFactory, ['@pim_enrich.query.product_and_product_model_query_builder_from_size_factory']]
             - [setProductProcessor, ['@pcmt_rules.service.copy_products_rule.copy_products_rule_processor']]
+            - [setJobParametersTextCreator, ['@pcmt.rules.service.job_parameters_text_creator']]
 
     pcmt.connector.job.step.family_to_family:
         class: PcmtRulesBundle\Connector\Job\Step\FamilyToFamilyStep
@@ -22,6 +23,7 @@ services:
             - [setRuleProductProcessor, ['@pcmt.service.rule_product_processor']]
             - [setPqbFactory, ['@pim_enrich.query.product_and_product_model_query_builder_from_size_factory']]
             - [setFamilyRepository, ['@pim_catalog.repository.family']]
+            - [setJobParametersTextCreator, ['@pcmt.rules.service.job_parameters_text_creator']]
 
     pcmt.connector.job.step.select_options_rule:
         class: PcmtRulesBundle\Connector\Job\Step\SelectOptionsRuleStep

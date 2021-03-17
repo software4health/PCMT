@@ -26,14 +26,16 @@ use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use PcmtRulesBundle\Service\CopyProductsRule\CopyProductToProductModel;
-use PcmtRulesBundle\Service\RuleAttributeProvider;
 use PcmtRulesBundle\Service\RuleProcessorCopier;
 use PcmtRulesBundle\Tests\TestDataBuilder\AttributeBuilder;
+use PcmtRulesBundle\Tests\TestDataBuilder\AttributeMappingBuilder;
+use PcmtRulesBundle\Tests\TestDataBuilder\AttributeMappingCollectionBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\FamilyBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\FamilyVariantBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\ProductBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\ProductModelBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\VariantAttributeSetBuilder;
+use PcmtRulesBundle\Value\AttributeMappingCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -41,9 +43,6 @@ class CopyProductToProductModelTest extends TestCase
 {
     /** @var ProductQueryBuilderFactoryInterface|MockObject */
     private $productQueryBuilderFactoryMock;
-
-    /** @var RuleAttributeProvider|MockObject */
-    private $ruleAttributeProviderMock;
 
     /** @var SaverInterface */
     private $productSaverMock;
@@ -72,7 +71,6 @@ class CopyProductToProductModelTest extends TestCase
     protected function setUp(): void
     {
         $this->productQueryBuilderFactoryMock = $this->createMock(ProductQueryBuilderFactory::class);
-        $this->ruleAttributeProviderMock = $this->createMock(RuleAttributeProvider::class);
         $this->productSaverMock = $this->createMock(SaverInterface::class);
         $this->productModelSaverMock = $this->createMock(SaverInterface::class);
         $this->productQueryBuilderMock = $this->createMock(ProductQueryBuilderInterface::class);
@@ -97,7 +95,24 @@ class CopyProductToProductModelTest extends TestCase
         $attribute1 = (new AttributeBuilder())->withCode('A1')->build();
         $attribute2 = (new AttributeBuilder())->withCode('A2')->build();
         $attribute3 = (new AttributeBuilder())->withCode('A3')->build();
-        $attributes = [$attribute1, $attribute2, $attribute3];
+
+        $mapping1 = (new AttributeMappingBuilder())
+            ->withSourceAttribute($attribute1)
+            ->withDestinationAttribute($attribute1)
+            ->build();
+        $mapping2 = (new AttributeMappingBuilder())
+            ->withSourceAttribute($attribute2)
+            ->withDestinationAttribute($attribute2)
+            ->build();
+        $mapping3 = (new AttributeMappingBuilder())
+            ->withSourceAttribute($attribute3)
+            ->withDestinationAttribute($attribute3)
+            ->build();
+        $attributeMappingCollection = (new AttributeMappingCollectionBuilder())
+            ->withAttributeMapping($mapping1)
+            ->withAttributeMapping($mapping2)
+            ->withAttributeMapping($mapping3)
+            ->build();
 
         $variantAttributeSet1 = (new VariantAttributeSetBuilder())
             ->withLevel(1)
@@ -140,9 +155,9 @@ class CopyProductToProductModelTest extends TestCase
             ->build();
 
         return [
-            [$sourceProduct1, $productModel1, $attributes, 0, 0], // value of axis attribute does not exists
-            [$sourceProduct2, $productModel1, $attributes, 1, 0], // one level
-            [$sourceProduct2, $productModel2, $attributes, 1, 1], // two levels - should create pm and p.
+            [$sourceProduct1, $productModel1, $attributeMappingCollection, 0, 0], // value of axis attribute does not exists
+            [$sourceProduct2, $productModel1, $attributeMappingCollection, 1, 0], // one level
+            [$sourceProduct2, $productModel2, $attributeMappingCollection, 1, 1], // two levels - should create pm and p.
         ];
     }
 
@@ -152,7 +167,7 @@ class CopyProductToProductModelTest extends TestCase
     public function testProcess(
         ProductInterface $sourceProduct,
         ProductModelInterface $destinationProductModel,
-        array $attributes,
+        AttributeMappingCollection $attributeMappingCollection,
         int $saveProductCalls,
         int $saveProductModelCalls
     ): void {
@@ -163,10 +178,14 @@ class CopyProductToProductModelTest extends TestCase
             );
         $this->productSaverMock->expects($this->exactly($saveProductCalls))->method('save');
         $this->productModelSaverMock->expects($this->exactly($saveProductModelCalls))->method('save');
-        $this->ruleAttributeProviderMock->method('getAllForFamilies')->willReturn($attributes);
         $this->ruleProcessorCopierMock->method('copy')->willReturn(true);
         $processor = $this->getServiceInstance();
-        $processor->process($this->stepExecutionMock, $sourceProduct, $destinationProductModel);
+        $processor->process(
+            $this->stepExecutionMock,
+            $sourceProduct,
+            $destinationProductModel,
+            $attributeMappingCollection
+        );
     }
 
     /**
@@ -175,7 +194,7 @@ class CopyProductToProductModelTest extends TestCase
     public function testProcessSubProductFound(
         ProductInterface $sourceProduct,
         ProductModelInterface $destinationProductModel,
-        array $attributes,
+        AttributeMappingCollection $attributeMappingCollection,
         int $saveProductCalls,
         int $saveProductModelCalls
     ): void {
@@ -184,16 +203,14 @@ class CopyProductToProductModelTest extends TestCase
         );
         $this->productBuilderMock->expects($this->never())->method('createProduct');
         $this->productSaverMock->expects($this->exactly($saveProductCalls))->method('save');
-        $this->ruleAttributeProviderMock->method('getAllForFamilies')->willReturn($attributes);
         $this->ruleProcessorCopierMock->method('copy')->willReturn(true);
         $processor = $this->getServiceInstance();
-        $processor->process($this->stepExecutionMock, $sourceProduct, $destinationProductModel);
+        $processor->process($this->stepExecutionMock, $sourceProduct, $destinationProductModel, $attributeMappingCollection);
     }
 
     private function getServiceInstance(): CopyProductToProductModel
     {
-        return new \PcmtRulesBundle\Service\CopyProductsRule\CopyProductToProductModel(
-            $this->ruleAttributeProviderMock,
+        return new CopyProductToProductModel(
             $this->productSaverMock,
             $this->productModelSaverMock,
             $this->productBuilderMock,
