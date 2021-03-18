@@ -88,7 +88,12 @@ class RuleProcessor
 
         $keyAttributeCode = $stepExecution->getJobParameters()->get('keyAttribute');
 
-        $keyValue = $sourceProduct->getValue($keyAttributeCode);
+        $keyAttributeMapping = $this->attributeMappingGenerator->getKeyAttributesMapping(
+            $keyAttributeCode['sourceKeyAttribute'],
+            $keyAttributeCode['destinationKeyAttribute']
+        );
+
+        $keyValue = $sourceProduct->getValue($keyAttributeMapping->getSourceAttribute()->getCode());
         if (!$keyValue) {
             return;
         }
@@ -100,12 +105,12 @@ class RuleProcessor
             'limit'          => self::MAX_DESTINATION_PRODUCTS,
         ]);
         try {
-            $pqb->addFilter($keyAttributeCode, Operators::EQUALS, $keyValue->getData());
+            $pqb->addFilter($keyAttributeMapping->getDestinationAttribute()->getCode(), Operators::EQUALS, $keyValue->getData());
         } catch (\Throwable $e) {
             try {
-                $pqb->addFilter($keyAttributeCode, Operators::IN_LIST, [$keyValue->getData()]);
+                $pqb->addFilter($keyAttributeMapping->getDestinationAttribute()->getCode(), Operators::IN_LIST, [$keyValue->getData()]);
             } catch (\Throwable $e) {
-                throw new \Exception('Unsupported attribute type used as key attribute in a rule: ' . $keyAttributeCode);
+                throw new \Exception('Unsupported attribute type used as key attribute in a rule: ' . $keyAttributeCode['destinationKeyAttribute']);
             }
         }
         $pqb->addFilter('family', Operators::IN_LIST, [$destinationFamily->getCode()]);

@@ -136,8 +136,6 @@ extensions:
       destinationFamily: 'configuration.destinationFamily'
       fieldCode: configuration.keyAttribute
       readOnly: false
-      label: pcmt.rules.family_to_family_job.properties.key_attribute.title
-      tooltip: pcmt.rules.family_to_family_job.properties.key_attribute.help
 
   pcmt-rules-family-to-family-job-edit-label:
     module: pim/job/common/edit/label

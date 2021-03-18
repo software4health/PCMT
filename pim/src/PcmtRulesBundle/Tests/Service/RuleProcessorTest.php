@@ -142,8 +142,27 @@ class RuleProcessorTest extends TestCase
             ->expects($this->at(1))
             ->method('get')
             ->with('keyAttribute')
-            ->willReturn('test');
+            ->willReturn([
+                'sourceKeyAttribute'      => 'test',
+                'destinationKeyAttribute' => 'test',
+            ]);
         $this->attributeMappingGeneratorMock->method('get')->willReturn($attributeMappingCollection);
+        $this->attributeMappingGeneratorMock
+            ->method('getKeyAttributesMapping')
+            ->willReturn(
+                (new AttributeMappingBuilder())
+                    ->withSourceAttribute(
+                        (new AttributeBuilder())
+                            ->withCode('test')
+                            ->build()
+                    )
+                    ->withDestinationAttribute(
+                        (new AttributeBuilder())
+                            ->withCode('test')
+                            ->build()
+                    )
+                    ->build()
+            );
 
         $this->productQueryBuilderMock->method('execute')->willReturn($destinationProducts);
         $this->ruleProcessorCopierMock->expects($this->exactly($expectedCalls))->method('copy')->willReturn(true);
@@ -185,7 +204,26 @@ class RuleProcessorTest extends TestCase
             ->expects($this->at(1))
             ->method('get')
             ->with('keyAttribute')
-            ->willReturn('test');
+            ->willReturn([
+                'sourceKeyAttribute'      => 'test',
+                'destinationKeyAttribute' => 'test',
+            ]);
+        $this->attributeMappingGeneratorMock
+            ->method('getKeyAttributesMapping')
+            ->willReturn(
+                (new AttributeMappingBuilder())
+                    ->withSourceAttribute(
+                        (new AttributeBuilder())
+                            ->withCode('test')
+                            ->build()
+                    )
+                    ->withDestinationAttribute(
+                        (new AttributeBuilder())
+                            ->withCode('test')
+                            ->build()
+                    )
+                    ->build()
+            );
         $this->productQueryBuilderMock->method('execute')->willReturn([]);
         $this->ruleProcessorCopierMock->expects($this->exactly(1))->method('copy')->willReturn(true);
         $processor = $this->getRuleProductProcessorInstance();
@@ -210,7 +248,26 @@ class RuleProcessorTest extends TestCase
             ->expects($this->at(1))
             ->method('get')
             ->with('keyAttribute')
-            ->willReturn('test');
+            ->willReturn([
+                'sourceKeyAttribute'      => 'test',
+                'destinationKeyAttribute' => 'test',
+            ]);
+        $this->attributeMappingGeneratorMock
+            ->method('getKeyAttributesMapping')
+            ->willReturn(
+                (new AttributeMappingBuilder())
+                    ->withSourceAttribute(
+                        (new AttributeBuilder())
+                            ->withCode('test')
+                            ->build()
+                    )
+                    ->withDestinationAttribute(
+                        (new AttributeBuilder())
+                            ->withCode('test')
+                            ->build()
+                    )
+                    ->build()
+            );
         $this->productQueryBuilderMock->method('execute')->willReturn($destinationProducts);
         $this->ruleProcessorCopierMock->method('copy')->willThrowException(new \Exception());
         $this->stepExecutionMock->expects($this->atLeastOnce())->method('addWarning');
@@ -236,7 +293,10 @@ class RuleProcessorTest extends TestCase
             ->expects($this->at(1))
             ->method('get')
             ->with('keyAttribute')
-            ->willReturn('test');
+            ->willReturn([
+                'sourceKeyAttribute'      => 'test',
+                'destinationKeyAttribute' => 'test',
+            ]);
         $this->productQueryBuilderMock->method('addFilter')->willThrowException(new \Exception());
         $this->expectException(\Throwable::class);
         $processor = $this->getRuleProductProcessorInstance();
@@ -263,7 +323,26 @@ class RuleProcessorTest extends TestCase
             ->expects($this->at(1))
             ->method('get')
             ->with('keyAttribute')
-            ->willReturn('test');
+            ->willReturn([
+                'sourceKeyAttribute'      => 'test',
+                'destinationKeyAttribute' => 'test',
+            ]);
+        $this->attributeMappingGeneratorMock
+            ->method('getKeyAttributesMapping')
+            ->willReturn(
+                (new AttributeMappingBuilder())
+                    ->withSourceAttribute(
+                        (new AttributeBuilder())
+                            ->withCode('test')
+                            ->build()
+                    )
+                    ->withDestinationAttribute(
+                        (new AttributeBuilder())
+                            ->withCode('test')
+                            ->build()
+                    )
+                    ->build()
+            );
         $processor = $this->getRuleProductProcessorInstance();
         $processor->process($this->stepExecutionMock, $sourceFamily, $destinationFamily, $sourceProduct);
     }
@@ -288,7 +367,26 @@ class RuleProcessorTest extends TestCase
             ->expects($this->at(1))
             ->method('get')
             ->with('keyAttribute')
-            ->willReturn('test');
+            ->willReturn([
+                'sourceKeyAttribute'      => 'test',
+                'destinationKeyAttribute' => 'test',
+            ]);
+        $this->attributeMappingGeneratorMock
+            ->method('getKeyAttributesMapping')
+            ->willReturn(
+                (new AttributeMappingBuilder())
+                    ->withSourceAttribute(
+                        (new AttributeBuilder())
+                            ->withCode('test')
+                            ->build()
+                    )
+                    ->withDestinationAttribute(
+                        (new AttributeBuilder())
+                            ->withCode('test')
+                            ->build()
+                    )
+                    ->build()
+            );
         $processor = $this->getRuleProductProcessorInstance();
         $processor->process($this->stepExecutionMock, $sourceFamily, $destinationFamily, $sourceProduct);
     }

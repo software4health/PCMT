@@ -26,7 +26,10 @@ class FamilyToFamilyDefaultValueProvider implements DefaultValuesProviderInterfa
         return [
             'sourceFamily'      => '',
             'destinationFamily' => '',
-            'keyAttribute'      => '',
+            'keyAttribute'      => [
+                'sourceKeyAttribute'      => '',
+                'destinationKeyAttribute' => '',
+            ],
             'user_to_notify'    => null,
             'attributeMapping'  => [],
         ];

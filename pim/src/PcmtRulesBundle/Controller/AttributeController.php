@@ -54,17 +54,28 @@ class AttributeController
             return new JsonResponse([]);
         }
 
-        $attributes = $this->ruleAttributeProvider->getPossibleForKeyAttribute($sourceFamily, $destinationFamily);
+        ['sourceKeyAttributes' => $sourceKeyAttributes, 'destinationKeyAttributes' => $destinationKeyAttributes] = $this->ruleAttributeProvider->getPossibleForKeyAttribute($sourceFamily, $destinationFamily);
 
-        $normalizedAttributes = array_map(function ($attribute) {
+        $normalizedSourceAttributes = array_map(function ($attribute) {
             return $this->lightAttributeNormalizer->normalize(
                 $attribute,
                 'internal_api',
                 ['locale' => $this->userContext->getUiLocale()->getCode()]
             );
-        }, $attributes);
+        }, $sourceKeyAttributes);
 
-        return new JsonResponse($normalizedAttributes);
+        $normalizedDestinationAttributes = array_map(function ($attribute) {
+            return $this->lightAttributeNormalizer->normalize(
+                $attribute,
+                'internal_api',
+                ['locale' => $this->userContext->getUiLocale()->getCode()]
+            );
+        }, $destinationKeyAttributes);
+
+        return new JsonResponse([
+            'sourceKeyAttributes'      => $normalizedSourceAttributes,
+            'destinationKeyAttributes' => $normalizedDestinationAttributes,
+        ]);
     }
 
     public function getForOptionsAction(Request $request): Response

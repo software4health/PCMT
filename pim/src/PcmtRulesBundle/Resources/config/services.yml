@@ -132,6 +132,13 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: pcmt_correct_attribute_mapping_constraint_validator }
 
+    pcmt.constraints.correct_key_attribute_mapping_constraint_validator:
+        class: PcmtRulesBundle\Validators\CorrectKeyAttributeConstraintValidator
+        arguments:
+            - '@pim_catalog.repository.family'
+        tags:
+            - { name: validator.constraint_validator, alias: pcmt_correct_key_attribute_constraint_validator }
+
     pcmt.constraints.family_has_variants_constraint_validator:
         class: PcmtRulesBundle\Validators\FamilyHasVariantsConstraintValidator
         arguments:

@@ -76,8 +76,11 @@ pcmt:
                     title: Destination family
                     help: Destination family
                 key_attribute:
-                    title: Key Attribute
-                    help: Key Attribute
+                    title: Key attribute
+                    help: Key attribute
+                    placeholder:
+                        source: Source key attribute
+                        destination: Destination key attribute
             tab:
                 attribute_mapping: Attribute mapping
         select_options_job:

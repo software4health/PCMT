@@ -85,7 +85,10 @@ class RuleAttributeProvider
         $attributes2 = $this->attributeRepository->findAttributesByFamily($destinationFamily);
         $attributes2 = $this->filterForKeyAttribute($attributes2);
 
-        return array_intersect($attributes1, $attributes2);
+        return [
+            'sourceKeyAttributes'      => $attributes1,
+            'destinationKeyAttributes' => $attributes2,
+        ];
     }
 
     public function getForOptions(FamilyInterface $family, array $types = [], ?string $validationRule = null): array

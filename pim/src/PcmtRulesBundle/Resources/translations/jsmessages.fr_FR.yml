@@ -76,8 +76,11 @@ pcmt:
                     title: FR Destination family
                     help: FR Destination family
                 key_attribute:
-                    title: FR Key Attribute
-                    help: FR Key Attribute
+                    title: FR Key attribute
+                    help: FR Key attribute
+                    placeholder:
+                        source: FR Source key attribute
+                        destination: FR Destination key attribute
             tab:
                 attribute_mapping: FR Attribute mapping
         select_options_job:
