@@ -73,19 +73,28 @@ class RuleAttributeProviderTest extends TestCase
             [$sourceFamily, [$attribute1, $attributeUnique]],
             [$destinationFamily, [$attribute1, $attribute2, $attributeUnique]],
         ];
-        $expectedAttributes1 = [];
+        $expectedAttributes1 = [
+            'sourceKeyAttributes'      => [],
+            'destinationKeyAttributes' => [$attribute2],
+        ];
 
         $map2 = [
             [$sourceFamily, [$attribute1, $attribute3, $attribute4, $attributeUnique]],
             [$destinationFamily, [$attribute1, $attribute2, $attribute3, $attribute4, $attributeUnique]],
         ];
-        $expectedAttributes2 = [$attribute4];
+        $expectedAttributes2 = [
+            'sourceKeyAttributes'      => [$attribute4],
+            'destinationKeyAttributes' => [$attribute2, $attribute4],
+        ];
 
         $map3 = [
             [$sourceFamily, [$attribute1, $attribute5]],
             [$destinationFamily, [$attribute1, $attribute2, $attribute5]],
         ];
-        $expectedAttributes3 = [];
+        $expectedAttributes3 = [
+            'sourceKeyAttributes'      => [],
+            'destinationKeyAttributes' => [$attribute2],
+        ];
 
         return [
             [$sourceFamily, $destinationFamily, $map1, $expectedAttributes1],

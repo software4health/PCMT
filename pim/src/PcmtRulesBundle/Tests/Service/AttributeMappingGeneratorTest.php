@@ -86,6 +86,26 @@ class AttributeMappingGeneratorTest extends TestCase
         $this->assertEquals($expectedCount, $collection->count());
     }
 
+    public function testGetKeyAttributesMapping(): void
+    {
+        $sourceKeyAttributeCode = 'test1';
+        $destinationKeyAttributeCode = 'test2';
+
+        $this->ruleAttributeProviderMock->method('getAttributeByCode')->willReturnOnConsecutiveCalls(
+            (new AttributeBuilder())->withCode($sourceKeyAttributeCode)->build(),
+            (new AttributeBuilder())->withCode($destinationKeyAttributeCode)->build()
+        );
+
+        $keyAttributeMapping = $this->getAttributeMappingGeneratorInstance()
+            ->getKeyAttributesMapping(
+                $sourceKeyAttributeCode,
+                $destinationKeyAttributeCode
+            );
+
+        $this->assertEquals($sourceKeyAttributeCode, $keyAttributeMapping->getSourceAttribute()->getCode());
+        $this->assertEquals($destinationKeyAttributeCode, $keyAttributeMapping->getDestinationAttribute()->getCode());
+    }
+
     private function getAttributeMappingGeneratorInstance(): AttributeMappingGenerator
     {
         return new AttributeMappingGenerator(

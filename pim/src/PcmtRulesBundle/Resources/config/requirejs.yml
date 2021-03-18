@@ -20,6 +20,7 @@ config:
     pcmt/rules/template/group: pcmtrules/templates/group.html
 
     pcmt/rules/template/job/field/select: pcmtrules/templates/job/field/select.html
+    pcmt/rules/template/job/field/multiple-select: pcmtrules/templates/job/field/multiple-select.html
     pcmt/rules/template/job/rules/edit/mapping-tab: pcmtrules/templates/job/rules/edit/mapping-tab.html
     pcmt/rules/template/job/rules/edit/attribute-mapping: pcmtrules/templates/job/rules/edit/attribute-mapping.html
     pcmt/rules/template/job/rules/edit/attribute-mapping-row: pcmtrules/templates/job/rules/edit/attribute-mapping-row.html

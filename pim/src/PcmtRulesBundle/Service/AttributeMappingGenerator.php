@@ -46,4 +46,12 @@ class AttributeMappingGenerator
 
         return $mappings;
     }
+
+    public function getKeyAttributesMapping(string $sourceKeyAttributeCode, string $destinationKeyAttributeCode): AttributeMapping
+    {
+        return new AttributeMapping(
+            $this->ruleAttributeProvider->getAttributeByCode($sourceKeyAttributeCode),
+            $this->ruleAttributeProvider->getAttributeByCode($destinationKeyAttributeCode)
+        );
+    }
 }

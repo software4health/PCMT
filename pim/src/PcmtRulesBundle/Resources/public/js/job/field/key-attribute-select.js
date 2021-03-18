@@ -11,18 +11,38 @@
  */
 define([
     'underscore',
+    'oro/translator',
     'pcmt/rules/job/field/select',
+    'pcmt/rules/template/job/field/multiple-select',
     'pim/common/property',
-    'pim/fetcher-registry'
+    'pim/fetcher-registry',
+    'pim/user-context',
+    'pim/i18n'
 ], function (
     _,
+    __,
     BaseField,
+    fieldTemplate,
     propertyAccessor,
-    FetcherRegistry
+    FetcherRegistry,
+    UserContext,
+    i18n
 ) {
     return BaseField.extend({
+        fieldTemplate: _.template(fieldTemplate),
         sourceFamily: '',
         destinationFamily: '',
+
+        events: {
+            "change select": "updateModelAfterChange",
+        },
+
+        sourceOptions: [],
+        destinationOptions: [],
+        keyAttribute: {
+            sourceKeyAttribute: '',
+            destinationKeyAttribute: ''
+        },
 
         configure: function() {
             this.listenTo(this.getRoot(), this.postUpdateEventName, this.onUpdateField);
@@ -43,15 +63,33 @@ define([
                     options.validationRule = this.config.validationRule;
                 }
                 FetcherRegistry.getFetcher(this.config.fetcher).fetchForOptions(options).then(
-                    function (options) {
-                        this.selectOptions = options;
+                    function (result) {
+                        this.sourceOptions = result.sourceKeyAttributes;
+                        this.destinationOptions = result.destinationKeyAttributes;
                         this.render();
                         this.updateState();
                     }.bind(this)
                 );
             } else {
-                this.selectOptions = [];
+                this.sourceOptions = [];
+                this.destinationOptions = [];
             }
+        },
+
+        /**
+         * {@inheritdoc}
+         */
+        renderInput: function (templateContext) {
+            return this.fieldTemplate(_.extend(templateContext, {
+                sourceOptions: this.sourceOptions,
+                sourcePlaceholder: __('pcmt.rules.family_to_family_job.properties.key_attribute.placeholder.source'),
+                sourceKeyAttribute: this.keyAttribute.sourceKeyAttribute,
+                destinationOptions: this.destinationOptions,
+                destinationPlaceholder: __('pcmt.rules.family_to_family_job.properties.key_attribute.placeholder.destination'),
+                destinationKeyAttribute: this.keyAttribute.destinationKeyAttribute,
+                i18n: i18n,
+                locale: UserContext.get('catalogLocale')
+            }));
         },
 
         onUpdateField: function() {
@@ -71,5 +109,34 @@ define([
             }
         },
 
+        updateModelAfterChange: function (event) {
+            this.updateModelValue(event.target.name, event.target.value);
+            this.render();
+        },
+
+        updateModelValue: function (type, value) {
+            this.keyAttribute[type] = value;
+
+            this.updateState();
+        },
+
+        /**
+         * Update the model after dom update
+         */
+        updateState: function () {
+            var data = propertyAccessor.updateProperty(this.getFormData(), this.getFieldCode(), this.getFieldValue());
+
+            this.setData(data);
+        },
+
+        /**
+         * {@inheritdoc}
+         */
+        getFieldValue: function () {
+            return {
+                sourceKeyAttribute: this.keyAttribute.sourceKeyAttribute,
+                destinationKeyAttribute: this.keyAttribute.destinationKeyAttribute
+            }
+        }
     });
 });
