@@ -163,5 +163,10 @@ batch_jobs:
         validation.label: Validation
         label: Set image from URL
 
-
+pcmt_simple_job:
+    form:
+        job_instance:
+            button:
+                job.switcher: Simple launch
+                job.launch: Launch now
 

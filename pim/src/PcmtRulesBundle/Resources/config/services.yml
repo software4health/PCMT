@@ -40,6 +40,7 @@ services:
 
     pcmt_rules.datagrid.provider.job:
         class: PcmtRulesBundle\Provider\PcmtJobDatagridProvider
+        public: true
         arguments:
             - '@akeneo_batch.job.job_registry'
 
