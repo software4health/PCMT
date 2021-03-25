@@ -162,3 +162,10 @@ batch_jobs:
     pcmt_pull_images_rule:
         validation.label: FR Validation
         label: FR Set image from URL
+
+pcmt_simple_job:
+    form:
+        job_instance:
+            button:
+                job.switcher: FR Simple launch
+                job.launch: FR Launch now
