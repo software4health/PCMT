@@ -170,6 +170,55 @@ class RuleProcessorTest extends TestCase
         $processor->process($this->stepExecutionMock, $sourceFamily, $destinationFamily, $sourceProduct);
     }
 
+    /**
+     * @dataProvider dataProcess
+     */
+    public function testProcessThrowsException(
+        FamilyInterface $sourceFamily,
+        FamilyInterface $destinationFamily,
+        ProductInterface $sourceProduct,
+        array $destinationProducts,
+        AttributeMappingCollection $attributeMappingCollection,
+        int $expectedCalls
+    ): void {
+        $this->jobParametersMock
+            ->expects($this->at(0))
+            ->method('get')
+            ->with('attributeMapping')
+            ->willReturn([]);
+        $this->jobParametersMock
+            ->expects($this->at(1))
+            ->method('get')
+            ->with('keyAttribute')
+            ->willReturn([
+                'sourceKeyAttribute'      => 'test',
+                'destinationKeyAttribute' => 'test',
+            ]);
+        $this->attributeMappingGeneratorMock->method('get')->willReturn($attributeMappingCollection);
+        $this->attributeMappingGeneratorMock
+            ->method('getKeyAttributesMapping')
+            ->willReturn(
+                (new AttributeMappingBuilder())
+                    ->withSourceAttribute(
+                        (new AttributeBuilder())
+                            ->withCode('test')
+                            ->build()
+                    )
+                    ->withDestinationAttribute(
+                        (new AttributeBuilder())
+                            ->withCode('test')
+                            ->build()
+                    )
+                    ->build()
+            );
+
+        $this->expectException(\Throwable::class);
+        $this->productQueryBuilderMock->method('addFilter')->willThrowException(new \Exception());
+
+        $processor = $this->getRuleProductProcessorInstance();
+        $processor->process($this->stepExecutionMock, $sourceFamily, $destinationFamily, $sourceProduct);
+    }
+
     public function dataProcessNoDestinationProduct(): array
     {
         $attributes = [
