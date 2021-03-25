@@ -93,6 +93,9 @@ class RuleProcessor
             $keyAttributeCode['destinationKeyAttribute']
         );
 
+        // add key attribute to the rest of mappings
+        $mappings->add($keyAttributeMapping);
+
         $keyValue = $sourceProduct->getValue($keyAttributeMapping->getSourceAttribute()->getCode());
         if (!$keyValue) {
             return;
