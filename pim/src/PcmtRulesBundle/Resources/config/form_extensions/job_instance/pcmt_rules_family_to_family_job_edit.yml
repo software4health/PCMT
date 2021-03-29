@@ -125,7 +125,7 @@ extensions:
       label: pcmt.rules.family_to_family_job.properties.destination_family.title
       tooltip: pcmt.rules.family_to_family_job.properties.destination_family.help
 
-  pcmt-rules-family-to-family-job-edit-properties-source-attribute:
+  pcmt-rules-family-to-family-job-edit-properties-key-attribute:
     module: pcmt/rules/job/field/key-attribute-select
     parent: pcmt-rules-family-to-family-job-edit-properties
     position: 165
@@ -136,6 +136,7 @@ extensions:
       destinationFamily: 'configuration.destinationFamily'
       fieldCode: configuration.keyAttribute
       readOnly: false
+      label: pcmt.rules.family_to_family_job.properties.key_attribute.title
 
   pcmt-rules-family-to-family-job-edit-label:
     module: pim/job/common/edit/label

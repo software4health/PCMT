@@ -45,18 +45,9 @@ pim_import_export:
 
 pcmt:
     rules:
-        create:
-            unique_id: FR Unique ID
-            source_family: FR Source Family
-            destination_family: FR Destination Family
-            key_attribute: FR Key attribute
-        edit:
-            unique_id: FR Unique ID
-            source_family: FR Source Family
-            destination_family: FR Destination Family
-            key_attribute: FR Key attribute
-        info:
-            key_attribute: FR Only not unique attributes of text and simple select type that are added to both families are available
+        attribute_mapping:
+            source: FR Source
+            destination: FR Destination
         copy_products_job:
             properties:
                 source_family:
@@ -81,6 +72,9 @@ pcmt:
                     placeholder:
                         source: FR Source key attribute
                         destination: FR Destination key attribute
+                    label:
+                        source: FR Source
+                        destination: FR Destination
             tab:
                 attribute_mapping: FR Attribute mapping
         select_options_job:

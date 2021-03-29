@@ -7,6 +7,16 @@
 <table class="AknGrid">
     <tbody class="AknGrid-body">
 
+        <tr class="AknGrid-bodyRow">
+            <td class="AknGrid-bodyCell">
+                <%- sourceLabel %>
+            </td>
+            <td class="AknGrid-bodyCell"></td>
+            <td class="AknGrid-bodyCell">
+                <%- destinationLabel %>
+            </td>
+        </tr>
+
         <% _.each(rows, function(row) { %>
             <%= row %>
         <% }); %>
