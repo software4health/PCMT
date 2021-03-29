@@ -13,6 +13,7 @@ define(
     [
         'jquery',
         'underscore',
+        'oro/translator',
         'pim/job/common/edit/field/field',
         'pcmt/rules/template/job/rules/edit/attribute-mapping',
         'pcmt/rules/template/job/rules/edit/attribute-mapping-row',
@@ -23,6 +24,7 @@ define(
     function (
         $,
         _,
+        __,
         BaseForm,
         template,
         rowTemplate,
@@ -119,6 +121,8 @@ define(
                 this.$el.html(this.template({
                     rows: rows,
                     error: this.getParent().getValidationErrorsForField(this.getFieldCode()),
+                    sourceLabel: __('pcmt.rules.attribute_mapping.source'),
+                    destinationLabel: __('pcmt.rules.attribute_mapping.destination')
                 }));
                 this.$('.select2').select2();
                 this.delegateEvents();

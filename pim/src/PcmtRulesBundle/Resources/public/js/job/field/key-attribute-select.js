@@ -82,9 +82,11 @@ define([
         renderInput: function (templateContext) {
             return this.fieldTemplate(_.extend(templateContext, {
                 sourceOptions: this.sourceOptions,
+                sourceLabel: __('pcmt.rules.family_to_family_job.properties.key_attribute.label.source'),
                 sourcePlaceholder: __('pcmt.rules.family_to_family_job.properties.key_attribute.placeholder.source'),
                 sourceKeyAttribute: this.keyAttribute.sourceKeyAttribute,
                 destinationOptions: this.destinationOptions,
+                destinationLabel: __('pcmt.rules.family_to_family_job.properties.key_attribute.label.destination'),
                 destinationPlaceholder: __('pcmt.rules.family_to_family_job.properties.key_attribute.placeholder.destination'),
                 destinationKeyAttribute: this.keyAttribute.destinationKeyAttribute,
                 i18n: i18n,
