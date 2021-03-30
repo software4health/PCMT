@@ -12,6 +12,7 @@ namespace PcmtRulesBundle\Tests\Validators;
 
 use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
+use PcmtRulesBundle\Service\AttributeMappingTypesChecker;
 use PcmtRulesBundle\Tests\TestDataBuilder\AttributeBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\CorrectAttributeMappingConstraintBuilder;
 use PcmtRulesBundle\Tests\TestDataBuilder\FamilyBuilder;
@@ -34,6 +35,9 @@ class CorrectAttributeMappingConstraintValidatorTest extends TestCase
     /** @var FamilyRepositoryInterface|MockObject */
     private $familyRepositoryMock;
 
+    /** @var AttributeMappingTypesChecker|MockObject */
+    private $attributeMappingTypesCheckerMock;
+
     protected function setUp(): void
     {
         $this->contextMock = $this->createMock(ExecutionContextInterface::class);
@@ -42,6 +46,8 @@ class CorrectAttributeMappingConstraintValidatorTest extends TestCase
         $this->violationBuilderMock->method('atPath')->willReturn($this->violationBuilderMock);
 
         $this->familyRepositoryMock = $this->createMock(FamilyRepositoryInterface::class);
+
+        $this->attributeMappingTypesCheckerMock = $this->createMock(AttributeMappingTypesChecker::class);
     }
 
     public function dataValidate(): array
@@ -90,17 +96,6 @@ class CorrectAttributeMappingConstraintValidatorTest extends TestCase
             [
                 [
                     [
-                        'sourceValue'      => 'attr_source',
-                        'destinationValue' => 'attr_dest2',
-                    ],
-                ],
-                $sourceFamily,
-                $destinationFamily,
-                false,
-            ],
-            [
-                [
-                    [
                         'sourceValue'      => 'attr_source_not_existing',
                         'destinationValue' => 'attr_dest1',
                     ],
@@ -126,6 +121,8 @@ class CorrectAttributeMappingConstraintValidatorTest extends TestCase
     /** @dataProvider dataValidate */
     public function testValidate(array $attributeMapping, FamilyInterface $sourceFamily, FamilyInterface $destinationFamily, bool $result): void
     {
+        $this->attributeMappingTypesCheckerMock->method('checkIfPossible')->willReturn(true);
+
         $constraint = (new CorrectAttributeMappingConstraintBuilder())->build();
 
         $this->familyRepositoryMock
@@ -154,6 +151,73 @@ class CorrectAttributeMappingConstraintValidatorTest extends TestCase
             $this->contextMock->expects($this->once())->method('buildViolation')->willReturn(
                 $this->violationBuilderMock
             );
+        }
+
+        $validator = $this->getValidatorInstance();
+        $validator->validate('x', $constraint);
+    }
+
+    public function dataValidateWrongAttributes(): array
+    {
+        $sourceFamily = (new FamilyBuilder())->withCode('SOURCE')->build();
+        $sourceFamily->addAttribute(
+            (new AttributeBuilder())->withCode('attr_source')->withType('type1')->build()
+        );
+        $destinationFamily = (new FamilyBuilder())->withCode('DESTINATION')->build();
+        $destinationFamily->addAttribute(
+            (new AttributeBuilder())->withCode('attr_dest')->withType('type1')->build()
+        );
+        $destinationFamily->addAttribute(
+            (new AttributeBuilder())->withCode('attr_dest2')->withType('type2')->build()
+        );
+
+        return [
+            [
+                [
+                    [
+                        'sourceValue'      => 'attr_source',
+                        'destinationValue' => 'attr_dest',
+                    ],
+                ],
+                $sourceFamily,
+                $destinationFamily,
+            ],
+        ];
+    }
+
+    /** @dataProvider dataValidateWrongAttributes */
+    public function testValidateWrongAttributes(array $attributeMapping, FamilyInterface $sourceFamily, FamilyInterface $destinationFamily): void
+    {
+        $this->attributeMappingTypesCheckerMock->method('checkIfPossible')->willReturn(false);
+
+        $constraint = (new CorrectAttributeMappingConstraintBuilder())->build();
+
+        $this->familyRepositoryMock
+            ->method('findOneBy')
+            ->withConsecutive(
+                [['code' => $sourceFamily->getCode()]],
+                [['code' => $destinationFamily->getCode()]]
+            )
+            ->willReturnOnConsecutiveCalls(
+                $sourceFamily,
+                $destinationFamily
+            );
+
+        $root = [
+            'sourceFamily'      => $sourceFamily->getCode(),
+            'destinationFamily' => $destinationFamily->getCode(),
+            'attributeMapping'  => $attributeMapping,
+        ];
+        $this->contextMock
+            ->method('getRoot')
+            ->willReturn($root);
+
+        if ($attributeMapping) {
+            $this->contextMock->expects($this->once())->method('buildViolation')->willReturn(
+                $this->violationBuilderMock
+            );
+        } else {
+            $this->contextMock->expects($this->never())->method('buildViolation');
         }
 
         $validator = $this->getValidatorInstance();
@@ -210,7 +274,8 @@ class CorrectAttributeMappingConstraintValidatorTest extends TestCase
     private function getValidatorInstance(): CorrectAttributeMappingConstraintValidator
     {
         $validator = new CorrectAttributeMappingConstraintValidator(
-            $this->familyRepositoryMock
+            $this->familyRepositoryMock,
+            $this->attributeMappingTypesCheckerMock
         );
         $validator->initialize($this->contextMock);
 
