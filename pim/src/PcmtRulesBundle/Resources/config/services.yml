@@ -130,6 +130,7 @@ services:
         class: PcmtRulesBundle\Validators\CorrectAttributeMappingConstraintValidator
         arguments:
             - '@pim_catalog.repository.family'
+            - '@pcmt.rules.service.attribute_mapping_types_checker'
         tags:
             - { name: validator.constraint_validator, alias: pcmt_correct_attribute_mapping_constraint_validator }
 
@@ -137,6 +138,7 @@ services:
         class: PcmtRulesBundle\Validators\CorrectKeyAttributeConstraintValidator
         arguments:
             - '@pim_catalog.repository.family'
+            - '@pcmt.rules.service.attribute_mapping_types_checker'
         tags:
             - { name: validator.constraint_validator, alias: pcmt_correct_key_attribute_constraint_validator }
 
@@ -176,5 +178,8 @@ services:
 
     pcmt.rules.service.job_parameters_text_creator:
         class: PcmtRulesBundle\Service\JobParametersTextCreator
+
+    pcmt.rules.service.attribute_mapping_types_checker:
+        class: PcmtRulesBundle\Service\AttributeMappingTypesChecker
 
 

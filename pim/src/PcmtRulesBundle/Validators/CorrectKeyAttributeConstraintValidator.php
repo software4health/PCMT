@@ -14,6 +14,7 @@ use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use PcmtRulesBundle\Constraints\CorrectKeyAttributeConstraint;
+use PcmtRulesBundle\Service\AttributeMappingTypesChecker;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -23,10 +24,15 @@ class CorrectKeyAttributeConstraintValidator extends ConstraintValidator
     /** @var FamilyRepositoryInterface */
     private $familyRepository;
 
+    /** @var AttributeMappingTypesChecker */
+    private $attributeMappingTypesChecker;
+
     public function __construct(
-        FamilyRepositoryInterface $familyRepository
+        FamilyRepositoryInterface $familyRepository,
+        AttributeMappingTypesChecker $attributeMappingTypesChecker
     ) {
         $this->familyRepository = $familyRepository;
+        $this->attributeMappingTypesChecker = $attributeMappingTypesChecker;
     }
 
     /**
@@ -83,9 +89,9 @@ class CorrectKeyAttributeConstraintValidator extends ConstraintValidator
         $destinationAttribute = $destinationAttributes->filter(function (AttributeInterface $attribute) use ($destinationAttributeCode) {
             return $attribute->getCode() === $destinationAttributeCode;
         })->first();
-        if ($sourceAttribute->getType() !== $destinationAttribute->getType()) {
+        if (!$this->attributeMappingTypesChecker->checkIfPossible($sourceAttribute->getType(), $destinationAttribute->getType())) {
             throw new \Exception(sprintf(
-                'Attributes %s and %s are of different types.',
+                'Attributes %s and %s are of incompatible types.',
                 $sourceAttribute->getLabel(),
                 $destinationAttribute->getLabel()
             ));

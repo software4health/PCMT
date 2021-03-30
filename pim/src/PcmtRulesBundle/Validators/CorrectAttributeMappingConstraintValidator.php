@@ -19,6 +19,7 @@ use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Pim\Structure\Component\Repository\FamilyRepositoryInterface;
 use PcmtRulesBundle\Constraints\CorrectAttributeMappingConstraint;
+use PcmtRulesBundle\Service\AttributeMappingTypesChecker;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -28,10 +29,15 @@ class CorrectAttributeMappingConstraintValidator extends ConstraintValidator
     /** @var FamilyRepositoryInterface */
     private $familyRepository;
 
+    /** @var AttributeMappingTypesChecker */
+    private $attributeMappingTypesChecker;
+
     public function __construct(
-        FamilyRepositoryInterface $familyRepository
+        FamilyRepositoryInterface $familyRepository,
+        AttributeMappingTypesChecker $attributeMappingTypesChecker
     ) {
         $this->familyRepository = $familyRepository;
+        $this->attributeMappingTypesChecker = $attributeMappingTypesChecker;
     }
 
     /**
@@ -90,16 +96,13 @@ class CorrectAttributeMappingConstraintValidator extends ConstraintValidator
             return $attribute->getCode() === $destinationAttributeCode;
         })->first();
 
-        $types = [
-            'pim_catalog_text',
-            'pim_catalog_simpleselect',
-        ];
-        if (in_array($sourceAttribute->getType(), $types) && in_array($destinationAttribute->getType(), $types)) {
-            return;
-        }
-        if ($sourceAttribute->getType() !== $destinationAttribute->getType()) {
+        $ifPossible = $this->attributeMappingTypesChecker->checkIfPossible(
+            $sourceAttribute->getType(),
+            $destinationAttribute->getType()
+        );
+        if (!$ifPossible) {
             throw new \Exception(sprintf(
-                'Attributes %s and %s are of different types.',
+                'Attributes %s and %s are of incompatible types.',
                 $sourceAttribute->getLabel(),
                 $destinationAttribute->getLabel()
             ));
