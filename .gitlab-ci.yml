@@ -661,3 +661,43 @@ env-malawi-uat-destroy:
   environment:
     name: malawi-uat
     action: stop
+
+############### OpenData Environment ###############
+
+.env-opendata:
+  extends:
+    - .pcmt_v_2_3_2
+  stage: deploy
+  when: manual
+  needs: []
+  environment:
+    name: opendata
+    url: http://opendata.productcatalog.io
+    on_stop: env-opendata-destroy
+
+.env-opendata_script-deploy:
+  script:
+    - ./bin/ci-deploy.sh opendata
+    
+env-opendata (WIPE DB):
+  extends:
+    - .env-opendata
+    - .env-opendata_script-deploy
+  variables:
+    PCMT_PROFILE: dev
+
+env-opendata (KEEP DB):
+  extends:
+    - .env-opendata
+    - .env-opendata_script-deploy
+  variables:
+    PCMT_PROFILE: production
+
+env-opendata-destroy:
+  extends:
+    - .env-opendata
+  script: 
+    - ./deploy/terraform/run-docker.sh opendata destroy -auto-approve
+  environment:
+    name: opendata
+    action: stop
