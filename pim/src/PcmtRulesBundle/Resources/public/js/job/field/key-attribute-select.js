@@ -46,8 +46,12 @@ define([
 
         configure: function() {
             this.listenTo(this.getRoot(), this.postUpdateEventName, this.onUpdateField);
+            this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_fetch', this.postFetch);
 
             BaseField.prototype.configure.apply(this, arguments);
+        },
+        postFetch: function(data) {
+            this.keyAttribute =  this.getValue();
         },
 
         fetch: function() {
