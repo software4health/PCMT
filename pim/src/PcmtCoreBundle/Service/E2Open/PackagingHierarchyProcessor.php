@@ -18,16 +18,18 @@ class PackagingHierarchyProcessor
 {
     /** @var ObjectUpdaterInterface */
     private $productUpdater;
-
+    
     /** @var LoggerInterface */
     private $logger;
-
-    public function __construct(ObjectUpdaterInterface $productUpdater, LoggerInterface $logger)
-    {
+    
+    public function __construct(
+        ObjectUpdaterInterface $productUpdater,
+        LoggerInterface $logger
+    ) {
         $this->productUpdater = $productUpdater;
         $this->logger = $logger;
     }
-
+    
     /**
      * @param ProductInterface[] $products
      */
@@ -38,16 +40,20 @@ class PackagingHierarchyProcessor
         foreach ($products as $product) {
             $data = [];
             
-            $this->getChildTradeItemValues($product, $products, $data);
+            $this->getChildTradeItemValues(
+                $product,
+                $products,
+                $data
+            );
             
-            $this->logger->info('Updating packaging hierarchy for: '. $product->getId());
+            $this->logger->info('Updating packaging hierarchy for: ' . $product->getId());
             
             $newDataEncoded = json_encode($data);
             
             $valuesToUpdate['GS1_PACKAGING_HIERARCHY']['data'] = [
-                'data'   => $newDataEncoded,
+                'data' => $newDataEncoded,
                 'locale' => null,
-                'scope'  => null,
+                'scope' => null,
             ];
             
             $this->productUpdater->update(
@@ -59,33 +65,62 @@ class PackagingHierarchyProcessor
         }
     }
     
-    private function getChildTradeItemValues(ProductInterface $product, array $products, array &$data): void
-    {
+    private function getChildTradeItemValues(
+        ProductInterface $product,
+        array $products,
+        array &$data
+    ): void {
         $row = [];
         $row['tradeItemUnitDescriptorCode'] = $product->getValue('GS1_TRADEITEMUNITDESCRIPTORCODE') ?
-            $product->getValue('GS1_TRADEITEMUNITDESCRIPTORCODE')->getData() : '';
+            $product->getValue('GS1_TRADEITEMUNITDESCRIPTORCODE')
+                ->getData() : '';
         $row['tradeItemDescription'] = $product->getValue('GS1_TRADEITEMDESCRIPTION') ?
-            $product->getValue('GS1_TRADEITEMDESCRIPTION')->getData() : '';
+            $product->getValue('GS1_TRADEITEMDESCRIPTION')
+                ->getData() : '';
         $row['GTIN'] = $product->getValue('GTIN') ?
-            $product->getValue('GTIN')->getData() : '';
+            $product->getValue('GTIN')
+                ->getData() : '';
         $row['quantityOfNextLowerLevelTradeItem'] = $product->getValue('GS1_QUANTITYOFNEXTLOWERLEVELTRADEITEM') ?
-            (int) $product->getValue('GS1_QUANTITYOFNEXTLOWERLEVELTRADEITEM')->getData() : '';
+            (int)$product->getValue('GS1_QUANTITYOFNEXTLOWERLEVELTRADEITEM')
+                ->getData() : '';
         $row['childTradeItem_gtin'] = $product->getValue('GS1_GTIN_CHILD_NEXTLOWERLEVELTRADEITEMINFORMATION') ?
-            $product->getValue('GS1_GTIN_CHILD_NEXTLOWERLEVELTRADEITEMINFORMATION')->getData() : '';
+            $product->getValue('GS1_GTIN_CHILD_NEXTLOWERLEVELTRADEITEMINFORMATION')
+                ->getData() : '';
         $data[] = $row;
         
-        if($product->getValue('GS1_GTIN_CHILD_NEXTLOWERLEVELTRADEITEMINFORMATION')) {
-            $childProduct = $this->findChildTradeItem($products, $product->getValue('GS1_GTIN_CHILD_NEXTLOWERLEVELTRADEITEMINFORMATION')->getData());
+        if ($product->getValue('GS1_GTIN_CHILD_NEXTLOWERLEVELTRADEITEMINFORMATION')) {
+            $childProduct = $this->findChildTradeItem(
+                $products,
+                $product->getValue(
+                    'GS1_GTIN_CHILD_NEXTLOWERLEVELTRADEITEMINFORMATION'
+                )
+                    ->getData()
+            );
             
-            $this->getChildTradeItemValues($childProduct, $products, $data);
+            $this->getChildTradeItemValues(
+                $childProduct,
+                $products,
+                $data
+            );
         }
     }
     
-    private function findChildTradeItem(array $products, string $expectedGtin): ?ProductInterface
-    {
-        $result = array_values(array_filter($products, function (ProductInterface $product) use ($expectedGtin) {
-            return $product->getValue('GTIN')->getData() === $expectedGtin;
-        }));
+    private function findChildTradeItem(
+        array $products,
+        string $expectedGtin
+    ): ?ProductInterface {
+        $result = array_values(
+            array_filter(
+                $products,
+                function (ProductInterface $product) use
+                (
+                    $expectedGtin
+                ) {
+                    return $product->getValue('GTIN')
+                            ->getData() === $expectedGtin;
+                }
+            )
+        );
         
         return $result[0] ?? null;
     }
