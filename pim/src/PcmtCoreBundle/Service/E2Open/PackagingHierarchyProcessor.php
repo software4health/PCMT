@@ -39,9 +39,9 @@ class PackagingHierarchyProcessor
             $data = [];
             
             $this->getChildTradeItemValues($product, $products, $data);
-    
+            
             $this->logger->info('Updating packaging hierarchy for: '. $product->getId());
-    
+            
             $newDataEncoded = json_encode($data);
             
             $valuesToUpdate['GS1_PACKAGING_HIERARCHY']['data'] = [
@@ -49,7 +49,7 @@ class PackagingHierarchyProcessor
                 'locale' => null,
                 'scope'  => null,
             ];
-    
+            
             $this->productUpdater->update(
                 $product,
                 [
@@ -59,7 +59,7 @@ class PackagingHierarchyProcessor
         }
     }
     
-    private function getChildTradeItemValues(ProductInterface $product, array $products, array &$data)
+    private function getChildTradeItemValues(ProductInterface $product, array $products, array &$data): void
     {
         $row = [];
         $row['tradeItemUnitDescriptorCode'] = $product->getValue('GS1_TRADEITEMUNITDESCRIPTORCODE') ?
@@ -75,7 +75,6 @@ class PackagingHierarchyProcessor
         $data[] = $row;
         
         if($product->getValue('GS1_GTIN_CHILD_NEXTLOWERLEVELTRADEITEMINFORMATION')) {
-            
             $childProduct = $this->findChildTradeItem($products, $product->getValue('GS1_GTIN_CHILD_NEXTLOWERLEVELTRADEITEMINFORMATION')->getData());
             
             $this->getChildTradeItemValues($childProduct, $products, $data);
