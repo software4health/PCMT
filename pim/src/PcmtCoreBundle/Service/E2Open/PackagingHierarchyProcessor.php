@@ -18,10 +18,10 @@ class PackagingHierarchyProcessor
 {
     /** @var ObjectUpdaterInterface */
     private $productUpdater;
-    
+
     /** @var LoggerInterface */
     private $logger;
-    
+
     public function __construct(
         ObjectUpdaterInterface $productUpdater,
         LoggerInterface $logger
@@ -29,33 +29,33 @@ class PackagingHierarchyProcessor
         $this->productUpdater = $productUpdater;
         $this->logger = $logger;
     }
-    
+
     /**
      * @param ProductInterface[] $products
      */
     public function process(array $products): void
     {
         $this->logger->info('Processing Packaging Hierarchy Table');
-        
+
         foreach ($products as $product) {
             $data = [];
-            
+
             $this->getChildTradeItemValues(
                 $product,
                 $products,
                 $data
             );
-            
+
             $this->logger->info('Updating packaging hierarchy for: ' . $product->getId());
-            
+
             $newDataEncoded = json_encode($data);
-            
+
             $valuesToUpdate['GS1_PACKAGING_HIERARCHY']['data'] = [
-                'data' => $newDataEncoded,
+                'data'   => $newDataEncoded,
                 'locale' => null,
-                'scope' => null,
+                'scope'  => null,
             ];
-            
+
             $this->productUpdater->update(
                 $product,
                 [
@@ -64,7 +64,7 @@ class PackagingHierarchyProcessor
             );
         }
     }
-    
+
     private function getChildTradeItemValues(
         ProductInterface $product,
         array $products,
@@ -81,13 +81,13 @@ class PackagingHierarchyProcessor
             $product->getValue('GTIN')
                 ->getData() : '';
         $row['quantityOfNextLowerLevelTradeItem'] = $product->getValue('GS1_QUANTITYOFNEXTLOWERLEVELTRADEITEM') ?
-            (int)$product->getValue('GS1_QUANTITYOFNEXTLOWERLEVELTRADEITEM')
+            (int) $product->getValue('GS1_QUANTITYOFNEXTLOWERLEVELTRADEITEM')
                 ->getData() : '';
         $row['childTradeItem_gtin'] = $product->getValue('GS1_GTIN_CHILD_NEXTLOWERLEVELTRADEITEMINFORMATION') ?
             $product->getValue('GS1_GTIN_CHILD_NEXTLOWERLEVELTRADEITEMINFORMATION')
                 ->getData() : '';
         $data[] = $row;
-        
+
         if ($product->getValue('GS1_GTIN_CHILD_NEXTLOWERLEVELTRADEITEMINFORMATION')) {
             $childProduct = $this->findChildTradeItem(
                 $products,
@@ -96,7 +96,7 @@ class PackagingHierarchyProcessor
                 )
                     ->getData()
             );
-            
+
             $this->getChildTradeItemValues(
                 $childProduct,
                 $products,
@@ -104,7 +104,7 @@ class PackagingHierarchyProcessor
             );
         }
     }
-    
+
     private function findChildTradeItem(
         array $products,
         string $expectedGtin
@@ -112,16 +112,15 @@ class PackagingHierarchyProcessor
         $result = array_values(
             array_filter(
                 $products,
-                function (ProductInterface $product) use
-                (
+                function (ProductInterface $product) use (
                     $expectedGtin
                 ) {
                     return $product->getValue('GTIN')
-                            ->getData() === $expectedGtin;
+                        ->getData() === $expectedGtin;
                 }
             )
         );
-        
+
         return $result[0] ?? null;
     }
 }
