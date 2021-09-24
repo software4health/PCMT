@@ -5,6 +5,6 @@ root-volume-size = 40
 
 tag-name    = "gfpvan-prod"
 tag-type    = "production"
-tag-bill-to = "PCMT"
+tag-bill-to = "PCMT-GFPVAN"
 
 domain-name = "gfpvan-prod.productcatalog.io"
