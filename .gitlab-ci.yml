@@ -741,3 +741,43 @@ env-zambia-destroy:
   environment:
     name: zambia
     action: stop
+
+############### DDCC Environment ###############
+
+.env-ddcc:
+  extends:
+    - .pcmt_v_2_3_2
+  stage: deploy
+  when: manual
+  needs: []
+  environment:
+    name: ddcc
+    url: http://ddcc.productcatalog.io
+    on_stop: env-ddcc-destroy
+
+.env-ddcc_script-deploy:
+  script:
+    - ./bin/ci-deploy.sh ddcc
+    
+env-ddcc (WIPE DB):
+  extends:
+    - .env-ddcc
+    - .env-ddcc_script-deploy
+  variables:
+    PCMT_PROFILE: dev
+
+env-ddcc (KEEP DB):
+  extends:
+    - .env-ddcc
+    - .env-ddcc_script-deploy
+  variables:
+    PCMT_PROFILE: production
+
+env-ddcc-destroy:
+  extends:
+    - .env-ddcc
+  script: 
+    - ./deploy/terraform/run-docker.sh ddcc destroy -auto-approve
+  environment:
+    name: ddcc
+    action: stop
