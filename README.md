@@ -192,7 +192,19 @@ Restore:
 1. SSH to instance
 1. Unpack the backup into pcmt.sql file
 1. Run `make dev-import-sql` 
+### Logs
 
+Most logs can be accessed through the typical docker logging mechanism:  `docker log <container name>`.
+
+There are a few logs however that can only be accessed within the container:
+
+- fpm
+  - `/srv/pim/var/logs`
+    - `dev.log` & `prod.log`: Symfony logs, including from Akeneo and extensions (e.g. PCMT)
+- httpd
+  - `/var/log`
+    - `akeneo_access.log` & `akeneo_error.log`:  apache access and error log
+  
 ### Migrations
 
 PCMT is using standard Doctrine migrations mechanism, same as Akeneo. 
