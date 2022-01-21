@@ -279,6 +279,20 @@ scalyr docker build:
     - make scalyr
     - docker push pcmt/scalyr:latest
 
+scp-put docker build:
+  stage: build
+  only:
+    refs:
+      - master@pcmt/pcmt
+    changes:
+      - deploy/scp-put/**/*
+  except:
+    variables:
+      - $CI_SELENIUM == "true"
+  script:
+    - make scp-put
+    - docker push pcmt/scp-put:latest
+
 ############### Showcase Environment ###############
 
 .env-showcase:
