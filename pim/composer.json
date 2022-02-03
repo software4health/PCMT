@@ -57,7 +57,8 @@
         "behat/mink-selenium2-driver": "^1.4",
         "symfony/yaml": "^3.0",
         "symfony/finder": "^3.0",
-        "damiankryger/akeneo-table-attribute-bundle": "dev-pcmt"
+        "damiankryger/akeneo-table-attribute-bundle": "dev-pcmt",
+        "cweagans/composer-patches": "~1.0"
     },
     "require-dev": {
         "doctrine/migrations": "1.5.0",
@@ -116,6 +117,12 @@
         },
         "branch-alias": {
             "dev-master": "3.2.x-dev"
+        },
+        "composer-exit-on-patch-failure": true,
+        "patches": {
+            "akeneo/pim-community-dev": {
+                "Fix: https://github.com/akeneo/pim-community-dev/issues/15644": "patches/filters-column.ts.patch"
+            }
         }
     }
 }

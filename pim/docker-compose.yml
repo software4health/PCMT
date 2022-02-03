@@ -6,6 +6,11 @@
 
 version: '3.4'
 services:
+  pim-build:
+    image: pcmt/pim-build:latest
+    build:
+      context: .
+      target: pim-build
   node:
     image: pcmt/node:${PCMT_VER:-latest}
     build:
