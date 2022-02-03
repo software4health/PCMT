@@ -14,7 +14,7 @@ USER root
 RUN mkdir -p /srv/pim && \
     chown docker:docker /srv/pim && \
     apt-get update && \
-    apt-get install netcat cron dnsutils -y && \
+    apt-get install netcat cron dnsutils patch -y && \
     apt-get clean && \
     apt-get autoremove
 
@@ -33,6 +33,7 @@ COPY --from=akeneo --chown=docker:docker /srv/pim /srv/pim
 ADD --chown=docker:docker .cache/composer ${COMPOSER_CACHE_DIR}
 ADD --chown=docker:docker composer.* /srv/pim/
 ADD --chown=docker:docker package.json /srv/pim/
+ADD --chown=docker:docker patches/ /srv/pim/patches/
 ADD --chown=docker:docker app/ /srv/pim/app/
 ADD --chown=docker:docker src/ /srv/pim/src/
 ADD --chown=docker:docker crontab /srv/pim/crontab
