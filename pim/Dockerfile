@@ -13,6 +13,10 @@ ARG AKENEO_VER
 USER root
 RUN mkdir -p /srv/pim && \
     chown docker:docker /srv/pim && \
+    sed -i 's#mozilla/DST_Root_CA_X3.crt#!mozilla/DST_Root_CA_X3.crt#g' /etc/ca-certificates.conf && \
+    update-ca-certificates && \
+    apt-key del 95BD4743 && \
+    wget -O /etc/apt/trusted.gpg.d/sury.gpg https://packages.sury.org/php/apt.gpg && \
     apt-get update && \
     apt-get install netcat cron dnsutils patch -y && \
     apt-get clean && \
