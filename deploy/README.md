@@ -76,5 +76,20 @@ __Example__: destroy the `cd-test` environment
 SSH_PRIV_KEY_PATH=$HOME/.ssh/id_rsa ./run-docker.sh cd-test destroy -auto-approve
 ```
 
+## Development
+
+Development using the built-in tools can be achieved by setting the environment variable `PCMT_TF_DEV` (to anything).
+This will then mount the terraform definitions directly into the terraform container, overwriting what's there,
+allowing for commands such as `fmt` to modify the source on your computer, and to skip the container re-build step.
+
+Example:
+```bash
+export PCMT_TF_DEV
+./run-docker.sh ...
+...
+...
+unset PCMT_TF_DEV # unset variable to exit development mode
+```
+
 ---
 Copyright (c) 2019, VillageReach.  Licensed CC BY-SA 4.0:  https://creativecommons.org/licenses/by-sa/4.0/

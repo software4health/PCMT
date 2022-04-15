@@ -5,6 +5,9 @@
 # SPDX-License-Identifier: NPOSL-3.0
 ######################################################################
 
+set -e
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 : "${AWS_SHARED_CREDENTIALS_FILE:=$HOME/.aws/credentials}"
 : "${SSH_PRIV_KEY_PATH:=$HOME/.ssh/id_rsa}"
 HELPER_CONTAINER="pcmt-tf-helper"
@@ -71,6 +74,11 @@ cpFileFromEnvIntoHelper "$PCMT_MYSQL_PASSWORD_CONF" \
 cpFileFromEnvIntoHelper "$PCMT_MYSQL_SSH_AUTHORIZED_KEY_CONF" \
     "/conf/ssh_authorized_key"
 
+## detect if dev mode asked for
+if [ ! -z ${PCMT_TF_DEV+x} ]; then
+    echo "PCMT_TF_DEV set, mounting terraform directly"
+fi
+
 docker run --rm \
     -e AWS_SHARED_CREDENTIALS_FILE="/tmp/.aws/aws-credentials" \
     -e PCMT_PROFILE \
@@ -81,4 +89,5 @@ docker run --rm \
     -v "$SECRETS_VOL":/conf \
     -v "$AWS_CREDS_VOL":/tmp/.aws \
     -v "/var/run/docker.sock:/var/run/docker.sock" \
+    ${PCMT_TF_DEV:+-v "$DIR:/app"} \
     pcmt/terraform "${@}"

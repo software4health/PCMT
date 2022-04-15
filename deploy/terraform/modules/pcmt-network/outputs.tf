@@ -13,3 +13,8 @@ output "security-group-id" {
   value       = aws_security_group.pcmt-web.id
   description = "Id of the security group"
 }
+
+output "openhim-security-group-id" {
+  value = aws_security_group.openhim-web.id
+  description = "id of the security group for an instance with openhim"
+}
