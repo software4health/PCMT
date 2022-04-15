@@ -13,3 +13,8 @@ output "security-group-id" {
   value       = module.pcmt-network-useast.security-group-id
   description = "Id of the security group"
 }
+
+output "openhim-security-group-id" {
+  value       = module.pcmt-network-useast.openhim-security-group-id
+  description = "Id for the security group when deploying OpenHIM"
+}

@@ -6,13 +6,13 @@
 
 terraform {
   required_version = "~> 0.12.29"
-  
+
   required_providers {
     aws = {
       version = "~> 3.1.0"
     }
   }
-  
+
   backend "s3" {
     bucket = "pcmt-terraform-states"
     key    = "pcmt-network-useast.tf"
