@@ -121,7 +121,6 @@ akeneo_pim_structure:
 
 parameters:
     pim_ce_dev_src_folder_location: '%kernel.project_dir%/vendor/akeneo/pim-community-dev'
-    installer_data: 'PcmtCustomDatasetBundle:pcmt_global'
     # to switch to standard Akeneo demo data, use the following line:
     # installer_data: 'PimInstallerBundle:icecat_demo_dev'
     e2Open_import_files_directory: '%kernel.project_dir%/src/PcmtCoreBundle/Resources/E2OpenImport/'
