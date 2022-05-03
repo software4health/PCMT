@@ -60,6 +60,8 @@ Notes:
     are simply copied, not synchronized so don't edit them directly.
 - `make dev-fpm` will start a shell with access to Akeneo tools such 
     as `bin/console`.
+- `make dev-node` will start a shell with access to npm tools, such as
+  `yarn add`.
 
 ### Commands
 

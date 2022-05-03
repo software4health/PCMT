@@ -52,6 +52,10 @@ dev-cp-package-json:
 dev-fpm:
 	./ddev.sh exec fpm bash
 
+.PHONY: dev-node
+dev-node:
+	./ddev.sh run --rm --entrypoint /bin/bash node
+
 .PHONY: dev-db-restart
 dev-db-restart:
 	./ddev.sh exec fpm rm -rf var/cache

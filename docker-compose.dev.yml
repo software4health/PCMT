@@ -33,6 +33,8 @@ services:
     volumes:
       - 'pim:/srv/pim'
       - './pim/src:/srv/pim/src:ro'
+      - './pim/yarn.lock:/srv/pim/yarn.lock'
+      - './pim/package.json:/srv/pim/package.json'
     working_dir: '/srv/pim'
     networks:
      - akeneo

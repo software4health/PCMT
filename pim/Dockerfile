@@ -37,6 +37,7 @@ COPY --from=akeneo --chown=docker:docker /srv/pim /srv/pim
 ADD --chown=docker:docker .cache/composer ${COMPOSER_CACHE_DIR}
 ADD --chown=docker:docker composer.* /srv/pim/
 ADD --chown=docker:docker package.json /srv/pim/
+ADD --chown=docker:docker yarn.lock /srv/pim/
 ADD --chown=docker:docker patches/ /srv/pim/patches/
 ADD --chown=docker:docker app/ /srv/pim/app/
 ADD --chown=docker:docker src/ /srv/pim/src/
