@@ -1,0 +1,46 @@
+<!--
+  ~ Copyright (c) 2022, VillageReach
+  ~ Licensed under the Non-Profit Open Software License version 3.0.
+  ~ SPDX-License-Identifier: NPOSL-3.0
+  -->
+<div class="AknSubsection">
+    <header class="AknSubsection-title">
+        <%- title %>
+    </header>
+</div>
+<div class="AknFormContainer AknFormContainer--expanded">
+    <div class="AknFieldContainer">
+        <div class="AknFieldContainer-header">
+            <label class="AknFieldContainer-label"><%- label %></label>
+        </div>
+        <div class="AknFieldContainer-inputContainer">
+            <select class="select2" title="<%- title %>" name="fhir_mapping" data-placeholder="<%- placeholder %>">
+
+                <option value="" <% if (_.isEmpty(selected)) { %> selected<% } %>></option>
+                <% _.each(options, function (option) { %>
+                <option value="<%- option.value %>"
+                <% if (option.value === selected) { %> selected<% } %>
+                >
+                <%- option.label %>
+                </option>
+                <% }); %>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="AknFieldContainer-footer ">
+    <div class="AknBadge AknBadge--success" style="display: none" id="success_div">
+        <i class="icon-thumbs-up"></i> <%- save_success %>
+    </div>
+
+    <div class="AknFieldContainer-validationError" style="display: none" id="error_div">
+        <%- save_failed %>
+        <span id="error"></span>
+    </div>
+</div>
+
+
+
+
+

@@ -88,3 +88,7 @@ pcmt_rules:
 pcmt_cis:
     resource: "@PcmtCISBundle/Resources/config/routing.yml"
 
+fhir:
+    resource: "@FhirBundle/Resources/config/routing.yml"
+
+
