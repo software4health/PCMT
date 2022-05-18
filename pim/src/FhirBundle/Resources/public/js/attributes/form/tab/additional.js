@@ -1,10 +1,10 @@
 'use strict';
 
-define(['jquery', 'underscore', 'oro/translator', 'pim/form', 'fhir/template/attribute/tab/additional'],
-    function ($, _, __, BaseForm, template) {
+define(['jquery', 'underscore', 'oro/translator', 'pim/form', 'fhir/template/attribute/tab/additional','oro/messenger'],
+    function ($, _, __, BaseForm, template, messenger) {
         return BaseForm.extend({
             events: {
-                "change select": "updateModelAfterChange",
+                "click select": "updateModelAfterChange",
             },
             template: _.template(template),
             mapping:'',
@@ -14,32 +14,29 @@ define(['jquery', 'underscore', 'oro/translator', 'pim/form', 'fhir/template/att
                     code: this.code,
                     label: __('pcmt_core.fhir.tab.lable')
                 });
+                this.listenTo(this.getRoot(), 'pcmt:fhir:attribute:form:render:before', () => {
+                    this.getCurrentMapping();
+                });
                 return BaseForm.prototype.configure.apply(this, arguments);
             },
             render: function () {
-                if(this.getFormData().code !== null && this.getFormData().type !== null){
-                    //get mapping
-                    this.getCurrentMapping(this.getFormData().code,this.getFormData().type);
-                }
-                let selected=this.mapping;
+                //get mapping
+                this.getRoot().trigger('pcmt:fhir:attribute:form:render:before');
                 this.$el.html(this.template({
                     label: __('pcmt_core.fhir.select.lable'),
                     options: [{"value":"description","label":__("fhir.options.description")},{"value":"identifier","label":__("fhir.options.identifier")}],
-                    selected: selected,
+                    selected: this.mapping,
                     title: __('pcmt_core.fhir.title.lable'),
-                    placeholder: __('pcmt_core.fhir.placeholder.lable'),
-                    save_success: __('pcmt_core.fhir.saved.lable'),
-                    save_failed: __('pcmt_core.fhir.failed.lable')
+                    placeholder: __('pcmt_core.fhir.placeholder.lable')
                 }));
                 this.$('.select2').select2();
                 this.delegateEvents();
                 return this;
             },
             updateModelAfterChange: function (event) {
-                let value=event.target.value;
-                this.updateFhirMapping(this.getFormData().code,this.getFormData().type,value);
-                this.mapping=value;
-                this.render();
+                this.updateFhirMapping(this.getFormData().code,this.getFormData().type,event.target.value);
+                this.mapping=event.target.value;
+                return this;
             },
             updateFhirMapping: function (code,type,mapping){
                 $.ajax(
@@ -54,32 +51,34 @@ define(['jquery', 'underscore', 'oro/translator', 'pim/form', 'fhir/template/att
                     }
                 ).done(function(resp) {
                     console.log(resp);
-                    this.$('#success_div').hide();
-                    this.$('#error_div').hide();
-                    this.$('#error').html('');
                     if(resp.success === true){
-                        this.$('#success_div').show();
+                        messenger.notify(
+                            'success',
+                            __('pcmt_core.fhir.saved.lable')
+                        );
                     }else{
-                        this.$('#error').html(resp.error);
-                        this.$('#error_div').show();
+                        messenger.notify(
+                            'error',
+                            __('pcmt_core.fhir.failed.lable')
+                        );
                     }
                 }.bind(this));
 
             },
-            getCurrentMapping: function (code,type){
+            getCurrentMapping: function (){
                 $.ajax(
                     {
                         url: Routing.generate('pim_fhir_get_mapping'),
                         type: 'POST',
                         data: JSON.stringify({
-                            code: code,
-                            type: type
+                            code: this.getFormData().code,
+                            type: this.getFormData().type
                         })
                     }
                 ).done(function (resp){
                     this.mapping=resp.mapping;
+                    this.$('#fhir_mapping').val(resp.mapping).trigger('change');
                 }.bind(this));
-
             }
 
 
