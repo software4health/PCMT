@@ -3,4 +3,4 @@ extensions:
     module: fhir/attributes/tab/additional     # The requirejs module we just created
     parent: pim-attribute-edit-form-form-tabs # The parent extension in the form where we want to be regisetred
     targetZone: container
-    position: 140                              # The extension position
+    position: 140
