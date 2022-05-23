@@ -9,8 +9,10 @@ services:
     arguments:
       - '@pim_api.normalizer.values'
       - '@fhir_repository'
+      - '@router'
   fhir_api.normalizer.connector_product_models:
     class: 'FhirBundle\Normalizer\ExternalApi\ConnectorProductModelNormalizer'
     arguments:
       - '@pim_api.normalizer.values'
       - '@fhir_repository'
+      - '@router'
