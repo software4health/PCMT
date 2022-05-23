@@ -127,6 +127,7 @@ class FhirProductController extends ProductController
 
     /** @var DuplicateValueChecker */
     protected $duplicateValueChecker;
+
     public function __construct(
         NormalizerInterface $normalizer,
         IdentifiableObjectRepositoryInterface $channelRepository,
@@ -285,9 +286,9 @@ class FhirProductController extends ProductController
 
             $paginationParameters = [
                 'query_parameters'    => $queryParameters,
-                'list_route_name'     => 'pim_api_product_list',
-                'item_route_name'     => 'pim_api_product_get',
-                'item_identifier_key' => 'pim_identifier',
+                'list_route_name'     => 'pim_fhir_api_product_list',
+                'item_route_name'     => 'pim_fhir_api_product_get',
+                'item_identifier_key' => 'id',
             ];
 
             $count = $query->withCountAsBoolean() ? $connectorProductList->totalNumberOfProducts() : null;
@@ -307,9 +308,9 @@ class FhirProductController extends ProductController
                 'next' => false !== $lastProduct ? $this->primaryKeyEncrypter->encrypt($lastProduct->id()) : null,
                 'self' => $query->searchAfter,
             ],
-            'list_route_name'     => 'pim_api_product_list',
-            'item_route_name'     => 'pim_api_product_get',
-            'item_identifier_key' => 'pim_identifier',
+            'list_route_name'     => 'pim_fhir_api_product_list',
+            'item_route_name'     => 'pim_fhir_api_product_get',
+            'item_identifier_key' => 'id',
         ];
 
         return $this->searchAfterPaginator->paginate(

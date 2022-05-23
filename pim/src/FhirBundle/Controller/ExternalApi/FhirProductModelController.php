@@ -263,7 +263,7 @@ class FhirProductModelController extends ProductModelController
                 'query_parameters'    => $queryParameters,
                 'list_route_name'     => 'pim_fhir_api_product_model_list',
                 'item_route_name'     => 'pim_fhir_api_product_model_get',
-                'item_identifier_key' => 'code',
+                'item_identifier_key' => 'id',
             ];
 
             $count = $query->withCountAsBoolean() ? $connectorProductModels->totalNumberOfProductModels() : null;
@@ -285,7 +285,7 @@ class FhirProductModelController extends ProductModelController
             ],
             'list_route_name'     => 'pim_fhir_api_product_model_list',
             'item_route_name'     => 'pim_fhir_api_product_model_get',
-            'item_identifier_key' => 'code',
+            'item_identifier_key' => 'id',
         ];
 
         return $this->searchAfterPaginator->paginate(

@@ -12,6 +12,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Connector\ReadModel\ConnectorProduct
 use Akeneo\Pim\Enrichment\Component\Product\Connector\ReadModel\ConnectorProductModelList;
 use Akeneo\Pim\Enrichment\Component\Product\Normalizer\ExternalApi\ValuesNormalizer;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class ConnectorProductModelNormalizer
 {
@@ -21,10 +22,14 @@ final class ConnectorProductModelNormalizer
     /** @var EntityRepository */
     private $entityRepository;
 
-    public function __construct(ValuesNormalizer $valuesNormalizer, EntityRepository $entityRepository)
+    /** @var UrlGeneratorInterface */
+    private $router;
+
+    public function __construct(ValuesNormalizer $valuesNormalizer, EntityRepository $entityRepository, UrlGeneratorInterface $router)
     {
         $this->valuesNormalizer = $valuesNormalizer;
         $this->entityRepository = $entityRepository;
+        $this->router = $router;
     }
 
     public function normalizeConnectorProductModelList(ConnectorProductModelList $list): array
@@ -39,29 +44,65 @@ final class ConnectorProductModelNormalizer
         $values = $this->valuesNormalizer->normalize($connectorProductModel->values(), 'standard');
         $attributes = $connectorProductModel->attributeCodesInValues();
         $repository = $this->entityRepository;
-        $identifier = '';
-        $description = ['attributeType' => ''];
+        $identifier = [];
+        $description = [];
+        $product_model_route = $this->router->generate(
+            'pim_api_product_model_get',
+            ['code' => $connectorProductModel->code()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
         foreach ($attributes as $code) {
             $mapping = $repository->findOneByCode($code);
             if ($mapping) {
+                $attribute_route = $this->router->generate(
+                    'pim_api_attribute_get',
+                    ['code' => $code],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
                 if ('identifier' === $mapping->getMapping()) {
-                    $identifier = $values[$code][0]['data'];
+                    $identifier[] = [
+                        'type' => [
+                            'coding' => [
+                                'system'  => $attribute_route,
+                                'code'    => $code,
+                                'display' => $code,
+                            ],
+                            'text' => $code,
+                        ],
+                        'system' => $product_model_route,
+                        'value'  => $values[$code][0]['data'],
+                    ];
                 } elseif ('description' === $mapping->getMapping()) {
+                    $attributeTypeKey = '';
                     if ('pim_catalog_boolean' === $mapping->getType()) {
-                        $description['attributeTypeBoolean'] = $values[$code][0]['data'];
+                        $attributeTypeKey = 'attributeTypeBoolean';
                     } elseif ('pim_catalog_number' === $mapping->getType()) {
-                        $description['attributeTypeInteger'] = $values[$code][0]['data'];
+                        $attributeTypeKey = 'attributeTypeInteger';
                     } else {
-                        $description['attributeTypeString'] = $values[$code][0]['data'];
+                        $attributeTypeKey = 'attributeTypeString';
                     }
+                    $description[] = [
+                        'attributeType' => [
+                            'coding' => [
+                                [
+                                    'system'  => $attribute_route,
+                                    'code'    => $code,
+                                    'display' => $code,
+                                ],
+                            ],
+                            'text' => $code,
+                        ],
+                        $attributeTypeKey => $values[$code][0]['data'],
+                    ];
                 }
             }
         }
 
         return [
-            'identifier'  => $identifier,
-            'description' => $description,
-            'code'        => $connectorProductModel->code(),
+            'resourceType' => 'Product',
+            'id'           => $connectorProductModel->code(),
+            'identifier'   => $identifier,
+            'description'  => $description,
         ];
     }
 }

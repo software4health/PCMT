@@ -8,6 +8,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Connector\ReadModel\ConnectorProduct
 use Akeneo\Pim\Enrichment\Component\Product\Connector\ReadModel\ConnectorProductList;
 use Akeneo\Pim\Enrichment\Component\Product\Normalizer\ExternalApi\ValuesNormalizer;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Copyright (c) 2022, VillageReach
@@ -22,10 +23,14 @@ final class ConnectorProductNormalizer
     /** @var EntityRepository */
     private $entityRepository;
 
-    public function __construct(ValuesNormalizer $valuesNormalizer, EntityRepository $entityRepository)
+    /** @var UrlGeneratorInterface */
+    private $router;
+
+    public function __construct(ValuesNormalizer $valuesNormalizer, EntityRepository $entityRepository, UrlGeneratorInterface $router)
     {
         $this->valuesNormalizer = $valuesNormalizer;
         $this->entityRepository = $entityRepository;
+        $this->router = $router;
     }
 
     public function normalizeConnectorProductList(ConnectorProductList $connectorProducts): array
@@ -43,16 +48,36 @@ final class ConnectorProductNormalizer
         $values = $this->valuesNormalizer->normalize($connectorProduct->values(), 'standard');
         $attr_values = $connectorProduct->attributeCodesInValues();
         $repository = $this->entityRepository;
-        $identifier = '';
-        $description = [
-            'language'    => '',
-            'description' => '',
-        ];
+        $identifier = [];
+        $description = [];
+        $product_route = $this->router->generate(
+            'pim_api_product_get',
+            ['code' => $connectorProduct->identifier()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
         foreach ($attr_values as $code) {
             $mapping = $repository->findOneByCode($code);
             if ($mapping) {
                 if ('identifier' === $mapping->getMapping()) {
-                    $identifier = $values[$code][0]['data'];
+                    $attribute_route = $this->router->generate(
+                        'pim_api_attribute_get',
+                        ['code' => $code],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $identifier[] = [
+                        'type' => [
+                            'coding' => [
+                                [
+                                    'system'  => $attribute_route,
+                                    'code'    => $code,
+                                    'display' => $code,
+                                ],
+                            ],
+                            'text' => $code,
+                        ],
+                        'system' => $product_route,
+                        'value'  => $values[$code][0]['data'],
+                    ];
                 } elseif ('description' === $mapping->getMapping()) {
                     $description['language'] = $values[$code][0]['locale'];
                     $description['description'] = $values[$code][0]['data'];
@@ -61,12 +86,10 @@ final class ConnectorProductNormalizer
         }
 
         return [
-            'identifier'  => $identifier,
-            'description' => [
-                'language'    => $description['language'],
-                'description' => $description['description'],
-            ],
-            'pim_identifier' => $connectorProduct->identifier(),
+            'resourceType' => 'Item',
+            'id'           => $connectorProduct->identifier(),
+            'identifier'   => $identifier,
+            'description'  => $description,
         ];
     }
 }
