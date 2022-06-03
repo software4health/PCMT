@@ -288,6 +288,8 @@ class FhirProductController extends ProductController
             $queryParameters['locales'] = implode(',', $query->localeCodes);
         }
 
+        $bundle = [];
+
         if (PaginationTypes::OFFSET === $query->paginationType) {
             $queryParameters = ['page' => $query->page] + $queryParameters;
 
@@ -300,11 +302,36 @@ class FhirProductController extends ProductController
 
             $count = $query->withCountAsBoolean() ? $connectorProductList->totalNumberOfProducts() : null;
 
-            return $this->offsetPaginator->paginate(
+            $paginated = $this->offsetPaginator->paginate(
                 $this->connectorProductNormalizer->normalizeConnectorProductList($connectorProductList),
                 $paginationParameters,
                 $count
             );
+
+            //create fhir bundle output
+            $bundle['resourceType'] = 'Bundle';
+            if (array_key_exists('current_page', $paginated)) {
+                $bundle['meta'] = [
+                    'current_page' => $paginated['current_page'],
+                ];
+            }
+            $bundle['type'] = 'searchset';
+            foreach ($paginated['_links'] as $k => $l) {
+                $bundle['link'][] = [
+                    'relation' => $k,
+                    'url'      => $l['href'],
+                ];
+            }
+            foreach ($paginated['_embedded']['items'] as $v) {
+                $entry = [];
+                $entry['fullUrl'] = $v['_links']['self']['href'];
+                unset($v['_links']);
+                $entry['resource'] = $v;
+                $entry['search'] = 'match';
+                $bundle['entry'][] = $entry;
+            }
+
+            return $bundle;
         }
         $connectorProducts = $connectorProductList->connectorProducts();
         $lastProduct = end($connectorProducts);
@@ -320,10 +347,34 @@ class FhirProductController extends ProductController
             'item_identifier_key' => 'id',
         ];
 
-        return $this->searchAfterPaginator->paginate(
+        $paginated = $this->searchAfterPaginator->paginate(
             $this->connectorProductNormalizer->normalizeConnectorProductList($connectorProductList),
             $parameters,
             null
         );
+        //create fhir bundle output
+        $bundle['resourceType'] = 'Bundle';
+        if (array_key_exists('current_page', $paginated)) {
+            $bundle['meta'] = [
+                'current_page' => $paginated['current_page'],
+            ];
+        }
+        $bundle['type'] = 'searchset';
+        foreach ($paginated['_links'] as $k => $l) {
+            $bundle['link'][] = [
+                'relation' => $k,
+                'url'      => $l['href'],
+            ];
+        }
+        foreach ($paginated['_embedded']['items'] as $v) {
+            $entry = [];
+            $entry['fullUrl'] = $v['_links']['self']['href'];
+            unset($v['_links']);
+            $entry['resource'] = $v;
+            $entry['search'] = 'match';
+            $bundle['entry'][] = $entry;
+        }
+
+        return $bundle;
     }
 }
