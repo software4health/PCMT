@@ -5,6 +5,11 @@
 ######################################################################
 
 services:
+  fhir_repository:
+    class: Doctrine\ORM\EntityRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - FhirBundle\Entity\FhirMapping
   pim_fhir_api.controller.product:
     class: 'FhirBundle\Controller\ExternalApi\FhirProductController'
     arguments:
@@ -34,6 +39,7 @@ services:
       - '@security.token_storage'
       - '@akeneo.pim.enrichment.product.connector.get_product_from_identifiers'
       - '@pim_api.checker.duplicate_value'
+      - '@fhir_repository'
   pim_fhir_api.controller.product_model:
     class: 'FhirBundle\Controller\ExternalApi\FhirProductModelController'
     arguments:

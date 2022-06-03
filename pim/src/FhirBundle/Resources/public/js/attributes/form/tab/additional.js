@@ -24,7 +24,7 @@ define(['jquery', 'underscore', 'oro/translator', 'pim/form', 'fhir/template/att
                 this.getRoot().trigger('pcmt:fhir:attribute:form:render:before');
                 this.$el.html(this.template({
                     label: __('pcmt_core.fhir.select.lable'),
-                    options: [{"value":"description","label":__("fhir.options.description")},{"value":"identifier","label":__("fhir.options.identifier")}],
+                    options: [{"value":"description","label":__("fhir.options.description")},{"value":"identifier","label":__("fhir.options.identifier")},{"value":"marketingAuthorization","label":__("fhir.options.marketingAuthorization")}],
                     selected: this.mapping,
                     title: __('pcmt_core.fhir.title.lable'),
                     placeholder: __('pcmt_core.fhir.placeholder.lable')
