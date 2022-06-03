@@ -30,6 +30,7 @@ use Akeneo\Tool\Component\StorageUtils\Repository\IdentifiableObjectRepositoryIn
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
+use Doctrine\ORM\EntityRepository;
 use Elasticsearch\Common\Exceptions\ServerErrorResponseException;
 use FhirBundle\Normalizer\ExternalApi\ConnectorProductNormalizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -128,6 +129,9 @@ class FhirProductController extends ProductController
     /** @var DuplicateValueChecker */
     protected $duplicateValueChecker;
 
+    /** @var EntityRepository */
+    private $entityRepository;
+
     public function __construct(
         NormalizerInterface $normalizer,
         IdentifiableObjectRepositoryInterface $channelRepository,
@@ -154,7 +158,8 @@ class FhirProductController extends ProductController
         ConnectorProductNormalizer $connectorProductNormalizer,
         TokenStorageInterface $tokenStorage,
         GetConnectorProducts $getConnectorProducts,
-        ?DuplicateValueChecker $duplicateValueChecker = null // TODO @merge Remove this null parameter and the conditions
+        ?DuplicateValueChecker $duplicateValueChecker = null, // TODO @merge Remove this null parameter and the conditions
+        EntityRepository $entityRepository
     ) {
         $this->normalizer = $normalizer;
         $this->channelRepository = $channelRepository;
@@ -182,6 +187,7 @@ class FhirProductController extends ProductController
         $this->tokenStorage = $tokenStorage;
         $this->getConnectorProducts = $getConnectorProducts;
         $this->duplicateValueChecker = $duplicateValueChecker;
+        $this->entityRepository = $entityRepository;
     }
     /**
      * @throws ServerErrorResponseException
@@ -190,10 +196,14 @@ class FhirProductController extends ProductController
     public function listAction(Request $request): JsonResponse
     {
         $query = new ListProductsQuery();
-
-        if ($request->query->has('attributes')) {
-            $query->attributeCodes = explode(',', $request->query->get('attributes'));
+        //Query Fhir mappings
+        $fhir_mapping = $this->entityRepository->findAll();
+        $attributes = [];
+        foreach ($fhir_mapping as $mapping) {
+            $attributes[] = $mapping->getCode();
         }
+        //Query fhir attributes
+        $query->attributeCodes = $attributes;
         if ($request->query->has('locales')) {
             $query->localeCodes = explode(',', $request->query->get('locales'));
         }
@@ -276,9 +286,6 @@ class FhirProductController extends ProductController
         }
         if (null !== $query->localeCodes) {
             $queryParameters['locales'] = implode(',', $query->localeCodes);
-        }
-        if (null !== $query->attributeCodes) {
-            $queryParameters['attributes'] = implode(',', $query->attributeCodes);
         }
 
         if (PaginationTypes::OFFSET === $query->paginationType) {

@@ -26,6 +26,15 @@ final class ConnectorProductNormalizer
     /** @var UrlGeneratorInterface */
     private $router;
 
+    /** @var string */
+    private $identifier = 'identifier';
+
+    /** @var string */
+    private $description = 'description';
+
+    /** @var string */
+    private $marketingAuthorization = 'marketingAuthorization';
+
     public function __construct(ValuesNormalizer $valuesNormalizer, EntityRepository $entityRepository, UrlGeneratorInterface $router)
     {
         $this->valuesNormalizer = $valuesNormalizer;
@@ -50,6 +59,7 @@ final class ConnectorProductNormalizer
         $repository = $this->entityRepository;
         $identifier = [];
         $description = [];
+        $marketingAuthorization = [];
         $product_route = $this->router->generate(
             'pim_api_product_get',
             ['code' => $connectorProduct->identifier()],
@@ -58,12 +68,12 @@ final class ConnectorProductNormalizer
         foreach ($attr_values as $code) {
             $mapping = $repository->findOneByCode($code);
             if ($mapping) {
-                if ('identifier' === $mapping->getMapping()) {
-                    $attribute_route = $this->router->generate(
-                        'pim_api_attribute_get',
-                        ['code' => $code],
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
+                $attribute_route = $this->router->generate(
+                    'pim_api_attribute_get',
+                    ['code' => $code],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                if ($this->identifier === $mapping->getMapping()) {
                     $identifier[] = [
                         'type' => [
                             'coding' => [
@@ -78,18 +88,40 @@ final class ConnectorProductNormalizer
                         'system' => $product_route,
                         'value'  => $values[$code][0]['data'],
                     ];
-                } elseif ('description' === $mapping->getMapping()) {
+                } elseif ($this->description === $mapping->getMapping()) {
                     $description['language'] = $values[$code][0]['locale'];
                     $description['description'] = $values[$code][0]['data'];
+                } elseif ($this->marketingAuthorization === $mapping->getMapping()) {
+                    $marketingAuthorization[] = [
+                        'holder' => [
+                            'reference' => $attribute_route,
+                            'display'   => $code,
+                        ],
+                        'number' => [
+                            'type' => [
+                                'coding' => [
+                                    [
+                                        'system'  => $attribute_route,
+                                        'code'    => $code,
+                                        'display' => $code,
+                                    ],
+                                ],
+                                'text' => $code,
+                            ],
+                            'system' => $product_route,
+                            'value'  => $values[$code][0]['data'],
+                        ],
+                    ];
                 }
             }
         }
 
         return [
-            'resourceType' => 'Item',
-            'id'           => $connectorProduct->identifier(),
-            'identifier'   => $identifier,
-            'description'  => $description,
+            'resourceType'           => 'Item',
+            'id'                     => $connectorProduct->identifier(),
+            'identifier'             => $identifier,
+            'description'            => $description,
+            'marketingAuthorization' => $marketingAuthorization,
         ];
     }
 }

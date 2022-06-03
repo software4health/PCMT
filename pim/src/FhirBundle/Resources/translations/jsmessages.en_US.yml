@@ -16,3 +16,4 @@ fhir:
   options:
     description: Description
     identifier: Identifier
+    marketingAuthorization: Marketing authorization
