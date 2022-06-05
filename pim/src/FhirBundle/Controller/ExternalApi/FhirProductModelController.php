@@ -26,6 +26,7 @@ use Akeneo\Tool\Component\StorageUtils\Repository\IdentifiableObjectRepositoryIn
 use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\UserManagement\Component\Model\UserInterface;
+use Doctrine\ORM\EntityRepository;
 use Elasticsearch\Common\Exceptions\ServerErrorResponseException;
 use FhirBundle\Normalizer\ExternalApi\ConnectorProductModelNormalizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -111,6 +112,9 @@ class FhirProductModelController extends ProductModelController
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
+    /** @var EntityRepository */
+    private $entityRepository;
+
     public function __construct(
         ProductQueryBuilderFactoryInterface $pqbFactory,
         ProductQueryBuilderFactoryInterface $pqbSearchAfterFactory,
@@ -132,7 +136,8 @@ class FhirProductModelController extends ProductModelController
         ConnectorProductModelNormalizer $connectorProductModelNormalizer,
         GetConnectorProductModels $getConnectorProductModels,
         TokenStorageInterface $tokenStorage,
-        array $apiConfiguration
+        array $apiConfiguration,
+        EntityRepository $entityRepository
     ) {
         $this->pqbFactory = $pqbFactory;
         $this->pqbSearchAfterFactory = $pqbSearchAfterFactory;
@@ -155,6 +160,7 @@ class FhirProductModelController extends ProductModelController
         $this->getConnectorProductModels = $getConnectorProductModels;
         $this->tokenStorage = $tokenStorage;
         $this->apiConfiguration = $apiConfiguration;
+        $this->entityRepository = $entityRepository;
     }
 
     /**
@@ -187,9 +193,14 @@ class FhirProductModelController extends ProductModelController
 
         $query = new ListProductModelsQuery();
 
-        if ($request->query->has('attributes')) {
-            $query->attributeCodes = explode(',', $request->query->get('attributes'));
+        //Query Fhir mappings
+        $fhir_mapping = $this->entityRepository->findAll();
+        $attributes = [];
+        foreach ($fhir_mapping as $mapping) {
+            $attributes[] = $mapping->getCode();
         }
+        //Query fhir attributes
+        $query->attributeCodes = $attributes;
         if ($request->query->has('locales')) {
             $query->localeCodes = explode(',', $request->query->get('locales'));
         }
@@ -252,9 +263,8 @@ class FhirProductModelController extends ProductModelController
         if (null !== $query->localeCodes) {
             $queryParameters['locales'] = implode(',', $query->localeCodes);
         }
-        if (null !== $query->attributeCodes) {
-            $queryParameters['attributes'] = implode(',', $query->attributeCodes);
-        }
+
+        $bundle = [];
 
         if (PaginationTypes::OFFSET === $query->paginationType) {
             $queryParameters = ['page' => $query->page] + $queryParameters;
@@ -268,11 +278,35 @@ class FhirProductModelController extends ProductModelController
 
             $count = $query->withCountAsBoolean() ? $connectorProductModels->totalNumberOfProductModels() : null;
 
-            return $this->offsetPaginator->paginate(
+            $paginated = $this->offsetPaginator->paginate(
                 $this->connectorProductModelNormalizer->normalizeConnectorProductModelList($connectorProductModels),
                 $paginationParameters,
                 $count
             );
+            //create fhir bundle output
+            $bundle['resourceType'] = 'Bundle';
+            if (array_key_exists('current_page', $paginated)) {
+                $bundle['meta'] = [
+                    'current_page' => $paginated['current_page'],
+                ];
+            }
+            $bundle['type'] = 'searchset';
+            foreach ($paginated['_links'] as $k => $l) {
+                $bundle['link'][] = [
+                    'relation' => $k,
+                    'url'      => $l['href'],
+                ];
+            }
+            foreach ($paginated['_embedded']['items'] as $v) {
+                $entry = [];
+                $entry['fullUrl'] = $v['_links']['self']['href'];
+                unset($v['_links']);
+                $entry['resource'] = $v;
+                $entry['search'] = 'match';
+                $bundle['entry'][] = $entry;
+            }
+
+            return $bundle;
         }
         $productModels = $connectorProductModels->connectorProductModels();
         $lastProductModel = end($productModels);
@@ -288,10 +322,34 @@ class FhirProductModelController extends ProductModelController
             'item_identifier_key' => 'id',
         ];
 
-        return $this->searchAfterPaginator->paginate(
+        $paginated = $this->searchAfterPaginator->paginate(
             $this->connectorProductModelNormalizer->normalizeConnectorProductModelList($connectorProductModels),
             $parameters,
             null
         );
+        //create fhir bundle output
+        $bundle['resourceType'] = 'Bundle';
+        if (array_key_exists('current_page', $paginated)) {
+            $bundle['meta'] = [
+                'current_page' => $paginated['current_page'],
+            ];
+        }
+        $bundle['type'] = 'searchset';
+        foreach ($paginated['_links'] as $k => $l) {
+            $bundle['link'][] = [
+                'relation' => $k,
+                'url'      => $l['href'],
+            ];
+        }
+        foreach ($paginated['_embedded']['items'] as $v) {
+            $entry = [];
+            $entry['fullUrl'] = $v['_links']['self']['href'];
+            unset($v['_links']);
+            $entry['resource'] = $v;
+            $entry['search'] = 'match';
+            $bundle['entry'][] = $entry;
+        }
+
+        return $bundle;
     }
 }

@@ -64,6 +64,7 @@ services:
       - '@akeneo.pim.enrichment.product.connector.get_product_models_from_codes'
       - '@security.token_storage'
       - '%pim_api.configuration%'
+      - '@fhir_repository'
   pcmt_fhir.controller.rest.fhir_mapping:
     class: 'FhirBundle\Controller\FhirController'
     arguments:
