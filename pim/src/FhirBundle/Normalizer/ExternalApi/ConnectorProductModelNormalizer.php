@@ -25,6 +25,12 @@ final class ConnectorProductModelNormalizer
     /** @var UrlGeneratorInterface */
     private $router;
 
+    /** @var string */
+    private $identifier = 'identifier';
+
+    /** @var string */
+    private $description = 'description';
+
     public function __construct(ValuesNormalizer $valuesNormalizer, EntityRepository $entityRepository, UrlGeneratorInterface $router)
     {
         $this->valuesNormalizer = $valuesNormalizer;
@@ -59,7 +65,7 @@ final class ConnectorProductModelNormalizer
                     ['code' => $code],
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
-                if ('identifier' === $mapping->getMapping()) {
+                if ($this->identifier === $mapping->getMapping()) {
                     $identifier[] = [
                         'type' => [
                             'coding' => [
@@ -72,7 +78,7 @@ final class ConnectorProductModelNormalizer
                         'system' => $product_model_route,
                         'value'  => $values[$code][0]['data'],
                     ];
-                } elseif ('description' === $mapping->getMapping()) {
+                } elseif ($this->description === $mapping->getMapping()) {
                     $attributeTypeKey = '';
                     if ('pim_catalog_boolean' === $mapping->getType()) {
                         $attributeTypeKey = 'attributeTypeBoolean';
