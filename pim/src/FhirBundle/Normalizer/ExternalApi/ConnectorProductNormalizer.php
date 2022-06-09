@@ -116,12 +116,42 @@ final class ConnectorProductNormalizer
             }
         }
 
+        $product_model_fhir_route = $this->router->generate(
+            'pim_fhir_api_product_model_get',
+            ['code' => $connectorProduct->parentProductModelCode()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $product_model_route = $this->router->generate(
+            'pim_api_product_model_get',
+            ['code' => $connectorProduct->parentProductModelCode()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
         return [
             'resourceType'           => 'Item',
             'id'                     => $connectorProduct->identifier(),
             'identifier'             => $identifier,
             'description'            => $description,
             'marketingAuthorization' => $marketingAuthorization,
+            'association'            => [
+                'associationType' => [
+                    'system'  => $product_model_route,
+                    'code'    => $connectorProduct->parentProductModelCode(),
+                    'display' => $connectorProduct->parentProductModelCode(),
+                ],
+                'associatedProduct' => [
+                    'Product' => [
+                        'reference' => $product_model_fhir_route,
+                        'display'   => $connectorProduct->parentProductModelCode(),
+                        'type'      => 'Product',
+                    ],
+                ],
+                'quantity' => [
+                    'numerator'   => 1,
+                    'denominator' => 1,
+                ],
+            ],
         ];
     }
 }

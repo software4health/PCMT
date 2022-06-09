@@ -18,12 +18,10 @@
 
                 <option value="" <% if (_.isEmpty(selected)) { %> selected<% } %>></option>
                 <% _.each(options, function (option) { %>
-                <option value="<%- option.value %>"
-                <% if (option.value === selected) { %> selected<%
-} %>
-                >
-                <%- option.label %>
-                </option>
+                    <option value="<%- option.value %>"
+                        <% if (option.value === selected) { %> selected<% } %> >
+                        <%- option.label %>
+                    </option>
                 <% }); %>
             </select>
         </div>

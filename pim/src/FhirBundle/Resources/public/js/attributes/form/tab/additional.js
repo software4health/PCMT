@@ -24,7 +24,7 @@ define(['jquery', 'underscore', 'oro/translator', 'pim/form', 'fhir/template/att
                 this.getRoot().trigger('pcmt:fhir:attribute:form:render:before');
                 this.$el.html(this.template({
                     label: __('pcmt_core.fhir.select.lable'),
-                    options: [{"value":"description","label":__("fhir.options.description")},{"value":"identifier","label":__("fhir.options.identifier")},{"value":"marketingAuthorization","label":__("fhir.options.marketingAuthorization")}],
+                    options: this.getMappingOptions(),
                     selected: this.mapping,
                     title: __('pcmt_core.fhir.title.lable'),
                     placeholder: __('pcmt_core.fhir.placeholder.lable')
@@ -79,9 +79,14 @@ define(['jquery', 'underscore', 'oro/translator', 'pim/form', 'fhir/template/att
                     this.mapping=resp.mapping;
                     this.$('#fhir_mapping').val(resp.mapping).trigger('change');
                 }.bind(this));
+            },
+            getMappingOptions: function (){
+                return [
+                    {"value":"description","label":__("fhir.options.description")},
+                    {"value":"identifier","label":__("fhir.options.identifier")},
+                    {"value":"marketingAuthorization","label":__("fhir.options.marketingAuthorization")}
+                ];
             }
-
-
         });
     }
 );
