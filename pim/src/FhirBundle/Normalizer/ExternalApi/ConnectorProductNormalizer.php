@@ -27,19 +27,26 @@ final class ConnectorProductNormalizer
     private $router;
 
     /** @var string */
-    private $identifier = 'identifier';
+    private $identifier;
 
     /** @var string */
-    private $description = 'description';
+    private $description;
 
     /** @var string */
-    private $marketingAuthorization = 'marketingAuthorization';
+    private $marketingAuthorization;
 
-    public function __construct(ValuesNormalizer $valuesNormalizer, EntityRepository $entityRepository, UrlGeneratorInterface $router)
+    /** @var string */
+    private $other;
+
+    public function __construct(ValuesNormalizer $valuesNormalizer, EntityRepository $entityRepository, UrlGeneratorInterface $router, string $identifier, string $description, string $marketingAuthorization, string $other)
     {
         $this->valuesNormalizer = $valuesNormalizer;
         $this->entityRepository = $entityRepository;
         $this->router = $router;
+        $this->identifier = $identifier;
+        $this->description = $description;
+        $this->marketingAuthorization = $marketingAuthorization;
+        $this->other = $other;
     }
 
     public function normalizeConnectorProductList(ConnectorProductList $connectorProducts): array
@@ -60,6 +67,7 @@ final class ConnectorProductNormalizer
         $identifier = [];
         $description = [];
         $marketingAuthorization = [];
+        $other = [];
         $product_route = $this->router->generate(
             'pim_api_product_get',
             ['code' => $connectorProduct->identifier()],
@@ -73,45 +81,21 @@ final class ConnectorProductNormalizer
                     ['code' => $code],
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
-                if ($this->identifier === $mapping->getMapping()) {
-                    $identifier[] = [
-                        'type' => [
-                            'coding' => [
-                                [
-                                    'system'  => $attribute_route,
-                                    'code'    => $code,
-                                    'display' => $code,
-                                ],
-                            ],
-                            'text' => $code,
-                        ],
-                        'system' => $product_route,
-                        'value'  => $values[$code][0]['data'],
-                    ];
-                } elseif ($this->description === $mapping->getMapping()) {
-                    $description['language'] = $values[$code][0]['locale'];
-                    $description['description'] = $values[$code][0]['data'];
-                } elseif ($this->marketingAuthorization === $mapping->getMapping()) {
-                    $marketingAuthorization[] = [
-                        'holder' => [
-                            'reference' => $attribute_route,
-                            'display'   => $code,
-                        ],
-                        'number' => [
-                            'type' => [
-                                'coding' => [
-                                    [
-                                        'system'  => $attribute_route,
-                                        'code'    => $code,
-                                        'display' => $code,
-                                    ],
-                                ],
-                                'text' => $code,
-                            ],
-                            'system' => $product_route,
-                            'value'  => $values[$code][0]['data'],
-                        ],
-                    ];
+
+                switch ($mapping->getMapping()) {
+                    case $this->identifier:
+                        $identifier[] = $this->mapIdentifier($attribute_route, $code, $product_route, $values);
+                        break;
+                    case $this->description:
+                        $description['language'] = $values[$code][0]['locale'];
+                        $description['description'] = $values[$code][0]['data'];
+                        break;
+                    case $this->marketingAuthorization:
+                        $marketingAuthorization[] = $this->mapMarketingAuthorization($attribute_route, $code, $product_route, $values);
+                        break;
+                    case $this->other:
+                        $other[] = $this->mapOther($attribute_route, $code, $values);
+                        break;
                 }
             }
         }
@@ -152,6 +136,64 @@ final class ConnectorProductNormalizer
                     'denominator' => 1,
                 ],
             ],
+            'attributes' => $other,
+        ];
+    }
+
+    private function mapIdentifier(string $attribute_route, string $code, string $product_route, array $values): array
+    {
+        return [
+            'type' => [
+                'coding' => [
+                    [
+                        'system'  => $attribute_route,
+                        'code'    => $code,
+                        'display' => $code,
+                    ],
+                ],
+                'text' => $code,
+            ],
+            'system' => $product_route,
+            'value'  => $values[$code][0]['data'],
+        ];
+    }
+
+    private function mapMarketingAuthorization(string $attribute_route, string $code, string $product_route, array $values): array
+    {
+        return [
+            'holder' => [
+                'reference' => $attribute_route,
+                'display'   => $code,
+            ],
+            'number' => [
+                'type' => [
+                    'coding' => [
+                        [
+                            'system'  => $attribute_route,
+                            'code'    => $code,
+                            'display' => $code,
+                        ],
+                    ],
+                    'text' => $code,
+                ],
+                'system' => $product_route,
+                'value'  => $values[$code][0]['data'],
+            ],
+        ];
+    }
+
+    private function mapOther(string $attribute_route, string $code, array $values): array
+    {
+        return [
+            'attributeType' => [
+                'coding' => [
+                    'system'  => $attribute_route,
+                    'code'    => $code,
+                    'display' => $code,
+                ],
+                'text' => $code,
+            ],
+            'value' => $values[$code][0]['data'],
         ];
     }
 }

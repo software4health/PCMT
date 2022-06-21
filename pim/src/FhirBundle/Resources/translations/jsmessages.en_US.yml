@@ -17,3 +17,4 @@ fhir:
     description: Description
     identifier: Identifier
     marketingAuthorization: Marketing authorization (Item Only)
+    other: Other

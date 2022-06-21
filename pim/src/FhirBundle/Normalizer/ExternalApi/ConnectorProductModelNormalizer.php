@@ -26,16 +26,18 @@ final class ConnectorProductModelNormalizer
     private $router;
 
     /** @var string */
-    private $identifier = 'identifier';
+    private $identifier;
 
     /** @var string */
-    private $description = 'description';
+    private $description;
 
-    public function __construct(ValuesNormalizer $valuesNormalizer, EntityRepository $entityRepository, UrlGeneratorInterface $router)
+    public function __construct(ValuesNormalizer $valuesNormalizer, EntityRepository $entityRepository, UrlGeneratorInterface $router, string $identifier, string $description)
     {
         $this->valuesNormalizer = $valuesNormalizer;
         $this->entityRepository = $entityRepository;
         $this->router = $router;
+        $this->identifier = $identifier;
+        $this->description = $description;
     }
 
     public function normalizeConnectorProductModelList(ConnectorProductModelList $list): array
@@ -65,41 +67,22 @@ final class ConnectorProductModelNormalizer
                     ['code' => $code],
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
-                if ($this->identifier === $mapping->getMapping()) {
-                    $identifier[] = [
-                        'type' => [
-                            'coding' => [
-                                'system'  => $attribute_route,
-                                'code'    => $code,
-                                'display' => $code,
-                            ],
-                            'text' => $code,
-                        ],
-                        'system' => $product_model_route,
-                        'value'  => $values[$code][0]['data'],
-                    ];
-                } elseif ($this->description === $mapping->getMapping()) {
-                    $attributeTypeKey = '';
-                    if ('pim_catalog_boolean' === $mapping->getType()) {
-                        $attributeTypeKey = 'attributeTypeBoolean';
-                    } elseif ('pim_catalog_number' === $mapping->getType()) {
-                        $attributeTypeKey = 'attributeTypeInteger';
-                    } else {
-                        $attributeTypeKey = 'attributeTypeString';
-                    }
-                    $description[] = [
-                        'attributeType' => [
-                            'coding' => [
-                                [
-                                    'system'  => $attribute_route,
-                                    'code'    => $code,
-                                    'display' => $code,
-                                ],
-                            ],
-                            'text' => $code,
-                        ],
-                        $attributeTypeKey => $values[$code][0]['data'],
-                    ];
+
+                switch ($mapping->getMapping()) {
+                    case $this->identifier:
+                        $identifier[] = $this->mapIdentifier($attribute_route, $code, $product_model_route, $values);
+                        break;
+                    case $this->description:
+                        $attributeTypeKey = '';
+                        if ('pim_catalog_boolean' === $mapping->getType()) {
+                            $attributeTypeKey = 'attributeTypeBoolean';
+                        } elseif ('pim_catalog_number' === $mapping->getType()) {
+                            $attributeTypeKey = 'attributeTypeInteger';
+                        } else {
+                            $attributeTypeKey = 'attributeTypeString';
+                        }
+                        $description[] = $this->mapDescription($attribute_route, $code, $values, $attributeTypeKey);
+                        break;
                 }
             }
         }
@@ -109,6 +92,39 @@ final class ConnectorProductModelNormalizer
             'id'           => $connectorProductModel->code(),
             'identifier'   => $identifier,
             'description'  => $description,
+        ];
+    }
+
+    private function mapIdentifier(string $attribute_route, string $code, string $product_model_route, array $values): array
+    {
+        return [
+            'type' => [
+                'coding' => [
+                    'system'  => $attribute_route,
+                    'code'    => $code,
+                    'display' => $code,
+                ],
+                'text' => $code,
+            ],
+            'system' => $product_model_route,
+            'value'  => $values[$code][0]['data'],
+        ];
+    }
+
+    private function mapDescription(string $attribute_route, string $code, array $values, string $attributeTypeKey): array
+    {
+        return [
+            'attributeType' => [
+                'coding' => [
+                    [
+                        'system'  => $attribute_route,
+                        'code'    => $code,
+                        'display' => $code,
+                    ],
+                ],
+                'text' => $code,
+            ],
+            $attributeTypeKey => $values[$code][0]['data'],
         ];
     }
 }

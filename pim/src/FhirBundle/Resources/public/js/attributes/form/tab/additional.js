@@ -82,9 +82,10 @@ define(['jquery', 'underscore', 'oro/translator', 'pim/form', 'fhir/template/att
             },
             getMappingOptions: function (){
                 return [
+                    {"value":"other","label":__("fhir.options.other")},
                     {"value":"description","label":__("fhir.options.description")},
                     {"value":"identifier","label":__("fhir.options.identifier")},
-                    {"value":"marketingAuthorization","label":__("fhir.options.marketingAuthorization")}
+                    {"value":"marketingAuthorization","label":__("fhir.options.marketingAuthorization")},
                 ];
             }
         });
