@@ -74,4 +74,4 @@ security:
     - { path: ^/admin/, role: ROLE_ADMIN }
     - { path: ^/api/rest/v1$, role: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/api/, role: pim_api_overall_access }
-    - { path: ^/api/fhir/rest/v1$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/api/fhir$, role: IS_AUTHENTICATED_ANONYMOUSLY }

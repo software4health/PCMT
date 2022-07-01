@@ -291,6 +291,8 @@ class FhirProductModelController extends ProductModelController
                 ];
             }
             $bundle['type'] = 'searchset';
+            $bundle['timestamp'] = date('c');
+            $bundle['total'] = $connectorProductModels->totalNumberOfProductModels();
             foreach ($paginated['_links'] as $k => $l) {
                 $bundle['link'][] = [
                     'relation' => $k,
@@ -335,6 +337,8 @@ class FhirProductModelController extends ProductModelController
             ];
         }
         $bundle['type'] = 'searchset';
+        $bundle['timestamp'] = date('c');
+        $bundle['total'] = $connectorProductModels->totalNumberOfProductModels();
         foreach ($paginated['_links'] as $k => $l) {
             $bundle['link'][] = [
                 'relation' => $k,
