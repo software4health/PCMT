@@ -6,12 +6,12 @@
 
 fhir_api_product:
   resource: '@FhirBundle/Resources/config/routing/product.yml'
-  prefix: /api/fhir/rest/v1
+  prefix: /api/fhir
 
 fhir_api_product_model:
   resource: '@FhirBundle/Resources/config/routing/product_model.yml'
-  prefix: /api/fhir/rest/v1
+  prefix: /api/fhir
 
 fhir_mapping:
   resource: '@FhirBundle/Resources/config/routing/fhir_mapping.yml'
-  prefix: /fhir/rest/v1
+  prefix: /fhir
