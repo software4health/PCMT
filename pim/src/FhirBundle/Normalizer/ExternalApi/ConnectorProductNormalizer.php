@@ -7,6 +7,7 @@ namespace FhirBundle\Normalizer\ExternalApi;
 use Akeneo\Pim\Enrichment\Component\Product\Connector\ReadModel\ConnectorProduct;
 use Akeneo\Pim\Enrichment\Component\Product\Connector\ReadModel\ConnectorProductList;
 use Akeneo\Pim\Enrichment\Component\Product\Normalizer\ExternalApi\ValuesNormalizer;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -38,7 +39,10 @@ final class ConnectorProductNormalizer
     /** @var string */
     private $other;
 
-    public function __construct(ValuesNormalizer $valuesNormalizer, EntityRepository $entityRepository, UrlGeneratorInterface $router, string $identifier, string $description, string $marketingAuthorization, string $other)
+    /** @var ObjectRepository */
+    private $categoryRepository;
+
+    public function __construct(ValuesNormalizer $valuesNormalizer, EntityRepository $entityRepository, UrlGeneratorInterface $router, string $identifier, string $description, string $marketingAuthorization, string $other, ObjectRepository $categoryRepository)
     {
         $this->valuesNormalizer = $valuesNormalizer;
         $this->entityRepository = $entityRepository;
@@ -47,6 +51,7 @@ final class ConnectorProductNormalizer
         $this->description = $description;
         $this->marketingAuthorization = $marketingAuthorization;
         $this->other = $other;
+        $this->categoryRepository = $categoryRepository;
     }
 
     public function normalizeConnectorProductList(ConnectorProductList $connectorProducts): array
@@ -112,6 +117,24 @@ final class ConnectorProductNormalizer
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
+        $categories = [];
+
+        foreach ($this->categoryRepository->findByCode($connectorProduct->categoryCodes()) as $category) {
+            $category_route = $this->router->generate(
+                'pim_api_category_get',
+                ['code' => $category->getCode()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $categories[] = [
+                'coding' => [
+                    'system'  => $category_route,
+                    'code'    => $category->getCode(),
+                    'display' => $category->getLabel(),
+                ],
+                'text' => $category->getLabel(),
+            ];
+        }
+
         return [
             'resourceType'           => 'Item',
             'id'                     => $connectorProduct->identifier(),
@@ -136,7 +159,8 @@ final class ConnectorProductNormalizer
                     'denominator' => 1,
                 ],
             ],
-            'attributes' => $other,
+            'attributes'     => $other,
+            'classification' => $categories,
         ];
     }
 

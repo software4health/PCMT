@@ -11,6 +11,7 @@ namespace FhirBundle\Normalizer\ExternalApi;
 use Akeneo\Pim\Enrichment\Component\Product\Connector\ReadModel\ConnectorProductModel;
 use Akeneo\Pim\Enrichment\Component\Product\Connector\ReadModel\ConnectorProductModelList;
 use Akeneo\Pim\Enrichment\Component\Product\Normalizer\ExternalApi\ValuesNormalizer;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -31,13 +32,17 @@ final class ConnectorProductModelNormalizer
     /** @var string */
     private $description;
 
-    public function __construct(ValuesNormalizer $valuesNormalizer, EntityRepository $entityRepository, UrlGeneratorInterface $router, string $identifier, string $description)
+    /** @var ObjectRepository */
+    private $categoryRepository;
+
+    public function __construct(ValuesNormalizer $valuesNormalizer, EntityRepository $entityRepository, UrlGeneratorInterface $router, string $identifier, string $description, ObjectRepository $categoryRepository)
     {
         $this->valuesNormalizer = $valuesNormalizer;
         $this->entityRepository = $entityRepository;
         $this->router = $router;
         $this->identifier = $identifier;
         $this->description = $description;
+        $this->categoryRepository = $categoryRepository;
     }
 
     public function normalizeConnectorProductModelList(ConnectorProductModelList $list): array
@@ -87,11 +92,31 @@ final class ConnectorProductModelNormalizer
             }
         }
 
+        $categories = [];
+
+        foreach ($this->categoryRepository->findByCode($connectorProductModel->categoryCodes()) as $category) {
+            $category_route = $this->router->generate(
+                'pim_api_category_get',
+                ['code' => $category->getCode()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            $categories[] = [
+                'coding' => [
+                    'system'  => $category_route,
+                    'code'    => $category->getCode(),
+                    'display' => $category->getLabel(),
+                ],
+                'text' => $category->getLabel(),
+            ];
+        }
+
         return [
-            'resourceType' => 'Product',
-            'id'           => $connectorProductModel->code(),
-            'identifier'   => $identifier,
-            'description'  => $description,
+            'resourceType'   => 'Product',
+            'id'             => $connectorProductModel->code(),
+            'identifier'     => $identifier,
+            'description'    => $description,
+            'classification' => $categories,
         ];
     }
 
