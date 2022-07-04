@@ -1,4 +1,4 @@
-VER 2.5.0 / unreleased
+VER 2.4.1 / unreleased
 ==================
 
 **Added**
@@ -6,6 +6,8 @@ VER 2.5.0 / unreleased
 **Changed**
 
 **Fixed**
+
+- [#1176](https://gitlab.com/pcmt/pcmt/-/issues/1176) Fixed missing fhir mapping migration
 
 VER 2.4.0 / 2022-07-04
 ==================
