@@ -1,9 +1,5 @@
-VER 2.4.1 / unreleased
+VER 2.4.1 / 2022-07-04
 ==================
-
-**Added**
-
-**Changed**
 
 **Fixed**
 
