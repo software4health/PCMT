@@ -15,7 +15,7 @@ class Version20220704204334 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $sql = <<<SQL
-DROP TABLE IF EXISTS `pcmt_cis_subscription`;
+DROP TABLE IF EXISTS `pcmt_fhir_attribute_mapping`;
 
 CREATE TABLE `pcmt_fhir_attribute_mapping` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -24,7 +24,7 @@ CREATE TABLE `pcmt_fhir_attribute_mapping` (
     `mapping` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `searchunique_idx` (`code`)
-) ENGING=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 SQL;
         $this->addSql($sql);
