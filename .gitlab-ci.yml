@@ -645,7 +645,7 @@ env-malawi-destroy:
 
 .env-malawi-uat:
   extends:
-    - .pcmt_v_2_2_0
+    - .pcmt_v_2_4_0
   stage: deploy
   when: manual
   needs: []
