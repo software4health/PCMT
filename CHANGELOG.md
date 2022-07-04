@@ -1,12 +1,10 @@
-VER 2.4.0 / unreleased
+VER 2.4.0 / 2022-07-04
 ==================
 
 **Added**
 
-**Changed**
-
-**Fixed**
-
+- [&50](https://gitlab.com/groups/pcmt/-/epics/50) Added alpha release of Product and Item draft of FHIR api.
+- [&43](https://gitlab.com/groups/pcmt/-/epics/43) Added additional Family2Family mappings
 
 VER 2.3.2 / 2021-02-11
 ==================
