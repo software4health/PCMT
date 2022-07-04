@@ -5,7 +5,7 @@
 ######################################################################
 
 #--- Akeneo base ---
-FROM akeneo/fpm:php-7.2 as akeneo
+FROM pcmt/fpm:php-7.2 as akeneo
 LABEL maintainer="josh.zamor@villagereach.org"
 ARG AKENEO_URL=https://github.com/akeneo/pim-community-standard/archive/
 ARG AKENEO_VER
