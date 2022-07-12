@@ -111,11 +111,34 @@ final class ConnectorProductNormalizer
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        $product_model_route = $this->router->generate(
-            'pim_api_product_model_get',
-            ['code' => $connectorProduct->parentProductModelCode()],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
+        $association = [];
+
+        if ($connectorProduct->parentProductModelCode()) {
+            $product_model_route = $this->router->generate(
+                'pim_api_product_model_get',
+                ['code' => $connectorProduct->parentProductModelCode()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            $association = [
+                'associationType' => [
+                    'system'  => $product_model_route,
+                    'code'    => $connectorProduct->parentProductModelCode(),
+                    'display' => $connectorProduct->parentProductModelCode(),
+                ],
+                'associatedProduct' => [
+                    'Product' => [
+                        'reference' => $product_model_fhir_route,
+                        'display'   => $connectorProduct->parentProductModelCode(),
+                        'type'      => 'Product',
+                    ],
+                ],
+                'quantity' => [
+                    'numerator'   => 1,
+                    'denominator' => 1,
+                ],
+            ];
+        }
 
         $categories = [];
 
@@ -141,26 +164,9 @@ final class ConnectorProductNormalizer
             'identifier'             => $identifier,
             'description'            => $description,
             'marketingAuthorization' => $marketingAuthorization,
-            'association'            => [
-                'associationType' => [
-                    'system'  => $product_model_route,
-                    'code'    => $connectorProduct->parentProductModelCode(),
-                    'display' => $connectorProduct->parentProductModelCode(),
-                ],
-                'associatedProduct' => [
-                    'Product' => [
-                        'reference' => $product_model_fhir_route,
-                        'display'   => $connectorProduct->parentProductModelCode(),
-                        'type'      => 'Product',
-                    ],
-                ],
-                'quantity' => [
-                    'numerator'   => 1,
-                    'denominator' => 1,
-                ],
-            ],
-            'attributes'     => $other,
-            'classification' => $categories,
+            'association'            => $association,
+            'attributes'             => $other,
+            'classification'         => $categories,
         ];
     }
 
