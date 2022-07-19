@@ -21,7 +21,6 @@ These may be operated from the [Environments][gitlab-env] screen.
 | [test][test]                   | Every change to `master`     | CD/Test the latest           |
 | [showcase][show]               | Manually, at sprint showcase | Sprint Showcases             |
 | [beta][beta]                   | Alias for demo               | Alias for demo               |
-| [undp-demo][undp-demo]         | Manually as desired          | demo for UNDP                |
 | [covid-dev][covid-dev]         | Manually as desired          | 1.x dev for COVID products   |
 
 [gitlab-env]: https://gitlab.com/pcmt/pcmt/environments
