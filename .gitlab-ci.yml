@@ -721,46 +721,6 @@ env-opendata-destroy:
     name: opendata
     action: stop
 
-############### Zambia Environment ###############
-
-.env-zambia:
-  extends:
-    - .pcmt_v_2_3_2
-  stage: deploy
-  when: manual
-  needs: []
-  environment:
-    name: zambia
-    url: http://zambia.productcatalog.io
-    on_stop: env-zambia-destroy
-
-.env-zambia_script-deploy:
-  script:
-    - ./bin/ci-deploy.sh zambia
-    
-env-zambia (WIPE DB):
-  extends:
-    - .env-zambia
-    - .env-zambia_script-deploy
-  variables:
-    PCMT_PROFILE: dev
-
-env-zambia (KEEP DB):
-  extends:
-    - .env-zambia
-    - .env-zambia_script-deploy
-  variables:
-    PCMT_PROFILE: production
-
-env-zambia-destroy:
-  extends:
-    - .env-zambia
-  script: 
-    - ./deploy/terraform/run-docker.sh zambia destroy -auto-approve
-  environment:
-    name: zambia
-    action: stop
-
 ############### DDCC Environment ###############
 
 .env-ddcc:
