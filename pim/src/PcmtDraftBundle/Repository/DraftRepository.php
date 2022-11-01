@@ -26,13 +26,13 @@ class DraftRepository extends EntityRepository implements DraftRepositoryInterfa
         return '
             (select d.id from pcmt_catalog_product_draft d
             inner join pcmt_catalog_product_draft_category c on d.id = c.draft_id
-            WHERE c.category_id IN(:categoryIds) AND d.status = :statusId)
+            WHERE c.category_id IN(:categoryIds) AND d.status = :statusId AND (d.product_id is not null OR d.product_model_id is not null))
 
             UNION
 
             (select d.id from pcmt_catalog_product_draft d
             left join pcmt_catalog_product_draft_category c on d.id = c.draft_id
-            where c.draft_id is null AND d.status = :statusId2)
+            where c.draft_id is null AND d.status = :statusId2 AND (d.product_id is not null OR d.product_model_id is not null))
         ';
     }
 
