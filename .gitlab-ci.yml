@@ -31,6 +31,10 @@ include:
 ############### PCMT VERSIONS (for deploy) ###############
 
 
+.pcmt_v_2_4_2:
+  variables:
+    PCMT_VER: '2.4.2'
+    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v2.4.2/pcmt-v2.4.2.tar.gz'
 .pcmt_v_2_4_1:
   variables:
     PCMT_VER: '2.4.1'
