@@ -7,6 +7,13 @@ VER 2.5.0 / unreleased
 
 **Fixed**
 
+VER 2.4.2 / 2022-11-08
+==================
+
+**Fixed**
+
+- [#1218](https://gitlab.com/pcmt/pcmt/-/issues/1218) Fixed draft screen hanging w/ deleted products / models
+
 VER 2.4.1 / 2022-07-04
 ==================
 
