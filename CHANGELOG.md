@@ -7,6 +7,14 @@ VER 2.5.0 / unreleased
 
 **Fixed**
 
+VER 2.4.3 / 2022-12-01
+==================
+
+**Fixed**
+
+- [#1220](https://gitlab.com/pcmt/pcmt/-/issues/1220) Add missing parent association for middle 
+  product variants to FHIR API
+
 VER 2.4.2 / 2022-11-08
 ==================
 
