@@ -105,17 +105,17 @@ final class ConnectorProductNormalizer
             }
         }
 
-        $product_model_fhir_route = $this->router->generate(
-            'pim_fhir_api_product_model_get',
-            ['code' => $connectorProduct->parentProductModelCode()],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-
         $association = [];
 
         if ($connectorProduct->parentProductModelCode()) {
             $product_model_route = $this->router->generate(
                 'pim_api_product_model_get',
+                ['code' => $connectorProduct->parentProductModelCode()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            $product_model_fhir_route = $this->router->generate(
+                'pim_fhir_api_product_model_get',
                 ['code' => $connectorProduct->parentProductModelCode()],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
