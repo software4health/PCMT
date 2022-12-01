@@ -111,11 +111,47 @@ final class ConnectorProductModelNormalizer
             ];
         }
 
+        $association = [];
+
+        if ($connectorProductModel->parentCode()) {
+            $parent_product_model_route = $this->router->generate(
+                'pim_api_product_model_get',
+                ['code' => $connectorProductModel->parentCode()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            $product_model_fhir_route = $this->router->generate(
+                'pim_fhir_api_product_model_get',
+                ['code' => $connectorProductModel->parentCode()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            $association = [
+                'associationType' => [
+                    'system'  => $parent_product_model_route,
+                    'code'    => $connectorProductModel->parentCode(),
+                    'display' => $connectorProductModel->parentCode(),
+                ],
+                'associatedProduct' => [
+                    'Product' => [
+                        'reference' => $product_model_fhir_route,
+                        'display'   => $connectorProductModel->parentCode(),
+                        'type'      => 'Product',
+                    ],
+                ],
+                'quantity' => [
+                    'numerator'   => 1,
+                    'denominator' => 1,
+                ],
+            ];
+        }
+
         return [
             'resourceType'   => 'Product',
             'id'             => $connectorProductModel->code(),
             'identifier'     => $identifier,
             'description'    => $description,
+            'association'    => $association,
             'classification' => $categories,
         ];
     }
