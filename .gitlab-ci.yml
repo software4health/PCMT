@@ -35,10 +35,6 @@ include:
   variables:
     PCMT_VER: '2.4.3'
     PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v2.4.3/pcmt-v2.4.3.tar.gz'
-.pcmt_v_2_4_2:
-  variables:
-    PCMT_VER: '2.4.2'
-    PCMT_ASSET_URL: 'https://gitlab.com/pcmt/pcmt/-/archive/v2.4.2/pcmt-v2.4.2.tar.gz'
 .pcmt_v_2_3_2:
   variables:
     PCMT_VER: '2.3.2'
@@ -641,7 +637,7 @@ env-malawi-destroy:
 
 .env-malawi-uat:
   extends:
-    - .pcmt_v_2_4_2
+    - .pcmt_v_2_4_3
   stage: deploy
   when: manual
   needs: []
