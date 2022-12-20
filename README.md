@@ -7,7 +7,7 @@ are procuring, using and sharing product data.
 More specifically the PCMT is aimed at global health stakeholders to ease
 their interoperability and master data challenges.
 
-## License and Copyright
+## License, Copyright, Conduct and Contribution
 
 PCMT is an open and freely available community project stewarded by 
 VillageReach.  PCMT code and documentation is copyright VillageReach and
@@ -16,6 +16,7 @@ licensed under the [NP-OSL v3][np-osl] and the [CC BY-SA 4.0][cc-by-sa].
 - [PCMT License & Copyright][pcmt-license]
 - [Architecture Decision](./doc/arch/adr-006.md)
 - [License How-to](./doc/license-howto.md)
+- [Code of Conduct](https://www.contributor-covenant.org/version/1/4/code-of-conduct/)
 - TODO: Contribution guide
 
 PCMT includes a derivative work of Akeneo PIM Community Edition which is
