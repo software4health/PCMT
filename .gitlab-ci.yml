@@ -597,7 +597,7 @@ env-zimbabwe-covid-destroy:
 
 .env-malawi:
   extends:
-    - .pcmt_v_2_2_0
+    - .pcmt_v_2_4_3
   stage: deploy
   when: manual
   needs: []
