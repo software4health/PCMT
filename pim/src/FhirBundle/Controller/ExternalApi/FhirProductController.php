@@ -196,8 +196,37 @@ class FhirProductController extends ProductController
     public function listAction(Request $request): JsonResponse
     {
         $query = new ListProductsQuery();
-        //Query Fhir mappings
-        $fhir_mapping = $this->entityRepository->findAll();
+
+        $fhir_mapping = [];
+
+        if ($request->query->has('mappingType')) {
+            $mappingType = json_decode($request->query->get('mappingType'), true);
+            if (!is_array($mappingType)) {
+                throw new BadRequestHttpException('Mapping search query parameter should be valid JSON.');
+            }
+
+            //validate with type value
+            $mappingTypes = [
+                'identifier',
+                'description',
+                'other',
+                'marketingAuthorization',
+            ];
+            $mapping_validation = true;
+            foreach ($mappingType as $type) {
+                if (!in_array($type, $mappingTypes)) {
+                    $mapping_validation = false;
+                }
+            }
+
+            if ($mapping_validation) {
+                $fhir_mapping = $this->entityRepository->findBy(['mapping' => $mappingType]);
+            } else {
+                throw new BadRequestHttpException('Mapping type does match: ["identifier", "description", "other", "marketingAuthorization"]');
+            }
+        } else {
+            $fhir_mapping = $this->entityRepository->findAll();
+        }
         $attributes = [];
         foreach ($fhir_mapping as $mapping) {
             $attributes[] = $mapping->getCode();
@@ -211,6 +240,25 @@ class FhirProductController extends ProductController
             $query->search = json_decode($request->query->get('search'), true);
             if (!is_array($query->search)) {
                 throw new BadRequestHttpException('Search query parameter should be valid JSON.');
+            }
+        }
+
+        //add search for attributes not empty
+        if (count($attributes) && $request->query->has('mappingType')) {
+            //create query []
+            $search_attributes = [];
+            foreach ($attributes as $code) {
+                $search_attributes[$code][] = [
+                    'operator' => 'NOT EMPTY',
+                ];
+            }
+
+            if (!is_array($query->search)) {
+                //nothing was set
+                $query->search = $search_attributes;
+            } else {
+                //add
+                $query->search = array_merge($query->search, $search_attributes);
             }
         }
 
