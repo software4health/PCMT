@@ -10,30 +10,30 @@ frame "PCMT" {
         UOM: Cycle
     ]
 
-    component levo-mylan [
+    component levo_mylan [
         Mylan Levonorgestrel/Ethinyl Estradiol 150/30 mcg + Placebo 28 Tablets/Cycle
 
         Brand:  Zinnia-P
         Market Auth:  12345
     ]
 
-    [levo] --> [levo-mylan]: manufacturer authorized in country
+    [levo] --> [levo_mylan]: manufacturer authorized in country
 }
 
 frame "OCL" {
-    component term-levo [
+    component term_levo [
                 Levonorgestrel/Ethinyl Estradiol 150/30 mcg + Placebo 28 Tablets/Cycle
     ]
 
-    levo <-> term-levo: terminology to inventory item
+    [levo] <--> [term_levo]: terminology to inventory item
 }
 
 frame "ICD-11" {
-    component icd11-levo [
+    component icd11_levo [
         XM6U53 Levonorgestrel
     ]
 
-    levo -> icd11-levo: ICD-11 coding
-    term-levo -> icd11-levo: ICD-11 mapping
+    [levo] --> [icd11_levo]: ICD-11 coding
+    [term_levo] --> [icd11_levo]: ICD-11 mapping
 }
 
