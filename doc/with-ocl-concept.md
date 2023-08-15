@@ -17,7 +17,7 @@ frame "PCMT" {
         Market Auth:  12345
     ]
 
-    [levo] --> [levo_mylan]: manufacturer authorized in country
+    [levo] ----> [levo_mylan]: manufacturer authorized in country
 }
 
 frame "OCL" {
@@ -25,7 +25,7 @@ frame "OCL" {
                 Levonorgestrel/Ethinyl Estradiol 150/30 mcg + Placebo 28 Tablets/Cycle
     ]
 
-    [levo] <--> [term_levo]: terminology to inventory item
+    [levo] <---> [term_levo]: terminology to inventory item
 }
 
 frame "ICD-11" {
@@ -33,7 +33,7 @@ frame "ICD-11" {
         XM6U53 Levonorgestrel
     ]
 
-    [levo] --> [icd11_levo]: ICD-11 coding
+    [levo] ---> [icd11_levo]: ICD-11 coding
     [term_levo] --> [icd11_levo]: ICD-11 mapping
 }
 
