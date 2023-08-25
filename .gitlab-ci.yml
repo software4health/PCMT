@@ -385,7 +385,7 @@ env-test-destroy:
 
 .env-test-pc-io:
   extends:
-    - .pim_only_changes
+    - .pcmt_v_2_4_3
   stage: deploy
   only:
     - master@pcmt/pcmt
