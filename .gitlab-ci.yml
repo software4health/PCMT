@@ -387,8 +387,6 @@ env-test-destroy:
   extends:
     - .pcmt_v_2_4_3
   stage: deploy
-  only:
-    - master@pcmt/pcmt
   when: manual
   variables:
     PCMT_PROFILE: dev
@@ -409,15 +407,6 @@ env-test-pc-io:
   extends:
     - .env-test-pc-io
     - .env-test-pc-io_script-deploy
-  only:
-    refs:
-      - master@pcmt/pcmt
-
-env-test-pc-io (manual):
-  extends:
-    - .env-test-pc-io
-    - .env-test-pc-io_script-deploy
-  when: manual
 
 env-test-pc-io-destroy:
   extends:
