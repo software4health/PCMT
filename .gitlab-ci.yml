@@ -381,6 +381,53 @@ env-test-destroy:
     name: test 
     action: stop
 
+############### Test.productcatalog.io Environment ###############
+
+.env-test-pc-io:
+  extends:
+    - .pim_only_changes
+  stage: deploy
+  only:
+    - master@pcmt/pcmt
+  when: manual
+  variables:
+    PCMT_PROFILE: dev
+  environment:
+    name: test-pc-io
+    url: http://test.productcatalog.io
+    on_stop: env-test-pc-io-destroy
+
+.env-test-pc-io_script-deploy:
+  script:
+    - ./bin/ci-deploy.sh test-pc-io
+    
+.env-test-pc-io_script-destroy:
+  script:
+    - ./deploy/terraform/run-docker.sh test-pc-io destroy -auto-approve
+
+env-test-pc-io:
+  extends:
+    - .env-test-pc-io
+    - .env-test-pc-io_script-deploy
+  only:
+    refs:
+      - master@pcmt/pcmt
+
+env-test-pc-io (manual):
+  extends:
+    - .env-test-pc-io
+    - .env-test-pc-io_script-deploy
+  when: manual
+
+env-test-pc-io-destroy:
+  extends:
+    - .env-test-pc-io
+    - .env-test-pc-io_script-destroy
+  when: manual
+  environment:
+    name: test-pc-io
+    action: stop
+
 ############### GFPVAN Prod Environment ###############
 
 .env-gfpvan:
