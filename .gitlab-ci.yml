@@ -388,6 +388,7 @@ env-test-destroy:
     - .pcmt_v_2_4_3
   stage: deploy
   when: manual
+  needs: []
   variables:
     PCMT_PROFILE: dev
   environment:
