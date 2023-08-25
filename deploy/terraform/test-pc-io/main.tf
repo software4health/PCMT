@@ -15,7 +15,7 @@ terraform {
   
   backend "s3" {
     bucket = "pcmt-terraform-states"
-    key    = "pcmt-demo.tf"
+    key    = "pcmt-test-pc-io.tf"
     region = "eu-west-1"
   }
 }
@@ -42,7 +42,7 @@ data "terraform_remote_state" "pcmt-hosted-zone" {
   }
 }
 
-module "demo" {
+module "test-pc-io" {
   source = "../modules/pcmt"
   providers = {
     aws.compute = aws
