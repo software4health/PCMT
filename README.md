@@ -243,3 +243,4 @@ In case of issues related to the lack of access to the Akeneo's `package.json` f
 1. Uncomment the `ADD --chown=docker:docker package.json /srv/pim/` line in `pim/Dockerfile`.
 1. Commit your changes and push them to the remote repository.
   
+# PCMT
